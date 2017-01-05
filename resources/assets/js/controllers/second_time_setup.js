@@ -4,7 +4,7 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 		$rootScope.section = 'second_time_setup';
 
 		$scope.identity = Identity;
-		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.step = 1;
 		$scope.isEditing = false;
 
 		$scope.causes = MockData.alertReasonsPriority;
