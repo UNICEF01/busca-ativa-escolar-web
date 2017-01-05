@@ -54,6 +54,28 @@
 					return params;
 				},
 
+				ConfirmSelect: function(message, details, list, canDismiss) {
+					var params = {
+						templateUrl: '/modals/confirm_select.html',
+						controller: 'ConfirmSelectModalCtrl',
+						size: 'md',
+						resolve: {
+							message: function() { return message; },
+							details: function() { return details; },
+							list: function() { return list; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+				
 				Prompt: function(question, defaultAnswer, canDismiss) {
 					var params = {
 						templateUrl: '/modals/prompt.html',

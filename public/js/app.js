@@ -92,6 +92,10 @@
 				when('/cities', {
 					templateUrl: 'cities/list.html?NC=' + NC,
 					controller: 'CitySearchCtrl'
+				})
+				.when('/new_cities', {
+					templateUrl: 'cities/new_cities.html?NC=' + NC,
+					controller: 'NewCityCtrl'
 				}).
 				when('/settings', {
 					templateUrl: 'settings/manage_settings.html?NC=' + NC,
@@ -452,6 +456,49 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').controller('NewCityCtrl', function ($scope, $rootScope, MockData, Identity, Modals) {
+
+		$rootScope.section = 'cities';
+		$scope.identity = Identity;
+		
+		var list = [
+			{id: '1', name: 'Município já participante do programa'},
+		    {id: '2', name: 'Os dados cadastrados são falsos'}
+		];
+
+		$scope.range = function (start, end) {
+			var arr = [];
+
+			for(var i = start; i <= end; i++) {
+				arr.push(i);
+			}
+
+			return arr;
+		}
+
+		$scope.accept = function() {
+			Modals.show(Modals.Confirm(
+				'Tem certeza que deseja ACEITAR este município?','Esta ação não poderá ser desfeita. O Cordenador Operacional receberá um email com os dados de acesso do sistema.'
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/cities';
+			});
+		};
+
+		$scope.deny = function() {
+			Modals.show(Modals.ConfirmSelect(
+				'Tem certeza que deseja INDEFERIR este município?','Esta ação não poderá ser desfeita.', list
+			)).then(function(res) {
+				Identity.login();
+				location.hash = '/cities';
+			});
+		};
+
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').controller('CreateAlertCtrl', function ($scope, $rootScope, MockData, Identity) {
 
 		$rootScope.section = 'dashboard';
@@ -568,7 +615,7 @@ angular.module('BuscaAtivaEscolar').controller('SecondTimeSetupCtrl', function (
 		$rootScope.section = 'second_time_setup';
 
 		$scope.identity = Identity;
-		$scope.step = 3; // Steps 1 and 2 are from sign up
+		$scope.step = 1; 
 		$scope.isEditing = false;
 
 		$scope.causes = MockData.alertReasonsPriority;
@@ -1962,6 +2009,30 @@ Highcharts.maps["countries/br/br-all"] = {
 
 	angular
 		.module('BuscaAtivaEscolar')
+		.controller('ConfirmSelectModalCtrl', function ConfirmSelectModalCtrl($scope, $q, $uibModalInstance, message, details, list, canDismiss) {
+
+			// console.log("[modal] confirm_modal", message, details, list, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.list = list;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
 		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss) {
 
 			console.log("[modal] prompt_modal", question, canDismiss);
@@ -2665,6 +2736,28 @@ Highcharts.maps["countries/br/br-all"] = {
 							canDismiss: function() { return canDismiss; }
 						}
 					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+				
+				ConfirmSelect: function(message, details, list, canDismiss) {
+					var params = {
+						templateUrl: '/modals/confirm_select.html',
+						controller: 'ConfirmSelectModalCtrl',
+						size: 'md',
+						resolve: {
+							message: function() { return message; },
+							details: function() { return details; },
+							list: function() { return list; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
 
 					if (!canDismiss) {
 						params.keyboard = false;
