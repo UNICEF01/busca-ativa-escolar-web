@@ -1,6 +1,9 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, Modals, MockData, Identity) {
+		
+		$scope.cities = MockData.cities;
+		$scope.states = MockData.states;
 
 		$rootScope.section = 'sign_up';
 
@@ -12,14 +15,12 @@
 
 		$scope.goToStep = function (step) {
 			if(!$scope.agreeTOS) return;
-			if($scope.step >= 4) return;
 
 			$scope.step = step;
 			$window.scrollTo(0, 0);
 		};
 
 		$scope.nextStep = function() {
-			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step++;
@@ -28,7 +29,6 @@
 		};
 
 		$scope.prevStep = function() {
-			if(!$scope.agreeTOS) return;
 			if($scope.step >= 4) return;
 
 			$scope.step--;

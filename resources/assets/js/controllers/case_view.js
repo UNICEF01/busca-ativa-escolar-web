@@ -5,12 +5,12 @@
 		$rootScope.section = 'cases';
 
 		$scope.identity = Identity;
-		$scope.reasons = MockData.alertReasons;
+		$scope.reasons = MockData.searchReasons;
+		$scope.alertReasons = MockData.alertReasons;
 
 		$scope.input = {
 			hasBeenAtSchool: 1,
 			doesWork: 1,
-			reasons: {3: 1},
 			obsStillAtSchool: 1,
 		};
 
