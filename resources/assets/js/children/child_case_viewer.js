@@ -276,8 +276,14 @@
 			return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
 		};
 
+		convertFormatDate = function(date){
+			var value = date.toISOString().substring(0, 10);
+			var from = value.toString().split("-");
+			return (from[2]+"/" +from[1] +"/" +from[0]);
+		}
+
 		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = (new Date()).toISOString().substring(0, 10);
+			$scope.fields[field] = convertFormatDate(new Date);
 		};
 
 		function filterOutEmptyFields(data) {

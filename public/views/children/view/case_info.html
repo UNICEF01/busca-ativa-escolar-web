@@ -744,12 +744,12 @@
 		<div class="form-group col-md-6">
 			<label class="control-label">Data da (re)matrícula</label>
 			<p>
-				<div class="label label-default">{{$parent.openedCase.enrolled_at}}</div>
+				<div class="label label-default">{{$parent.openedCase.enrolled_at | amDateFormat:'DD/MM/YYYY'}}</div>
 			</p>
 		</div>
 
 		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (aaaa-mm-dd)*</label>
+			<label class="control-label" for="fld-obs-report_date">Data de registro do relatório (dd/mm/aaaa)*</label>
 			<div class="clearfix">
 				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditStep(step)" ng-model="fields.report_date" style="float: left; width: 70%;">
 				<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditStep(step)" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje</button>
