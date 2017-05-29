@@ -484,9 +484,13 @@
 		$scope.saveAndProceed = function() {
 			console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
 
-			$scope.save().then(function() {
-				$scope.$parent.completeStep($scope.step);
-			});
+			$scope.save()
+				.then(function() {
+					return $scope.step.$promise;
+				})
+				.then(function() {
+					$scope.$parent.completeStep($scope.step);
+				});
 		};
 
 		$scope.isStepOpen = function (stepClassName) {
@@ -559,6 +563,7 @@
 			for(var i in data) {
 				if(!data.hasOwnProperty(i)) continue;
 				if(data[i] === null) continue;
+				if(data[i] === 'null') continue;
 				if(data[i] === undefined) continue;
 				if(("" + data[i]).trim().length <= 0) continue;
 				filtered[i] = data[i];
