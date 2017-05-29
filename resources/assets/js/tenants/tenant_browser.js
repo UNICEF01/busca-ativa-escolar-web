@@ -12,7 +12,7 @@
 
 			$scope.identity = Identity;
 			$scope.tenants = {};
-			$scope.query = {sort: {registered_at: 'asc'}};
+			$scope.query = {sort: {}};
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
