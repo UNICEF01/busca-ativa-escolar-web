@@ -4,7 +4,7 @@
 
 		function init(scope, element, attrs) {
 
-			var sortModes = [null, 'asc', 'desc'];
+			var sortModes = [undefined, 'asc', 'desc'];
 
 			scope.sortMode = (scope.model && scope.model[scope.field]) ? scope.model[scope.field] : null;
 			scope.sortModeIndex = (scope.sortMode) ? sortModes.indexOf(scope.sortMode) : 0;
