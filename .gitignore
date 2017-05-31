@@ -5,3 +5,4 @@ node_modules
 doc/_site
 doc/.sass-cache
 doc/.jekyll-metadata
+environment.js
