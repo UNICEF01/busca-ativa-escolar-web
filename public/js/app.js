@@ -5832,7 +5832,7 @@ if (!Array.prototype.find) {
 					notifications = res.data;
 					isBusy = false;
 					emitToastsOnNewNotifications(isFirstRefresh);
-				}); 
+				});
 			}
 
 			function setup() {
