@@ -5815,7 +5815,7 @@ if (!Array.prototype.find) {
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Identity, Config, Platform, UserNotifications) {
+		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Auth, Identity, Config, Platform, UserNotifications) {
 
 			var notifications = [];
 			var seenNotifications = [];
@@ -5824,6 +5824,7 @@ if (!Array.prototype.find) {
 			function refresh(isFirstRefresh) {
 
 				if(!Identity.isLoggedIn()) return;
+				if(Auth.isRefreshExpired()) return;
 
 				isBusy = true;
 
@@ -5831,7 +5832,7 @@ if (!Array.prototype.find) {
 					notifications = res.data;
 					isBusy = false;
 					emitToastsOnNewNotifications(isFirstRefresh);
-				});
+				}); 
 			}
 
 			function setup() {

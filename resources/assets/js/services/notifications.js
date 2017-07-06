@@ -1,7 +1,7 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Identity, Config, Platform, UserNotifications) {
+		.service('Notifications', function ($interval, $location, $rootScope, ngToast, Auth, Identity, Config, Platform, UserNotifications) {
 
 			var notifications = [];
 			var seenNotifications = [];
@@ -10,6 +10,7 @@
 			function refresh(isFirstRefresh) {
 
 				if(!Identity.isLoggedIn()) return;
+				if(Auth.isRefreshExpired()) return;
 
 				isBusy = true;
 
