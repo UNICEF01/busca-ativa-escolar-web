@@ -8,6 +8,7 @@
 			var useableErrorStatuses = [400, 401, 403];
 
 			var REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
+			var OPTIONAL_AUTH = {'X-Require-Auth': 'auth-optional'};
 
 			function isLoading() {
 				return (numPendingRequests > 0);
@@ -53,6 +54,7 @@
 			this.isLoading = isLoading;
 
 			this.REQUIRE_AUTH = REQUIRE_AUTH;
+			this.OPTIONAL_AUTH = OPTIONAL_AUTH;
 
 		});
 })();

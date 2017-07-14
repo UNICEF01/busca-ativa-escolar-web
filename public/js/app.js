@@ -1779,6 +1779,24 @@
 
 })();
 (function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appSupportWidget', function (Modals) {
+
+		function init(scope, element, attrs) {
+			scope.createNewTicket = function() {
+				Modals.show(Modals.NewSupportTicketModal());
+			}
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/components/support_widget.html'
+		};
+	});
+
+})();
+(function() {
 	identify('config', 'charts.js');
 
 	angular.module('BuscaAtivaEscolar').run(function (Config) {
@@ -3135,8 +3153,16 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			this.request = function (config) {
 
-				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
 
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
 				return Identity.provideToken().then(function (access_token) {
 					config.headers.Authorization = 'Bearer ' + access_token;
 					return config;
@@ -3603,6 +3629,44 @@ Highcharts.maps["countries/br/br-all"] = {
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
 			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
+
+			console.log("[modal] new_support_ticket_modal");
+
+			$scope.isLoading = false;
+
+			$scope.ticket = {
+				name: '',
+				city_name: '',
+				phone: '',
+				email: '',
+				message: ''
+			};
+
+			$scope.submitTicket = function() {
+				$scope.isLoading = true;
+
+				SupportTicket.submit($scope.ticket, function(res) {
+					$scope.isLoading = false;
+
+					ngToast.success('Solicitação de suporte enviada com sucesso!');
+					$uibModalInstance.close({response: $scope.answer});
+				});
+				
+				return false;
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
 
 		});
 
@@ -4390,6 +4454,22 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
+		.factory('SupportTicket', function SupportTicket(API, Identity, $resource) {
+
+			var authRequiredHeaders = API.REQUIRE_AUTH;
+			var authOptionalHeaders = API.OPTIONAL_AUTH;
+
+			return $resource(API.getURI('support/tickets/:id'), {id: '@id'}, {
+				all: {url: API.getURI('support/tickets/all'), method: 'POST', headers: authRequiredHeaders},
+				submit: {url: API.getURI('support/tickets/submit'), method: 'POST', headers: authOptionalHeaders},
+				find: {method: 'GET', headers: authRequiredHeaders}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
 		.factory('SystemHealth', function SystemHealth(API, Identity, $resource) {
 
 			var authHeaders = API.REQUIRE_AUTH;
@@ -4477,6 +4557,7 @@ if (!Array.prototype.find) {
 			var useableErrorStatuses = [400, 401, 403];
 
 			var REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
+			var OPTIONAL_AUTH = {'X-Require-Auth': 'auth-optional'};
 
 			function isLoading() {
 				return (numPendingRequests > 0);
@@ -4522,6 +4603,7 @@ if (!Array.prototype.find) {
 			this.isLoading = isLoading;
 
 			this.REQUIRE_AUTH = REQUIRE_AUTH;
+			this.OPTIONAL_AUTH = OPTIONAL_AUTH;
 
 		});
 })();
@@ -5711,6 +5793,17 @@ if (!Array.prototype.find) {
 						params.keyboard = false;
 						params.backdrop = 'static';
 					}
+
+					return params;
+				},
+
+				NewSupportTicketModal: function() {
+					var params = {
+						templateUrl: '/views/modals/new_support_ticket.html',
+						controller: 'NewSupportTicketModalCtrl',
+						size: 'md',
+						resolve: {}
+					};
 
 					return params;
 				},

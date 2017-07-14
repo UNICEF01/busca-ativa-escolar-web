@@ -5,8 +5,16 @@
 
 			this.request = function (config) {
 
-				if(config.headers['X-Require-Auth'] !== 'auth-required') return config;
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
 
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
 				return Identity.provideToken().then(function (access_token) {
 					config.headers.Authorization = 'Bearer ' + access_token;
 					return config;

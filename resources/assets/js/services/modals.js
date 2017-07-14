@@ -77,6 +77,17 @@
 					return params;
 				},
 
+				NewSupportTicketModal: function() {
+					var params = {
+						templateUrl: '/views/modals/new_support_ticket.html',
+						controller: 'NewSupportTicketModalCtrl',
+						size: 'md',
+						resolve: {}
+					};
+
+					return params;
+				},
+
 				Login: function(reason, canDismiss) {
 					var params = {
 						templateUrl: '/views/modals/login.html',
