@@ -774,4 +774,14 @@ a.column-sorter {
   text-align: center;
 }
 
+.metrics-country .panel-footer {
+  font-size: 12px;
+}
+.metrics-country a[ui-sref] {
+  color: #666;
+}
+.metrics-country a[ui-sref]:hover {
+  color: black;
+}
+
 /*# sourceMappingURL=app.css.map */

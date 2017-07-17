@@ -242,3 +242,9 @@ a.column-sorter {
 		text-align: center;
 	}
 }
+
+.metrics-country {
+	.panel-footer { font-size: 12px; }
+	a[ui-sref] { color: #666; }
+		a[ui-sref]:hover { color: black; }
+}
