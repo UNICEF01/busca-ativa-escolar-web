@@ -20,6 +20,7 @@
 						<th><column-sorter on-change="refresh" model="query.sort" field="'last_activity_at'">Atividade</column-sorter></th>
 						<th>Gestor político</th>
 						<th>Coordenador operacional</th>
+						<th>Opções</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -52,6 +53,16 @@
 						<td width="5%">
 							<span ng-show="tenant.operational_admin">{{tenant.operational_admin.name}}</span> <br />
 							<span class="label label-default"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</span>
+						</td>
+						<td width="5%">
+							<a class="btn btn-sm btn-raised btn-danger"
+							   ng-click="disableTenant(tenant)"
+							   uib-tooltip="Ao desativar um município, todos os acessos à ele serão cancelados,
+							   e ele passará a figurar novamente na lista de municípios disponíveis para adesão.
+							   Os contadores e métricas não serão removidos."
+							>
+								<i class="fa fa-ban"></i> Desativar
+							</a>
 						</td>
 					</tr>
 				</tbody>

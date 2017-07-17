@@ -49,7 +49,7 @@
 							<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
 							<td>
 								<span ng-show="signup.is_approved" class="label label-success">Aguardando Configuração</span>
-								<span ng-show="!signup.is_approved" class="label label-warning">Pendente</span>
+								<span ng-show="!signup.is_approved" class="label label-warning">Aguardando Aprovação</span>
 							</td>
 						</tr>
 					</tbody>
@@ -170,6 +170,7 @@
 				<div ng-show="signup.is_approved">
 					<div class="alert alert-success"><strong>Adesão aprovada!</strong> Aguardando a configuração inicial pelo Gestor Político do município.</div>
 					<div><a class="btn btn-raised btn-primary" ng-click="resendNotification(signup)"><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a></div>
+					<div><a class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-trash"></i> Cancelar adesão</a></div>
 				</div>
 			</div>
 		</div>
