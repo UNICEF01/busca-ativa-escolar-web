@@ -7,23 +7,51 @@
 			</div>
 			<div class="panel-body">
 				<div class="alert alert-success" ng-hide="signups.data && signups.data.length > 0">Nenhuma adesão pendente de aprovação!</div>
+				<div class="simple-filter">
+					<h5><i class="fa fa-filter"></i> Filtrar</h5>
+
+					<div>
+						<div class="form-group col-md-4">
+							<input type="text" class="form-control" ng-model="query.filter.city_name" ng-change="refresh()" placeholder="Nome..." />
+						</div>
+						<div class="form-group col-md-4">
+							<select class="form-control" ng-model="query.filter.created_at" ng-change="refresh()">
+								<option value="">Todos</option>
+								<option value="7">Últimos 7 dias</option>
+								<option value="30">Últimos 30 dias</option>
+								<option value="60">Últimos 60 dias</option>
+								<option value="90">Últimos 90 dias</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4">
+							<select class="form-control" ng-model="query.filter.status" ng-change="refresh()">
+								<option value="all">Todos</option>
+								<option value="pending">Pendentes</option>
+								<option value="pending_approval">Aguardando aprovação</option>
+								<option value="pending_setup">Aguardando configuração</option>
+								<option value="rejected">Rejeitados</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
 				<table class="table" ng-show="signups.data && signups.data.length > 0">
 					<thead>
-					<tr>
-						<th><column-sorter on-change="refresh" model="query.sort" field="'cities.name:city_id'">Município</column-sorter></th>
-						<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
-						<th><column-sorter on-change="refresh" model="query.sort" field="'status'">Status</column-sorter></th>
-					</tr>
+						<tr>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'cities.name:city_id'">Município</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'status'">Status</column-sorter></th>
+						</tr>
 					</thead>
 					<tbody>
-					<tr ng-repeat="(i, signup) in signups.data" ng-click="preview(signup)" style="cursor: pointer;">
-						<td><span ng-bind="signup.city.name"></span>/<span ng-bind="signup.city.uf"></span></td>
-						<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
-						<td>
-							<span ng-show="signup.is_approved" class="label label-success">Aguardando Configuração</span>
-							<span ng-show="!signup.is_approved" class="label label-warning">Pendente</span>
-						</td>
-					</tr>
+						<tr ng-repeat="(i, signup) in signups.data" ng-click="preview(signup)" style="cursor: pointer;">
+							<td><span ng-bind="signup.city.name"></span>/<span ng-bind="signup.city.uf"></span></td>
+							<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
+							<td>
+								<span ng-show="signup.is_approved" class="label label-success">Aguardando Configuração</span>
+								<span ng-show="!signup.is_approved" class="label label-warning">Pendente</span>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
