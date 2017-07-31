@@ -67,6 +67,11 @@
 
 				<div class="alert alert-primary">Adesão registrada <strong uib-tooltip-html="signup.created_at" ng-bind="signup.created_at | amTimeAgo"></strong> <span ng-show="signup.data.admin.name">por <strong ng-bind="signup.data.admin.name"></strong></span></div>
 
+				<div class="form-group col-md-12">
+					<label class="control-label">Cód. Adesão</label>
+					<p>{{signup.id}}</p>
+				</div>
+
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="material-icons">person</i> Gestor Político</div>
 					<div class="panel-body">
@@ -170,6 +175,10 @@
 				<div ng-show="signup.is_approved">
 					<div class="alert alert-success"><strong>Adesão aprovada!</strong> Aguardando a configuração inicial pelo Gestor Político do município.</div>
 					<div><a class="btn btn-raised btn-primary" ng-click="resendNotification(signup)"><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a></div>
+					<div class="form-group">
+						<label class="control-label">URL para configuração inicial:</label>
+						<input class="form-control" value="{{signup.provision_url}}" />
+					</div>
 					<div><a class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-trash"></i> Cancelar adesão</a></div>
 				</div>
 			</div>
