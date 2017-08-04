@@ -32,12 +32,22 @@
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 			}
 
+			$scope.isSuperAdmin = function() {
+				return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
+			};
+
 			$scope.canDefineUserTenant = function() {
-				if(Identity.getType() !== 'superuser' && Identity.getType() !== 'gestor_nacional') {
-					return false;
-				}
+				if(!$scope.isSuperAdmin()) return false;
 
 				return ($scope.user.type !== 'superuser' && $scope.user.type !== 'gestor_nacional');
+			};
+
+			$scope.canDefineUserUF = function() {
+				if($scope.user.type !== 'gestor_estadual' && $scope.user.type !== 'supervisor_estadual') return false;
+				if($scope.isSuperAdmin()) return true;
+				if(Identity.getType() === 'gestor_estadual') return true;
+
+				return (Identity.getType() === 'supervisor_estadual' && $scope.user.type === 'supervisor_estadual');
 			};
 
 			$scope.openUser = function(user_id, is_reviewing) {

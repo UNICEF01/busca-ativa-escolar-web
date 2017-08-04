@@ -184,6 +184,10 @@
 				return min + Math.floor( Math.random() * (max - min));
 			};
 
+			$scope.isUFScoped = function() {
+				return Identity.getType() === 'gestor_estadual' || Identity.getType() === 'supervisor_estadual';
+			};
+
 			$scope.canFilterBy = function(filter_id) {
 				if(!$scope.ready) return false;
 
@@ -191,12 +195,30 @@
 					return $scope.current.view === 'timeline';
 				}
 
-				return $scope.entities[$scope.current.entity].filters.indexOf(filter_id) !== -1;
+				// Is filter valid for entity
+				if($scope.entities[$scope.current.entity].filters.indexOf(filter_id) === -1) {
+					return false;
+				}
+
+				if(filter_id === 'uf') {
+					return Identity.getType() === 'gestor_nacional'
+						|| Identity.getType() === 'superuser'
+				}
+
+				if(filter_id === 'city_id') {
+					return Identity.getType() === 'gestor_nacional'
+						|| Identity.getType() === 'superuser'
+						|| Identity.getType() === 'gestor_estadual'
+						|| Identity.getType() === 'supervisor_estadual'
+				}
+
+				return true;
 			};
 
 			$scope.fetchCities = function(query) {
 				var data = {name: query, $hide_loading_feedback: true};
 				if($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
+				if($scope.isUFScoped()) data.uf = Identity.getCurrentUser().uf;
 
 				console.log("[create_alert] Looking for cities: ", data);
 
