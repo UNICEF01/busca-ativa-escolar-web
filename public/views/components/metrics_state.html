@@ -1,0 +1,38 @@
+<div class="row metrics-country">
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
+			<div class="panel-footer">municípios participantes <i uib-tooltip="Quantidade de municípios cadastrados e participantes do programa Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<h1 class="panel-body"><span ng-bind="stats.num_signups || 0"></span> <small ng-bind="stats.num_pending_setup || 0"></small></h1>
+			<div class="panel-footer">adesões realizadas / em configuração</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="panel panel-default" ui-sref="pending_signups" style="cursor: pointer">
+			<h1 class="panel-body"><span ng-bind="stats.num_pending_signups || 0"></span></h1>
+			<div class="panel-footer">adesões <br />pendentes <i uib-tooltip="Quantas adesões de municípios estão aguardando aprovação do gestor nacional" class="fa fa-info-circle"></i>&nbsp;</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<h1 class="panel-body" ng-bind="stats.num_alerts || 0"></h1>
+			<div class="panel-footer">alertas <i uib-tooltip="Quantos alertas, no total, foram abertos na plataforma" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
+			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Quantos casos, na plataforma, estão em andamento agora" class="fa fa-info-circle"></i>&nbsp;</div>
+		</div>
+	</div>
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<h1 class="panel-body" ng-bind="stats.num_children_reinserted || 0"></h1>
+			<div class="panel-footer">crianças ou adolescentes<br /> (re)matriculados <i uib-tooltip="Quantas crianças, na platforma, já foram rematriculadas" class="fa fa-info-circle"></i>&nbsp;</div>
+		</div>
+	</div>
+</div>

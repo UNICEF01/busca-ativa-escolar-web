@@ -5,6 +5,7 @@
 <div ng-if="identity.getType() === 'gestor_politico'" ng-include="'/views/dashboards/gestor_politico.html'"></div>
 <div ng-if="identity.getType() === 'gestor_nacional'" ng-include="'/views/dashboards/gestor_nacional.html'"></div>
 <div ng-if="identity.getType() === 'superuser'" ng-include="'/views/dashboards/super_administrador.html'"></div>
+<div ng-if="identity.getType() === 'gestor_estadual' || identity.getType() === 'supervisor_estadual'" ng-include="'/views/dashboards/gestor_estadual.html'"></div>
 
 <!--div>
 	<h3><i class="fa fa-code"></i> Últimas atualizações da plataforma</h3>

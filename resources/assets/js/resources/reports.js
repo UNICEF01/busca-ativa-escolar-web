@@ -8,6 +8,7 @@
 			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
 				query: {method: 'POST', headers: headers},
 				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
+				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
 			});
 		});
 })();
