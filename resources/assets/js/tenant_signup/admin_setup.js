@@ -9,7 +9,7 @@
 				unauthenticated: true
 			});
 		})
-		.controller('AdminSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, SignUps, Cities, Modals, StaticData) {
+		.controller('AdminSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Cities, Modals, StaticData) {
 
 			$scope.static = StaticData;
 
@@ -75,7 +75,7 @@
 			};
 
 			$scope.fetchSignupDetails = function() {
-				SignUps.getViaToken({id: signupID, token: signupToken}, function (data) {
+				TenantSignups.getViaToken({id: signupID, token: signupToken}, function (data) {
 					$scope.ready = true;
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
@@ -106,7 +106,7 @@
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
 					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
 
-					SignUps.complete(data, function (res) {
+					TenantSignups.complete(data, function (res) {
 						if(res.status === 'ok') {
 							ngToast.success('Adesão finalizada!');
 							$scope.step = 5;

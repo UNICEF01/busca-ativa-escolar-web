@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, ngToast, Utils, SignUps, Cities, Modals, StaticData) {
+	angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData) {
 
 		$scope.static = StaticData;
 
@@ -108,7 +108,7 @@
 				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
 				data.mayor = Utils.prepareDateFields(data.mayor, ['dob']);
 
-				SignUps.register(data, function (res) {
+				TenantSignups.register(data, function (res) {
 					if(res.status === 'ok') {
 						ngToast.success('Solicitação de adesão registrada!');
 						$scope.step = 5;

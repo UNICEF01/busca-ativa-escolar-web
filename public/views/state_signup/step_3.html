@@ -1,0 +1,57 @@
+<form class="panel panel-default" ng-submit="nextStep()">
+	<div class="panel-heading">
+		<h3><strong>{{step}}.</strong> <i class="fa fa-user"></i> Cadastre o Supervisor Estadual</h3>
+	</div>
+	<div class="panel-body">
+
+		<p> Informe aqui os dados do Supervisor Estadual do município. </p>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-name">Nome*</label>
+			<input type="text" class="form-control" required id="fld-co-name" ng-model="$parent.form.supervisor.name">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+			<input type="tel" class="form-control" ui-date-mask required id="fld-co-dob" ng-model="$parent.form.supervisor.dob" placeholder="dd/mm/yyyy">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-cpf">CPF*</label>
+			<input type="tel" ui-br-cpf-mask class="form-control"  required id="fld-co-cpf" ng-model="$parent.form.supervisor.cpf" placeholder="000.000.000-00">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-email">E-mail*</label>
+			<input type="email" class="form-control" required id="fld-co-email" ng-model="$parent.form.supervisor.email">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-email">Crie uma senha de acesso*</label>
+			<input type="password" class="form-control" required id="fld-co-password" ng-model="$parent.form.supervisor.password">
+		</div>
+
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-work-phone">Telefone fixo*</label>
+			<input type="tel" ui-br-phone-number class="form-control" required id="fld-co-work-phone" ng-model="$parent.form.supervisor.phone" placeholder="(00) 00000-0000">
+		</div>
+		<div class="form-group col-md-6">
+			<label class="control-label" for="fld-co-work-mobile">Telefone celular</label>
+			<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="$parent.form.supervisor.mobile" placeholder="(00) 00000-0000">
+		</div>
+
+		<hr />
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-institution">Órgão*</label>
+			<input type="text" class="form-control" id="fld-co-institution" required ng-model="$parent.form.supervisor.institution">
+		</div>
+
+		<div class="form-group col-md-12">
+			<label class="control-label" for="fld-co-position">Cargo*</label>
+			<input type="text" class="form-control" id="fld-co-position" required ng-model="$parent.form.supervisor.position">
+		</div>
+
+	</div>
+	<div class="panel-footer clearfix">
+		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
+	</div>
+</form>

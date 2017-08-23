@@ -8,7 +8,7 @@
 				controller: 'TenantSetupCtrl'
 			});
 		})
-		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants, Modals) {
+		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, TenantSignups, Tenants, Modals) {
 
 			if(!$stateParams.step) return $state.go('tenant_setup', {step: 1});
 
@@ -52,7 +52,7 @@
 				'Deseja prosseguir com o cadastro?',
 				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
 				)).then(function(res) {
-					SignUps.completeSetup({}, function() {
+					TenantSignups.completeSetup({}, function() {
 						Platform.setFlag('HIDE_NAVBAR', false);
 
 						Identity.refresh();

@@ -1952,10 +1952,16 @@
 					controller: 'CreditsCtrl',
 					unauthenticated: true
 				})
-				.state('sign_up', {
-					url: '/sign_up',
-					templateUrl: '/views/sign_up/main.html',
-					controller: 'SignUpCtrl',
+				.state('tenant_signup', {
+					url: '/tenant_signup',
+					templateUrl: '/views/tenant_signup/main.html',
+					controller: 'TenantSignupCtrl',
+					unauthenticated: true
+				})
+				.state('state_signup', {
+					url: '/state_signup',
+					templateUrl: '/views/state_signup/main.html',
+					controller: 'StateSignupCtrl',
 					unauthenticated: true
 				})
 
@@ -4378,32 +4384,6 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
-		.factory('SignUps', function SignUps(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
-
-			return $resource(API.getURI('signups/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-
-				getPending: {url: API.getURI('signups/pending'), method: 'POST', isArray: false, headers: authHeaders},
-				approve: {url: API.getURI('signups/:id/approve'), method: 'POST', headers: authHeaders},
-				reject: {url: API.getURI('signups/:id/reject'), method: 'POST', headers: authHeaders},
-
-				updateRegistrationEmail: {url: API.getURI('signups/:id/update_registration_email'), method: 'POST', headers: authHeaders},
-				resendNotification: {url: API.getURI('signups/:id/resend_notification'), method: 'POST', headers: authHeaders},
-				completeSetup: {url: API.getURI('signups/complete_setup'), method: 'POST', headers: authHeaders},
-
-				register: {url: API.getURI('signups/register'), method: 'POST', headers: headers},
-				getViaToken: {url: API.getURI('signups/via_token/:id'), method: 'GET', headers: headers},
-				complete: {url: API.getURI('signups/:id/complete'), method: 'POST', headers: headers},
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
 		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
 
 			var authHeaders = API.REQUIRE_AUTH;
@@ -4530,6 +4510,32 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('maintenance/system_health'), {}, {
 				getStats: {method: 'GET', headers: authHeaders},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('signups/tenants/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+
+				getPending: {url: API.getURI('signups/tenants/pending'), method: 'POST', isArray: false, headers: authHeaders},
+				approve: {url: API.getURI('signups/tenants/:id/approve'), method: 'POST', headers: authHeaders},
+				reject: {url: API.getURI('signups/tenants/:id/reject'), method: 'POST', headers: authHeaders},
+
+				updateRegistrationEmail: {url: API.getURI('signups/tenants/:id/update_registration_email'), method: 'POST', headers: authHeaders},
+				resendNotification: {url: API.getURI('signups/tenants/:id/resend_notification'), method: 'POST', headers: authHeaders},
+				completeSetup: {url: API.getURI('signups/tenants/complete_setup'), method: 'POST', headers: authHeaders},
+
+				register: {url: API.getURI('signups/tenants/register'), method: 'POST', headers: headers},
+				getViaToken: {url: API.getURI('signups/tenants/via_token/:id'), method: 'GET', headers: headers},
+				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
 			});
 
 		});
@@ -6662,6 +6668,190 @@ function identify(namespace, file) {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
+			$stateProvider.state('pending_state_signups', {
+				url: '/pending_state_signups',
+				templateUrl: '/views/state_signup/pending_signups.html',
+				controller: 'PendingStateSignupsCtrl'
+			})
+		})
+		.controller('PendingStateSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, StateSignups, StaticData) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.signups = {};
+			$scope.signup = {};
+			$scope.query = {sort: {created_at: 'desc'}, filter: {status: 'pending'}};
+
+			$scope.refresh = function() {
+				$scope.signups = StateSignups.getPending($scope.query);
+				return $scope.signups.$promise;
+			};
+
+			$scope.preview = function(signup) {
+				$scope.signup = signup;
+			};
+
+			$scope.approve = function(signup) {
+				StateSignups.approve({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.reject = function(signup) {
+				StateSignups.reject({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.updateRegistrationEmail = function(type, signup) {
+				StateSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+					if(res.status !== "ok") {
+						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
+						return;
+					}
+
+					ngToast.success("E-mail do gestor atualizado!");
+				});
+			};
+
+			$scope.resendNotification = function(signup) {
+				StateSignups.resendNotification({id: signup.id}, function() {
+					ngToast.success('Notificação reenviada!');
+				});
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
+
+		$scope.static = StaticData;
+
+		$scope.step = 1;
+		$scope.numSteps = 5;
+		$scope.isCityAvailable = false;
+
+		$scope.form = {
+			uf: null,
+			admin: {},
+			supervisor: {}
+		};
+
+		var fieldNames = {
+			cpf: 'CPF',
+			name: 'nome',
+			email: 'e-mail institucional',
+			position: 'posição',
+			institution: 'instituição',
+			password: 'senha',
+			dob: 'data de nascimento',
+			phone: 'telefone institucional',
+			mobile: 'celular institucional',
+			personal_phone: 'telefone pessoal',
+			personal_mobile: 'celular pessoal'
+		};
+
+		var messages = {
+			invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
+			invalid_supervisor: 'Dados do supervisor estadual incompletos! Campos inválidos: '
+		};
+
+		var requiredAdminFields = ['email','name','cpf','dob','phone'];
+		var requiredSupervisorFields = ['email','name','cpf','dob','phone'];
+
+		$scope.goToStep = function (step) {
+			if($scope.step < 1) return;
+			if($scope.step > $scope.numSteps) return;
+
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			if($scope.step >= $scope.numSteps) return;
+
+			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
+			if($scope.step === 3 && !Utils.isValid($scope.form.supervisor, requiredSupervisorFields, fieldNames, messages.invalid_supervisor)) return;
+
+			$scope.step++;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.prevStep = function() {
+			if($scope.step <= 1) return;
+
+			$scope.step--;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.onCitySelect = function(uf, city) {
+			if(!uf || !city) return;
+			$scope.checkCityAvailability(city);
+		};
+
+		$scope.checkStateAvailability = function(uf) {
+
+			$scope.hasCheckedAvailability = false;
+
+			StateSignups.checkIfAvailable({uf: uf}, function (res) {
+				$scope.hasCheckedAvailability = true;
+				$scope.isStateAvailable = !!res.is_available;
+			});
+		};
+
+		$scope.finish = function() {
+			if(!$scope.agreeTOS) return;
+
+				var data = {};
+				data.admin = Object.assign({}, $scope.form.admin);
+				data.supervisor = Object.assign({}, $scope.form.supervisor);
+				data.uf = $scope.form.uf;
+
+				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
+				if(!Utils.isValid(data.supervisor, requiredSupervisorFields, messages.invalid_supervisor)) return;
+
+				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+				data.supervisor = Utils.prepareDateFields(data.supervisor, ['dob']);
+
+				StateSignups.register(data, function (res) {
+					if(res.status === 'ok') {
+						ngToast.success('Solicitação de adesão registrada!');
+						$scope.step = 5;
+						return;
+					}
+
+					if(res.reason === 'admin_email_in_use') {
+						$scope.step = 2;
+						return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+					}
+
+					if(res.reason === 'invalid_admin_data') {
+						$scope.step = 2;
+						ngToast.danger(messages.invalid_admin);
+
+						return Utils.displayValidationErrors(res);
+					}
+
+					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+
+				});
+
+		};
+
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
 			$stateProvider.state('admin_setup', {
 				url: '/admin_setup/{id}?token',
 				templateUrl: '/views/initial_admin_setup/main.html',
@@ -6669,7 +6859,7 @@ function identify(namespace, file) {
 				unauthenticated: true
 			});
 		})
-		.controller('AdminSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, SignUps, Cities, Modals, StaticData) {
+		.controller('AdminSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Cities, Modals, StaticData) {
 
 			$scope.static = StaticData;
 
@@ -6735,7 +6925,7 @@ function identify(namespace, file) {
 			};
 
 			$scope.fetchSignupDetails = function() {
-				SignUps.getViaToken({id: signupID, token: signupToken}, function (data) {
+				TenantSignups.getViaToken({id: signupID, token: signupToken}, function (data) {
 					$scope.ready = true;
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
@@ -6766,7 +6956,7 @@ function identify(namespace, file) {
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
 					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
 
-					SignUps.complete(data, function (res) {
+					TenantSignups.complete(data, function (res) {
 						if(res.status === 'ok') {
 							ngToast.success('Adesão finalizada!');
 							$scope.step = 5;
@@ -6809,7 +6999,83 @@ function identify(namespace, file) {
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SignUpCtrl', function ($scope, $rootScope, $window, ngToast, Utils, SignUps, Cities, Modals, StaticData) {
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('tenant_setup', {
+				url: '/tenant_setup?step',
+				templateUrl: '/views/initial_tenant_setup/main.html',
+				controller: 'TenantSetupCtrl'
+			});
+		})
+		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, TenantSignups, Tenants, Modals) {
+
+			if(!$stateParams.step) return $state.go('tenant_setup', {step: 1});
+
+			$scope.step = parseInt($stateParams.step, 10);
+			$scope.isReady = false;
+			$scope.tenant = {};
+
+			$scope.getAdminUserID = function() {
+				return $scope.tenant.operational_admin_id;
+			};
+
+			$scope.goToStep = function(step) {
+				if(step > 5) return;
+				if(step < 1) return;
+				$state.go('tenant_setup', {step: step});
+			};
+
+			$scope.nextStep = function() {
+
+				var step = $scope.step + 1;
+				if($scope.step > 5) {
+					return $scope.completeSetup();
+				}
+
+				$state.go('tenant_setup', {step: step});
+			};
+
+			$scope.prevStep = function() {
+				var step = $scope.step - 1;
+				if(step <= 0) step = 1;
+
+				$state.go('tenant_setup', {step: step});
+			};
+
+			$scope.getCurrentStep = function() {
+				return $scope.step;
+			};
+
+			$scope.completeSetup = function() {
+				Modals.show(Modals.Confirm(
+				'Deseja prosseguir com o cadastro?',
+				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+				)).then(function(res) {
+					TenantSignups.completeSetup({}, function() {
+						Platform.setFlag('HIDE_NAVBAR', false);
+
+						Identity.refresh();
+
+						$state.go('dashboard');
+					});
+				});
+			};
+
+			Platform.whenReady(function() {
+				Platform.setFlag('HIDE_NAVBAR', true);
+
+				$scope.tenant = Identity.getCurrentUser().tenant;
+				$scope.isReady = true;
+
+				console.info('[tenant_setup] Tenant setup for: ', $scope.tenant);
+			});
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData) {
 
 		$scope.static = StaticData;
 
@@ -6917,7 +7183,7 @@ function identify(namespace, file) {
 				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
 				data.mayor = Utils.prepareDateFields(data.mayor, ['dob']);
 
-				SignUps.register(data, function (res) {
+				TenantSignups.register(data, function (res) {
 					if(res.status === 'ok') {
 						ngToast.success('Solicitação de adesão registrada!');
 						$scope.step = 5;
@@ -6949,89 +7215,13 @@ function identify(namespace, file) {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
-			$stateProvider.state('tenant_setup', {
-				url: '/tenant_setup?step',
-				templateUrl: '/views/initial_tenant_setup/main.html',
-				controller: 'TenantSetupCtrl'
-			});
-		})
-		.controller('TenantSetupCtrl', function ($scope, $state, $stateParams, Platform, Identity, SignUps, Tenants, Modals) {
-
-			if(!$stateParams.step) return $state.go('tenant_setup', {step: 1});
-
-			$scope.step = parseInt($stateParams.step, 10);
-			$scope.isReady = false;
-			$scope.tenant = {};
-
-			$scope.getAdminUserID = function() {
-				return $scope.tenant.operational_admin_id;
-			};
-
-			$scope.goToStep = function(step) {
-				if(step > 5) return;
-				if(step < 1) return;
-				$state.go('tenant_setup', {step: step});
-			};
-
-			$scope.nextStep = function() {
-
-				var step = $scope.step + 1;
-				if($scope.step > 5) {
-					return $scope.completeSetup();
-				}
-
-				$state.go('tenant_setup', {step: step});
-			};
-
-			$scope.prevStep = function() {
-				var step = $scope.step - 1;
-				if(step <= 0) step = 1;
-
-				$state.go('tenant_setup', {step: step});
-			};
-
-			$scope.getCurrentStep = function() {
-				return $scope.step;
-			};
-
-			$scope.completeSetup = function() {
-				Modals.show(Modals.Confirm(
-				'Deseja prosseguir com o cadastro?',
-				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
-				)).then(function(res) {
-					SignUps.completeSetup({}, function() {
-						Platform.setFlag('HIDE_NAVBAR', false);
-
-						Identity.refresh();
-
-						$state.go('dashboard');
-					});
-				});
-			};
-
-			Platform.whenReady(function() {
-				Platform.setFlag('HIDE_NAVBAR', true);
-
-				$scope.tenant = Identity.getCurrentUser().tenant;
-				$scope.isReady = true;
-
-				console.info('[tenant_setup] Tenant setup for: ', $scope.tenant);
-			});
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('pending_signups', {
-				url: '/pending_signups',
+			$stateProvider.state('pending_tenant_signups', {
+				url: '/pending_tenant_signups',
 				templateUrl: '/views/tenants/pending_signups.html',
-				controller: 'PendingSignupsCtrl'
+				controller: 'PendingTenantSignupsCtrl'
 			})
 		})
-		.controller('PendingSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, SignUps, StaticData) {
+		.controller('PendingTenantSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, TenantSignups, StaticData) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -7041,7 +7231,7 @@ function identify(namespace, file) {
 			$scope.query = {sort: {created_at: 'desc'}, filter: {status: 'pending'}};
 
 			$scope.refresh = function() {
-				$scope.signups = SignUps.getPending($scope.query);
+				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
 			};
 
@@ -7050,21 +7240,21 @@ function identify(namespace, file) {
 			};
 
 			$scope.approve = function(signup) {
-				SignUps.approve({id: signup.id}, function() {
+				TenantSignups.approve({id: signup.id}, function() {
 					$scope.refresh();
 					$scope.signup = {};
 				});
 			};
 
 			$scope.reject = function(signup) {
-				SignUps.reject({id: signup.id}, function() {
+				TenantSignups.reject({id: signup.id}, function() {
 					$scope.refresh();
 					$scope.signup = {};
 				});
 			};
 
 			$scope.updateRegistrationEmail = function(type, signup) {
-				SignUps.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+				TenantSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
 					if(res.status !== "ok") {
 						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
 						return;
@@ -7075,7 +7265,7 @@ function identify(namespace, file) {
 			};
 
 			$scope.resendNotification = function(signup) {
-				SignUps.resendNotification({id: signup.id}, function() {
+				TenantSignups.resendNotification({id: signup.id}, function() {
 					ngToast.success('Notificação reenviada!');
 				});
 			};

@@ -42,10 +42,16 @@
 					controller: 'CreditsCtrl',
 					unauthenticated: true
 				})
-				.state('sign_up', {
-					url: '/sign_up',
-					templateUrl: '/views/sign_up/main.html',
-					controller: 'SignUpCtrl',
+				.state('tenant_signup', {
+					url: '/tenant_signup',
+					templateUrl: '/views/tenant_signup/main.html',
+					controller: 'TenantSignupCtrl',
+					unauthenticated: true
+				})
+				.state('state_signup', {
+					url: '/state_signup',
+					templateUrl: '/views/state_signup/main.html',
+					controller: 'StateSignupCtrl',
 					unauthenticated: true
 				})
 
