@@ -6,7 +6,8 @@
 					<h3><i class="fa fa-university"></i> Municípios</h3>
 				</div>
 				<div class="col-md-6">
-					<a ng-if="identity.can('tenants.manage')" ui-sref="pending_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question"></i> Adesões pendentes</a>
+					<a ng-if="identity.can('tenants.manage')" ui-sref="pending_tenant_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question-circle"></i> Adesões municipais</a>
+					<a ng-if="identity.can('tenants.manage')" ui-sref="pending_state_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question-circle"></i> Adesões estaduais</a>
 				</div>
 			</div>
 		</div>
