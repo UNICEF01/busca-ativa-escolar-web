@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('metricsState', function (moment, Platform, Reports, Charts) {
+	angular.module('BuscaAtivaEscolar').directive('metricsState', function (moment, Platform, Reports, ngToast,) {
 
 		function init(scope, element, attrs) {
 			scope.stats = {};

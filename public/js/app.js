@@ -1432,7 +1432,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('metricsState', function (moment, Platform, Reports, Charts) {
+	angular.module('BuscaAtivaEscolar').directive('metricsState', function (moment, Platform, Reports, ngToast,) {
 
 		function init(scope, element, attrs) {
 			scope.stats = {};
@@ -1552,7 +1552,7 @@
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, Notifications, Platform, Auth) {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, StaticData, Notifications, Platform, Auth) {
 
 		function init(scope, element, attrs) {
 			scope.identity = Identity;
@@ -1564,6 +1564,12 @@
 
 			scope.isHidden = function() {
 				return !!Platform.getFlag('HIDE_NAVBAR');
+			};
+
+			scope.renderTenantName = function() {
+				if(Identity.getCurrentUser().tenant) return Identity.getCurrentUser().tenant.name;
+				if(Identity.getCurrentUser().uf) return StaticData.getCurrentUF().name;
+				return '';
 			};
 
 			scope.onMenuToggle = function(isOpen) {
@@ -4398,6 +4404,30 @@ if (!Array.prototype.find) {
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
+		.factory('StateSignups', function StateSignups(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('signups/state/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+
+				getPending: {url: API.getURI('signups/state/pending'), method: 'POST', isArray: false, headers: authHeaders},
+				approve: {url: API.getURI('signups/state/:id/approve'), method: 'POST', headers: authHeaders},
+				reject: {url: API.getURI('signups/state/:id/reject'), method: 'POST', headers: authHeaders},
+
+				updateRegistrationEmail: {url: API.getURI('signups/state/:id/update_registration_email'), method: 'POST', headers: authHeaders},
+				resendNotification: {url: API.getURI('signups/state/:id/resend_notification'), method: 'POST', headers: authHeaders},
+
+				register: {url: API.getURI('signups/state/register'), method: 'POST', headers: headers},
+				checkIfAvailable: {url: API.getURI('signups/state/check_if_available'), method: 'POST', headers: headers},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
 		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
 
 			var data = {};
@@ -4449,11 +4479,20 @@ if (!Array.prototype.find) {
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
 			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
+
+			function getCurrentUF() {
+				var user = Identity.getCurrentUser();
+				if(!user) return null;
+				if(!user.uf) return null;
+
+				return getUFByCode(user.uf);
+			}
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -4471,6 +4510,8 @@ if (!Array.prototype.find) {
 				getCaseStepSlugs: getCaseStepSlugs,
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
+				getUFByCode: getUFByCode,
+				getCurrentUF: getCurrentUF,
 				getRegions: getRegions,
 				getAPIEndpoints: getAPIEndpoints,
 				getCaseCancelReasons: getCaseCancelReasons,
@@ -5100,6 +5141,12 @@ if (!Array.prototype.find) {
 				: {};
 		}
 
+		function getCurrentTenant() {
+			var user = getCurrentUser();
+			if(!user) return null;
+			return user.tenant;
+		}
+
 		function getCurrentUserID() {
 			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
 				? $localStorage.identity.current_user.id
@@ -5164,6 +5211,7 @@ if (!Array.prototype.find) {
 
 		return {
 			getCurrentUser: getCurrentUser,
+			getCurrentTenant: getCurrentTenant,
 			getCurrentUserID: getCurrentUserID,
 			setCurrentUser: setCurrentUser,
 			getType: getType,
@@ -6791,9 +6839,10 @@ function identify(namespace, file) {
 			$window.scrollTo(0, 0);
 		};
 
-		$scope.onCitySelect = function(uf, city) {
-			if(!uf || !city) return;
-			$scope.checkCityAvailability(city);
+		$scope.onUFSelect = function(uf) {
+			console.log("UF selected: ", uf);
+			if(!uf) return;
+			$scope.checkStateAvailability(uf);
 		};
 
 		$scope.checkStateAvailability = function(uf) {

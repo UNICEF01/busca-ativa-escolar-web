@@ -1,4 +1,4 @@
-<form class="panel panel-default" ng-submit="$parent.hasCheckedAvailability && $parent.isCityAvailable ? nextStep() : null">
+<form class="panel panel-default" ng-submit="$parent.hasCheckedAvailability && $parent.isStateAvailable ? nextStep() : null">
 	<div class="panel-heading">
 		<h3><strong>{{step}}.</strong> <i class="fa fa-building"></i> Indique a UF</h3>
 	</div>
@@ -11,8 +11,7 @@
 		</div>
 
 		<div class="clearfix">
-			<!-- TODO: UF select from static data -->
-			<!--app-city-select uf="$parent.form.uf" city="$parent.form.city" on-select="onCitySelect" is-uf-required="true" is-city-required="true"></app-city-select-->
+			<select class="form-control" id="fld-uf" ng-model="$parent.form.uf" ng-change="onUFSelect($parent.form.uf)" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
 		</div>
 
 		<div ng-show="$parent.hasCheckedAvailability && !$parent.isStateAvailable">

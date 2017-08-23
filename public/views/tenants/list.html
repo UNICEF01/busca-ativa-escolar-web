@@ -6,7 +6,7 @@
 					<h3><i class="fa fa-university"></i> Municípios</h3>
 				</div>
 				<div class="col-md-6">
-					<a ui-sref="pending_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question"></i> Adesões pendentes</a>
+					<a ng-if="identity.can('tenants.manage')" ui-sref="pending_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question"></i> Adesões pendentes</a>
 				</div>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 						<th><column-sorter on-change="refresh" model="query.sort" field="'last_activity_at'">Atividade</column-sorter></th>
 						<th>Gestor político</th>
 						<th>Coordenador operacional</th>
-						<th>Opções</th>
+						<th ng-if="identity.can('tenants.manage')">Opções</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -54,7 +54,7 @@
 							<span ng-show="tenant.operational_admin">{{tenant.operational_admin.name}}</span> <br />
 							<span class="label label-default"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</span>
 						</td>
-						<td width="5%">
+						<td width="5%" ng-if="identity.can('tenants.manage')">
 							<a class="btn btn-sm btn-raised btn-danger"
 							   ng-click="disableTenant(tenant)"
 							   uib-tooltip="Ao desativar um município, todos os acessos à ele serão cancelados,

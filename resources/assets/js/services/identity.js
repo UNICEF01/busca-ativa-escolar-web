@@ -67,6 +67,12 @@
 				: {};
 		}
 
+		function getCurrentTenant() {
+			var user = getCurrentUser();
+			if(!user) return null;
+			return user.tenant;
+		}
+
 		function getCurrentUserID() {
 			return ($localStorage.identity.current_user && $localStorage.identity.current_user.id)
 				? $localStorage.identity.current_user.id
@@ -131,6 +137,7 @@
 
 		return {
 			getCurrentUser: getCurrentUser,
+			getCurrentTenant: getCurrentTenant,
 			getCurrentUserID: getCurrentUserID,
 			setCurrentUser: setCurrentUser,
 			getType: getType,

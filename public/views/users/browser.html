@@ -81,7 +81,8 @@
 				<thead>
 					<tr>
 						<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter></th>
-						<th><column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter></th>
+						<th ng-if="identity.getCurrentUser().uf"><column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter></th>
+						<th ng-if="!identity.getCurrentUser().uf"><column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter></th>
 						<th><column-sorter on-change="refresh" model="query.sort" field="'email'">E-mail</column-sorter></th>
 						<th><column-sorter on-change="refresh" model="query.sort" field="'type'">Tipo</column-sorter></th>
 						<th><column-sorter on-change="refresh" model="query.sort" field="'group_id'">Grupo</column-sorter></th>
@@ -95,7 +96,8 @@
 							<span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
 							<span ng-show="!!user.deleted_at" class="label label-warning">Desativado</span>
 						</td>
-						<td width="18%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
+						<td width="18%" ng-if="identity.getCurrentUser().uf">{{user.uf}}</td>
+						<td width="18%"ng-if="!identity.getCurrentUser().uf" width="18%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
 						<td width="18%">{{user.email}}</td>
 						<td width="18%">{{user.type | lang:'user.type'}}</td>
 						<td width="21%">{{user.group.name}}</td>

@@ -61,9 +61,10 @@
 			$window.scrollTo(0, 0);
 		};
 
-		$scope.onCitySelect = function(uf, city) {
-			if(!uf || !city) return;
-			$scope.checkCityAvailability(city);
+		$scope.onUFSelect = function(uf) {
+			console.log("UF selected: ", uf);
+			if(!uf) return;
+			$scope.checkStateAvailability(uf);
 		};
 
 		$scope.checkStateAvailability = function(uf) {

@@ -52,11 +52,20 @@
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
 			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
+
+			function getCurrentUF() {
+				var user = Identity.getCurrentUser();
+				if(!user) return null;
+				if(!user.uf) return null;
+
+				return getUFByCode(user.uf);
+			}
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -74,6 +83,8 @@
 				getCaseStepSlugs: getCaseStepSlugs,
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
+				getUFByCode: getUFByCode,
+				getCurrentUF: getCurrentUF,
 				getRegions: getRegions,
 				getAPIEndpoints: getAPIEndpoints,
 				getCaseCancelReasons: getCaseCancelReasons,

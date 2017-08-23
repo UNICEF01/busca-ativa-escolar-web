@@ -59,7 +59,7 @@
 
 				<div class="form-group col-md-12" ng-if="canDefineUserUF()">
 					<label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
-					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs()"></select>
+					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
 				</div>
 
 				<hr />
