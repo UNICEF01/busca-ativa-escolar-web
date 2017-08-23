@@ -45,7 +45,8 @@
 							<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
 							<td>
 								<span ng-show="signup.is_approved" class="label label-success">Aprovado!</span>
-								<span ng-show="!signup.is_approved" class="label label-warning">Aguardando Aprovação</span>
+								<span ng-show="!signup.is_approved && !signup.deleted_at" class="label label-warning">Aguardando Aprovação</span>
+								<span ng-show="!signup.is_approved && signup.deleted_at" class="label label-danger">Rejeitado</span>
 							</td>
 						</tr>
 					</tbody>
