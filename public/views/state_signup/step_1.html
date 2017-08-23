@@ -1,12 +1,12 @@
 <form class="panel panel-default" ng-submit="$parent.hasCheckedAvailability && $parent.isStateAvailable ? nextStep() : null">
 	<div class="panel-heading">
-		<h3><strong>{{step}}.</strong> <i class="fa fa-building"></i> Indique a UF</h3>
+		<h3><strong>{{step}}.</strong> <i class="fa fa-building"></i> Indique o estado</h3>
 	</div>
 
 	<div class="panel-body">
 		<div>
 			<p>
-				Selecione a UF que deseja cadastrar. Alguns municípios já possuem acesso ao programa e aparecerão destacados em cinza. Caso a UF não conste na lista, entre em contato com nossa equipe.
+				Selecione o estado que deseja cadastrar. Alguns municípios já possuem acesso ao programa e aparecerão destacados em cinza. Caso o estado não conste na lista, entre em contato com nossa equipe.
 			</p>
 		</div>
 
@@ -16,7 +16,7 @@
 
 		<div ng-show="$parent.hasCheckedAvailability && !$parent.isStateAvailable">
 			<div class="alert alert-warning">
-				<strong>UF indisponível!</strong> A UF indicada já é participante do programa Busca Ativa Escolar, ou já possui um processo de adesão em andamento.
+				<strong>UF indisponível!</strong> O estado indicado já é participante do programa Busca Ativa Escolar, ou já possui um processo de adesão em andamento.
 			</div>
 		</div>
 
