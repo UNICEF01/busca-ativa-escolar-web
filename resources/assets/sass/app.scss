@@ -222,6 +222,11 @@ a.column-sorter {
 .simple-filter {
 	h5 { margin: 0; }
 	.form-group { margin: 0; padding: 0 5px; }
+
+	th { padding: 0 0 10px 0 !important; }
+		th .form-group { margin: 0; padding: 0; }
+		th .form-control { font-size: 12px !important; padding: 0 5px; margin: 0 5px; }
+		th .form-control::placeholder { font-size: 12px !important; }
 }
 
 .card-detail-text {
@@ -247,4 +252,17 @@ a.column-sorter {
 	.panel-footer { font-size: 12px; }
 	a[ui-sref] { color: #666; }
 		a[ui-sref]:hover { color: black; }
+}
+
+.popover {
+	background: white !important;
+	color: black !important;
+
+	&.popover-paginator {
+		padding: 0;
+
+		h3.popover-title { background-color: #0c5e8e; color: white; }
+		input.form-control { width: 70px; }
+		button.btn-success { padding: 6px 10px; }
+	}
 }

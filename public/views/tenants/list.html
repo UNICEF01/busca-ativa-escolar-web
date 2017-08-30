@@ -22,6 +22,30 @@
 						<th>Coordenador operacional</th>
 						<th ng-if="identity.can('tenants.manage')">Opções</th>
 					</tr>
+					<tr class="simple-filter">
+						<th><input type="text" class="form-control" ng-model="query.filter.name" ng-change="refresh()" placeholder="Filtrar por nome..." /></th>
+						<th>
+							<select class="form-control" ng-model="query.filter.created_at" ng-change="refresh()">
+								<option value="">Todos</option>
+								<option value="7">Últimos 7 dias</option>
+								<option value="30">Últimos 30 dias</option>
+								<option value="60">Últimos 60 dias</option>
+								<option value="90">Últimos 90 dias</option>
+							</select>
+						</th>
+						<th>
+							<select class="form-control" ng-model="query.filter.last_activity_at" ng-change="refresh()">
+								<option value="">Todos</option>
+								<option value="7">Últimos 7 dias</option>
+								<option value="30">Últimos 30 dias</option>
+								<option value="60">Últimos 60 dias</option>
+								<option value="90">Últimos 90 dias</option>
+							</select>
+						</th>
+						<th><input type="text" class="form-control" ng-model="query.filter.political_admin" ng-change="refresh()" placeholder="Filtrar por nome..." /></th>
+						<th><input type="text" class="form-control" ng-model="query.filter.operational_admin" ng-change="refresh()" placeholder="Filtrar por nome..." /></th>
+						<th></th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="(i, tenant) in tenants.data">
@@ -67,6 +91,8 @@
 					</tr>
 				</tbody>
 			</table>
+
+			<app-paginator collection="tenants" query="query" on-refresh="refresh"></app-paginator>
 
 		</div>
 	</div>

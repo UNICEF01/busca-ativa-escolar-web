@@ -22,6 +22,7 @@
 
 			'ui.router',
 			'ui.bootstrap',
+			'ui.bootstrap',
 			'ui.select',
 			'ui.utils.masks',
 			'ui.ace',
@@ -1591,6 +1592,75 @@
 			link: init,
 			replace: true,
 			templateUrl: '/views/navbar.html'
+		};
+	});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').directive('appPaginator', function () {
+
+
+		function init(scope, element, attrs) {
+
+			scope.pageInput = 1;
+
+			function validatePageLimits() {
+				if(scope.query.page > scope.collection.meta.total_pages) {
+					scope.query.page = scope.collection.meta.total_pages
+				}
+
+				if(scope.query.page < 1) {
+					scope.query.page = 1
+				}
+			}
+
+			scope.nextPage = function() {
+				if(!scope.query) return;
+				if(!scope.collection) return;
+
+				scope.query.page++;
+
+				validatePageLimits();
+
+				scope.onRefresh();
+			};
+
+			scope.prevPage = function() {
+				if(!scope.query) return;
+				if(!scope.collection) return;
+
+				scope.query.page--;
+
+				validatePageLimits();
+
+				scope.onRefresh();
+			};
+
+			scope.jumpToPage = function(page) {
+				if(!scope.query) return;
+				if(!scope.collection) return;
+
+				scope.query.page = page;
+
+				validatePageLimits();
+
+				scope.onRefresh();
+			}
+
+		}
+
+		return {
+			scope: {
+				'onRefresh': '=?',
+				'collection': '=?',
+				'query': '=?',
+			},
+
+			link: init,
+			replace: true,
+
+			templateUrl: '/views/components/paginator.html'
 		};
 	});
 
@@ -6729,7 +6799,12 @@ function identify(namespace, file) {
 
 			$scope.signups = {};
 			$scope.signup = {};
-			$scope.query = {sort: {created_at: 'desc'}, filter: {status: 'pending'}};
+			$scope.query = {
+				sort: {created_at: 'desc'},
+				filter: {status: 'pending'},
+				max: 16,
+				page: 1
+			};
 
 			$scope.refresh = function() {
 				$scope.signups = StateSignups.getPending($scope.query);
@@ -7277,7 +7352,12 @@ function identify(namespace, file) {
 
 			$scope.signups = {};
 			$scope.signup = {};
-			$scope.query = {sort: {created_at: 'desc'}, filter: {status: 'pending'}};
+			$scope.query = {
+				max: 16,
+				page: 1,
+				sort: {created_at: 'desc'},
+				filter: {status: 'pending'}
+			};
 
 			$scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
@@ -7338,7 +7418,12 @@ function identify(namespace, file) {
 
 			$scope.identity = Identity;
 			$scope.tenants = {};
-			$scope.query = {sort: {}};
+			$scope.query = {
+				filter: {},
+				sort: {},
+				max: 16,
+				page: 1
+			};
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
@@ -7391,10 +7476,11 @@ function identify(namespace, file) {
 			group_id: null,
 			type: null,
 			email: null,
-			max: 128,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true
+			show_suspended: true,
+			max: 16,
+			page: 1,
 		};
 
 		$scope.quickAdd = false;

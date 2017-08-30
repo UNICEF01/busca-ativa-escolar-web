@@ -756,6 +756,21 @@ a.column-sorter {
   margin: 0;
   padding: 0 5px;
 }
+.simple-filter th {
+  padding: 0 0 10px 0 !important;
+}
+.simple-filter th .form-group {
+  margin: 0;
+  padding: 0;
+}
+.simple-filter th .form-control {
+  font-size: 12px !important;
+  padding: 0 5px;
+  margin: 0 5px;
+}
+.simple-filter th .form-control::placeholder {
+  font-size: 12px !important;
+}
 
 .card-detail-text {
   font-size: 14px;
@@ -782,6 +797,24 @@ a.column-sorter {
 }
 .metrics-country a[ui-sref]:hover {
   color: black;
+}
+
+.popover {
+  background: white !important;
+  color: black !important;
+}
+.popover.popover-paginator {
+  padding: 0;
+}
+.popover.popover-paginator h3.popover-title {
+  background-color: #0c5e8e;
+  color: white;
+}
+.popover.popover-paginator input.form-control {
+  width: 70px;
+}
+.popover.popover-paginator button.btn-success {
+  padding: 6px 10px;
 }
 
 /*# sourceMappingURL=app.css.map */

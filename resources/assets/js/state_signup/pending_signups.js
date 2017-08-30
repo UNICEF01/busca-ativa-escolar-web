@@ -15,7 +15,12 @@
 
 			$scope.signups = {};
 			$scope.signup = {};
-			$scope.query = {sort: {created_at: 'desc'}, filter: {status: 'pending'}};
+			$scope.query = {
+				sort: {created_at: 'desc'},
+				filter: {status: 'pending'},
+				max: 16,
+				page: 1
+			};
 
 			$scope.refresh = function() {
 				$scope.signups = StateSignups.getPending($scope.query);

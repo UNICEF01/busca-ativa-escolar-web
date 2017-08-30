@@ -12,7 +12,12 @@
 
 			$scope.identity = Identity;
 			$scope.tenants = {};
-			$scope.query = {sort: {}};
+			$scope.query = {
+				filter: {},
+				sort: {},
+				max: 16,
+				page: 1
+			};
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);

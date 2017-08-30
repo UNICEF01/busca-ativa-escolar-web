@@ -1,0 +1,31 @@
+<div class="row paginator" ng-show="collection && collection.meta && collection.meta.pagination && collection.meta.pagination.total_pages > 1">
+
+	<script type="text/ng-template" id="paginator_popover.html">
+		<div></div>
+		<form ng-submit="jumpToPage(pageInput)" class="form-inline">
+			<input placeholder="Pág. n&ordm;..." type="number" min="1" max="{{collection.meta.pagination.total_pages}}" ng-model="pageInput" class="form-control" />
+			<button type="submit" class="btn btn-success btn-raised"><i class="fa fa-hand-o-right"></i></button>
+		</form>
+	</script>
+
+	<div class="col-xs-3 text-left">
+		<a ng-show="collection.meta.pagination.current_page > 1" class="btn btn-primary btn-raised" uib-tooltip="Página anterior" ng-click="prevPage()">
+			<i class="fa fa-arrow-left"></i></a>
+	</div>
+
+	<div class="col-xs-6 text-center">
+		<a class="btn btn-default"
+	        uib-popover-template="'paginator_popover.html'"
+	        popover-title="Pular para página"
+			popover-class="popover-paginator"
+		>
+			Página <strong ng-bind="collection.meta.pagination.current_page">0</strong> de <strong ng-bind="collection.meta.pagination.total_pages">0</strong>
+		</a>
+	</div>
+
+	<div class="col-xs-3 text-right">
+		<a ng-show="collection.meta.pagination.current_page < collection.meta.pagination.total_pages" class="btn btn-primary btn-raised" uib-tooltip="Próxima página" ng-click="nextPage()">
+			<i class="fa fa-arrow-right"></i>
+		</a>
+	</div>
+</div>

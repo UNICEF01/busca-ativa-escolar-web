@@ -16,10 +16,11 @@
 			group_id: null,
 			type: null,
 			email: null,
-			max: 128,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true
+			show_suspended: true,
+			max: 16,
+			page: 1,
 		};
 
 		$scope.quickAdd = false;
