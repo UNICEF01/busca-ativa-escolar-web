@@ -29,15 +29,15 @@
 						api: 'http://api.busca-ativa-escolar.local/api/v1/',
 						token: 'http://api.busca-ativa-escolar.local/api/auth/token',
 					},
-					homolog_http: {
-						label: 'V1 Homolog - web3-lqdi (Insecure)',
-						api: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/v1/',
-						token: 'http://api.busca-ativa-escolar.dev.lqdi.net/api/auth/token',
-					},
 					tests_http: {
-						label: 'V1 Tests - conexaobrasil (Insecure)',
-						api: 'http://api.buscaativateste.conexaobrasil.org/api/v1/',
-						token: 'http://api.buscaativateste.conexaobrasil.org/api/auth/token',
+						label: 'V1 Tests - buscaativaescolar-web1 (Insecure)',
+						api: 'http://api.testes.buscaativaescolar.org.br/api/v1/',
+						token: 'http://api.testes.buscaativaescolar.org.br/api/auth/token',
+					},
+					tests_https: {
+						label: 'V1 Tests - buscaativaescolar-web1 (Secure)',
+						api: 'https://api.testes.buscaativaescolar.org.br/api/v1/',
+						token: 'https://api.testes.buscaativaescolar.org.br/api/auth/token',
 					},
 					prod_http: {
 						label: 'V1 Prod - buscaativaescolar-web1 (Insecure)',
@@ -56,7 +56,7 @@
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'tests_http', 'prod_http', 'prod_https'],
+				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'tests_http', 'tests_https', 'prod_http', 'prod_https'],
 				CURRENT_ENDPOINT: env('DEFAULT_ENDPOINT')
 
 			};
