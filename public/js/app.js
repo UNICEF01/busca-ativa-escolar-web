@@ -7468,7 +7468,7 @@ function identify(namespace, file) {
 				controller: 'UserBrowserCtrl'
 			})
 		})
-		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, Platform, Identity, Users, Groups, Tenants, StaticData) {
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData) {
 
 		$scope.identity = Identity;
 		$scope.query = {
@@ -7492,6 +7492,12 @@ function identify(namespace, file) {
 		$scope.setMaxResults = function(max) {
 			$scope.query.max = max;
 			$scope.refresh();
+		};
+
+		$scope.export = function() {
+			Identity.provideToken().then(function (token) {
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token);
+			});
 		};
 
 		$scope.canEditUser = function(user) {
