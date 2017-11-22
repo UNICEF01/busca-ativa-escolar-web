@@ -76,7 +76,7 @@
 								<span class="label label-default"><i class="fa fa-envelope"></i> {{tenant.political_admin.email}}</span>
 							</div>
 
-							<div class="label label-default" ng-show="!tenant.political_admin">Gestor não cadastrado</div>
+							<div class="label label-warning" ng-show="!tenant.political_admin">Gestor não cadastrado</div>
 						</td>
 						<td width="5%">
 							<div ng-show="tenant.operational_admin" ng-class="{'text-danger': tenant.operational_admin.deleted_at}">
@@ -84,7 +84,7 @@
 								<span class="label label-default"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</span>
 							</div>
 
-							<div class="label label-default" ng-show="!tenant.operational_admin">Gestor não cadastrado</div>
+							<div class="label label-warning" ng-show="!tenant.operational_admin">Gestor não cadastrado</div>
 						</td>
 						<td width="5%" ng-if="identity.can('tenants.manage')">
 							<a class="btn btn-sm btn-raised btn-danger"
