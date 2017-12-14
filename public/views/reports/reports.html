@@ -222,19 +222,8 @@
 
 		<div class="panel has-subnav-tabs panel-default">
 			<div class="panel-heading">
-				<h3><i class="material-icons">show_chart</i> Relatórios <small>Quantidade de casos</small></h3>
+				<h3><i class="material-icons">show_chart</i> Relatórios</h3>
 			</div>
-
-			<!--div class="row clearfix">
-				<div class="col-md-6">
-					<json-formatter json="current" open="10"></json-formatter>
-					<json-formatter json="filters" open="10"></json-formatter>
-				</div>
-				<div class="col-md-6">
-					<json-formatter json="reportData.query" open="0"></json-formatter>
-					<json-formatter json="reportData.response" open="10"></json-formatter>
-				</div>
-			</div-->
 
 			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
 

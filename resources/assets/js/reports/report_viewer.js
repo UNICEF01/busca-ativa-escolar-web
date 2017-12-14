@@ -57,54 +57,58 @@
 						name: 'Crianças e adolescentes',
 						value: 'num_children',
 						entity: 'children',
-						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'place_uf', 'place_city_id', 'school_last_id'],
+						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id'],
 						filters: [
 							'date',
 							'case_status',
 							'child_status',
 							'alert_status',
-							//'deadline_status', // TODO: implement in backend/searchdoc
 							'age',
 							'gender',
-							//'race',
-							//'parents_income',
-							//'guardian_schooling',
-							//'work_activity',
 							'place_kind',
 							'step_slug',
 							'uf',
 							'city',
 							'case_cause_ids'
 						],
-						views: ['chart', 'timeline'] //['map', 'chart', 'timeline', 'list']
-					}/*,
-					 alerts: {
-					 id: 'alerts',
-					 name: 'Alertas',
-					 value: 'num_alerts',
-					 dimensions: ['alert_status', 'deadline_status', 'alert_cause_id'],
-					 filters: ['age', 'gender', 'assigned_user', 'uf', 'city', 'alert_status', 'child_status', 'deadline_status'],
-					 views: ['map', 'chart', 'timeline', 'list']
-					 },
-					 users: {
-					 id: 'users',
-					 name: 'Usuários',
-					 value: 'num_assignments',
-					 dimensions: ['child_status', 'deadline_status', 'case_step'],
-					 filters: ['child_status', 'deadline_status', 'case_step', 'user_group', 'user_type'],
-					 views: ['chart', 'timeline', 'list']
-					 }*/
+						views: ['chart', 'timeline']
+					}
 				};
+
+				if(Identity.can('reports.tenants')) {
+					$scope.entities.tenants = {
+						id: 'tenants',
+						name: 'Municípios participantes',
+						value: 'num_tenants',
+						entity: 'tenant',
+						dimensions: ['uf', 'region'],
+						filters: ['uf'],
+						views: ['chart']
+					};
+				}
+
+				if(Identity.can('reports.ufs')) {
+					$scope.entities.ufs = {
+						id: 'ufs',
+							name: 'Estados participantes',
+							value: 'num_ufs',
+							entity: 'uf',
+							dimensions: ['region'],
+							filters: [],
+							views: ['chart']
+					};
+				}
 
 				$scope.views = {
 					map: {id: 'map', name: 'Mapa', allowsDimension: false, viewMode: 'linear'},
 					chart: {id: 'chart', name: 'Gráfico', allowsDimension: true, viewMode: 'linear'},
-					timeline: {id: 'timeline', name: 'Linha do tempo', allowsDimension: true, viewMode: 'time_series'},
-					//list: {id: 'list', name: 'Lista', allowsDimension: true, viewMode: 'linear'}
+					timeline: {id: 'timeline', name: 'Linha do tempo', allowsDimension: true, viewMode: 'time_series'}
 				};
 
 				$scope.totals = {
 					num_children: 'Número de crianças e adolescentes',
+					num_tenants: 'Número de municípios participantes',
+					num_ufs: 'Número de estados participantes',
 					num_alerts: 'Número de alertas',
 					num_assignments: 'Número de casos sob sua responsabilidade'
 				};
@@ -127,6 +131,8 @@
 					assigned_user: 'Usuário responsável',
 					parent_scholarity: 'Escolaridade do responsável',
 					place_uf: 'UF',
+					uf: 'UF',
+					region: 'Região',
 					place_city_id: 'Município',
 					school_last_id: 'Última escola que frequentou',
 					city: 'Município',
@@ -235,7 +241,6 @@
 			function getChartConfig() {
 				if($scope.current.view === "chart") return generateDimensionChart($scope.current.entity, $scope.current.dimension);
 				if($scope.current.view === "timeline") return generateTimelineChart($scope.current.entity, $scope.current.dimension);
-				//if($scope.current.view.id == "map") return MockData.brazilMapSettings;
 				return {};
 			}
 
