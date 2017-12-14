@@ -26,8 +26,8 @@
 				API_ENDPOINTS: {
 					local_http: {
 						label: 'V1 Local - Homestead (Insecure)',
-						api: 'http://api.busca-ativa-escolar.local/api/v1/',
-						token: 'http://api.busca-ativa-escolar.local/api/auth/token',
+						api: 'http://api.busca-ativa-escolar.test/api/v1/',
+						token: 'http://api.busca-ativa-escolar.test/api/auth/token',
 					},
 					tests_http: {
 						label: 'V1 Tests - buscaativaescolar-web1 (Insecure)',
