@@ -90,12 +90,24 @@
 				if(Identity.can('reports.ufs')) {
 					$scope.entities.ufs = {
 						id: 'ufs',
-							name: 'Estados participantes',
-							value: 'num_ufs',
-							entity: 'uf',
-							dimensions: ['region'],
-							filters: [],
-							views: ['chart']
+						name: 'Estados participantes',
+						value: 'num_ufs',
+						entity: 'uf',
+						dimensions: ['region'],
+						filters: [],
+						views: ['chart']
+					};
+				}
+
+				if(Identity.can('reports.signups')) {
+					$scope.entities.signups = {
+						id: 'signups',
+						name: 'Adesões municipais',
+						value: 'num_signups',
+						entity: 'signup',
+						dimensions: ['month'],
+						filters: [],
+						views: ['timeline']
 					};
 				}
 
@@ -109,6 +121,7 @@
 					num_children: 'Número de crianças e adolescentes',
 					num_tenants: 'Número de municípios participantes',
 					num_ufs: 'Número de estados participantes',
+					num_signups: 'Número de adesões municipais',
 					num_alerts: 'Número de alertas',
 					num_assignments: 'Número de casos sob sua responsabilidade'
 				};
@@ -136,6 +149,7 @@
 					place_city_id: 'Município',
 					school_last_id: 'Última escola que frequentou',
 					city: 'Município',
+					month: 'Mês'
 				};
 
 				$scope.chartConfig = getChartConfig();
@@ -197,8 +211,8 @@
 			$scope.canFilterBy = function(filter_id) {
 				if(!$scope.ready) return false;
 
-				if(filter_id === 'date') {
-					return $scope.current.view === 'timeline';
+				if(filter_id === 'date' && $scope.current.view !== 'timeline') {
+					return false;
 				}
 
 				// Is filter valid for entity
