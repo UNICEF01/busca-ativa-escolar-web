@@ -147,7 +147,7 @@
 			<hr />
 			<div style="text-align: center">
 				<strong ng-bind="search.stats.total_results"></strong> casos encontrados
-				<a ng-hide="true" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>
+				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>
 			</div>
 		</div>
 	</form>

@@ -8,7 +8,7 @@
 				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('ChildSearchCtrl', function ($scope, $anchorScroll, Children, Decorators) {
+		.controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators) {
 
 			$scope.Decorators = Decorators;
 			$scope.Children = Children;
@@ -42,6 +42,13 @@
 			$scope.resetQuery = function() {
 				$scope.query = angular.merge({}, $scope.defaultQuery);
 				$scope.refresh();
+			};
+
+			$scope.exportXLS = function() {
+				Children.export($scope.query, function (res) {
+					console.log("Exported: ", res);
+					window.open(res.download_url)
+				})
 			};
 
 			$scope.refresh();
