@@ -4,7 +4,7 @@
 		.config(function ($stateProvider) {
 			$stateProvider.state('pending_state_signups', {
 				url: '/pending_state_signups',
-				templateUrl: '/views/state_signup/pending_signups.html',
+				templateUrl: '/views/states/pending_signups.html',
 				controller: 'PendingStateSignupsCtrl'
 			})
 		})

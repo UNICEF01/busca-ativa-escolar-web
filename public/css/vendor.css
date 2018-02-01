@@ -9299,7 +9299,7 @@ output {
 }
 @media (min-width: 768px) {
   .form-horizontal .form-group-lg .control-label {
-    padding-top: 13.0px;
+    padding-top: 13px;
     font-size: 18px;
   }
 }
@@ -9669,7 +9669,7 @@ label.control-label {
 }
 .form-group.form-group-lg label.control-label {
   font-size: 14px;
-  line-height: 1.0;
+  line-height: 1;
   font-weight: 400;
   margin: 16px 0 0 0;
 }
@@ -9686,13 +9686,13 @@ label.control-label {
   top: -32px;
   left: 0;
   font-size: 14px;
-  line-height: 1.0;
+  line-height: 1;
 }
 .form-group.form-group-lg.label-floating input.form-control:-webkit-autofill ~ label.control-label label.control-label {
   top: -32px;
   left: 0;
   font-size: 14px;
-  line-height: 1.0;
+  line-height: 1;
 }
 
 select.form-control {

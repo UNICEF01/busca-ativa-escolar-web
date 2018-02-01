@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1488584770');
+  background-image: url('../images/logo_bae_header_v2.png?1513033102');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -204,7 +204,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1487704365');
+  background-image: url('../images/ico_forbidden.png?1513033102');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -815,6 +815,13 @@ a.column-sorter {
 }
 .popover.popover-paginator button.btn-success {
   padding: 6px 10px;
+}
+
+.btn-text {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
 }
 
 /*# sourceMappingURL=app.css.map */
