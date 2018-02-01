@@ -41,7 +41,7 @@
 					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
-					age: {from: 0, to: 28},
+					age: {from: 0, to: 99},
 					age_null: true,
 					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
 					gender_null: true,
