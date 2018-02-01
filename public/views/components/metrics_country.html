@@ -25,14 +25,16 @@
 	</div>
 	<div class="col-md-4">
 		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_alerts || 0"></h1>
-			<div class="panel-footer">alertas <i uib-tooltip="Quantos alertas, no total, foram abertos na plataforma" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
+			<h1 class="panel-body">
+				<span ng-bind="stats.num_alerts || 0"></span> <small>{{stats.num_pending_alerts || 0}} <a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+			</h1>
+			<div class="panel-footer">alertas aprovados / pendentes <i uib-tooltip="Quantos alertas, no total, foram abertos na plataforma" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
 		</div>
 	</div>
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
-			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Quantos casos, na plataforma, estão em andamento agora" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Quantos casos estão em andamento na plataforma agora (casos que já passaram da etapa de alerta)" class="fa fa-info-circle"></i>&nbsp;</div>
 		</div>
 	</div>
 	<div class="col-md-4">
