@@ -123,6 +123,11 @@
 							return ngToast.danger('O e-mail indicado para o coordenador já está em uso. Por favor, escolha outro e-mail');
 						}
 
+						if(res.reason === 'admin_emails_are_the_same') {
+							$scope.step = 4;
+							return ngToast.danger('Você precisa informar e-mails diferentes para o gestor político e o coordenador operacional');
+						}
+
 						if(res.reason === 'invalid_political_admin_data') {
 							$scope.step = 3;
 							ngToast.danger(messages.invalid_gp);
