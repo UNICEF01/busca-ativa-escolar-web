@@ -8,10 +8,11 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Reports, Identity, Charts) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Language, Reports, Identity, Charts) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
+			$scope.lang = Language;
 
 			$scope.ready = false;
 

@@ -74,7 +74,7 @@
 					<label class="control-label" for="filter-step_slug">Por etapa</label>
 					<select id="filter-step_slug" class="form-control" id="filter-step_slug" placeholder="Etapa do caso..."
 					        ng-model="filters.step_slug"
-					        ng-options="val as labels.step_slug[val] for val in values.step_slug">
+					        ng-options="val as lang.translate(val, 'case_step.name_by_slug') for val in static.getCaseStepSlugs()">
 						<option value="">Todas</option>
 					</select>
 				</div>
