@@ -8,7 +8,7 @@
 				controller: 'ChildSearchCtrl'
 			})
 		})
-		.controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators) {
+		.controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals) {
 
 			$scope.Decorators = Decorators;
 			$scope.Children = Children;
@@ -47,7 +47,7 @@
 			$scope.exportXLS = function() {
 				Children.export($scope.query, function (res) {
 					console.log("Exported: ", res);
-					window.open(res.download_url)
+					Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
 				})
 			};
 

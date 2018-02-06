@@ -1,0 +1,14 @@
+<div class="modal-template" id="md-confirm">
+	<div class="modal-header">
+		<h3 class="modal-title">{{title}}</h3>
+	</div>
+	<div class="modal-body">
+		<p ng-if="message">{{message}}</p>
+
+		<a ng-href="{{href}}" target="_blank" class="btn btn-lg btn-raised btn-success"><i class="fa fa-download"></i> Download</a>
+
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" type="button" ng-click="back()">Voltar</button>
+	</div>
+</div>

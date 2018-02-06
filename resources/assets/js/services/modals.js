@@ -151,6 +151,19 @@
 					};
 				},
 
+				DownloadLink: function(title, message, href) {
+					return {
+						templateUrl: '/views/modals/download_link.html',
+						controller: 'DownloadLinkModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							href: function() { return href; }
+						}
+					};
+				},
+
 				CaseRestart: function() {
 					var params = {
 						templateUrl: '/views/modals/case_restart.html',
