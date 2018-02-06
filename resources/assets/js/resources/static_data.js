@@ -52,6 +52,15 @@
 			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
 			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
 			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getUFsDropdown() {
+				var dropdown = [];
+
+				angular.forEach(data.UFsByCode, function (uf, key) {
+					dropdown.push(uf);
+				});
+
+				return dropdown;
+			}
 			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
@@ -83,6 +92,7 @@
 				getCaseStepSlugs: getCaseStepSlugs,
 				getAllowedMimeTypes: getAllowedMimeTypes,
 				getUFs: getUFs,
+				getUFsDropdown: getUFsDropdown,
 				getUFByCode: getUFByCode,
 				getCurrentUF: getCurrentUF,
 				getRegions: getRegions,

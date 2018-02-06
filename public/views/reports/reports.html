@@ -134,7 +134,7 @@
 
 				<div class="form-group" ng-show="canFilterBy('uf')">
 					<label class="control-label" for="fld-uf">UF*</label>
-					<select class="form-control" id="fld-uf" ng-model="filters.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()">
+					<select class="form-control" id="fld-uf" ng-model="filters.place_uf" ng-options="uf.code as uf.code for uf in static.getUFsDropdown() | orderBy:'code' track by uf.code">
 						<option value="">Todos</option>
 					</select>
 				</div>
