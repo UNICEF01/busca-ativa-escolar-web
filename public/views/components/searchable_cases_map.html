@@ -5,7 +5,37 @@
 	</div>
 
 	<ui-gmap-google-map events="ctrl.events" center="mapCenter" zoom="mapZoom" draggable="true" style="height: 400px">
-		<ui-gmap-markers idKey="'id'" models='coordinates' coords="'self'" type="'cluster'" click="onMarkerClick"></ui-gmap-markers>
+		<ui-gmap-markers idKey="'id'" models='coordinates' coords="'self'" type="'cluster'" typeOptions="clustererOptions" click="onMarkerClick"></ui-gmap-markers>
 	</ui-gmap-google-map>
+
+	<div class="legend">
+		<table class="table">
+			<thead>
+				<tr>
+					<th colspan="4">Legenda</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="background-color: #008cff; width: 50px;"></td>
+					<td>1-9 casos</td>
+					<td style="background-color: #ff00ed; width: 50px;"></td>
+					<td>1000-9999 casos</td>
+				</tr>
+				<tr>
+					<td style="background-color: #ffbf00; width: 50px;"></td>
+					<td>10-99 casos</td>
+					<td style="background-color: #9c00ff; width: 50px;"></td>
+					<td>10000+ casos</td>
+				</tr>
+				<tr>
+					<td style="background-color: #ff0000; width: 50px;"></td>
+					<td>100-999 casos</td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 </div>

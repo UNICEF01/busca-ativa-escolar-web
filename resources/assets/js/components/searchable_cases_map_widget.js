@@ -4,6 +4,10 @@
 
 		function init(scope, element, attrs) {
 
+			scope.clustererOptions = {
+				imagePath: '/images/clusterer/m'
+			};
+
 			scope.ctrl = {
 				events: {
 					tilesloaded: function(map) {
