@@ -20,7 +20,7 @@
 			<tr ng-repeat="attachment in attachments.data">
 				<td><span ng-bind="attachment.created_at | amCalendar" uib-tooltip-html="attachment.created_at | amTimeAgo"></span></td>
 				<td><span ng-bind="attachment.file_name"></span></td>
-				<td><span ng-bind="attachment.mime_type"></span></td>
+				<td><span ng-bind="attachment.mime_type | lang:'mime_types'"></span></td>
 				<td><span ng-bind="attachment.description"></span></td>
 				<td class="text-center">
 					<a class="btn btn-xs btn-raised btn-success" href="{{attachment.url}}" target="_blank"><i class="fa fa-download"></i> Download</a>
