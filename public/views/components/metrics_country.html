@@ -1,36 +1,100 @@
 <div class="row metrics-country">
-	<div class="col-md-3">
+	<div class="col-md-6">
 		<div class="panel panel-default">
-			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">municípios participantes <i uib-tooltip="Quantidade de municípios cadastrados e participantes do programa Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-heading">Alertas</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-3">
+						<span ng-bind="stats.num_total_alerts || 0"></span>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_alerts || 0"></span>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_pending_alerts || 0"></span> <small><a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_rejected_alerts || 0"></span>
+					</div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-3">
+						totais
+					</div>
+					<div class="col-md-3">
+						aprovados
+					</div>
+					<div class="col-md-3">
+						pendentes
+					</div>
+					<div class="col-md-3">
+						rejeitados
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
 	<div class="col-md-3">
 		<div class="panel panel-default">
-			<h1 class="panel-body"><span ng-bind="stats.num_signups || 0"></span> <small ng-bind="stats.num_pending_setup || 0"></small></h1>
-			<div class="panel-footer">adesões realizadas / em configuração</div>
+			<div class="panel-heading">Adesões municipais</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<span ng-bind="stats.num_signups || 0"></span>
+					</div>
+					<div class="col-md-6">
+						<span ng-bind="stats.num_pending_setup || 0"></span>
+					</div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-6">
+						realizadas
+					</div>
+					<div class="col-md-6">
+						em configuração
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-3">
 		<div class="panel panel-default" ui-sref="pending_tenant_signups" style="cursor: pointer">
-			<h1 class="panel-body"><span ng-bind="stats.num_pending_signups || 0"></span> <small><a ui-sref="pending_tenant_signups" uib-tooltip="Ver adesões municipais pendentes"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">adesões municipais <br />pendentes <i uib-tooltip="Quantas adesões de municípios estão aguardando aprovação do gestor nacional" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-heading">Adesões pendentes</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-6">
+						<span ng-bind="stats.num_pending_signups || 0"></span> <small><a ui-sref="pending_tenant_signups" uib-tooltip="Ver adesões municipais pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+					</div>
+					<div class="col-md-6">
+						<span ng-bind="stats.num_pending_state_signups || 0"></span> <small><a ui-sref="pending_state_signups" uib-tooltip="Ver adesões estaduais pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+					</div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-6">
+						adesões municipais
+					</div>
+					<div class="col-md-6">
+						adesões estaduais
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
-		<div class="panel panel-default" ui-sref="pending_state_signups" style="cursor: pointer">
-			<h1 class="panel-body"><span ng-bind="stats.num_pending_state_signups || 0"></span> <small><a ui-sref="pending_state_signups" uib-tooltip="Ver adesões estaduais pendentes"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">adesões estaduais <br />pendentes <i uib-tooltip="Quantas adesões de estados estão aguardando aprovação do gestor nacional" class="fa fa-info-circle"></i>&nbsp;</div>
-		</div>
-	</div>
+
 	<div class="col-md-4">
 		<div class="panel panel-default">
-			<h1 class="panel-body">
-				<span ng-bind="stats.num_alerts || 0"></span> <small>{{stats.num_pending_alerts || 0}} <a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
-			</h1>
-			<div class="panel-footer">alertas aprovados / pendentes <i uib-tooltip="Quantos alertas, no total, foram abertos na plataforma" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
+			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
+			<div class="panel-footer">municípios participantes <i uib-tooltip="Quantidade de municípios cadastrados e participantes do programa Busca Ativa Escolar" class="fa fa-info-circle"></i><br/>&nbsp;</div>
 		</div>
 	</div>
+
 	<div class="col-md-4">
 		<div class="panel panel-default">
 			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
