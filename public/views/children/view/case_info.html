@@ -452,7 +452,7 @@
 	<div class="panel-body">
 			<div class="form-group col-md-12">
 			<label class="control-label">Motivos de estar fora da escola*</label>
-			<div class="radio" ng-repeat="cause in static.getCaseCauses()">
+			<div class="radio" ng-repeat="cause in static.getVisibleCaseCauses()">
 				<label>
 					<input name="case_cause_{{cause.id}}"
 					       ng-disabled="!canEditStep(step)"

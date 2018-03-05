@@ -42,7 +42,9 @@
 
 			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
 			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : []; }
+			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? data.VisibleAlertCause : []; }
 			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
+			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? data.VisibleCaseCause : []; }
 			function getGenders() { return (data.Gender) ? data.Gender : []; }
 			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
 			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
@@ -81,7 +83,9 @@
 				refresh: refresh,
 				getUserTypes: getUserTypes,
 				getAlertCauses: getAlertCauses,
+				getVisibleAlertCauses: getVisibleAlertCauses,
 				getCaseCauses: getCaseCauses,
+				getVisibleCaseCauses: getVisibleCaseCauses,
 				getGenders: getGenders,
 				getHandicappedRejectReasons: getHandicappedRejectReasons,
 				getIncomeRanges: getIncomeRanges,

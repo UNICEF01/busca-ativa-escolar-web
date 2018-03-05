@@ -84,7 +84,7 @@
 		};
 
 		$scope.canEditStep = function(step) {
-			return !step.is_completed;
+			return !step.is_completed && step.slug !== 'alerta';
 		};
 
 		$scope.openStep = function(selectedStep) {
