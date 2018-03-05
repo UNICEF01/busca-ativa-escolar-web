@@ -27,7 +27,7 @@
 
 				})
 				.state('settings', {
-					url: '/settings',
+					url: '/settings?step',
 					templateUrl: '/views/settings/manage_settings.html',
 					controller: 'SettingsCtrl'
 				})

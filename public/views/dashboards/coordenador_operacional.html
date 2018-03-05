@@ -13,6 +13,18 @@
 			<h3><i class="material-icons">insert_chart</i> Visão geral do programa <small ng-bind="identity.getCurrentUser().tenant.name"></small></h3>
 			<metrics-overview></metrics-overview>
 
+			<div ng-show="!tenantInfo.educacensoImportDetails.has_imported">
+				<hr />
+
+				<h3><i class="fa fa-upload"></i> Importar alertas do Educacenso</h3>
+				<div class="alert alert-warning">
+					<strong>Estão disponíveis os resultados do Educacenso 2016!</strong>
+					<p>Você pode importar automaticamente a planilha de evasões escolares do seu município na plataforma Busca Ativa Escolar.</p>
+					<p>Os casos identificados no Educacenso serão registrados como alertas pendentes de forma automática.</p>
+					<a ui-sref="settings({step: 8})" class="btn btn-default btn-raised">Importar planilha</a>
+				</div>
+			</div>
+
 			<hr />
 
 			<h3><i class="material-icons">update</i> Últimas atualizações no sistema</h3>

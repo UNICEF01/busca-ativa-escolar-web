@@ -1,11 +1,13 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $rootScope, $window, ngToast, MockData, Identity) {
+	angular.module('BuscaAtivaEscolar').controller('SettingsCtrl', function ($scope, $stateParams, $state, $rootScope, $window, ngToast, MockData, Identity) {
 
 		$rootScope.section = 'settings';
 		$scope.identity = Identity;
 
-		$scope.step = 4;
+		if(!$stateParams.step) return $state.go('settings', {step: 4});
+
+		$scope.step = $stateParams.step;
 		$scope.isEditing = true;
 
 		$scope.causes = MockData.alertReasonsPriority;

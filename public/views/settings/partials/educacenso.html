@@ -1,0 +1,29 @@
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-upload"></i> Educacenso</h3>
+	</div>
+	<div class="panel-body">
+
+		<p>
+			Você pode importar a planilha de evasões escolares do Educacenso do INEP diretamente para a plataforma. Os casos do Educacenso são importados como alertas pendentes.
+		</p>
+
+		<div class="alert alert-danger" ng-show="importDetails.has_imported">
+			<strong>Você já importou um arquivo Educacenso!</strong> Se você importar novamente, os alertas poderão ser duplicados na plataforma!
+			<br />Repita o processo somente se você tiver uma nova planilha.
+
+			<br /><br />
+
+			<strong>Data de importação: </strong> {{importDetails.imported_at}} ({{importDetails.imported_at | amTimeAgo}})
+
+		</div>
+
+		<a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a>
+
+		<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora.</div>
+
+		<p ng-show="!$parent.isEditing">Esse procedimento é opcional. Caso não deseje importar a planilha, basta clicar a opção "Pular" abaixo.</p>
+		<p ng-show="!$parent.isEditing">Você pode importar a planilha em outro momento, na tela "Configurações".</p>
+
+	</div>
+</div>
