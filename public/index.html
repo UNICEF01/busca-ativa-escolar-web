@@ -10,7 +10,6 @@
 
 		<script type="text/javascript" src="/environment.js"></script>
 
-		<!-- TODO: place these within the repository -->
 		<link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" />
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -40,6 +39,7 @@
 			catch(e){window.attachEvent("onload", $buo_f)}
 		</script>
 
+		<!-- Browser polyfills -->
 		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
 
 		<!-- Bugsnag -->
@@ -49,37 +49,12 @@
 				data-apikey="49f4df9ab280dadf6542362723823497"></script>
 		<!--<![endif]-->
 
+		<!-- GMaps API (required to be loaded before vendors due to issue with ui-gmaps) -->
 		<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA"></script>
 
+		<!-- Core vendor libs -->
 		<script type="text/javascript" src="/vendor/lodash/dist/lodash.min.js"></script>
 		<script type="text/javascript" src="/js/vendor.js"></script>
-		<script type="text/javascript" src="/vendor/angular-i18n/angular-locale_pt-br.js"></script>
-		<script type="text/javascript" src="/vendor/numeral/languages/pt-br.js"></script>
-		<script type="text/javascript" src="/vendor/moment/locale/pt-br.js"></script>
-		<script type="text/javascript" src="/vendor/highcharts/modules/map.js"></script>
-		<script type="text/javascript" src="/vendor/ace-builds/src-min/ace.js"></script>
-
-		<script type="text/javascript" defer src="/js/app.js"></script>
-
-		<!--[if lte IE 9]><!-->
-		<!--script src="//cdn.rawgit.com/jpillora/xdomain/0.7.4/dist/xdomain.min.js"></script>
-		<script>
-			xdomain.slaves({
-				"http://api.busca-ativa-escolar.dev.lqdi.net": "/proxy.html",
-				"https://api.busca-ativa-escolar.dev.lqdi.net": "/proxy.html",
-				"http://*.busca-ativa-escolar.dev.lqdi.net": "/proxy.html",
-				"http://api.busca-ativa-escolar.local": "/proxy.html",
-				"https://api.busca-ativa-escolar.local": "/proxy.html",
-				"http://*.busca-ativa-escolar.local": "/proxy.html",
-				"http://api.buscaativaescolar.org.br": "/proxy.html",
-				"https://api.buscaativaescolar.org.br": "/proxy.html",
-				"http://*.buscaativaescolar.org.br": "/proxy.html",
-				"http://api.homolog.buscaativaescolar.org.br": "/proxy.html",
-				"https://api.homolog.buscaativaescolar.org.br": "/proxy.html",
-				"http://*.homolog.buscaativaescolar.org.br": "/proxy.html"
-			});
-		</script-->
-		<!--<![endif]-->
 
 	</head>
 	<body id="ng-app" ng-app="BuscaAtivaEscolar">
@@ -95,6 +70,16 @@
 		<div class="container app-container" ui-view></div>
 
 		<footer class="app-footer" ng-include="'/views/components/app_footer.html'"></footer>
+
+		<!-- Additional vendor libraries / locales -->
+		<script type="text/javascript" src="/vendor/angular-i18n/angular-locale_pt-br.js"></script>
+		<script type="text/javascript" src="/vendor/numeral/languages/pt-br.js"></script>
+		<script type="text/javascript" src="/vendor/moment/locale/pt-br.js"></script>
+		<script type="text/javascript" src="/vendor/highcharts/modules/map.js"></script>
+		<script type="text/javascript" src="/vendor/ace-builds/src-min/ace.js"></script>
+
+		<!-- Core app file -->
+		<script type="text/javascript" defer src="/js/app.js"></script>
 
 		<!-- Google Analytics -->
 		<script>
