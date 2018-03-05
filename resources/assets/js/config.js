@@ -1,5 +1,6 @@
 (function() {
-	console.log("[core.load] Loaded: config.js");
+
+	identify('core', 'config.js');
 
 	angular
 		.module('BuscaAtivaEscolar.Config', [])

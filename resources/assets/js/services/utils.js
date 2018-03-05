@@ -1,5 +1,7 @@
 (function() {
 
+	identify("core", "utils.js");
+
 	var app = angular.module('BuscaAtivaEscolar');
 
 	app
