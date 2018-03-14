@@ -249,14 +249,28 @@
 			return true;
 		};
 
-		$scope.canEditStep = function() {
+		$scope.canEditCurrentStep = function(isEditableOnAlerts) {
 			if(!$scope.step) return false;
 			if(!$scope.$parent.openedCase) return false;
+			if(!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
 			return (!$scope.step.is_completed);
 		};
 
+
+		$scope.canAcceptAlert = function(step, fields) {
+			if(!step) return false;
+			if(!step.requires_address_update) return true;
+			return fields && fields.place_address && (fields.place_address.trim().length > 0);
+		};
+
 		$scope.acceptAlert = function(childID) {
-			Alerts.accept({id: childID}, function() {
+			var data = {id: childID};
+
+			if($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
+				data.place_address = $scope.fields.place_address;
+			}
+
+			Alerts.accept(data, function() {
 				$state.reload();
 			})
 		};

@@ -53,8 +53,18 @@
 				$scope.child = child;
 			};
 
+			$scope.canAcceptAlert = function(child) {
+				if(!child) return false;
+				if(!child.requires_address_update) return true;
+				return child.alert && child.alert.place_address && (child.alert.place_address.trim().length > 0);
+			};
+
 			$scope.accept = function(child) {
-				Alerts.accept({id: child.id}, function() {
+				if(!$scope.canAcceptAlert(child)) {
+					return;
+				}
+
+				Alerts.accept({id: child.id, place_address: child.alert.place_address}, function() {
 					$scope.refresh();
 					$scope. child = {};
 				});

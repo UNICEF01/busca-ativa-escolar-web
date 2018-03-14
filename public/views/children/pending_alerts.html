@@ -30,7 +30,7 @@
 							<tr ng-repeat="(i, child) in getFilteredChildren()" ng-click="preview(child)" style="cursor: pointer;">
 								<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
-								<td><span ng-bind="child.name"></span></td>
+								<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
 								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
 							</tr>
 						</tbody>
@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="col-md-6">
-		<div class="panel panel-default" ng-show="child && child.id">
+		<form class="panel panel-default" ng-show="child && child.id" ng-submit="accept(child)">
 			<div class="panel-heading">
 				<h3><i class="fa fa-child"></i> {{child.name}}</h3>
 			</div>
@@ -143,10 +143,12 @@
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
 					<div class="panel-body">
-						<div class="row" ng-show="child.alert.place_address || child.alert.place_cep">
-							<div class="form-group col-md-8" ng-show="child.alert.place_address">
+						<div ng-show="!canAcceptAlert(child)" class="alert alert-warning"><strong>Endereço do alerta pendente!</strong> Antes de prosseguir, dialogue com a escola para entender melhor a realidade desse caso.</div>
+
+						<div class="row" ng-show="child.requires_address_update || child.alert.place_address || child.alert.place_cep">
+							<div class="form-group col-md-8" ng-show="child.requires_address_update || child.alert.place_address">
 								<label class="control-label">Endereço</label>
-								<p><span ng-bind="child.alert.place_address"></span></p>
+								<p><input type="text" class="form-control" required ng-model="child.alert.place_address" placeholder="Indique o endereço do alerta..." /></p>
 							</div>
 							<div class="form-group col-md-4" ng-show="child.alert.place_cep">
 								<label class="control-label">CEP</label>
@@ -190,9 +192,10 @@
 				</div>
 			</div>
 			<div class="panel-footer clearfix">
-				<a class="btn btn-raised btn-success" ng-click="accept(child)"><i class="fa fa-check"></i> Aceitar</a>
-				<a class="btn btn-raised btn-danger" ng-click="reject(child)"><i class="fa fa-ban"></i> Rejeitar</a>
+				<button type="submit" class="btn btn-raised no-animate btn-success" ng-show="canAcceptAlert(child)"><i class="fa fa-check"></i> Aceitar</button>
+				<div class="btn  no-animate btn-warning" ng-show="!canAcceptAlert(child)"><i class="fa fa-warning"></i> Endereço do alerta pendente!</div>
+				<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)"><i class="fa fa-ban"></i> Rejeitar</button>
 			</div>
-		</div>
+		</form>
 	</div>
 </div>
