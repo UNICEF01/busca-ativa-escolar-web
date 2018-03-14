@@ -1,6 +1,4 @@
 //! moment.js locale configuration
-//! locale : Breton [br]
-//! author : Jean-Baptiste Le Duigou : https://github.com/jbleduigou
 
 ;(function (global, factory) {
    typeof exports === 'object' && typeof module !== 'undefined'
@@ -81,6 +79,7 @@ var br = moment.defineLocale('br', {
         future : 'a-benn %s',
         past : '%s \'zo',
         s : 'un nebeud segondennoù',
+        ss : '%d eilenn',
         m : 'ur vunutenn',
         mm : relativeTimeWithMutation,
         h : 'un eur',
@@ -92,7 +91,7 @@ var br = moment.defineLocale('br', {
         y : 'ur bloaz',
         yy : specialMutationForYears
     },
-    ordinalParse: /\d{1,2}(añ|vet)/,
+    dayOfMonthOrdinalParse: /\d{1,2}(añ|vet)/,
     ordinal : function (number) {
         var output = (number === 1) ? 'añ' : 'vet';
         return number + output;

@@ -1,5 +1,5 @@
 "no use strict";
-;(function(window) {
+!(function(window) {
 if (typeof window.window != "undefined" && window.document)
     return;
 if (window.require && window.define)
@@ -450,9 +450,9 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
     };
     this.collapseRows = function() {
         if (this.end.column == 0)
-            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0)
+            return new Range(this.start.row, 0, Math.max(this.start.row, this.end.row-1), 0);
         else
-            return new Range(this.start.row, 0, this.end.row, 0)
+            return new Range(this.start.row, 0, this.end.row, 0);
     };
     this.toScreenRange = function(session) {
         var screenPosStart = session.documentToScreenPosition(this.start);
@@ -546,7 +546,7 @@ exports.applyDelta = function(docLines, delta, doNotValidate) {
             }
             break;
     }
-}
+};
 });
 
 define("ace/lib/event_emitter",["require","exports","module"], function(require, exports, module) {
@@ -607,7 +607,7 @@ EventEmitter.once = function(eventName, callback) {
 
 
 EventEmitter.setDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers
+    var handlers = this._defaultHandlers;
     if (!handlers)
         handlers = this._defaultHandlers = {_disabled_: {}};
     
@@ -624,7 +624,7 @@ EventEmitter.setDefaultHandler = function(eventName, callback) {
     handlers[eventName] = callback;
 };
 EventEmitter.removeDefaultHandler = function(eventName, callback) {
-    var handlers = this._defaultHandlers
+    var handlers = this._defaultHandlers;
     if (!handlers)
         return;
     var disabled = handlers._disabled_[eventName];
@@ -1849,7 +1849,7 @@ define("ace/mode/lua/luaparse",["require","exports","module"], function(require,
 
       case 126: // ~
         if (61 === next) return scanPunctuator('~=');
-        return raise({}, errors.expected, '=', '~');
+        return scanPunctuator('~');
 
       case 58: // :
         if (58 === next) return scanPunctuator('::');
@@ -1859,7 +1859,7 @@ define("ace/mode/lua/luaparse",["require","exports","module"], function(require,
         if (91 === next || 61 === next) return scanLongStringLiteral();
         return scanPunctuator('[');
       case 42: case 47: case 94: case 37: case 44: case 123: case 125:
-      case 93: case 40: case 41: case 59: case 35: case 45: case 43:
+      case 93: case 40: case 41: case 59: case 35: case 45: case 43: case 38: case 124:
         return scanPunctuator(input.charAt(index));
     }
 
@@ -2205,7 +2205,7 @@ define("ace/mode/lua/luaparse",["require","exports","module"], function(require,
   }
 
   function isUnary(token) {
-    if (Punctuator === token.type) return '#-'.indexOf(token.value) >= 0;
+    if (Punctuator === token.type) return '#-~'.indexOf(token.value) >= 0;
     if (Keyword === token.type) return 'not' === token.value;
     return false;
   }
@@ -2679,6 +2679,7 @@ define("ace/mode/lua/luaparse",["require","exports","module"], function(require,
         case 42: case 47: case 37: return 7; // * / %
         case 43: case 45: return 6; // + -
         case 60: case 62: return 3; // < >
+        case 38: case 124: return 7; // & |
       }
     } else if (2 === length) {
       switch (charCode) {

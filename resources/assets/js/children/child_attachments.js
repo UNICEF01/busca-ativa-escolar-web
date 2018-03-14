@@ -8,7 +8,7 @@
 				controller: 'ChildAttachmentsCtrl',
 			})
 		})
-		.controller('ChildAttachmentsCtrl', function ($scope, $state, $stateParams, ngToast, Auth, API, Modals, Children) {
+		.controller('ChildAttachmentsCtrl', function ($scope, $state, $window, $stateParams, ngToast, Auth, API, Modals, Children) {
 
 			$scope.Children = Children;
 
@@ -32,6 +32,8 @@
 					.then(function (file) {
 						ngToast.success('Arquivo anexado!');
 						$scope.refresh();
+
+						$window.location.reload();
 					})
 			};
 

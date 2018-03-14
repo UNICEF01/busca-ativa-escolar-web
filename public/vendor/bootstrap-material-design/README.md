@@ -1,7 +1,6 @@
 [![banner](demo/imgs/banner.jpg)](#)
 
 [![build status](https://travis-ci.org/FezVrasta/bootstrap-material-design.svg?branch=master)](https://travis-ci.org/FezVrasta/bootstrap-material-design)
-[![CDNJS](https://img.shields.io/cdnjs/v/bootstrap-material-design.svg)](https://cdnjs.com/libraries/bootstrap-material-design)
 [![gratipay](https://img.shields.io/gratipay/FezVrasta.svg)](https://gratipay.com/FezVrasta)
 [![Bower version](https://badge.fury.io/bo/bootstrap-material-design.svg)](https://github.com/FezVrasta/bootstrap-material-design)
 
@@ -32,7 +31,7 @@ Major differences:
 
 You may install this theme using NPM or Bower:
 
-- NPM : `npm install bootstrap-material-design`
+- NPM : `npm install bootstrap-material-design@0.5.10`
 - Bower : `bower install bootstrap-material-design`
 
 If you prefer, you can include this framework in your project using our official CDN:
@@ -43,7 +42,7 @@ If you prefer, you can include this framework in your project using our official
 
 ## Getting started
 
-Add the necessary links to your `<head>` element for fonts and stylesheets:
+Add the necessary links to your `<head>` element for fonts and stylsheets:
 ```html
   <!-- Material Design fonts -->
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700">

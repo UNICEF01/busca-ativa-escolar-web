@@ -7,8 +7,8 @@
 			var successStatuses = [200, 201, 202, 203];
 			var useableErrorStatuses = [400, 401, 403];
 
-			var REQUIRE_AUTH = {'X-Require-Auth': 'auth-required'};
-			var OPTIONAL_AUTH = {'X-Require-Auth': 'auth-optional'};
+			var REQUIRE_AUTH = {'X-Require-Auth': 'auth-required', 'Content-Type': 'application/json'};
+			var OPTIONAL_AUTH = {'X-Require-Auth': 'auth-optional', 'Content-Type': 'application/json'};
 
 			function isLoading() {
 				return (numPendingRequests > 0);
