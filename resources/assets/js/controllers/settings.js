@@ -5,7 +5,10 @@
 		$rootScope.section = 'settings';
 		$scope.identity = Identity;
 
-		if(!$stateParams.step) return $state.go('settings', {step: 4});
+		if(!$stateParams.step) {
+			if(Identity.can('settings.manage')) return $state.go('settings', {step: 4}); // First tab in settings
+			return $state.go('settings', {step: 8}); // Educacenso
+		}
 
 		$scope.step = $stateParams.step;
 		$scope.isEditing = true;

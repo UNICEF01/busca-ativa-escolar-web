@@ -25,7 +25,7 @@
 				<li ng-show="identity.can('users.view')"  ui-sref-active="active"><a ui-sref="user_browser"><i class="fa fa-users"></i> Usuários</a></li>
 				<li ng-show="identity.can('tenants.view')"  ui-sref-active="active"><a ui-sref="tenant_browser"><i class="fa fa-university"></i> Municípios</a></li>
 				<li ng-show="identity.can('ufs.view')"  ui-sref-active="active"><a ui-sref="state_browser"><i class="fa fa-map-o"></i> Estados</a></li>
-				<li ng-show="identity.can('settings.manage')"  ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
+				<li ng-show="identity.can('settings.manage') || identity.can('settings.educacenso')"  ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 			</ul>
 
 
