@@ -30,8 +30,6 @@
 					$scope.hasImported = true;
 
 					$scope.refresh();
-
-					$window.location.reload();
 				});
 			};
 
