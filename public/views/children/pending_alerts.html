@@ -163,10 +163,10 @@
 							</div>
 						</div>
 
-						<div class="row" ng-show="child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name">
-							<div class="form-group col-md-5" ng-show="child.alert.place_neighborhood">
+						<div class="row" ng-show="child.requires_address_update || child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name">
+							<div class="form-group col-md-5" ng-show="child.requires_address_update || child.alert.place_neighborhood">
 								<label class="control-label">Bairro</label>
-								<p><span ng-bind="child.alert.place_neighborhood"></span></p>
+								<p><input type="text" class="form-control" required ng-model="child.alert.place_neighborhood" placeholder="Indique o bairro..." /></p>
 							</div>
 							<div class="form-group col-md-2" ng-show="child.alert.place_uf">
 								<label class="control-label">UF</label>

@@ -56,7 +56,11 @@
 			$scope.canAcceptAlert = function(child) {
 				if(!child) return false;
 				if(!child.requires_address_update) return true;
-				return child.alert && child.alert.place_address && (child.alert.place_address.trim().length > 0);
+				return child.alert
+					&& child.alert.place_address
+					&& (child.alert.place_address.trim().length > 0)
+					&& child.alert.place_neighborhood
+					&& (child.alert.place_neighborhood.trim().length > 0);
 			};
 
 			$scope.accept = function(child) {
@@ -64,7 +68,7 @@
 					return;
 				}
 
-				Alerts.accept({id: child.id, place_address: child.alert.place_address}, function() {
+				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
 					$scope.refresh();
 					$scope. child = {};
 				});
@@ -79,7 +83,7 @@
 
 
 			Platform.whenReady(function() {
-				$scope.causes = StaticData.getAlertCauses()
+				$scope.causes = StaticData.getAlertCauses();
 				$scope.refresh();
 			});
 
