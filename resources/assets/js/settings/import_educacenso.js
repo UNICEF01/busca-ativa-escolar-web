@@ -1,7 +1,7 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.controller('ImportEducacensoCtrl', function ($scope, Modals, API, Tenants, ngToast) {
+		.controller('ImportEducacensoCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
 
 			$scope.hasImported = false;
 			$scope.jobs = null;
