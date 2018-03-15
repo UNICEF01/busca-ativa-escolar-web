@@ -33,7 +33,7 @@
 						ngToast.success('Arquivo anexado!');
 						$scope.refresh();
 
-						//$window.location.reload();
+						$window.location.reload();
 					})
 			};
 
