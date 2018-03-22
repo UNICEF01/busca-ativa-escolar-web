@@ -32,7 +32,7 @@
 					</div>
 				</th>
 			</tr>
-			<tr ng-repeat="(j, group) in getGroups() track by group.id">
+			<tr ng-if="!cause.blocked" ng-repeat="(j, group) in getGroups() track by group.id">
 				<td width="70%"><label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; color: black;">{{group.name}}</label></td>
 				<td width="30%">
 					<label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip-html="(group.settings.alerts[cause.id]) ? 'Visualiza e notifica' : 'Não visualiza'">
