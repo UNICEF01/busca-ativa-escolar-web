@@ -65,6 +65,8 @@
 			}
 			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
 			function getRegions() { return (data.Regions) ? data.Regions : []; }
+			function getTypesWithGlobalScope() { return (data.UsersWithGlobalScope) ? data.UsersWithGlobalScope : []; }
+			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
@@ -100,6 +102,8 @@
 				getUFByCode: getUFByCode,
 				getCurrentUF: getCurrentUF,
 				getRegions: getRegions,
+				getTypesWithGlobalScope: getTypesWithGlobalScope,
+				getTypesWithUFScope: getTypesWithUFScope,
 				getAPIEndpoints: getAPIEndpoints,
 				getCaseCancelReasons: getCaseCancelReasons,
 				isReady: isReady,
