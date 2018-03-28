@@ -1,13 +1,8 @@
-# Busca Ativa Escolar - Cliente Web
-
-## Repositórios do projeto
-- [lqdi/busca-ativa-escolar-api](https://github.com/lqdi/busca-ativa-escolar-api) - Back-end / API
-- [lqdi/busca-ativa-escolar-web](https://github.com/lqdi/busca-ativa-escolar-web) - Front-end / Cliente Web (este repositório)
-- [lqdi/busca-ativa-escolar-mobile](https://github.com/lqdi/busca-ativa-escolar-mobile) - Aplicativo móvel (Android/iOS) para o Técnico Verificador
+## About > Concept
 
 Garantir que cada criança e adolescente dos 4 aos 17 anos esteja na escola – e aprendendo – é, hoje, um dos principais desafios do Brasil. Também é parte da Agenda 2030 das Nações Unidas, um conjunto de programas, ações e diretrizes que devem ser implantados por todos os países nos próximos 15 anos para alcançar o desenvolvimento sustentável.
 
-Pensando nisso, o UNICEF, a União Nacional dos Dirigentes Municipais de Educação (Undime), o Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas) e o Instituto TIM desenvolveram o Projeto de Busca Ativa de Crianças e Adolescentes. O projeto disponibiliza gratuitamente aos municípios uma ferramenta tecnológica e uma metodologia social que permitem à sociedade local (governos municipais) fazer com que isso aconteça na prática.
+Pensando nisso, o UNICEF, a União Nacional dos Dirigentes Municipais de Educação (Undime), o Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas) e o Instituto TIM desenvolveram o Projeto de Busca Ativa de Crianças e Adolescentes. O projeto disponibiliza gratuitamente aos municípios uma suite de ferramentas digitais e uma metodologia social que permitem à sociedade local (governos municipais) fazer com que isso aconteça na prática.
 
 Como o município é o lugar no qual as políticas públicas realmente se concretizam a partir das demandas da população, é importante que os governos (municipal, estadual e federal) e as organizações da sociedade civil organizada se mobilizem para colocar na escola cada criança e adolescente que nunca estudou ou que abandonou os estudos em algum momento de sua trajetória.
 
@@ -15,23 +10,27 @@ O Projeto de Busca Ativa de Crianças e Adolescentes cria condições práticas 
 
 Batendo de porta em porta e mapeando os motivos da exclusão/evasão, vamos conseguir colocar cada uma dessas crianças e adolescentes na escola. A intenção é entender, na prática, por que isso ocorre, possibilitando a realização de políticas coordenadas de forma intersetorial para evitar que os casos voltem a se repetir.
 
-Assinam a construção do sistema para esse projeto:
+## About > Technical 
 
-* Fundo das Nações Unidas para a Infância (UNICEF)
-* União Nacional dos Dirigentes Municipais de Educação (Undime)
-* Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas)
-* Instituto TIM
+Frontend em Angular da aplicação [Busca Ativa Escolar API](https://github.com/lqdi/busca-ativa-escolar-api).
 
-A plataforma estará em uso em diversos municipios através da URL [http://foradaescolanaopode.org.br]
+### Related Projects
 
-## Sobre a aplicação
-Busca Ativa Escolar é uma aplicação web server-side baseada em linguagem PHP e banco de dados Postgres, com front-end em AngularJS, entre outras tecnologias e componentes, que propicia um ambiente virtual para busca, pesquisa, geolocalização e acompanhamento de caso de crianças e adolescentes que estejam em situação ausência escolar entre 04 e 17 anos de idade. A aplicação
+* API 
+  * https://github.com/institutotim/busca-ativa-escolar-api
+* Web panel frontend (this)
+  * https://github.com/lqdi/busca-ativa-escolar-web
+* Landing Page
+  * https://github.com/lqdi/busca-ativa-escolar-lp
+* App Mobile cross-plataform
+  * https://github.com/lqdi/busca-ativa-escolar-mobile
+* Alert Page
+  * https://github.com/lqdi/busca-ativa-escolar-alert-page
 
-### Documentação 
-Toda documentação da aplicação está na pasta [doc](doc). Esta aplicação usa o Jekyll como engine de documentação:
-- [Deploy](doc/bae_deploy.md)
+## Doc
+Toda documentação da aplicação está na pasta [doc](https://github.com/institutotim/busca-ativa-escolar-api/tree/master/doc) do repositório da api. Esta aplicação usa o Jekyll como engine de documentação.
 
-### [Software] Requisitos para Instalação
+### Software > Requirements
 Lista dos principais softwares que compõe e aplicação. Maiores detalhes, ver documentação de [instalação](doc/deploy.md) ou [guia do desenvolvedor](doc/developer_guide.md).
 
 - [Ubuntu Server >= 16.04](http://www.ubuntu.com) ou [Debian Server >= 8](https://www.debian.org.)
@@ -42,7 +41,7 @@ Lista dos principais softwares que compõe e aplicação. Maiores detalhes, ver 
 - [Memcached >= 1.4](https://memcached.org)
 
 
-### [Hardware] Requisitos para instalação
+### Hardhare > Requirements
 
 Benchmark recomendado para ambiente de produção com capacidade de gestão de até 50k registros:
 
@@ -59,9 +58,40 @@ Benchmark recomendado para ambiente de produção com capacidade de gestão de a
 Vale lembrar que os requisitos de hardware podem variar de acordo com a latência da rede, velocidade dos cores dos cpus, uso de proxies, entre outros fatores. Recomendamos aos sysadmin da rede em que a aplicação será instalada um monitoramento de tráfego e uso durante o período de 6 meses a 1 ano para avaliação de cenário de uso.
 
 
-### Ambientes de desenvolvimento e teste
-[http://busca-ativa-escolar-web.dev.lqdi.net]
+### Dev Enviroment
+* https://plataforma.testes.buscaativaescolar.org.br
 
-### Licença de uso e desenvolvimento
+## Partners > Sponsors and Operational 
 
-Busca Ativa Escolar é um software livre licenciado com [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html).
+* Fundo das Nações Unidas para a Infância (UNICEF)
+* União Nacional dos Dirigentes Municipais de Educação (Undime)
+* Colegiado Nacional de Gestores Municipais de Assistência Social (Congemas)
+* Instituto TIM
+
+## Partners > Builders
+
+* La Fabbrica - http://lafabbrica.net/
+* LQDI - https://lqdi.net/
+
+## Reference
+* http://www.foradaescolanaopode.org.br
+* https://buscaativaescolar.org.br
+* https://plataforma.buscaativaescolar.org.br
+* https://alerta.buscaativaescolar.org.br
+
+
+## License
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
