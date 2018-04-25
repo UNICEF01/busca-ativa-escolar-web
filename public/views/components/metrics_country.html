@@ -1,68 +1,47 @@
 <div class="row metrics-country">
-	<div class="col-md-6">
-		<div class="panel panel-default">
-			<div class="panel-heading">Alertas</div>
-			<h1 class="panel-body">
-				<div class="row">
-					<div class="col-md-3">
-						<span ng-bind="stats.num_total_alerts || 0"></span>
-					</div>
-					<div class="col-md-3">
-						<span ng-bind="stats.num_alerts || 0"></span>
-					</div>
-					<div class="col-md-3">
-						<span ng-bind="stats.num_pending_alerts || 0"></span> <small><a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
-					</div>
-					<div class="col-md-3">
-						<span ng-bind="stats.num_rejected_alerts || 0"></span>
-					</div>
-				</div>
-			</h1>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-3">
-						totais
-					</div>
-					<div class="col-md-3">
-						aprovados
-					</div>
-					<div class="col-md-3">
-						pendentes
-					</div>
-					<div class="col-md-3">
-						rejeitados
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div class="col-md-3">
+	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">Adesões municipais</div>
 			<h1 class="panel-body">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<span ng-bind="stats.num_signups || 0"></span>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
+						<span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios ativos"><i class="fa fa-arrow-circle-right"></i></a></small>
+					</div>
+					<div class="col-md-4">
 						<span ng-bind="stats.num_pending_setup || 0"></span>
 					</div>
 				</div>
 			</h1>
 			<div class="panel-footer">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						realizadas
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
+						municípios configurados
+					</div>
+					<div class="col-md-4">
 						em configuração
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3">
+
+	<div class="col-md-2">
+		<div class="panel panel-default">
+			<div class="panel-heading">Adesões estaduais</div>
+			<h1 class="panel-body"><span ng-bind="stats.num_ufs || 0"></span></h1>
+			<div class="panel-footer">realizadas</div>
+		</div>
+	</div>
+
+
+	<div class="col-md-4">
 		<div class="panel panel-default" ui-sref="pending_tenant_signups" style="cursor: pointer">
 			<div class="panel-heading">Adesões pendentes</div>
 			<h1 class="panel-body">
@@ -88,23 +67,59 @@
 		</div>
 	</div>
 
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="panel panel-default">
-			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">municípios participantes <i uib-tooltip="Quantidade de municípios cadastrados e participantes do programa Busca Ativa Escolar" class="fa fa-info-circle"></i><br/>&nbsp;</div>
+			<div class="panel-heading">Alertas</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-3">
+						<span ng-bind="stats.num_total_alerts || 0"></span>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_alerts || 0"></span>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_pending_alerts || 0"></span> <small><a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+					</div>
+					<div class="col-md-3">
+						<span ng-bind="stats.num_rejected_alerts || 0"></span>
+					</div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-3">
+						totais
+					</div>
+					<div class="col-md-3">
+						aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i>&nbsp;
+					</div>
+					<div class="col-md-3">
+						pendentes <i uib-tooltip="Alertas recebidos pelo(a) Supervisor(a) Institucional, mas ainda não analisados." class="fa fa-info-circle"></i>&nbsp;
+					</div>
+					<div class="col-md-3">
+						rejeitados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e rejeitados." class="fa fa-info-circle"></i>&nbsp;
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
-			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Quantos casos estão em andamento na plataforma agora (casos que já passaram da etapa de alerta)" class="fa fa-info-circle"></i>&nbsp;</div>
-		</div>
-	</div>
-	<div class="col-md-4">
-		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_children_reinserted || 0"></h1>
-			<div class="panel-footer">crianças ou adolescentes<br /> (re)matriculados <i uib-tooltip="Quantas crianças, na platforma, já foram rematriculadas" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-heading">Casos</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-6" ng-bind="stats.num_cases_in_progress || 0"></div>
+					<div class="col-md-6" ng-bind="stats.num_children_reinserted || 0"></div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-6">em andamento <i uib-tooltip="Quantos casos estão em andamento na plataforma agora (casos que já passaram da etapa de alerta)" class="fa fa-info-circle"></i>&nbsp;</div>
+					<div class="col-md-6">rematrículas <i uib-tooltip="Total de crianças rematriculadas." class="fa fa-info-circle"></i>&nbsp;</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
