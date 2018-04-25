@@ -38,7 +38,7 @@
 						<input type="tel" class="form-control" id="fld-codnis" ng-model="alert.nis">
 					</div>
 					<div class="form-group col-md-12">
-						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
+						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o principal motivo identificado:</label>
 						<div class="radio" ng-repeat="alertCause in static.getVisibleAlertCauses()">
 							<label>
 								<input name="alert_cause_id" ng-model="alert.alert_cause_id" required ng-value="alertCause.id" type="radio"> {{alertCause.label}}

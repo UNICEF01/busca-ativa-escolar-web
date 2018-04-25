@@ -74,7 +74,7 @@
 			<input type="tel" class="form-control" id="fld-alert-codnis" ng-readonly="!canEditCurrentStep()" ng-model="fields.nis">
 		</div>
 		<div class="form-group col-md-12">
-			<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione a principal causa identificada:</label>
+			<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o principal motivo identificada:</label>
 			<div class="radio" ng-repeat="alert_cause in static.getAlertCauses()">
 				<label>
 					<input name="alert_cause_{{alert_cause.id}}" ng-value="alert_cause.id" type="radio" ng-disabled="!canEditCurrentStep()" ng-model="fields.alert_cause_id"> {{alert_cause.label}}
@@ -449,7 +449,7 @@
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-	<div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre a causa de exclusão escolar</div>
+	<div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
 	<div class="panel-body">
 			<div class="form-group col-md-12">
 			<label class="control-label">Motivos de estar fora da escola*</label>
@@ -562,7 +562,7 @@
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Análise Técnica</div>
 	<div class="panel-body">
 		<div class="form-group col-md-12">
-			<label class="control-label">Causas identificadas</label>
+			<label class="control-label">Motivos identificados</label>
 			<div class="radio" ng-repeat="id in getCaseCauseIDs()">
 				<label>
 					<i class="fa fa-check"></i> {{static.getCaseCauses()[id].label}}

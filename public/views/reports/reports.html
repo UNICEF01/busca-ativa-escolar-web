@@ -53,8 +53,8 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_cause_ids')">
-					<label class="control-label" for="filter-case_cause_ids">Por causa do caso</label>
-					<select class="form-control" id="filter-case_cause_ids"  placeholder="Causa do caso..."
+					<label class="control-label" for="filter-case_cause_ids">Por motivo do caso</label>
+					<select class="form-control" id="filter-case_cause_ids"  placeholder="Motivo do caso..."
 					        ng-model="filters.case_cause_ids"
 					        ng-options="n.id as n.label for n in static.getCaseCauses()">
 						<option value="">Todas</option>
@@ -62,8 +62,8 @@
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_cause_id')">
-					<label class="control-label" for="filter-alert_cause_id">Por causa do alerta</label>
-					<select class="form-control" id="filter-alert_cause_id"  placeholder="Causa do alerta..."
+					<label class="control-label" for="filter-alert_cause_id">Por motivo do alerta</label>
+					<select class="form-control" id="filter-alert_cause_id"  placeholder="Motivo do alerta..."
 					        ng-model="filters.alert_cause_id"
 					        ng-options="n.id as n.label for n in static.getAlertCauses()">
 						<option value="">Todas</option>
