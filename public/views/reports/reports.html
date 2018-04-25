@@ -234,7 +234,7 @@
 						<th>%</th>
 					</tr>
 					<tr ng-if="current.view !== 'timeline'">
-						<td><strong>Total</strong></td>
+						<td><strong>{{fields[current.dimension]}} / Total</strong></td>
 						<td>{{reportData.response.records_total}}</td>
 						<td>100%</td>
 					</tr>
