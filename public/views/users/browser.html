@@ -99,7 +99,7 @@
 						</td>
 						<td width="5%"><span ng-show="user.uf">{{user.uf}}</span></td>
 						<td width="13%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
-						<td width="18%">{{user.email}}</td>
+						<td width="18%">{{user.email}}<br />{{user.contact_phone | brPhoneNumber}}</td>
 						<td width="18%">{{user.type | lang:'user.type'}}</td>
 						<td width="21%">{{user.group.name}}</td>
 						<td width="20%" ng-show="identity.can('users.manage')">
