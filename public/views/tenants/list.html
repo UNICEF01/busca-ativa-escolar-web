@@ -63,6 +63,9 @@
 							<span ng-show="tenant.activity_status === 'inactive_60d'">
 								<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (60+ dias)</span>
 							</span>
+							<span ng-show="tenant.activity_status === 'inactive_90d'">
+								<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (90+ dias)</span>
+							</span>
 							<span ng-show="tenant.activity_status === 'inactive_120d'">
 								<span class="label label-danger" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (120+ dias)</span>
 							</span>
