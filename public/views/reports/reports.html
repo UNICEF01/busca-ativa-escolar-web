@@ -253,7 +253,7 @@
 				</tbody>
 				<tbody ng-if="current.view === 'timeline'"  ng-repeat="(metric, value) in reportData.response.report">
 					<tr>
-						<td><strong>{{reportData.labels[metric] ? reportData.labels[metric] : metric }}</strong></td>
+						<td><strong>{{metric | amDateFormat:'DD/MM/YYYY'}}</strong></td>
 						<td ng-if="current.view === 'timeline'"></td>
 						<td ng-if="current.view === 'timeline'"></td>
 					</tr>
