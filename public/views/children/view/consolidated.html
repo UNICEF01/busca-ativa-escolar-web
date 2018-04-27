@@ -6,4 +6,4 @@
 <h3><i class="fa fa-folder-open"></i> Informações consolidadas</h3>
 <hr />
 
-<div ng-include="'/views/children/view/case_info.html'" ng-init="editable = false; showAll = true"></div>
+<div ng-include="'/views/children/view/case_info.html'" onload="editable = false; showAll = true; $$childHead.static = StaticData; $$childHead.fields = getConsolidatedFields()" ></div>
