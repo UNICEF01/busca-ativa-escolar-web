@@ -97,7 +97,7 @@
 						name: 'Estados participantes',
 						value: 'num_ufs',
 						entity: 'uf',
-						dimensions: ['region'],
+						dimensions: ['uf', 'region'],
 						filters: [],
 						views: ['chart']
 					};
@@ -277,7 +277,7 @@
 				if(!$scope.reportData.response.report) return;
 
 				var report = $scope.reportData.response.report;
-				var seriesName = $scope.totals[$scope.entities[entity].value];
+				var seriesName = $scope.reportData.response.seriesName ? $scope.reportData.response.seriesName : $scope.totals[$scope.entities[entity].value];
 				var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
 				return Charts.generateDimensionChart(report, seriesName, labels);
