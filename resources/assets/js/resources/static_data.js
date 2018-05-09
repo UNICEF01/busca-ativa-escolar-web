@@ -47,6 +47,7 @@
 			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? data.VisibleCaseCause : []; }
 			function getGenders() { return (data.Gender) ? data.Gender : []; }
 			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
+			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
 			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
 			function getRaces() { return (data.Race) ? data.Race : []; }
 			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
@@ -91,6 +92,7 @@
 				getGenders: getGenders,
 				getHandicappedRejectReasons: getHandicappedRejectReasons,
 				getIncomeRanges: getIncomeRanges,
+				getAgeRanges: getAgeRanges,
 				getRaces: getRaces,
 				getSchoolGrades: getSchoolGrades,
 				getSchoolingLevels: getSchoolingLevels,

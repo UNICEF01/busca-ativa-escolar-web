@@ -111,7 +111,7 @@
 					<div class="checkbox"><label for="filter-alert_status-rejected"><input type="checkbox" id="filter-alert_status-rejected"  checklist-model="filters.alert_status" checklist-value="'rejected'" name="filter-alert_status_rejected"> Improcedente</label></div>
 				</div>
 
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age')">
+				<!--div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age')">
 					<label class="control-label" for="filter-age-from">Por faixa etária</label>
 					<div class="form-inline">
 						<span> de </span>
@@ -119,6 +119,17 @@
 						<span> a </span>
 						<input type="number" style="width: 40px; text-align: center" min="0" max="99" class="form-control" id="filter-age-to" ng-model="filters.age.to">
 						<span> anos </span>
+					</div>
+					<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="filters.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
+				</div-->
+
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age_ranges')">
+					<label class="control-label" for="filter-age-null">Por faixa etária</label>
+
+					<div ng-repeat="n in static.getAgeRanges()" class="checkbox">
+						<label for="filter-age_ranges-{{n.slug}}">
+							<input type="checkbox" checklist-model="filters.age_ranges" checklist-value="n.slug" name="filter-age_ranges" id="filter-age_ranges-{{n.slug}}"> {{n.label}}
+						</label>
 					</div>
 					<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="filters.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
 				</div>
@@ -172,6 +183,14 @@
 					</div>
 				</div>
 
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('school_last_grade')">
+					<label class="control-label">Por último ano escolar cursado</label>
+					<select id="fld-school_last_grade" class="form-control"
+					        ng-model="filters.school_last_grade"
+					        ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+					<a class="btn btn-xs btn-default btn-raised" ng-show="filters.school_last_grade" ng-click="clearFilter('school_last_grade')"><i class="fa fa-times"></i> Remover filtro</a>
+				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('place_kind')">
 					<label class="control-label" for="filter-place_kind-rural">Por zona</label>
 					<div class="form-inline row">
@@ -179,14 +198,6 @@
 						<div class="checkbox col-md-6"><label for="filter-place_kind-urban"><input type="checkbox" checklist-model="filters.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban"> Urbana</label></div>
 						<div class="checkbox col-md-12"><label for="filter-place_kind-null"><input type="checkbox" ng-model="filters.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>
 					</div>
-				</div>
-
-				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('school_last_grade')">
-					<label class="control-label" for="filter-school_last_grade-rural">Por último ano cursado</label>
-					<select id="fld-school_last_grade" class="form-control"
-					        ng-model="filters.school_last_grade"
-					        ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
-					<a class="btn btn-xs btn-default btn-raised" ng-show="filters.school_last_grade" ng-click="clearFilter('school_last_grade')"><i class="fa fa-times"></i> Remover filtro</a>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('guardian_schooling')">
