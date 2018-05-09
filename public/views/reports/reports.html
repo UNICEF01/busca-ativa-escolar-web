@@ -181,6 +181,14 @@
 					</div>
 				</div>
 
+				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('school_last_grade')">
+					<label class="control-label" for="filter-school_last_grade-rural">Por último ano cursado</label>
+					<select id="fld-school_last_grade" class="form-control"
+					        ng-model="filters.school_last_grade"
+					        ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+					<a class="btn btn-xs btn-default btn-raised" ng-show="filters.school_last_grade" ng-click="clearFilter('school_last_grade')"><i class="fa fa-times"></i> Remover filtro</a>
+				</div>
+
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('guardian_schooling')">
 					<label class="control-label" for="filter-guardian_schooling">Por grau de instrução</label>
 					<select id="filter-guardian_schooling" class="form-control"

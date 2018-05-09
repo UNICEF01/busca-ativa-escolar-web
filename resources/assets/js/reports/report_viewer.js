@@ -44,6 +44,8 @@
 					child_status: ['in_school', 'in_observation', 'out_of_school'],
 					age: {from: 0, to: 99},
 					age_null: true,
+					school_last_grade: null,
+					school_last_grade_null: true,
 					gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
 					gender_null: true,
 					race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
@@ -67,6 +69,7 @@
 							'age',
 							'gender',
 							'place_kind',
+							'school_last_grade',
 							'step_slug',
 							'uf',
 							'city',
@@ -140,6 +143,7 @@
 					work_activity: 'Atividade econômica',
 					case_cause_ids: 'Motivo do Caso',
 					alert_cause_id: 'Motivo do Alerta',
+					school_last_grade: 'Último ano cursado',
 					user_group: 'Grupo do usuário',
 					user_type: 'Tipo do usuário',
 					assigned_user: 'Usuário responsável',
@@ -156,6 +160,10 @@
 				$scope.chartConfig = getChartConfig();
 
 				$scope.refresh();
+			};
+
+			$scope.clearFilter = function(name) {
+				$scope.filters[name] = null;
 			};
 
 			$scope.refresh = function() {
