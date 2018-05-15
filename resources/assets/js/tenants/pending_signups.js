@@ -8,7 +8,7 @@
 				controller: 'PendingTenantSignupsCtrl'
 			})
 		})
-		.controller('PendingTenantSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, TenantSignups, StaticData) {
+		.controller('PendingTenantSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, TenantSignups, StaticData, Config) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -25,6 +25,12 @@
 			$scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
+			};
+
+			$scope.export = function() {
+				Identity.provideToken().then(function (token) {
+					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token);
+				});
 			};
 
 			$scope.preview = function(signup) {
