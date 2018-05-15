@@ -8,7 +8,7 @@
 				controller: 'TenantBrowserCtrl'
 			})
 		})
-		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity) {
+		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity, Config) {
 
 			$scope.identity = Identity;
 			$scope.tenants = {};
@@ -21,6 +21,12 @@
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
+			};
+
+			$scope.export = function() {
+				Identity.provideToken().then(function (token) {
+					window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token);
+				});
 			};
 
 			$scope.disableTenant = function(tenant) {

@@ -6,6 +6,7 @@
 					<h3><i class="fa fa-university"></i> Municípios</h3>
 				</div>
 				<div class="col-md-6">
+					<a ng-if="identity.can('tenants.export')" ng-click="export()" class="btn btn-raised btn-primary pull-right"><i class="fa fa-download"></i> Exportar</a>
 					<a ng-if="identity.can('tenants.manage')" ui-sref="pending_tenant_signups" class="btn btn-raised btn-primary pull-right"><i class="fa fa-question-circle"></i> Adesões municipais</a>
 				</div>
 			</div>
