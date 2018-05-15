@@ -91,19 +91,7 @@
 			}
 
 			function stripTimeFromTimestamp(timestamp) {
-				if(timestamp instanceof Date) {
-					if(isNaN(timestamp.getTime())) return null;
-					timestamp = timestamp.toISOString();
-				}
-
-				timestamp = ("" + timestamp).substring(0, 10);
-
-				if(timestamp.indexOf('/') !== -1) {
-					return convertBRtoISODate(timestamp);
-				}
-
-				return timestamp;
-
+				return moment(timestamp).format('YYYY-MM-DD');
 			}
 
 			function displayValidationErrors(response) {

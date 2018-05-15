@@ -238,6 +238,12 @@
 				});
 		};
 
+		$scope.areDatesEqual = function (a, b) {
+			if(!a) return false;
+			if(!b) return false;
+			return moment(a).startOf('day').isSame(moment(b).startOf('day'));
+		};
+
 		$scope.isStepOpen = function (stepClassName) {
 			if(!$scope.step) return false;
 			return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
@@ -313,7 +319,7 @@
 		};
 
 		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = Utils.convertISOtoBRDate(new Date().toISOString().substring(0, 10));
+			$scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
 		};
 
 		function filterOutEmptyFields(data) {
@@ -429,7 +435,7 @@
 
 		$scope.save = function() {
 
-			var data = $scope.step.fields;
+			var data = Object.assign({}, $scope.step.fields);
 
 			data = Utils.prepareDateFields(data, dateOnlyFields);
 

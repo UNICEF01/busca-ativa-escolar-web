@@ -747,10 +747,12 @@
 	<div class="panel-body">
 
 		<div class="form-group col-md-6">
-			<label class="control-label">Data da (re)matrícula</label>
-			<p>
-				<div class="label label-default">{{$parent.openedCase.enrolled_at | amDateFormat:'DD/MM/YYYY'}}</div>
-			</p>
+			<label for="fld-obs-reinsertion_date" class="control-label">Data da (re)matrícula</label>
+			<div class="clearfix">
+				<input type="text" ui-date-mask class="form-control" id="fld-obs-reinsertion_date" ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+				<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje</button>
+				<small>Data original: {{fields.reinsertion_date_original | amDateFormat:'DD/MM/YYYY'}}</small>
+			</div>
 		</div>
 
 		<div class="form-group col-md-6">
@@ -759,6 +761,11 @@
 				<input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditCurrentStep()" ng-model="fields.report_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
 				<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje</button>
 			</div>
+		</div>
+
+		<div class="form-group col-md-12" ng-show="!areDatesEqual(fields.reinsertion_date, fields.reinsertion_date_original)">
+			<label class="control-label" for="fld-obs-reinsertion_date_change_reason">Descreva o motivo da mudança na data de rematrícula*</label>
+			<textarea style="height: 60px" class="form-control" id="fld-obs-reinsertion_date_change_reason" ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date_change_reason"></textarea>
 		</div>
 
 		<div class="form-group col-md-12">
