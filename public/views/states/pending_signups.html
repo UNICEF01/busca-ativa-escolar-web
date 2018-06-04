@@ -124,44 +124,44 @@
 				</div>
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="material-icons">person</i> Dados do Supervisor Estadual</div>
+					<div class="panel-heading"><i class="material-icons">person</i> Dados do Coordenador Estadual</div>
 					<div class="panel-body">
 
 						<div class="form-group col-md-12">
 							<label class="control-label">Nome*</label>
-							<p>{{signup.data.supervisor.name}}</p>
+							<p>{{signup.data.coordinator.name}}</p>
 						</div>
 
 						<div class="form-group col-md-6">
 							<label class="control-label">Data de nascimento*</label>
-							<p>{{signup.data.supervisor.dob | amDateFormat:'DD/MM/YYYY'}}</p>
+							<p>{{signup.data.coordinator.dob | amDateFormat:'DD/MM/YYYY'}}</p>
 						</div>
 
 						<div class="form-group col-md-6">
 							<label class="control-label">CPF*</label>
-							<p>{{signup.data.supervisor.cpf}}</p>
+							<p>{{signup.data.coordinator.cpf}}</p>
 						</div>
 
 						<div class="form-group col-md-12">
-							<label for="fld-signup-supervisor-email" class="control-label">E-mail institucional*</label>
+							<label for="fld-signup-coordinator-email" class="control-label">E-mail institucional*</label>
 							<div class="row">
 								<div class="col-md-10">
-									<input class="form-control" id="fld-signup-supervisor-email" type="text" ng-model="signup.data.supervisor.email" />
+									<input class="form-control" id="fld-signup-coordinator-email" type="text" ng-model="signup.data.coordinator.email" />
 								</div>
 								<div class="col-md-2">
-									<button type="button" class="btn btn-sm btn-raised btn-primary" uib-tooltip="Alterar e-mail do prefeito" ng-click="updateRegistrationEmail('supervisor', signup)"><i class="fa fa-save"></i></button>
+									<button type="button" class="btn btn-sm btn-raised btn-primary" uib-tooltip="Alterar e-mail do coordenador" ng-click="updateRegistrationEmail('coordinator', signup)"><i class="fa fa-save"></i></button>
 								</div>
 							</div>
 						</div>
 
 						<div class="form-group col-md-6">
 							<label class="control-label">Telefone fixo institucional*</label>
-							<p>{{signup.data.supervisor.phone}}</p>
+							<p>{{signup.data.coordinator.phone}}</p>
 						</div>
 
 						<div class="form-group col-md-6">
 							<label class="control-label">Telefone celular institucional</label>
-							<p>{{signup.data.supervisor.mobile}}</p>
+							<p>{{signup.data.coordinator.mobile}}</p>
 						</div>
 
 					</div>

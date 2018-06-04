@@ -6,7 +6,7 @@
 <div ng-if="identity.getType() === 'gestor_nacional'" ng-include="'/views/dashboards/gestor_nacional.html'"></div>
 <div ng-if="identity.getType() === 'comite_nacional'" ng-include="'/views/dashboards/gestor_nacional.html'"></div>
 <div ng-if="identity.getType() === 'superuser'" ng-include="'/views/dashboards/super_administrador.html'"></div>
-<div ng-if="identity.getType() === 'gestor_estadual'" ng-include="'/views/dashboards/gestor_estadual.html'"></div>
+<div ng-if="identity.getType() === 'gestor_estadual' || identity.getType() === 'coordenador_estadual'" ng-include="'/views/dashboards/gestor_estadual.html'"></div>
 <div ng-if="identity.getType() === 'comite_estadual'" ng-include="'/views/dashboards/gestor_estadual.html'"></div>
 <div ng-if="identity.getType() === 'supervisor_estadual'" ng-include="'/views/dashboards/supervisor_estadual.html'"></div>
 
