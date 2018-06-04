@@ -8,7 +8,7 @@
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Utils, Cities, StaticData, Language, Reports, Identity, Charts) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Modals, Utils, Cities, StaticData, Language, Reports, Identity, Charts) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -198,11 +198,19 @@
 
 			};
 
-			function fetchReportData() {
+			$scope.exportXLS = function() {
+				fetchReportData('xls').then(function (res) {
+					console.log("Exported: ", res);
+					Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar o relatório exportado:', res.download_url));
+				})
+			};
+
+			function fetchReportData(format) {
 
 				var params = Object.assign({}, $scope.current);
 				params.view = $scope.views[$scope.current.view].viewMode;
 				params.filters = $scope.filters;
+				params.format = (format ? format : 'json');
 
 				params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
 
@@ -211,6 +219,10 @@
 						from: (params.filters.period.from) ? moment(params.filters.period.from).format('YYYY-MM-DD') : null,
 						to: (params.filters.period.to) ? moment(params.filters.period.to).format('YYYY-MM-DD') : null,
 					};
+				}
+
+				if(params.format === 'xls') {
+					return Reports.query(params).$promise;
 				}
 
 				$scope.reportData = Reports.query(params);
