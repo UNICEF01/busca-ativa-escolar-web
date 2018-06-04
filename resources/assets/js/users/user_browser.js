@@ -13,6 +13,7 @@
 		$scope.identity = Identity;
 		$scope.query = {
 			tenant_id: null,
+			uf: null,
 			group_id: null,
 			type: null,
 			email: null,
@@ -65,6 +66,10 @@
 		$scope.getTenants = function() {
 			if(!$scope.tenants || !$scope.tenants.data) return [];
 			return $scope.tenants.data;
+		};
+
+		$scope.getUFs = function() {
+			return StaticData.getUFs();
 		};
 
 		$scope.refresh = function() {
