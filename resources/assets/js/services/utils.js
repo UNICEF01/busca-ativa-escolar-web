@@ -61,7 +61,14 @@
 					if(!data.hasOwnProperty(i)) continue;
 					if(dateOnlyFields.indexOf(i) === -1) continue;
 
+					if(!data[i]) continue;
+					if(("" + data[i]).length <= 0) continue;
+
 					data[i] = stripTimeFromTimestamp(data[i]);
+
+					if(("" + data[i]).toLowerCase() === "invalid date") {
+						data[i] = null;
+					}
 				}
 
 				return data;
