@@ -46,7 +46,7 @@
 								<button type="button" class="btn-text" ui-sref="admin_editor({admin_id: uf.admin.id})" ng-class="{'text-danger' : uf.admin.deleted_at}" ng-disabled="uf.admin.deleted_at">
 									<strong ng-show="uf.admin">{{uf.admin.name}}</strong> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="uf.admin.deleted_at"></i>
 								</button> <br />
-								<span><i class="fa fa-envelope"></i> {{uf.admin.email}}</span>
+								<span ng-if="identity.can('ufs.contact_info')"><i class="fa fa-envelope"></i> {{uf.admin.email}}</span>
 
 							</div>
 
@@ -57,7 +57,7 @@
 								<button type="button" class="btn-text" ui-sref="coordinator_editor({coordinator_id: uf.coordinator.id})" ng-class="{'text-danger' : uf.coordinator.deleted_at}" ng-disabled="uf.coordinator.deleted_at">
 									<strong ng-show="uf.coordinator">{{uf.coordinator.name}}</strong> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="uf.coordinator.deleted_at"></i>
 								</button> <br />
-								<span><i class="fa fa-envelope"></i> {{uf.coordinator.email}}</span>
+								<span ng-if="identity.can('ufs.contact_info')"><i class="fa fa-envelope"></i> {{uf.coordinator.email}}</span>
 
 							</div>
 
