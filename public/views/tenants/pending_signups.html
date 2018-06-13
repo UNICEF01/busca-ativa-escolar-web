@@ -2,7 +2,7 @@
 	<div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
-				<h3 class="pull-left"><i class="fa fa-university"></i> Adesões municipais pendentes</h3>
+				<h3 class="pull-left"><i class="fa fa-university"></i> Adesões municipais</h3>
 				<div class="pull-right">
 					<div><a class="btn btn-sm btn-raised btn-default" ng-click="refresh()"><i class="fa fa-refresh"></i> Atualizar</a></div>
 					<div ng-if="identity.can('tenants.export_signups')"><a class="btn btn-sm btn-raised btn-success" ng-click="export()"><i class="fa fa-download"></i> Exportar</a></div>
@@ -31,7 +31,6 @@
 						<div class="form-group col-md-3">
 							<select class="form-control" ng-model="query.filter.status" ng-change="refresh()">
 								<option value="all">Todos</option>
-								<option value="pending">Pendentes</option>
 								<option value="pending_approval">Aguardando aprovação</option>
 								<option value="pending_setup">Aguardando configuração</option>
 								<option value="rejected">Rejeitados</option>
