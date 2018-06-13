@@ -19,7 +19,7 @@
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'pending'}
+				filter: {status: 'all'}
 			};
 
 			$scope.refresh = function() {
