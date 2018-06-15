@@ -40,9 +40,9 @@
 						<span class="caret"></span>
 					</a>
 					<ul uib-dropdown-menu class="dropdown-menu" style="min-width: 270px">
-						<li><a ng-click="toggleNotifications($event)"><i class="fa fa-envelope-o"></i> Notificações</a></li>
+						<li ng-show="identity.can('notifications')"><a ng-click="toggleNotifications($event)"><i class="fa fa-envelope-o"></i> Notificações</a></li>
 
-						<li class="notification-center" uib-collapse="!showNotifications">
+						<li ng-show="identity.can('notifications')" class="notification-center" uib-collapse="!showNotifications">
 							<div ng-show="!notifications.hasUnread()" class="alert alert-info">Nenhuma notificação recente.</div>
 							<div ng-show="notifications.isLoading()" class="text-center" style="padding: 15px 0"><i class="fa fa-refresh rotate-icon"></i></div>
 

@@ -11,6 +11,7 @@
 
 				if(!Identity.isLoggedIn()) return;
 				if(Auth.isRefreshExpired()) return;
+				if(!Identity.can('notifications')) return;
 
 				isBusy = true;
 
