@@ -809,7 +809,7 @@
 				})
 		});
 
-	function ChildConsolidatedCtrl($scope, $state, $stateParams, Children, Decorators) {
+	function ChildConsolidatedCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 
@@ -820,8 +820,11 @@
 		$scope.fields = {};
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = $scope.refreshChildData(function (data) {
-			angular.copy(data.consolidated, $scope.fields);
+			var consolidated = Utils.unpackDateFields(data.consolidated, dateOnlyFields)
+			angular.copy(consolidated, $scope.fields);
 		});
+
+		var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
 
 		$scope.getConsolidatedFields = function() {
 			return $scope.fields;
