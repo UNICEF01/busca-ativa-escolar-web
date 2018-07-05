@@ -21,7 +21,7 @@
 			};
 
 			$scope.goToStep = function(step) {
-				if(step > 5) return;
+				if(step > 6) return;
 				if(step < 1) return;
 				$state.go('tenant_setup', {step: step});
 			};
@@ -29,7 +29,7 @@
 			$scope.nextStep = function() {
 
 				var step = $scope.step + 1;
-				if($scope.step > 5) {
+				if($scope.step > 6) {
 					return $scope.completeSetup();
 				}
 
