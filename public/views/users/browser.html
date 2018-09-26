@@ -6,7 +6,7 @@
 			<a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Exportar</a>
 		</div>
 		<div class="panel-body">
-				
+
 				<p>
 				Cadastre aqui os diferentes usuários que vão participar da Busca Ativa Escolar. No momento do cadastro, você deve escolher qual o perfil do usuário.
 				</p>
@@ -60,7 +60,7 @@
 						<label><i class="fa fa-user"></i> Tipo</label>
 						<ui-select ng-model="query.type" on-select="refresh()">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected | lang:'user.type'}}</ui-select-match>
-							<ui-select-choices repeat="type in identity.getCurrentUser().can_filter | filter: $select.search">
+							<ui-select-choices repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search">
 								<div ng-bind-html="type | lang:'user.type' | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>
