@@ -118,7 +118,10 @@
 			for(var date in report) {
 
 				if(!report.hasOwnProperty(date)) continue;
-				if(categories.indexOf(date) === -1) categories.push(date);
+
+				if(categories.indexOf(date) === -1) {
+					categories.push(Utils.convertISOtoBRDate(date));
+				}
 
 				for(var metric in report[date]) {
 					if(!report[date].hasOwnProperty(metric)) continue;

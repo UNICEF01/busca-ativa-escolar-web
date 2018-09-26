@@ -2470,26 +2470,6 @@
 
 })();
 (function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
-(function() {
 
 	angular
 		.module('BuscaAtivaEscolar')
@@ -3363,88 +3343,24 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('maintenance_imports', {
-					url: '/maintenance/imports',
-					templateUrl: '/views/maintenance/imports.html',
-					controller: 'ImportsCtrl'
-				})
-		})
-		.controller('ImportsCtrl',
-			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, ImportJobs, Modals, ngToast, API) {
-
-				$scope.static = StaticData;
-
-				$scope.refresh = function() {
-					ImportJobs.all({$hide_loading_feedback: true}, function (jobs) {
-						$scope.jobs = jobs;
-					});
-				};
-
-				$scope.jobs = {};
-				$scope.refresh();
-
-				$scope.newImport = function (type) {
-					Modals.show(
-						Modals.FileUploader(
-							'Nova importação',
-							'Selecione o arquivo que deseja importar',
-							API.getURI('maintenance/import_jobs/new'), {type: type}
-						)
-					).then(function (res) {
-						ngToast.success('Arquivo pronto para processamento!');
-						console.info("[maintenance.imports] Job ready, return: ", res);
-						$scope.refresh();
-					});
-				};
-
-				$scope.processJob = function(job) {
-					ImportJobs.process({id: job.id, $hide_loading_feedback: true}, function (res) {
-						ngToast.success('Processamento do arquivo concluído!');
-						console.info("[maintenance.imports] Job processed, return: ", res);
-					});
-					$timeout($scope.refresh, 100);
-				};
-
-				$scope.renderProgress = function(job) {
-					if(job.total_records === 0) return '100 %';
-					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
-				};
-
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
 			}
-		);
-})();
-(function() {
+		};
 
-	angular
-		.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('sms_conversations', {
-					url: '/maintenance/sms_conversations',
-					templateUrl: '/views/maintenance/sms_conversations.html',
-					controller: 'SmsConversationsCtrl'
-				})
-		})
-		.controller('SmsConversationsCtrl',
-			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, SmsConversations, Modals, ngToast, API) {
+		var Step = {
 
-				$scope.static = StaticData;
+		};
 
-				$scope.refresh = function() {
-					SmsConversations.all({}, function (conversations) {
-						$scope.conversations = conversations;
-					});
-				};
-
-				$scope.conversations = {};
-				$scope.refresh();
-			}
-		);
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
 })();
 (function() {
 	angular
@@ -3663,82 +3579,87 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
+	angular
+		.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
 			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
+				.state('maintenance_imports', {
+					url: '/maintenance/imports',
+					templateUrl: '/views/maintenance/imports.html',
+					controller: 'ImportsCtrl'
 				})
 		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+		.controller('ImportsCtrl',
+			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, ImportJobs, Modals, ngToast, API) {
 
-			$scope.email = "";
-			$scope.isLoading = false;
+				$scope.static = StaticData;
 
-			console.info("[password_reset.forgot_password] Begin password reset");
+				$scope.refresh = function() {
+					ImportJobs.all({$hide_loading_feedback: true}, function (jobs) {
+						$scope.jobs = jobs;
+					});
+				};
 
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
+				$scope.jobs = {};
+				$scope.refresh();
 
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
+				$scope.newImport = function (type) {
+					Modals.show(
+						Modals.FileUploader(
+							'Nova importação',
+							'Selecione o arquivo que deseja importar',
+							API.getURI('maintenance/import_jobs/new'), {type: type}
+						)
+					).then(function (res) {
+						ngToast.success('Arquivo pronto para processamento!');
+						console.info("[maintenance.imports] Job ready, return: ", res);
+						$scope.refresh();
+					});
+				};
 
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao solicitar a troca de senha: " + res.reason);
-						return;
-					}
+				$scope.processJob = function(job) {
+					ImportJobs.process({id: job.id, $hide_loading_feedback: true}, function (res) {
+						ngToast.success('Processamento do arquivo concluído!');
+						console.info("[maintenance.imports] Job processed, return: ", res);
+					});
+					$timeout($scope.refresh, 100);
+				};
 
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
+				$scope.renderProgress = function(job) {
+					if(job.total_records === 0) return '100 %';
+					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
+				};
+
+			}
+		);
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('sms_conversations', {
+					url: '/maintenance/sms_conversations',
+					templateUrl: '/views/maintenance/sms_conversations.html',
+					controller: 'SmsConversationsCtrl'
 				})
-			}
-
 		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+		.controller('SmsConversationsCtrl',
+			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, SmsConversations, Modals, ngToast, API) {
 
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
+				$scope.static = StaticData;
 
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+				$scope.refresh = function() {
+					SmsConversations.all({}, function (conversations) {
+						$scope.conversations = conversations;
+					});
+				};
 
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
+				$scope.conversations = {};
+				$scope.refresh();
 			}
-
-		});
-
+		);
 })();
 (function() {
 
@@ -4043,6 +3964,85 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao solicitar a troca de senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
 			}
 
 		});
@@ -5293,7 +5293,10 @@ if (!Array.prototype.find) {
 			for(var date in report) {
 
 				if(!report.hasOwnProperty(date)) continue;
-				if(categories.indexOf(date) === -1) categories.push(date);
+
+				if(categories.indexOf(date) === -1) {
+					categories.push(Utils.convertISOtoBRDate(date));
+				}
 
 				for(var metric in report[date]) {
 					if(!report[date].hasOwnProperty(metric)) continue;
@@ -6812,132 +6815,6 @@ function identify(namespace, file) {
 }
 (function() {
 
-	angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
-
-		$scope.static = StaticData;
-
-		$scope.step = 1;
-		$scope.numSteps = 5;
-		$scope.isCityAvailable = false;
-
-		$scope.form = {
-			uf: null,
-			admin: {},
-			coordinator: {}
-		};
-
-		var fieldNames = {
-			cpf: 'CPF',
-			name: 'nome',
-			email: 'e-mail institucional',
-			position: 'posição',
-			institution: 'instituição',
-			password: 'senha',
-			dob: 'data de nascimento',
-			phone: 'telefone institucional',
-			mobile: 'celular institucional',
-			personal_phone: 'telefone pessoal',
-			personal_mobile: 'celular pessoal'
-		};
-
-		var messages = {
-			invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
-			invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
-		};
-
-		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredCoordinatorFields = ['email','name','cpf','dob','phone'];
-
-		$scope.goToStep = function (step) {
-			if($scope.step < 1) return;
-			if($scope.step >= $scope.numSteps) return;
-
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
-
-		$scope.nextStep = function() {
-			if($scope.step >= $scope.numSteps) return;
-
-			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
-			if($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
-
-			$scope.step++;
-			$window.scrollTo(0, 0);
-		};
-
-		$scope.prevStep = function() {
-			if($scope.step <= 1) return;
-
-			$scope.step--;
-			$window.scrollTo(0, 0);
-		};
-
-		$scope.onUFSelect = function(uf) {
-			console.log("UF selected: ", uf);
-			if(!uf) return;
-			$scope.checkStateAvailability(uf);
-		};
-
-		$scope.checkStateAvailability = function(uf) {
-
-			$scope.hasCheckedAvailability = false;
-
-			StateSignups.checkIfAvailable({uf: uf}, function (res) {
-				$scope.hasCheckedAvailability = true;
-				$scope.isStateAvailable = !!res.is_available;
-			});
-		};
-
-		$scope.finish = function() {
-			if(!$scope.agreeTOS) return;
-
-				var data = {};
-				data.admin = Object.assign({}, $scope.form.admin);
-				data.coordinator = Object.assign({}, $scope.form.coordinator);
-				data.uf = $scope.form.uf;
-
-				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
-				if(!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
-
-				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
-				data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
-
-				StateSignups.register(data, function (res) {
-					if(res.status === 'ok') {
-						ngToast.success('Solicitação de adesão registrada!');
-						$scope.step = 5;
-						return;
-					}
-
-					if(res.reason === 'admin_email_in_use') {
-						$scope.step = 2;
-						return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
-					}
-
-					if(res.reason === 'coordinator_email_in_use') {
-						$scope.step = 2;
-						return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
-					}
-
-					if(res.reason === 'invalid_admin_data') {
-						$scope.step = 2;
-						ngToast.danger(messages.invalid_admin);
-
-						return Utils.displayValidationErrors(res);
-					}
-
-					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
-
-				});
-
-		};
-
-	});
-
-})();
-(function() {
-
 	angular.module('BuscaAtivaEscolar')
 		.controller('ImportEducacensoCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
 
@@ -7171,6 +7048,132 @@ function identify(namespace, file) {
 			})
 
 		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
+
+		$scope.static = StaticData;
+
+		$scope.step = 1;
+		$scope.numSteps = 5;
+		$scope.isCityAvailable = false;
+
+		$scope.form = {
+			uf: null,
+			admin: {},
+			coordinator: {}
+		};
+
+		var fieldNames = {
+			cpf: 'CPF',
+			name: 'nome',
+			email: 'e-mail institucional',
+			position: 'posição',
+			institution: 'instituição',
+			password: 'senha',
+			dob: 'data de nascimento',
+			phone: 'telefone institucional',
+			mobile: 'celular institucional',
+			personal_phone: 'telefone pessoal',
+			personal_mobile: 'celular pessoal'
+		};
+
+		var messages = {
+			invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
+			invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
+		};
+
+		var requiredAdminFields = ['email','name','cpf','dob','phone'];
+		var requiredCoordinatorFields = ['email','name','cpf','dob','phone'];
+
+		$scope.goToStep = function (step) {
+			if($scope.step < 1) return;
+			if($scope.step >= $scope.numSteps) return;
+
+			$scope.step = step;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.nextStep = function() {
+			if($scope.step >= $scope.numSteps) return;
+
+			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
+			if($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
+
+			$scope.step++;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.prevStep = function() {
+			if($scope.step <= 1) return;
+
+			$scope.step--;
+			$window.scrollTo(0, 0);
+		};
+
+		$scope.onUFSelect = function(uf) {
+			console.log("UF selected: ", uf);
+			if(!uf) return;
+			$scope.checkStateAvailability(uf);
+		};
+
+		$scope.checkStateAvailability = function(uf) {
+
+			$scope.hasCheckedAvailability = false;
+
+			StateSignups.checkIfAvailable({uf: uf}, function (res) {
+				$scope.hasCheckedAvailability = true;
+				$scope.isStateAvailable = !!res.is_available;
+			});
+		};
+
+		$scope.finish = function() {
+			if(!$scope.agreeTOS) return;
+
+				var data = {};
+				data.admin = Object.assign({}, $scope.form.admin);
+				data.coordinator = Object.assign({}, $scope.form.coordinator);
+				data.uf = $scope.form.uf;
+
+				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
+				if(!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
+
+				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+				data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
+
+				StateSignups.register(data, function (res) {
+					if(res.status === 'ok') {
+						ngToast.success('Solicitação de adesão registrada!');
+						$scope.step = 5;
+						return;
+					}
+
+					if(res.reason === 'admin_email_in_use') {
+						$scope.step = 2;
+						return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+					}
+
+					if(res.reason === 'coordinator_email_in_use') {
+						$scope.step = 2;
+						return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
+					}
+
+					if(res.reason === 'invalid_admin_data') {
+						$scope.step = 2;
+						ngToast.danger(messages.invalid_admin);
+
+						return Utils.displayValidationErrors(res);
+					}
+
+					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+
+				});
+
+		};
+
+	});
 
 })();
 (function() {
