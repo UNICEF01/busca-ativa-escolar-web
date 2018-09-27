@@ -8,10 +8,11 @@
 				controller: 'TenantBrowserCtrl'
 			})
 		})
-		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity, Config) {
+		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity, Config, Ufs) {
 
 			$scope.identity = Identity;
 			$scope.tenants = {};
+			$scope.ufs = Ufs;
 			$scope.query = {
 				filter: {},
 				sort: {},
