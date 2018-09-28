@@ -2408,7 +2408,10 @@
 		$scope.identity = Identity;
 
 		if(!$stateParams.step) {
-			if(Identity.can('settings.manage')) return $state.go('settings', {step: 4}); // First tab in settings
+			if(Identity.can('settings.manage') || Identity.can('groups.manage')) { // First tab in settings
+				return $state.go('settings', {step: 4});
+            }
+
 			return $state.go('settings', {step: 8}); // Educacenso
 		}
 
@@ -7962,6 +7965,10 @@ function identify(namespace, file) {
 
 			$scope.isTargetUserTenantBound = function () {
 				return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
+			};
+
+			$scope.isTargetUserUFBound = function () {
+				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
 			};
 
 			$scope.canDefineUserTenant = function() {
