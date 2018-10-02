@@ -114,13 +114,27 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         subtitle: {},
         series: [],
         credits: {},
-        plotOptions: {},
-        navigator: {enabled: false},
-        xAxis: {
-          events: {}
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true
+            }
+          },
+          pie: {
+            allowPointSelect: true,
+            showInLegend: true,
+            cursor: 'pointer',
+            dataLabels: {
+              enabled: true,
+              format: '{point.percentage:.1f} %',
+              style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+              }
+            }
+          }
         },
-        yAxis: {
-          events: {}
+        legend: {
+          layout: 'vertical'
         }
       };
 
