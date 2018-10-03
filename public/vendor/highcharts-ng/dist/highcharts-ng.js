@@ -114,6 +114,13 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
         subtitle: {},
         series: [],
         credits: {},
+        exporting: {
+          buttons: {
+            contextButton: {
+              symbol: 'download'
+            }
+          }
+        },
         plotOptions: {
           bar: {
             dataLabels: {
@@ -124,15 +131,40 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             allowPointSelect: true,
             showInLegend: true,
             cursor: 'pointer',
+            colorByPoint: true,
             dataLabels: {
               enabled: true,
-              format: '{point.percentage:.1f} %',
-              style: {
-                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-              }
+              format: '{point.percentage:.1f} %2'
             }
           }
         },
+        colors: [
+          '#F44336',
+          '#2196F3',
+          '#E91E63',
+          '#009688',
+          '#9C27B0',
+          '#673AB7',
+          '#3F51B5',
+          '#f4b48e',
+          '#4CAF50',
+          '#CDDC39',
+          '#0054d4',
+          '#FFC107',
+          '#8BC34A',
+          '#FF5722',
+          '#FFEB3B',
+          '#795548',
+          '#FF9800',
+          '#9E9E9E',
+          '#607D8B',
+          '#006400',
+          '#40E0D0',
+          '#8FBC8F',
+          '#F08080',
+          '#B0E0E6',
+          '#9ACD32',
+        ],
         legend: {
           layout: 'vertical'
         }
@@ -268,22 +300,22 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
                 if (s.visible !== undefined && chartSeries.visible !== s.visible) {
                   chartSeries.setVisible(s.visible, false);
                 }
-                
+
                 // Make sure the current series index can be accessed in seriesOld
                 if (idx < seriesOld.length) {
                   var sOld = seriesOld[idx];
                   var sCopy = angular.copy(sOld);
-                  
+
                   // Get the latest data point from the new series
                   var ptNew = s.data[s.data.length - 1];
-                  
+
                   // Check if the new and old series are identical with the latest data point added
                   // If so, call addPoint without shifting
                   sCopy.data.push(ptNew);
                   if (angular.equals(sCopy, s)) {
                     chartSeries.addPoint(ptNew, false);
                   }
-                  
+
                   // Check if the data change was a push and shift operation
                   // If so, call addPoint WITH shifting
                   else {
