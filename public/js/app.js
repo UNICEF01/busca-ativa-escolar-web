@@ -7602,9 +7602,9 @@ function identify(namespace, file) {
 			invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
 			invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
 		};
-
+		//Campos obrigatórios do formulario
 		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredMayorFields = ['email','name','cpf','dob','phone'];
+		var requiredMayorFields = ['name','cpf','dob','phone'];
 
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
