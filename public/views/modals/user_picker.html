@@ -9,20 +9,7 @@
 			<ui-select ng-model="$parent.selectedUser">
 				<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
 				<ui-select-choices repeat="user in users | filter: $select.search track by user.id">
-					<div>
-						<div>
-							<i class="fa fa-user"></i>
-							<strong ng-bind-html="user.name | highlight: $select.search"></strong>
-
-						</div>
-						<div>
-							<small ng-bind="user.type | lang:'user.type'"></small>
-							<span class="pull-right text-right" ng-show="user.group">
-								<small ng-bind="user.group.name"></small>
-								<i class="fa fa-users"></i>
-							</span>
-						</div>
-					</div>
+					<div><i class="fa fa-user"></i> <strong ng-bind-html="user.name | highlight: $select.search"></strong> <small ng-bind="user.type | lang:'user.type'"></small></div>
 				</ui-select-choices>
 			</ui-select>
 		</div>

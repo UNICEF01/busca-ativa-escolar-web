@@ -40,10 +40,6 @@
 				return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
 			};
 
-			$scope.isTargetUserUFBound = function () {
-				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
-			};
-
 			$scope.canDefineUserTenant = function() {
 				// Can specify user tenant only if superadmin, and only if target user type is tenant-bound
 				if(!$scope.isSuperAdmin()) return false;
