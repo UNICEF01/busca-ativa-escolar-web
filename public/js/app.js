@@ -953,30 +953,21 @@
 			})
 		})
 		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
-
 			$scope.identity = Identity;
 
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
-			$scope.sort = {};
-			$scope.filter = {};
 
-			$scope.getFilteredChildren = function() {
-				var filtered = [];
+			$scope.query = {
+                name: null,
+                submitter_name: null,
+                sort: {},
+                max: 16,
+                page: 1
+            };
 
-				for(var i in $scope.children.data) {
-					if(!$scope.children.data.hasOwnProperty(i)) continue;
-					var alert = $scope.children.data[i];
-
-					if($scope.filter.name && alert.name.toLowerCase().indexOf($scope.filter.name.toLowerCase()) === -1) continue;
-					if($scope.filter.submitter_name && alert.submitter.name.toLowerCase().indexOf($scope.filter.submitter_name.toLowerCase()) === -1) continue;
-
-					filtered.push(alert);
-				}
-
-				return filtered;
-			};
+            $scope.search = {};
 
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
@@ -986,11 +977,17 @@
 				return $scope.causes[$scope.child.alert.alert_cause_id].label;
 			};
 
+            $scope.setMaxResults = function(max) {
+                $scope.query.max = max;
+                $scope.refresh();
+            };
+
 			$scope.static = StaticData;
 
 			$scope.refresh = function() {
 				$scope.child = null;
-				$scope.children = Alerts.getPending({sort: $scope.sort});
+				$scope.children = Alerts.getPending($scope.query);
+				$scope.search = $scope.children;
 			};
 
 			$scope.preview = function(child) {
@@ -2408,7 +2405,10 @@
 		$scope.identity = Identity;
 
 		if(!$stateParams.step) {
-			if(Identity.can('settings.manage')) return $state.go('settings', {step: 4}); // First tab in settings
+			if(Identity.can('settings.manage') || Identity.can('groups.manage')) { // First tab in settings
+				return $state.go('settings', {step: 4});
+            }
+
 			return $state.go('settings', {step: 8}); // Educacenso
 		}
 
@@ -5174,6 +5174,24 @@ if (!Array.prototype.find) {
 
 })();
 (function() {
+//Cria o icone de download
+    Highcharts.SVGRenderer.prototype.symbols.download = function (x, y, w, h) {
+        var path = [
+            // Arrow stem
+            'M', x + w * 0.5, y,
+            'L', x + w * 0.5, y + h * 0.7,
+            // Arrow head
+            'M', x + w * 0.3, y + h * 0.5,
+            'L', x + w * 0.5, y + h * 0.7,
+            'L', x + w * 0.7, y + h * 0.5,
+            // Box
+            'M', x, y + h * 0.9,
+            'L', x, y + h,
+            'L', x + w, y + h,
+            'L', x + w, y + h * 0.9
+        ];
+        return path;
+    };
 
 	var app = angular.module('BuscaAtivaEscolar');
 
@@ -7581,9 +7599,9 @@ function identify(namespace, file) {
 			invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
 			invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
 		};
-
+		//Campos obrigatórios do formulario
 		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredMayorFields = ['email','name','cpf','dob','phone'];
+		var requiredMayorFields = ['name','cpf','dob','phone'];
 
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
@@ -7962,6 +7980,10 @@ function identify(namespace, file) {
 
 			$scope.isTargetUserTenantBound = function () {
 				return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
+			};
+
+			$scope.isTargetUserUFBound = function () {
+				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
 			};
 
 			$scope.canDefineUserTenant = function() {
