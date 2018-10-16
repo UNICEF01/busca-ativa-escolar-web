@@ -9,21 +9,30 @@
 			})
 		})
 		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
+
 			$scope.identity = Identity;
 
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
+			$scope.sort = {};
+			$scope.filter = {};
 
-			$scope.query = {
-                name: null,
-                submitter_name: null,
-                sort: {},
-                max: 16,
-                page: 1
-            };
+			$scope.getFilteredChildren = function() {
+				var filtered = [];
 
-            $scope.search = {};
+				for(var i in $scope.children.data) {
+					if(!$scope.children.data.hasOwnProperty(i)) continue;
+					var alert = $scope.children.data[i];
+
+					if($scope.filter.name && alert.name.toLowerCase().indexOf($scope.filter.name.toLowerCase()) === -1) continue;
+					if($scope.filter.submitter_name && alert.submitter.name.toLowerCase().indexOf($scope.filter.submitter_name.toLowerCase()) === -1) continue;
+
+					filtered.push(alert);
+				}
+
+				return filtered;
+			};
 
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
@@ -33,17 +42,11 @@
 				return $scope.causes[$scope.child.alert.alert_cause_id].label;
 			};
 
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.refresh();
-            };
-
 			$scope.static = StaticData;
 
 			$scope.refresh = function() {
 				$scope.child = null;
-				$scope.children = Alerts.getPending($scope.query);
-				$scope.search = $scope.children;
+				$scope.children = Alerts.getPending({sort: $scope.sort});
 			};
 
 			$scope.preview = function(child) {
