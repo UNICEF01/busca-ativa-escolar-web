@@ -944,22 +944,22 @@
 })();
 (function() {
 
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
-            $stateProvider.state('pending_alerts', {
-                url: '/pending_alerts',
-                templateUrl: '/views/children/pending_alerts.html',
-                controller: 'PendingAlertsCtrlCtrl'
-            })
-        })
-        .controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
-            $scope.identity = Identity;
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_alerts', {
+				url: '/pending_alerts',
+				templateUrl: '/views/children/pending_alerts.html',
+				controller: 'PendingAlertsCtrlCtrl'
+			})
+		})
+		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
+			$scope.identity = Identity;
 
-            $scope.children = {};
-            $scope.child = {};
-            $scope.causes = {};
+			$scope.children = {};
+			$scope.child = {};
+			$scope.causes = {};
 
-            $scope.query = {
+			$scope.query = {
                 name: null,
                 submitter_name: null,
                 sort: {},
@@ -969,66 +969,66 @@
 
             $scope.search = {};
 
-            $scope.getAlertCauseName = function() {
-                if(!$scope.child) return 'err:no_child_open';
-                if(!$scope.child.alert) return 'err:no_alert_data';
-                if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
-                if(!$scope.causes[$scope.child.alert.alert_cause_id]) return 'err:no_cause_with_id';
-                return $scope.causes[$scope.child.alert.alert_cause_id].label;
-            };
+			$scope.getAlertCauseName = function() {
+				if(!$scope.child) return 'err:no_child_open';
+				if(!$scope.child.alert) return 'err:no_alert_data';
+				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
+				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return 'err:no_cause_with_id';
+				return $scope.causes[$scope.child.alert.alert_cause_id].label;
+			};
 
             $scope.setMaxResults = function(max) {
                 $scope.query.max = max;
                 $scope.refresh();
             };
 
-            $scope.static = StaticData;
+			$scope.static = StaticData;
 
-            $scope.refresh = function() {
-                $scope.child = null;
-                $scope.children = Alerts.getPending($scope.query);
-                $scope.search = $scope.children;
-            };
+			$scope.refresh = function() {
+				$scope.child = null;
+				$scope.children = Alerts.getPending($scope.query);
+				$scope.search = $scope.children;
+			};
 
-            $scope.preview = function(child) {
-                $scope.child = child;
-            };
+			$scope.preview = function(child) {
+				$scope.child = child;
+			};
 
-            $scope.canAcceptAlert = function(child) {
-                if(!child) return false;
-                if(!child.requires_address_update) return true;
-                return child.alert
-                    && child.alert.place_address
-                    && (child.alert.place_address.trim().length > 0)
-                    && child.alert.place_neighborhood
-                    && (child.alert.place_neighborhood.trim().length > 0);
-            };
+			$scope.canAcceptAlert = function(child) {
+				if(!child) return false;
+				if(!child.requires_address_update) return true;
+				return child.alert
+					&& child.alert.place_address
+					&& (child.alert.place_address.trim().length > 0)
+					&& child.alert.place_neighborhood
+					&& (child.alert.place_neighborhood.trim().length > 0);
+			};
 
-            $scope.accept = function(child) {
-                if(!$scope.canAcceptAlert(child)) {
-                    return;
-                }
+			$scope.accept = function(child) {
+				if(!$scope.canAcceptAlert(child)) {
+					return;
+				}
 
-                Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
-                    $scope.refresh();
-                    $scope. child = {};
-                });
-            };
+				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
+					$scope.refresh();
+					$scope. child = {};
+				});
+			};
 
-            $scope.reject = function(child) {
-                Alerts.reject({id: child.id}, function() {
-                    $scope.refresh();
-                    $scope.child = {};
-                });
-            };
+			$scope.reject = function(child) {
+				Alerts.reject({id: child.id}, function() {
+					$scope.refresh();
+					$scope.child = {};
+				});
+			};
 
 
-            Platform.whenReady(function() {
-                $scope.causes = StaticData.getAlertCauses();
-                $scope.refresh();
-            });
+			Platform.whenReady(function() {
+				$scope.causes = StaticData.getAlertCauses();
+				$scope.refresh();
+			});
 
-        });
+		});
 
 })();
 (function() {
@@ -2405,7 +2405,10 @@
 		$scope.identity = Identity;
 
 		if(!$stateParams.step) {
-			if(Identity.can('settings.manage')) return $state.go('settings', {step: 4}); // First tab in settings
+			if(Identity.can('settings.manage') || Identity.can('groups.manage')) { // First tab in settings
+				return $state.go('settings', {step: 4});
+            }
+
 			return $state.go('settings', {step: 8}); // Educacenso
 		}
 
@@ -5171,6 +5174,24 @@ if (!Array.prototype.find) {
 
 })();
 (function() {
+//Cria o icone de download
+    Highcharts.SVGRenderer.prototype.symbols.download = function (x, y, w, h) {
+        var path = [
+            // Arrow stem
+            'M', x + w * 0.5, y,
+            'L', x + w * 0.5, y + h * 0.7,
+            // Arrow head
+            'M', x + w * 0.3, y + h * 0.5,
+            'L', x + w * 0.5, y + h * 0.7,
+            'L', x + w * 0.7, y + h * 0.5,
+            // Box
+            'M', x, y + h * 0.9,
+            'L', x, y + h,
+            'L', x + w, y + h,
+            'L', x + w, y + h * 0.9
+        ];
+        return path;
+    };
 
 	var app = angular.module('BuscaAtivaEscolar');
 
@@ -7578,9 +7599,9 @@ function identify(namespace, file) {
 			invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
 			invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
 		};
-
+		//Campos obrigatórios do formulario
 		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredMayorFields = ['email','name','cpf','dob','phone'];
+		var requiredMayorFields = ['name','cpf','dob','phone'];
 
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
@@ -7959,6 +7980,10 @@ function identify(namespace, file) {
 
 			$scope.isTargetUserTenantBound = function () {
 				return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
+			};
+
+			$scope.isTargetUserUFBound = function () {
+				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
 			};
 
 			$scope.canDefineUserTenant = function() {
