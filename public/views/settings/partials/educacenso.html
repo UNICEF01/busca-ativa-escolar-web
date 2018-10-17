@@ -15,6 +15,11 @@
 					<br />Repita o processo somente se você tiver uma nova planilha.
 				</div>
 
+				<div class="alert alert-danger">
+					<strong>Atenção!</strong>
+					<br />Arquivos muito grandes demandam um tempo maior para processamento. Após a confirmação do upload do arquivo, acompanhe o status da importação logo abaixo.
+				</div>
+
 				<a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a>
 
 				<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora.</div>
@@ -35,7 +40,7 @@
 						<th>Data e hora</th>
 						<th>Status</th>
 						<th>Solicitante</th>
-						<th>Qtd. Alertas</th>
+
 					</tr>
 					</thead>
 					<tbody>
@@ -48,7 +53,7 @@
 							<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-ban"></i> Erro</span>
 						</td>
 						<td><span ng-bind="job.user.name"></span></td>
-						<td><span ng-show="job.status === 'completed'" ng-bind="job.total_records"></span></td>
+
 					</tr>
 					</tbody>
 				</table>
