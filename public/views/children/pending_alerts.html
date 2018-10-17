@@ -6,37 +6,59 @@
 				<a style="margin-top: 22px;" class="btn btn-sm btn-raised btn-default pull-right" ng-click="refresh()"><i class="fa fa-refresh"></i> Atualizar</a>
 			</div>
 			<div class="panel-body">
-				<div class="alert alert-success" ng-hide="children.data && children.data.length > 0">Nenhum alerta pendente de aprovação!</div>
-				<div ng-show="children.data && children.data.length > 0">
+
+				<div>
+
 					<div class="simple-filter">
 						<h5><i class="fa fa-filter"></i> Filtrar</h5>
 						<div class="form-group col-md-6">
-							<input type="search" class="form-control" ng-model="filter.name" placeholder="Nome..." />
+							<input type="search" class="form-control" ng-model="query.name" placeholder="Nome..." />
 						</div>
 						<div class="form-group col-md-6">
-							<input type="search" class="form-control" ng-model="filter.submitter_name" placeholder="Agente..." />
+							<input type="search" class="form-control" ng-model="query.submitter_name" placeholder="Agente..." />
 						</div>
 					</div>
+
+					<div style="margin-top: 10px;">
+						<div class="form-group col-md-3" style="margin-top: 20px;">
+							Limite de exibição
+						</div>
+						<div class="form-group col-md-7">
+							<ul class="nav nav-pills adm-max-results-filter">
+								<li ng-class="{active: query.max==16}"><a ng-click="setMaxResults(16)">16</a></li>
+								<li ng-class="{active: query.max==32}"><a ng-click="setMaxResults(32)">32</a></li>
+								<li ng-class="{active: query.max==64}"><a ng-click="setMaxResults(64)">64</a></li>
+								<li ng-class="{active: query.max==128}"><a ng-click="setMaxResults(128)">128</a></li>
+							</ul>
+						</div>
+					</div>
+
 					<table class="table">
 						<thead>
-							<tr>
-								<th><column-sorter on-change="refresh" model="sort" field="'alert_submitter_id'">Agente</column-sorter></th>
-								<th><column-sorter on-change="refresh" model="sort" field="'risk_level'">Prioridade</column-sorter></th>
-								<th><column-sorter on-change="refresh" model="sort" field="'name'">Nome</column-sorter></th>
-								<th><column-sorter on-change="refresh" model="sort" field="'created_at'">Data</column-sorter></th>
-							</tr>
+						<tr>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'alert_submitter_id'">Agente</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter></th>
+							<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
+						</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="(i, child) in getFilteredChildren()" ng-click="preview(child)" style="cursor: pointer;">
-								<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
-								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
-								<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
-								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
-							</tr>
+						<tr ng-repeat="child in children.data" ng-click="preview(child)" style="cursor: pointer;">
+							<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
+							<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
+							<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
+							<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
+						</tr>
 						</tbody>
 					</table>
+
+					<app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+
 				</div>
+
 			</div>
+
+
 		</div>
 	</div>
 
