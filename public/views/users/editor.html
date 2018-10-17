@@ -39,7 +39,7 @@
 				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()"></select>
 			</div>
 
-			<div class="form-group col-md-6" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
+			<div class="form-group col-md-6" ng-if="isTargetUserTenantBound()">
 				<label class="control-label" for="fld-group">Grupo*</label>
 				<select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data">
 					<option value="">Nenhum</option>

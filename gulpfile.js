@@ -29,7 +29,7 @@ elixir(function(mix) {
 		desiredDependencies.push(dependencies[i]);
 	}
 
-	mix.scripts(desiredDependencies, 'public/js/vendor.js', '/');
+	mix.scripts(desiredDependencies, "public/js/vendor.js", "/");
 	mix.scriptsIn('resources/assets/js*', 'public/js/app.js');
 	mix.browserify('app.js');
 
