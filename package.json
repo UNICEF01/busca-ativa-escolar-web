@@ -13,5 +13,7 @@
     "laravel-elixir-wiredep": "*",
     "wiredep": "^4.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "angular-cookies": "^1.7.5"
+  }
 }
