@@ -20,6 +20,8 @@
 				}
 
 				$scope.groups[i].is_deleting = true;
+
+                $scope.save();
 			};
 
 			$scope.cancelRemoval = function (i) {
@@ -82,6 +84,7 @@
 				$scope.groups.push(group);
 
 				$scope.newGroupName = '';
+                $scope.save();
 			};
 
 
