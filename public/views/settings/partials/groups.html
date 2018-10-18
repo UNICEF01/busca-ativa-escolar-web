@@ -3,8 +3,11 @@
 		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
 	</div>
 	<form name="$parent.$parent.groupsEdit" class="panel-body">
-		<p>
+		<p ng-if="identity.getCurrentTenant()">
 			Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
+		</p>
+		<p ng-if="!identity.getCurrentTenant()">
+			Os grupos de trabalho respondem pelas diferentes coordenadorias / regionais / diretorias estaduais de ensino que serão responsáveis pela (re)matrícula das crianças e adolescentes de determinado conjunto de municípios que atendem.
 		</p>
 		<table class="table sign-up-groups">
 			<thead>
