@@ -68,7 +68,7 @@
 					console.error('[groups.save] Error: ', err);
 					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
 					$scope.refresh();
-				})
+				});
 			};
 
 			$scope.addGroup = function() {
@@ -87,17 +87,28 @@
                 $scope.save();
 			};
 
+            $scope.updateGroup = function(value,index) {
+
+                if(!$scope.groups[index].name) return;
+                if($scope.groups[index].name.length < 5) return;
+
+				if(value !== $scope.groupsCopy[index].name){
+                    $scope.save();
+
+                }
+            };
+
 
 			$scope.refresh = function() {
 				Groups.find(function(res) {
 					$scope.groups = res.data;
+					$scope.groupsCopy = angular.copy($scope.groups);
 				});
 			};
 
 			Platform.whenReady(function() {
 				$scope.refresh();
-			})
-
+			});
 		});
 
 })();

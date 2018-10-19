@@ -19,7 +19,7 @@
 			<tbody>
 			<tr ng-repeat="(i, group) in getGroups() track by i">
 				<td>
-					<input type="text" ng-enter="addGroup()" ng-disabled="group.is_deleting" ng-class="{'text-will-remove': group.is_deleting}" ng-model="group.name" name="group_{{i}}" class="form-control"/>
+					<input id="id_{{i}}" type="text" ng-enter="updateGroup(group.name, i)" ng-blur="updateGroup(group.name, i)" ng-disabled="group.is_deleting" ng-class="{'text-will-remove': group.is_deleting}" ng-model="group.name" ng-enter="addGroup()" name="group_{{i}}" class="form-control"/>
 				</td>
 				<td>
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
@@ -28,7 +28,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><input type="text" ng-model="$parent.newGroupName" class="form-control" placeholder="Nome da secretaria..." ng-enter="addGroup()"/></td>
+				<td><input type="text" ng-model="$parent.newGroupName" ng-blur="addGroup()" class="form-control" placeholder="Nome da secretaria..." ng-enter="addGroup()"/></td>
 				<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo"><i class="fa fa-plus-circle"></i></a></td>
 			</tr>
 			</tbody>
