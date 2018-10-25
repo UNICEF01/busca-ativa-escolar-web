@@ -3,7 +3,7 @@
 		<div class="panel-heading clearfix">
 			<div class="row">
 				<div class="col-md-6">
-					<h3><i class="fa fa-university"></i> Municípios</h3>
+					<h3><i class="fa fa-university"></i> Municípios | {{tenants.meta.pagination.total}}</h3>
 				</div>
 				<div class="col-md-6">
 					<a ng-if="identity.can('tenants.export')" ng-click="export()" class="btn btn-raised btn-primary pull-right"><i class="fa fa-download"></i> Exportar</a>
