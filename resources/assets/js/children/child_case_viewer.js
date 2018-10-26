@@ -187,7 +187,8 @@
 
 	}
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData) {
+	function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants) {
+
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.CaseSteps = CaseSteps;
@@ -202,12 +203,25 @@
 		$scope.checkboxes = {};
 
 		$scope.step = {};
+        $scope.tenantSettings = {};
+
 		$scope.isMapReady = false;
 		$scope.defaultMapZoom = 14;
 
+		$scope.current_date = {};
+
 		function fetchStepData() {
-			$scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
-			$scope.step.$promise.then(function (step) {
+
+            $scope.current_date = new Date();
+
+            $scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
+
+            Tenants.getSettings(function (res) {
+                console.log('[manage_deadlines] Current settings: ', res);
+                $scope.tenantSettings = res;
+            });
+
+            $scope.step.$promise.then(function (step) {
 				$scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
 				$scope.case = step.case;
 				$scope.$parent.openStepID = $scope.step.id;
@@ -217,6 +231,7 @@
 				}
 
 			});
+
 		}
 
 		fetchStepData();
@@ -261,7 +276,6 @@
 			if(!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
 			return (!$scope.step.is_completed);
 		};
-
 
 		$scope.canAcceptAlert = function(step, fields) {
 			if(!step) return false;
@@ -336,7 +350,6 @@
 
 			return filtered;
 		}
-
 
 		$scope.assignUser = function() {
 
@@ -469,5 +482,37 @@
 				ngToast.success("Os campos da etapa foram salvos com sucesso!");
 			})
 		}
+
+        $scope.diffDaysBetweenSteps = function (a, b){
+            const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+            const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+            return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
+        };
+
+        $scope.canUpdateStepObservation = function (child){
+            var time_for_next_step = 0;
+            if($scope.step.slug=="1a_observacao"){
+                time_for_next_step = $scope.tenantSettings.stepDeadlines["1a_observacao"];
+                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                return permission;
+
+            }
+            if($scope.step.slug=="2a_observacao"){
+                time_for_next_step = $scope.tenantSettings.stepDeadlines["2a_observacao"];
+                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                return permission;
+            }
+            if($scope.step.slug=="3a_observacao"){
+                time_for_next_step = $scope.tenantSettings.stepDeadlines["3a_observacao"];
+                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                return permission;
+            }
+            if($scope.step.slug=="4a_observacao"){
+                time_for_next_step = $scope.tenantSettings.stepDeadlines["4a_observacao"];
+                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                return permission;
+            }
+        };
+
 	}
 })();
