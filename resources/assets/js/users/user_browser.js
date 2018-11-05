@@ -32,6 +32,7 @@
 
 		$scope.setMaxResults = function(max) {
 			$scope.query.max = max;
+            $scope.query.page = 1;
 			$scope.refresh();
 		};
 
