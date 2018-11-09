@@ -2,25 +2,25 @@
 	<div class="col-md-2">
 		<div class="panel panel-default">
 			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">municípios participantes <i uib-tooltip="Quantidade de municípios cadastrados e participantes do programa Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-footer">municípios participantes <i uib-tooltip="Total de municípios, do seu estado, que aderiram à Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
 		</div>
 	</div>
 	<div class="col-md-2">
 		<div class="panel panel-default">
 			<h1 class="panel-body" ng-bind="stats.num_alerts || 0"></h1>
-			<div class="panel-footer">alertas <i uib-tooltip="Quantos alertas, no total, foram abertos na plataforma" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
+			<div class="panel-footer">alertas <i uib-tooltip="Total de casos atribuídos à rede estadual pelos municípios" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
 		</div>
 	</div>
 	<div class="col-md-2">
 		<div class="panel panel-default">
 			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
-			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Quantos casos, na plataforma, estão em andamento" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Total de casos em andamento" class="fa fa-info-circle"></i>&nbsp;</div>
 		</div>
 	</div>
 	<div class="col-md-2">
 		<div class="panel panel-default">
 			<h1 class="panel-body" ng-bind="stats.num_children_reinserted || 0"></h1>
-			<div class="panel-footer">crianças ou adolescentes<br /> (re)matriculados <i uib-tooltip="Quantas crianças, na plataforma, já foram rematriculadas" class="fa fa-info-circle"></i>&nbsp;</div>
+			<div class="panel-footer">crianças ou adolescentes<br /> (re)matriculados <i uib-tooltip="Total de crianças/adolescentes que já foram (re)matriculados)" class="fa fa-info-circle"></i>&nbsp;</div>
 		</div>
 	</div>
 </div>
