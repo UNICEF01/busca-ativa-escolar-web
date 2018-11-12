@@ -44,7 +44,14 @@
 						</td>
 						<td width="8%" style="vertical-align: middle;">
 							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
-							<span class="label label-default" ng-show="child.case_status == 'cancelled'">Cancelado</span>
+							<span class="label label-default" ng-show="child.case_status == 'cancelled'">
+								Cancelado
+								<span ng-show="child.cancel_reason == 'duplicate'">| Motivo: Caso duplicado</span>
+								<span ng-show="child.cancel_reason == 'death'">| Motivo: Óbito</span>
+								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
+								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
+								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+							</span>
 							<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
 							<span ng-show="child.case_status === 'in_progress'">
 								<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
