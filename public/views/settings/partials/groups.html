@@ -3,9 +3,11 @@
 		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
 	</div>
 	<form name="$parent.$parent.groupsEdit" class="panel-body">
-		<p>
+		<p ng-if="identity.getCurrentTenant()">
 			Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
 		</p>
+		<p ng-if="!identity.getCurrentTenant()">
+			Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.</p>
 		<table class="table sign-up-groups">
 			<thead>
 			<tr>
@@ -15,25 +17,27 @@
 			</thead>
 			<tbody>
 			<tr ng-repeat="(i, group) in getGroups() track by i">
-				<td><input type="text" ng-disabled="group.is_deleting" ng-class="{'text-will-remove': group.is_deleting}" ng-model="group.name" name="group_{{i}}" class="form-control" placeholder="Nome da secretaria..." /></td>
+				<td>
+					<input id="id_{{i}}" type="text" ng-enter="updateGroup(group.name, i)" ng-blur="updateGroup(group.name, i)" ng-disabled="group.is_deleting" ng-class="{'text-will-remove': group.is_deleting}" ng-model="group.name" ng-enter="addGroup()" name="group_{{i}}" class="form-control"/>
+				</td>
 				<td>
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
-					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i> Remover</a>
-					<a class="btn btn-raised btn-warning" ng-show="group.is_deleting" ng-click="cancelRemoval(i);" uib-tooltip="Cancelar remoção"><i class="fa fa-undo"></i> Cancelar</a>
+					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+					<a class="btn btn-raised btn-warning" ng-show="group.is_deleting" ng-click="cancelRemoval(i);" uib-tooltip="Cancelar remoção"><i class="fa fa-undo"></i></a>
 				</td>
 			</tr>
 			<tr>
-				<td><input type="text" ng-model="$parent.newGroupName" class="form-control" placeholder="Nome da secretaria..." /></td>
-				<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo"><i class="fa fa-plus-circle"></i> Novo</a></td>
+				<td><input type="text" ng-model="$parent.newGroupName" ng-blur="addGroup()" class="form-control" placeholder="Nome da secretaria..." ng-enter="addGroup()"/></td>
+				<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo">Salvar</a></td>
 			</tr>
 			</tbody>
 		</table>
 
 	</form>
 
-	<div class="panel-footer clearfix">
-		<!--button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button-->
-		<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
-	</div>
+	<!--<div class="panel-footer clearfix">-->
+		<!--&lt;!&ndash;button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>-->
+		<!--<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button&ndash;&gt;-->
+		<!--<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right"><i class="fa fa-save"></i></button>-->
+	<!--</div>-->
 </div>
