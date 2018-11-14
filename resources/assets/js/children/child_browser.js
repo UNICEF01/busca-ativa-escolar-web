@@ -34,7 +34,10 @@
 			$scope.query = angular.merge({}, $scope.defaultQuery);
 			$scope.search = {};
 
-			$scope.refresh = function() {
+            $scope.query.sort = {};
+
+
+            $scope.refresh = function() {
 				$scope.search = Children.search($scope.query);
 				$anchorScroll('#');
 			};

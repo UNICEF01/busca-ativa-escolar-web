@@ -23,15 +23,13 @@
 					scope.onChange(scope.field, scope.sortMode);
 				}
 			};
-			//Default order
-            scope.model['created_at'] = 'desc';
 		}
 
 		return {
 			scope: {
 				'model': '=',
 				'field': '=',
-				'onChange': '=?',
+				'onChange': '=?'
 			},
 			link: init,
 			replace: true,

@@ -4,18 +4,32 @@
 			<h3><i class="material-icons">list</i> Casos | {{search.stats.total_results}}</h3>
 		</div>
 		<div class="panel-body">
+            <!--<pre>-->
+            <!--{{search.results | json}}-->
+            <!--</pre>-->
 
 			<table class="table table-striped table-hover">
+				<!--<thead>-->
+					<!--<tr>-->
+						<!--<th>Nome <br /><small>da criança ou adolescente</small></th>-->
+						<!--<th>Risco <br />&nbsp;</th>-->
+						<!--<th>Idade <br />&nbsp;</th>-->
+						<!--<th>Etapa <br />&nbsp;</th>-->
+						<!--<th>Responsável <br /><small>pela etapa</small></th>-->
+						<!--<th>Status <br /><small>do caso</small></th>-->
+						<!--<th class="text-center"><br />&nbsp;</th>-->
+					<!--</tr>-->
+				<!--</thead>-->
 				<thead>
-					<tr>
-						<th>Nome <br /><small>da criança ou adolescente</small></th>
-						<th>Risco <br />&nbsp;</th>
-						<th>Idade <br />&nbsp;</th>
-						<th>Etapa <br />&nbsp;</th>
-						<th>Responsável <br /><small>pela etapa</small></th>
-						<th>Status <br /><small>do caso</small></th>
-						<th class="text-center"><br />&nbsp;</th>
-					</tr>
+				<tr>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome <br /><small>da criança ou adolescente</column-sorter></th>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Risco</column-sorter></th>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'age'">Idade</column-sorter></th>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'step_name'">Etapa</column-sorter></th>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'assigned_user_name'">Responsável</column-sorter></th>
+					<th><column-sorter on-change="refresh" model="query.sort" field="'case_status'">Status <br /><small>do caso</column-sorter></th>
+					<th class="text-center"><br />&nbsp;</th>
+				</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="(i, child) in search.results">
