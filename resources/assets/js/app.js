@@ -22,10 +22,9 @@
 
 			'ui.router',
 			'ui.bootstrap',
-			'ui.bootstrap',
 			'ui.select',
 			'ui.utils.masks',
 			'ui.ace',
-
+			'datatables'
 		])
 })();
