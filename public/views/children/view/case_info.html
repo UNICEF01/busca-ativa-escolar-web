@@ -788,12 +788,17 @@
 			<textarea style="height: 100px" class="form-control" id="fld-obs-observations" ng-readonly="!canEditCurrentStep()" ng-model="fields.observations"></textarea>
 		</div>
 
+		<div class="form-group col-md-12" ng-show="canEditCurrentStep() && !canUpdateStepObservation(child)">
+			<div class="alert alert-warning">
+				<strong>Atenção</strong><br/>
+				A {{step.name}} só poderá ser cadastrada após o prazo definido nas configurações do município.
+			</div>
+		</div>
 
 		<div ng-show="editable && canEditCurrentStep()">
 			<hr />
-
-			<a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
-			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep()">Salvar e concluir etapa</a>
+			<a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && canUpdateStepObservation(child)" ng-click="save()">Salvar</a>
+			<a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && canUpdateStepObservation(child)">Salvar e concluir etapa</a>
 		</div>
 
 	</div>

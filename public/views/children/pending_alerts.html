@@ -1,5 +1,5 @@
 <div>
-	<div class="col-md-6">
+	<div class="col-md-7">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h3 class="pull-left"><i class="fa fa-bell"></i> Alertas pendentes | {{children.data.length}}</h3>
@@ -36,17 +36,17 @@
 					<table class="table">
 						<thead>
 							<tr>
+								<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'alert_submitter_id'">Agente</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter></th>
-								<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
 							</tr>
 						</thead>
 						<tbody>
                             <tr ng-repeat="child in children.data" ng-click="preview(child)" style="cursor: pointer;">
-                                <td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
+								<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
+								<td><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></td>
                                 <td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
-                                <td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
                                 <td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
                             </tr>
 						</tbody>
@@ -62,7 +62,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-6">
+	<div class="col-md-5">
 		<form class="panel panel-default" ng-show="child && child.id" ng-submit="accept(child)">
 			<div class="panel-heading">
 				<h3><i class="fa fa-child"></i> {{child.name}}</h3>

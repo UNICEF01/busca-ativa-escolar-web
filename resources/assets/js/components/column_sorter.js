@@ -22,9 +22,9 @@
 				if(scope.onChange) {
 					scope.onChange(scope.field, scope.sortMode);
 				}
-
-			}
-
+			};
+			//Default order
+            scope.model['created_at'] = 'desc';
 		}
 
 		return {
