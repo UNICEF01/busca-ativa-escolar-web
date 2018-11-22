@@ -1,4 +1,5 @@
 <div class="wnd-view">
+
 	<form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
 		<div class="panel-heading clearfix">
 			<div class="pull-left" ng-show="!isCreating">
@@ -22,6 +23,24 @@
 
 			<hr />
 
+			<div ng-if="canDefineUserTenant() || canDefineUserUF()">
+
+				<h5>Dados de plataforma</h5>
+
+				<div class="form-group col-md-12" ng-if="!canDefineUserUF() && canDefineUserTenant()">
+					<label class="control-label" for="fld-tenant_id"><i class="fa fa-university"></i> Município da plataforma*</label>
+					<select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id" ng-options="n.id as n.name for n in tenants.data" ng-change="onSelectTenant()"></select>
+				</div>
+
+				<div class="form-group col-md-12" ng-if="canDefineUserUF()">
+					<label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
+					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
+				</div>
+
+			</div>
+
+			<hr/>
+
 			<h5>Dados de acesso</h5>
 
 			<div class="form-group col-md-6">
@@ -36,7 +55,7 @@
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-type">Função ocupada no sistema*</label>
-				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()"></select>
+				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunction()"></select>
 			</div>
 
 			<div class="form-group col-md-6" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
@@ -47,23 +66,6 @@
 			</div>
 
 			<hr />
-
-			<div ng-if="canDefineUserTenant() || canDefineUserUF()">
-
-				<h5>Dados de plataforma</h5>
-
-				<div class="form-group col-md-12" ng-if="!canDefineUserUF() && canDefineUserTenant()">
-					<label class="control-label" for="fld-tenant_id"><i class="fa fa-university"></i> Município da plataforma*</label>
-					<select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id" ng-options="n.id as n.name for n in tenants.data"></select>
-				</div>
-
-				<div class="form-group col-md-12" ng-if="canDefineUserUF()">
-					<label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
-					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
-				</div>
-
-				<hr />
-			</div>
 
 			<h5>Dados pessoais</h5>
 
