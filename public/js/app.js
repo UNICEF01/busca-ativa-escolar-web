@@ -4048,6 +4048,49 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -4127,49 +4170,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
-}
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -4645,10 +4645,11 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
+                findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
 				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
 				create: {method: 'POST', headers: headers},
 				delete: {method: 'DELETE', headers: headers},
-				update: {method: 'PUT', headers: headers},
+				update: {method: 'PUT', headers: headers}
 			});
 
 		});
@@ -8065,11 +8066,11 @@ function identify(namespace, file) {
 			$scope.identity = Identity;
 			$scope.static = StaticData;
 
-			$scope.groups = Groups.find();
+			$scope.groups = {};
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
-			var permissions = {}
+			var permissions = {};
 			var dateOnlyFields = ['dob'];
 
 			Platform.whenReady(function() {
@@ -8078,6 +8079,12 @@ function identify(namespace, file) {
 
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+			}else{
+				if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+                    $scope.groups = {};
+				}else{
+					$scope.groups = Groups.find();
+				}
 			}
 
 			$scope.isSuperAdmin = function() {
@@ -8134,8 +8141,19 @@ function identify(namespace, file) {
 
 			};
 
+            $scope.onSelectTenant = function(){
+                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
+			}
+
 			function prepareUserModel(user) {
-				return Utils.unpackDateFields(user, dateOnlyFields)
+
+                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+                    $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
+                }else{
+                    $scope.groups = Groups.find();
+				}
+
+                return Utils.unpackDateFields(user, dateOnlyFields)
 			}
 
 			function onSaved(res) {
