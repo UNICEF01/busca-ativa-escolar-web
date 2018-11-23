@@ -47,7 +47,7 @@
 								<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
 								<td>
 									<span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
-									<div class="pull-right"><small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small> <i class="fa fa-group"></i></div>
+									<div ng-show="child.submitter.group.name" class="pull-right"><small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small> <i class="fa fa-group"></i></div>
 								</td>
                                 <td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
                                 <td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
