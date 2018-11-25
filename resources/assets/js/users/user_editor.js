@@ -96,10 +96,28 @@
                 $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
 			}
 
+            $scope.onSelectUf = function(){
+                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
+            }
+
+            $scope.onSelectFunction = function(){
+                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+                    $scope.groups = {};
+                    $scope.user.uf = null;
+                    $scope.user.tenant_id = null;
+                }
+			}
+
 			function prepareUserModel(user) {
 
                 if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
+
+                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
+                        $scope.groups = Groups.findByUf({'uf': user.uf});
+					}else {
+                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
+                    }
+
                 }else{
                     $scope.groups = Groups.find();
 				}

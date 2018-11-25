@@ -16,9 +16,14 @@
 		</div>
 		<div class="panel-body">
 
-			<div class="form-group col-md-12">
+			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-name">Nome*</label>
 				<input type="text" class="form-control" id="fld-name" ng-model="user.name">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-type">Função ocupada no sistema*</label>
+				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunction()"></select>
 			</div>
 
 			<hr />
@@ -34,7 +39,7 @@
 
 				<div class="form-group col-md-12" ng-if="canDefineUserUF()">
 					<label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
-					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
+					<select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'" ng-change="onSelectUf()"></select>
 				</div>
 
 			</div>
@@ -43,22 +48,17 @@
 
 			<h5>Dados de acesso</h5>
 
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
 				<input type="email" autocomplete="new-password" class="form-control" id="fld-email" required ng-model="user.email">
 			</div>
 
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-password"><i class="fa fa-key"></i> Alterar senha de acesso*</label>
 				<input type="password" autocomplete="new-password" class="form-control" id="fld-password" ng-model="user.password">
 			</div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-type">Função ocupada no sistema*</label>
-				<select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunction()"></select>
-			</div>
-
-			<div class="form-group col-md-6" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
+			<div class="form-group col-md-4" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
 				<label class="control-label" for="fld-group">Grupo*</label>
 				<select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data">
 					<option value="">Nenhum</option>
