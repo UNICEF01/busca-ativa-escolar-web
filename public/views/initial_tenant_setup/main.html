@@ -19,8 +19,10 @@
 </div>
 
 <div class="clearfix" ng-if="isReady" style="margin: 20px 0">
+	<button ng-click="completeSetup()" type="button" class="btn btn-raised pull-left">Fazer depois</button>
 	<button ng-show="getCurrentStep() > 1" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
 	<button ng-show="getCurrentStep() < 6" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
 	<!--button ng-show="getCurrentStep() < 5" ng-click="completeSetup()" type="button" class="btn btn-success btn-raised pull-right">Pular configuração inicial <i class="fa fa-repeat"></i></button-->
 	<button ng-show="getCurrentStep() == 6" ng-click="completeSetup()" type="button" class="btn btn-primary btn-raised pull-right">Concluir <i class="fa fa-check"></i></button>
 </div>
+<div class="warning badge" style="position: relative; top: -15px;">Atenção! Optando por fazer depois, os grupos, prazos e prioridades exibidos são os padrões do sistema.</div>

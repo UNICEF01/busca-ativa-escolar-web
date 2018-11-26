@@ -52,7 +52,7 @@
 		};
 
 		$scope.static = StaticData;
-		$scope.tenants = Tenants.find();
+		$scope.tenants = [];
 		$scope.groups = Groups.find();
 		$scope.canFilterByTenant = false;
 
@@ -74,6 +74,7 @@
 		};
 
 		$scope.refresh = function() {
+            $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
 			$scope.search = Users.search($scope.query);
 		};
 

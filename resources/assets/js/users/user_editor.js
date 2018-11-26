@@ -17,11 +17,11 @@
 			$scope.identity = Identity;
 			$scope.static = StaticData;
 
-			$scope.groups = Groups.find();
+			$scope.groups = {};
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
-			var permissions = {}
+			var permissions = {};
 			var dateOnlyFields = ['dob'];
 
 			Platform.whenReady(function() {
@@ -30,6 +30,12 @@
 
 			if(!$scope.isCreating) {
 				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+			}else{
+				if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+                    $scope.groups = {};
+				}else{
+					$scope.groups = Groups.find();
+				}
 			}
 
 			$scope.isSuperAdmin = function() {
@@ -86,8 +92,37 @@
 
 			};
 
+            $scope.onSelectTenant = function(){
+                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
+			}
+
+            $scope.onSelectUf = function(){
+                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
+            }
+
+            $scope.onSelectFunction = function(){
+                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+                    $scope.groups = {};
+                    $scope.user.uf = null;
+                    $scope.user.tenant_id = null;
+                }
+			}
+
 			function prepareUserModel(user) {
-				return Utils.unpackDateFields(user, dateOnlyFields)
+
+                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+
+                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
+                        $scope.groups = Groups.findByUf({'uf': user.uf});
+					}else {
+                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
+                    }
+
+                }else{
+                    $scope.groups = Groups.find();
+				}
+
+                return Utils.unpackDateFields(user, dateOnlyFields)
 			}
 
 			function onSaved(res) {

@@ -24,16 +24,8 @@
 				<div class="row">
 					<div class="form-group col-md-6" ng-if="canFilterByTenant">
 						<div class="row">
-							<div class="col-md-8">
-								<label><i class="fa fa-university"></i> Município</label>
-								<ui-select ng-model="query.tenant_id" on-select="refresh()">
-									<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
-									<ui-select-choices repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
-										<div ng-bind-html="tenant.name | highlight: $select.search"></div>
-									</ui-select-choices>
-								</ui-select>
-							</div>
-							<div class="col-md-4">
+
+							<div class="col-md-3">
 								<label>UF</label>
 								<ui-select ng-model="query.uf" on-select="refresh()">
 									<ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.code}}</ui-select-match>
@@ -42,6 +34,18 @@
 									</ui-select-choices>
 								</ui-select>
 							</div>
+
+
+							<div class="col-md-9">
+								<label><i class="fa fa-university"></i> Município</label>
+								<ui-select ng-model="query.tenant_id" on-select="refresh()">
+									<ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}</ui-select-match>
+									<ui-select-choices repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
+										<div ng-bind-html="tenant.name | highlight: $select.search"></div>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+
 						</div>
 					</div>
 
