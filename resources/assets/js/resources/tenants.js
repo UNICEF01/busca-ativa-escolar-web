@@ -13,7 +13,8 @@
 				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
 				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
 				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
-				find: {method: 'GET', headers: headers}
+				find: {method: 'GET', headers: headers},
+                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders}
 			});
 
 		});
