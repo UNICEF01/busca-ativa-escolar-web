@@ -8,7 +8,7 @@
 				controller: 'StateBrowserCtrl'
 			})
 		})
-		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity) {
+		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -23,6 +23,12 @@
 			$scope.refresh = function() {
 				$scope.states = States.all($scope.query);
 			};
+
+            $scope.export = function() {
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
+                });
+            };
 			
 			$scope.refresh();
 
