@@ -1,9 +1,9 @@
 <div class="panel panel-default">
-	<div class="panel-body">
+	<div class="panel-body" ng-if="isReady() && hasAssignments()">
 
 		<div class="alert alert-info" ng-show="isReady() && !hasAssignments()">Você não tem atribuições pendentes.</div>
 
-		<table class="table table-striped table-hover" ng-show="isReady() && hasAssignments()">
+			<table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs" ng-show="isReady() && hasAssignments()">
 			<thead>
 				<tr>
 					<th>Nome <br /><small>da criança ou adolescente</small></th>
@@ -30,7 +30,7 @@
 						<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="child.risk_level === 'low'">B</div>
 					</td>
 					<td width="10%" style="vertical-align: middle;">
-						<span ng-show="child.age">{{child.age}} anos</span>
+						<span ng-show="child.age">{{child.age | digits}} anos</span>
 						<span ng-show="!child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
 					</td>
 					<td width="10%" style="vertical-align: middle;">
