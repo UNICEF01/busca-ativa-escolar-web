@@ -12,6 +12,11 @@
 			$scope.reason = reason;
 			$scope.canDismiss = canDismiss;
 
+            $scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
+            }
+
 			function onLoggedIn(session) {
 				$uibModalInstance.close({response: Identity.getCurrentUser()});
 			}

@@ -125,6 +125,11 @@
                 return Utils.unpackDateFields(user, dateOnlyFields)
 			}
 
+			$scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            }
+
 			function onSaved(res) {
 				if(res.status === "ok") {
 					ngToast.success("Dados de usuário salvos com sucesso!");

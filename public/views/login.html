@@ -14,13 +14,22 @@
 					<div class="panel-body">
 						<p>Bem-vindo(a) à Busca Ativa Escolar.</p>
 						<p>Preencha os campos a seguir com seu e-mail cadastrado e senha.</p>
+
 						<div class="form-group">
 							<label for="fld-email" class="control-label"><i class="fa fa-envelope"></i> E-mail:</label>
 							<input id="fld-email" class="form-control" type="email" name="email" ng-model="email" />
 						</div>
+
 						<div class="form-group">
-							<label for="fld-password" class="control-label"><i class="fa fa-key"></i> Senha:</label>
-							<input id="fld-password" class="form-control" type="password" name="password" ng-model="password" />
+							<div class="input-group">
+								<label for="fld-password" class="control-label"><i class="fa fa-key"></i> Senha:</label>
+								<input id="fld-password" class="form-control" type="password" name="password" ng-model="password" />
+								<span class="input-group-btn" uib-tooltip="Exibir a senha">
+									<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
+										<i class="fa fa-eye"></i>
+									</button>
+								</span>
+							</div>
 						</div>
 					</div>
 					<div class="panel-footer clearfix">
