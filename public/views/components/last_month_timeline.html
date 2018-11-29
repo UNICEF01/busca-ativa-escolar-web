@@ -1,9 +1,9 @@
 <div class="container chart-container">
 	<highchart
-			ng-show="isReady() && hasEnoughData()"
+			ng-show="isReady()"
 			id="timeline-chart"
 			config="getTimelineConfig()"
 			style="display: block; width: 100%; height: 500px;"
 	></highchart>
-	<div class="alert alert-info" ng-show="isReady() && !hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>
+	<!--<div class="alert alert-warning" ng-show="!hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>-->
 </div>
