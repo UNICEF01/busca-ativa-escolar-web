@@ -84,6 +84,11 @@
 				});
 			};
 
+            $scope.showPassowrd = function (elementId) {
+                var field_password = document.getElementById(elementId);
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            }
+
 			$scope.provisionTenant = function() {
 
 				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
