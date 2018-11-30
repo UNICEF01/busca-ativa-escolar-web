@@ -388,6 +388,11 @@
 			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
+        $scope.getAlertCauseId = function() {
+            if(!$scope.$parent.openedCase) return [];
+            return $scope.$parent.openedCase.alert_cause_id;
+        };
+
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
 
