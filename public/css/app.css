@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1513033102');
+  background-image: url('../images/logo_bae_header_v2.png?1537973354');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -121,6 +121,21 @@
 }
 #app-navbar .split-btn:last-child {
   border-right: 0;
+}
+
+.navbar-chart-filter {
+  background-color: #F7F7F9 !important;
+  color: #404040 !important;
+  border-radius: 2px !important;
+  border: 0 !important;
+  box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.12), 0 1px 6px 0 rgba(0, 0, 0, 0.12) !important;
+}
+.navbar-chart-filter a:hover {
+  color: #BABABA !important;
+}
+
+.active-nav-chart {
+  border-bottom: 1px solid;
 }
 
 .case-container .panel-body {
@@ -204,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1513033102');
+  background-image: url('../images/ico_forbidden.png?1537973354');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
