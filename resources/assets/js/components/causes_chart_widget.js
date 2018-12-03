@@ -26,8 +26,17 @@
             scope.filterShow = function () {
                 scope.showFilter = !scope.showFilter;
             }
+  
+          scope.menuFilter = [
+            {name: 'Tudo', title: 'Todos os registros', qtd_days: null},
+            {name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7},
+            {name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30},
+            {name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90},
+            {name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180}
+          ]
 
             scope.fetchCausesData = function (value) {
+                scope.selectedMenu = value;
                 var searchData = {
                     view: 'linear',
                     entity: 'children',
@@ -88,7 +97,7 @@
             }
 
             Platform.whenReady(function () {
-                scope.fetchCausesData();
+                scope.fetchCausesData(null);
             });
         }
 

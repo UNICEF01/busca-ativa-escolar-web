@@ -1,14 +1,11 @@
 <div>
-    <nav class="navbar navbar-info">
+    <nav class="navbar navbar-info navbar-chart-filter ">
         <div class="container-fluid">
             <div class="navbar-header">
                 <div class="navbar-brand">Filtros:</div>
             </div>
             <ul class="nav navbar-nav">
-                <li><a href="javascript:void(0)" ng-click="fetchCausesData(7)">Semanal</a></li>
-                <li><a href="javascript:void(0)" ng-click="fetchCausesData(30)">Mensal</a></li>
-                <li><a href="javascript:void(0)" ng-click="fetchCausesData(90)">Trimestral</a></li>
-                <li><a href="javascript:void(0)" ng-click="fetchCausesData(180)">Semestral</a></li>
+                <li :ng-class="{'active-nav-chart active': selectedMenu === item.qtd_days}" title="{{item.title}}" ng-repeat="item in menuFilter"><a href="javascript:void(0)" ng-click="fetchCausesData(item.qtd_days)">{{item.name}}</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="javascript:void(0)" ng-click="filterShow()"><span
