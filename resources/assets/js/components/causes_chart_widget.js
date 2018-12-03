@@ -36,6 +36,9 @@
           ]
 
             scope.fetchCausesData = function (value) {
+                if(value === null || typeof value === 'number'){
+                    scope.showFilter = false;
+                }
                 scope.selectedMenu = value;
                 var searchData = {
                     view: 'linear',
@@ -47,7 +50,6 @@
                     }
                 }
                 if(typeof value === 'number'){
-                    scope.showFilter = false;
                     searchData.filters.created_at = {
                         gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
                         lte: moment().format('YYYY-MM-DD'),
