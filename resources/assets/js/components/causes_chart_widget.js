@@ -36,6 +36,9 @@
           ]
 
             scope.fetchCausesData = function (value) {
+                if(value === null || typeof value === 'number'){
+                    scope.showFilter = false;
+                }
                 scope.selectedMenu = value;
                 var searchData = {
                     view: 'linear',
@@ -47,7 +50,6 @@
                     }
                 }
                 if(typeof value === 'number'){
-                    scope.showFilter = false;
                     searchData.filters.created_at = {
                         gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
                         lte: moment().format('YYYY-MM-DD'),
@@ -99,6 +101,53 @@
             Platform.whenReady(function () {
                 scope.fetchCausesData(null);
             });
+            //Date Picker and Masks
+
+
+            scope.today = function() {
+                scope.dt = new Date();
+            };
+            scope.today();
+
+            scope.clear = function() {
+                scope.dt = null;
+            };
+
+            scope.inlineOptions = {
+                minDate: new Date(),
+                showWeeks: false
+            };
+
+            scope.dateOptions1 = {
+                formatYear: 'yyyy',
+                showWeeks: false
+
+            };
+
+            scope.dateOptions2 = {
+                formatYear: 'yyyy',
+                maxDate: new Date(),
+                startingDay: 1
+            };
+
+            scope.open1 = function() {
+                scope.popup1.opened = true;
+            };
+
+            scope.open2 = function() {
+                scope.popup2.opened = true;
+            };
+
+            scope.format = 'ddMMyyyy';
+            scope.altInputFormats = ['M!/d!/yyyy'];
+
+            scope.popup1 = {
+                opened: false
+            };
+
+            scope.popup2 = {
+                opened: false
+            };
         }
 
         return {
