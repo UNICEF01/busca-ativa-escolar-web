@@ -27,9 +27,9 @@
 							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							<div class="label label-danger" uib-tooltip="Alto Risco" ng-show="child.risk_level === 'high'">A</div>
-							<div class="label label-warning" uib-tooltip="Médio Risco" ng-show="child.risk_level === 'medium'">M</div>
-							<div class="label label-default" uib-tooltip="Baixo Risco" ng-show="child.risk_level === 'low'">B</div>
+							<div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
+							<div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M</div>
+							<div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B</div>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							<span ng-show="child.age">{{child.age | digits}} anos</span>
