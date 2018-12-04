@@ -5,7 +5,9 @@
                 <div class="navbar-brand">Filtros:</div>
             </div>
             <ul class="nav navbar-nav">
-                <li :ng-class="{'active-nav-chart active': selectedMenu === item.qtd_days}" title="{{item.title}}" ng-repeat="item in menuFilter"><a href="javascript:void(0)" ng-click="fetchCausesData(item.qtd_days)">{{item.name}}</a></li>
+                <li :ng-class="{'active-nav-chart active': selectedMenu === item.qtd_days}" title="{{item.title}}"
+                    ng-repeat="item in menuFilter"><a href="javascript:void(0)"
+                                                      ng-click="fetchCausesData(item.qtd_days)">{{item.name}}</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="javascript:void(0)" ng-click="filterShow()"><span
@@ -14,15 +16,58 @@
         </div>
     </nav>
 
-    <div class="input-group" ng-show="showFilter">
-        <span class="input-group-addon" title="* Price" id="priceLabel">Data Inicial</span>
-        <input type="text" ng-model="dt_inicial" ui-date-mask class="form-control" placeholder="99/99/9999">
-        <span class="input-group-addon">Data Final</span>
-        <input type="text" ng-model="dt_final" ui-date-mask class="form-control" placeholder="99/99/9999">
-        <div class="input-group-btn">
-            <button class="btn btn-default" ng-disabled="!dt_inicial || !dt_final" type="botton" ng-click="fetchCausesData('filter')">
-                <i class="glyphicon glyphicon-search"></i>
-            </button>
+    <!--<div class="input-group" ng-show="showFilter">-->
+    <!--<span class="input-group-addon" title="* Price" id="priceLabel">Data Inicial</span>{{dt_inicial}}-->
+    <!--<input id='inicio-dt' ui-mask="99/99/9999" type="text" ng-model="dt_inicial" class="form-control"-->
+    <!--uib-datepicker-popup="{{format}}">-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open1()"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--<span class="input-group-addon">Data Final</span>-->
+    <!--<input type="text" ng-model="dt_final" ui-date-mask class="form-control" placeholder="99/99/9999">-->
+    <!--<div class="input-group-btn">-->
+    <!--<button class="btn btn-default" ng-disabled="!dt_inicial || !dt_final" type="botton"-->
+    <!--ng-click="fetchCausesData('filter')">-->
+    <!--<i class="glyphicon glyphicon-search"></i>-->
+    <!--</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="row" ng-show="showFilter">
+
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-addon">Data inicial</span>
+                <input type="text" class="form-control" ui-mask="99/99/9999" uib-datepicker-popup="{{format}}"
+                       ng-model="dt_inicial"
+                       is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"
+                       show-button-bar="false"/>
+                <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <span class="input-group-addon">Data final</span>
+                <input id="dt-fim" type="text" class="form-control hackyhack" ui-mask="99/99/9999"
+                       uib-datepicker-popup="{{format}}"
+                       ng-model="dt_final"
+                       is-open="popup2.opened" datepicker-options="dateOptions2" alt-input-formats="altInputFormats"
+                       close-text="Close"
+                       show-button-bar="false"/>
+                <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                <div class="input-group-btn">
+                    <button class="btn btn-default" ng-disabled="!dt_inicial || !dt_final" type="botton"
+                            ng-click="fetchCausesData('filter')">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
