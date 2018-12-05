@@ -23,8 +23,9 @@
 							<strong style="font-size: 15px;">
 								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
 								{{child.name}}
-							</strong><br />
-							<small><span uib-tooltip="Pais ou responsáveis"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
+							</strong><br>
+							<small uib-tooltip="Data de criação">{{child.created_at | date:"dd/MM/yyyy"}}</small><br>
+							<small><span uib-tooltip="Pais ou responsáveis" style="font-size: 9px;"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							<div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
@@ -43,7 +44,7 @@
 							<small ng-show="child.assigned_group_name" class="pull-right">{{child.assigned_group_name}} <i class="fa fa-group"></i></small>
 							<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
 						</td>
-						<td width="8%" style="vertical-align: middle;">
+						<td width="8%" style="vertical-align: middle;" class="text-center">
 							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
 							<span class="label label-default" ng-show="child.case_status == 'cancelled'">
 								Cancelado
