@@ -13,7 +13,7 @@
 		</div>
 		<div class="panel-body">
 
-			<table class="table table-striped table-hover table-bordered">
+			<table class="table table-striped table-hover">
 				<thead>
 					<tr>
 						<th><column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter></th>
@@ -93,49 +93,48 @@
 
 						<td>
 
-							<div ng-show="tenant.political_admin" class="{{tenant.political_admin.deleted_at ? 'text-danger' : ''}}">
-								<small>Gestor político da adesão:</small><br/>
-								<i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="tenant.political_admin.deleted_at"></i> <span ng-show="tenant.political_admin"><strong>{{tenant.political_admin.name}}</strong></span> <br />
+							<div ng-show="tenant.political_admin && !tenant.political_admin.deleted_at">
+								<small><strong>Gestor político da adesão: ---------------</strong></small><br/>
+								<span ng-show="tenant.political_admin"><strong>{{tenant.political_admin.name}}</strong></span> <br />
 								<small ng-if="identity.can('tenants.contact_info')"><i class="fa fa-envelope"></i> {{tenant.political_admin.email}}</small> <br />
 								<small ng-if="identity.can('tenants.contact_info')" ng-show="tenant.political_admin.contact_phone"><i class="fa fa-phone"></i> {{tenant.political_admin.contact_phone}}</small>
 							</div>
 
 							<div class="label label-warning" ng-show="!tenant.political_admin">Gestor da adesão não cadastrado</div>
+							<small>------------------------------------------------------</small>
 
-							<br/>
+							<br/><br/>
 
 							<div ng-show="tenant.users">
 								<div ng-repeat="(j, user) in tenant.users">
-
-									<div ng-show="user && user.type=='gestor_politico' && user.name != tenant.political_admin.name">
-										<i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="user.deleted_at"></i>
+									<div ng-show="user && user.type=='gestor_politico' && !user.deleted_at && user.name != tenant.political_admin.name">
 										<span><strong>{{user.name}}</strong></span> <br />
 										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.email"><i class="fa fa-envelope"></i> {{user.email}}</small> <br />
 										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.work_phone"><i class="fa fa-phone"></i> {{user.work_phone}}</small>
 									</div>
-
 								</div>
 							</div>
 
 						</td>
 
 						<td>
-							<div ng-show="tenant.operational_admin" ng-class="{'text-danger': tenant.operational_admin.deleted_at}">
-								<small>Coordenador operacional da adesão:</small><br/>
-								<i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="tenant.operational_admin.deleted_at"></i><span ng-show="tenant.operational_admin"><strong>{{tenant.operational_admin.name}}</strong></span><br />
+							<div ng-show="tenant.operational_admin && !tenant.operational_admin.deleted_at">
+								<small><strong>Coordenador operacional da adesão: ---</strong></small><br/>
+								<span ng-show="tenant.operational_admin"><strong>{{tenant.operational_admin.name}}</strong></span><br />
 								<small ng-if="identity.can('tenants.contact_info')"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</small><br />
 								<small ng-if="identity.can('tenants.contact_info')" ng-show="tenant.operational_admin.contact_phone"><i class="fa fa-phone"></i> {{tenant.operational_admin.contact_phone}}</small>
 							</div>
 
 							<div class="label label-warning" ng-show="!tenant.operational_admin">Coordenador da adesão não cadastrado</div>
 
+							<small>------------------------------------------------------</small>
+
 							<br/>
 
 							<div ng-show="tenant.users">
 								<div ng-repeat="(j, user) in tenant.users">
 
-									<div ng-show="user && user.type=='coordenador_operacional' && user.name != tenant.operational_admin.name">
-										<i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="user.deleted_at"></i>
+									<div ng-show="user && user.type=='coordenador_operacional' && !user.deleted_at && user.name != tenant.operational_admin.name">
 										<span><strong>{{user.name}}</strong></span> <br />
 										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.email"><i class="fa fa-envelope"></i> {{user.email}}</small> <br />
 										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.work_phone"><i class="fa fa-phone"></i> {{user.work_phone}}</small>
