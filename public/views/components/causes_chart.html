@@ -8,10 +8,9 @@
                 <li :ng-class="{'active-nav-chart active': selectedMenu === item.qtd_days}" title="{{item.title}}"
                     ng-repeat="item in menuFilter"><a href="javascript:void(0)"
                                                       ng-click="fetchCausesData(item.qtd_days)">{{item.name}}</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="javascript:void(0)" ng-click="filterShow()"><span
-                        class="glyphicon glyphicon-filter"></span> Personalizado</a></li>
+
+                <li><a class="warning" href="javascript:void(0)" ng-click="filterShow()"><span
+                        class="glyphicon glyphicon-filter"></span> Escolha o período</a></li>
             </ul>
         </div>
     </nav>

@@ -702,11 +702,6 @@
 			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
-        $scope.getAlertCauseId = function() {
-            if(!$scope.$parent.openedCase) return [];
-            return $scope.$parent.openedCase.alert_cause_id;
-        };
-
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
 
@@ -2594,11 +2589,6 @@
 			$state.go('dashboard');
 		}
 
-        $scope.showPassowrd = function () {
-            var field_password = document.getElementById("fld-password");
-            field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
-        }
-
 		function onLoggedIn(session) {
 
 			$scope.isLoading = false;
@@ -4100,11 +4090,6 @@ Highcharts.maps["countries/br/br-all"] = {
 			$scope.reason = reason;
 			$scope.canDismiss = canDismiss;
 
-            $scope.showPassowrd = function () {
-                var field_password = document.getElementById("fld-password");
-                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
-            }
-
 			function onLoggedIn(session) {
 				$uibModalInstance.close({response: Identity.getCurrentUser()});
 			}
@@ -5126,7 +5111,7 @@ if (!Array.prototype.find) {
 			var headers = {};
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
+				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
 				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
 				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
@@ -5523,7 +5508,7 @@ if (!Array.prototype.find) {
 						showInLegend: true,
 						cursor: 'pointer',
 						dataLabels: {
-							enabled: false,
+							enabled: true
 						}
 					}
 				},
@@ -5536,7 +5521,11 @@ if (!Array.prototype.find) {
 					floating: true,
 					borderWidth: 1,
 					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-					shadow: true
+					shadow: true,
+                    useHTML: true,
+                    labelFormatter: function() {
+                        return '<div style="text-align: left; width:130px;float:left;">' + this.name + '</div><div style="width:40px; float:left;text-align:right;">' + this.y + '%</div>';
+                    }
 				},
 				credits: {
 					enabled: false
@@ -5619,7 +5608,10 @@ if (!Array.prototype.find) {
 				title: {
 					text: ''
 				},
-				loading: false
+				loading: false,
+                credits: {
+                    enabled: false
+                }
 			};
 		}
 
@@ -7469,11 +7461,6 @@ function identify(namespace, file) {
 			});
 		};
 
-        $scope.showPassword = function (elementId) {
-            var field_password = document.getElementById(elementId);
-            field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-        }
-
 		$scope.finish = function() {
 			if(!$scope.agreeTOS) return;
 
@@ -7600,7 +7587,7 @@ function identify(namespace, file) {
 				controller: 'StateBrowserCtrl'
 			})
 		})
-		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
+		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -7615,12 +7602,6 @@ function identify(namespace, file) {
 			$scope.refresh = function() {
 				$scope.states = States.all($scope.query);
 			};
-
-            $scope.export = function() {
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
-                });
-            };
 			
 			$scope.refresh();
 
@@ -7712,11 +7693,6 @@ function identify(namespace, file) {
 					$scope.step = 3;
 				});
 			};
-
-            $scope.showPassowrd = function (elementId) {
-                var field_password = document.getElementById(elementId);
-                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
 
 			$scope.provisionTenant = function() {
 
@@ -8366,11 +8342,6 @@ function identify(namespace, file) {
 
                 return Utils.unpackDateFields(user, dateOnlyFields)
 			}
-
-			$scope.showPassowrd = function () {
-                var field_password = document.getElementById("fld-password");
-                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
 
 			function onSaved(res) {
 				if(res.status === "ok") {

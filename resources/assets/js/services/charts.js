@@ -92,7 +92,7 @@
 						showInLegend: true,
 						cursor: 'pointer',
 						dataLabels: {
-							enabled: false,
+							enabled: true
 						}
 					}
 				},
@@ -105,7 +105,11 @@
 					floating: true,
 					borderWidth: 1,
 					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-					shadow: true
+					shadow: true,
+                    useHTML: true,
+                    labelFormatter: function() {
+                        return '<div style="text-align: left; width:130px;float:left;">' + this.name + '</div><div style="width:40px; float:left;text-align:right;">' + this.y + '%</div>';
+                    }
 				},
 				credits: {
 					enabled: false
@@ -188,7 +192,10 @@
 				title: {
 					text: ''
 				},
-				loading: false
+				loading: false,
+                credits: {
+                    enabled: false
+                }
 			};
 		}
 
