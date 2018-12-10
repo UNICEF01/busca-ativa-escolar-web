@@ -127,7 +127,7 @@
             scope.dateOptions2 = {
                 formatYear: 'yyyy',
                 maxDate: new Date(),
-                startingDay: 1
+                showWeeks: false
             };
 
             scope.open1 = function() {
