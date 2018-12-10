@@ -3601,6 +3601,221 @@ Highcharts.maps["countries/br/br-all"] = {
 	})
 })();
 (function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
+
+			this.request = function (config) {
+
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
+
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+
+					if(error && error.error === 'token_refresh_fail') {
+						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
+						$rootScope.$broadcast('unauthorized');
+					}
+
+					throw error;
+				});
+
+			};
+
+			this.responseError = function (response) {
+
+				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
+					$rootScope.$broadcast('unauthorized');
+				}
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			console.log("[router] to=", toState, toParams);
+
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleErrorResponsesInterceptor', function () {
+
+			function handleResponse(response) {
+
+				if(!response) {
+					console.error('[interceptors.server_error] Empty response received!');
+					return response;
+				}
+
+				if(!response.data) {
+					console.error('[interceptors.server_error] Response missing decoded data: ', response);
+					return response;
+				}
+
+				// Handled by Exception interceptor
+				if(response.data.reason && response.data.reason === 'exception') return response;
+
+				var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
+
+				if(acceptableErrors.indexOf(response.status) === -1) {
+					console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
+					return response;
+				}
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function (Utils) {
+
+			function handleResponse(response) {
+
+				if(!response) return response;
+				if(!response.data) return response;
+				if(!response.data.reason) return response;
+				if(response.data.reason !== 'exception') return response;
+
+				var knownRootPaths = [
+					'/home/vagrant/projects/busca-ativa-escolar-api/',
+					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
+				];
+
+				if(response.data.exception.stack) {
+					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
+
+					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
+
+					if(messages) {
+
+						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
+
+						for(var i in messages) {
+							if(!messages.hasOwnProperty(i)) continue;
+							console.log(messages[i]);
+						}
+
+						console.endGroup();
+					}
+
+					return response;
+				}
+
+				console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
+
+			this.request = function (config) {
+
+				// Fixes weird bug with ng-file-uploader clearing the content type globally
+				//config.headers['Content-Type'] = "application/json";
+
+				if(!config.url) return config;
+
+				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
+				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
+
+				return config;
+
+			};
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
+
+			this.request = function (config) {
+
+				if(config.data && config.data.$hide_loading_feedback) return config;
+				if(config.params && config.params.$hide_loading_feedback) return config;
+
+				API.pushRequest();
+
+				return config;
+			};
+
+			this.response = function (response) {
+
+				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
+				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
+
+				API.popRequest();
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			$rootScope.previousState = fromState;
+			$rootScope.previousStateParams = fromParams;
+			$rootScope.currentState = toState;
+			$rootScope.currentStateParams = toParams;
+		}
+
+	});
+})();
+(function() {
 
 	angular
 		.module('BuscaAtivaEscolar')
@@ -3993,221 +4208,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 })();
 (function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
-
-			this.request = function (config) {
-
-				// No indication sent in headers
-				if(!config.headers['X-Require-Auth']) return config;
-
-				// Auth is optional, but not logged in
-				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
-
-				// Auth is neither optional nor required (header has invalid value)
-				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
-
-				// Auth is required
-				return Identity.provideToken().then(function (access_token) {
-					config.headers.Authorization = 'Bearer ' + access_token;
-					return config;
-				}, function (error) {
-					console.error("[auth.interceptor] Token provider returned error: ", error);
-
-					if(error && error.error === 'token_refresh_fail') {
-						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
-						$rootScope.$broadcast('unauthorized');
-					}
-
-					throw error;
-				});
-
-			};
-
-			this.responseError = function (response) {
-
-				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
-					$rootScope.$broadcast('unauthorized');
-				}
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			console.log("[router] to=", toState, toParams);
-
-			if(toState.unauthenticated) return;
-			if(Identity.isLoggedIn()) return;
-
-			console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
-
-			event.preventDefault();
-			$state.go('login');
-		}
-
-	});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('HandleErrorResponsesInterceptor', function () {
-
-			function handleResponse(response) {
-
-				if(!response) {
-					console.error('[interceptors.server_error] Empty response received!');
-					return response;
-				}
-
-				if(!response.data) {
-					console.error('[interceptors.server_error] Response missing decoded data: ', response);
-					return response;
-				}
-
-				// Handled by Exception interceptor
-				if(response.data.reason && response.data.reason === 'exception') return response;
-
-				var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
-
-				if(acceptableErrors.indexOf(response.status) === -1) {
-					console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
-					return response;
-				}
-
-				return response;
-
-			}
-
-			this.response = handleResponse;
-			this.responseError = handleResponse;
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('HandleExceptionResponsesInterceptor', function (Utils) {
-
-			function handleResponse(response) {
-
-				if(!response) return response;
-				if(!response.data) return response;
-				if(!response.data.reason) return response;
-				if(response.data.reason !== 'exception') return response;
-
-				var knownRootPaths = [
-					'/home/vagrant/projects/busca-ativa-escolar-api/',
-					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
-				];
-
-				if(response.data.exception.stack) {
-					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
-					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
-
-					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
-
-					if(messages) {
-
-						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
-
-						for(var i in messages) {
-							if(!messages.hasOwnProperty(i)) continue;
-							console.log(messages[i]);
-						}
-
-						console.endGroup();
-					}
-
-					return response;
-				}
-
-				console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
-
-				return response;
-
-			}
-
-			this.response = handleResponse;
-			this.responseError = handleResponse;
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
-
-			this.request = function (config) {
-
-				// Fixes weird bug with ng-file-uploader clearing the content type globally
-				//config.headers['Content-Type'] = "application/json";
-
-				if(!config.url) return config;
-
-				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
-				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
-
-				return config;
-
-			};
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
-
-			this.request = function (config) {
-
-				if(config.data && config.data.$hide_loading_feedback) return config;
-				if(config.params && config.params.$hide_loading_feedback) return config;
-
-				API.pushRequest();
-
-				return config;
-			};
-
-			this.response = function (response) {
-
-				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
-				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
-
-				API.popRequest();
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			$rootScope.previousState = fromState;
-			$rootScope.previousStateParams = fromParams;
-			$rootScope.currentState = toState;
-			$rootScope.currentStateParams = toParams;
-		}
-
-	});
-})();
-(function() {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
@@ -4286,45 +4286,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.resetPassword = function() {
-				$scope.true = false;
-
-				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
-					$scope.isLoading = false;
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-				})
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -4368,6 +4329,45 @@ if (!Array.prototype.find) {
 		}
 	});
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.resetPassword = function() {
+				$scope.true = false;
+
+				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
+					$scope.isLoading = false;
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+				})
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -5173,269 +5173,6 @@ if (!Array.prototype.find) {
 		});
 })();
 (function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ImportEducacensoCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
-
-			$scope.hasImported = false;
-			$scope.jobs = null;
-			$scope.importDetails = false;
-
-			$scope.refresh = function() {
-				Tenants.getSettings(function (res) {
-					console.log("Settings: ", res);
-					$scope.importDetails = res.educacensoImportDetails;
-				});
-
-				Tenants.getEducacensoJobs(function (res) {
-					console.log("Educacenso Jobs: ", res);
-					$scope.jobs = res.data;
-				});
-			};
-
-			$scope.beginImport = function() {
-				Modals.show(Modals.FileUploader(
-					'Enviar planilha do Educacenso',
-					'Selecione o arquivo de planilha do Educacenso recebido pelo INEP. O arquivo deve estar intacto e sem modificações, exatamente da forma como foi recebido.',
-					API.getURI('settings/educacenso/import')
-				)).then(function (file) {
-					console.log("File uploaded: ", file);
-					ngToast.success('Arquivo anexado!');
-					$scope.hasImported = true;
-
-					$scope.refresh();
-
-					$window.location.reload();
-				});
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ManageCaseWorkflowCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
-
-			$scope.static = StaticData;
-
-			$scope.groups = [];
-			$scope.settings = {};
-
-			$scope.getGroups = function() {
-				return $scope.groups;
-			};
-
-			$scope.save = function() {
-
-                for(var index_g in $scope.groups){
-                	if( index_g == 0){
-                    	var alerts = $scope.groups[index_g].settings.alerts;
-                        for(var index_a in alerts){
-                        	if(index_a != 500 && alerts[index_a] == false){
-                                ngToast.danger('O grupo Secretaria Municipal de Educação, obrigatoriamente, deve estar selecionado para todos os motivos de evasão escolar!');
-                        		return;
-							}
-						}
-                	}
-                }
-
-				var promises = [];
-
-				for(var i in $scope.groups) {
-					if(!$scope.groups.hasOwnProperty(i)) continue;
-					console.log('\t[manage_case_workflow.save] Update group: ', $scope.groups[i]);
-					promises.push( Groups.updateSettings($scope.groups[i]).$promise );
-				}
-
-				console.log('\t[manage_case_workflow.save] Update tenant: ', $scope.settings);
-				promises.push( Tenants.updateSettings($scope.settings).$promise );
-
-				$q.all(promises).then(
-					function (res) {
-						ngToast.success('Configurações salvas com sucesso!');
-						console.log('[manage_case_workflow.save] Saved! ', res);
-						$scope.refresh();
-					}, function (err) {
-						ngToast.danger('Ocorreu um erro ao salvar as configurações!');
-						console.error('[manage_case_workflow.save] Error: ', err);
-					}
-				);
-
-			};
-
-			$scope.refresh = function() {
-				Groups.find({with: 'settings'}, function(res) {
-					$scope.groups = res.data;
-				});
-
-				Tenants.getSettings(function (res) {
-					$scope.settings = res;
-				});
-			};
-
-			Platform.whenReady(function() {
-				$scope.refresh();
-			})
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ManageDeadlinesCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.tenantSettings = {};
-
-			$scope.save = function() {
-
-				Tenants.updateSettings($scope.tenantSettings).$promise.then(
-					function (res) {
-						console.log('[manage_deadlines.save] Saved! ', res);
-						ngToast.success('Configurações salvas com sucesso!');
-						$scope.refresh();
-					},
-					function (err) {
-						console.error('[manage_deadlines.save] Error: ', err);
-						ngToast.danger('Ocorreu um erro ao atualizar as configurações');
-					}
-				);
-
-			};
-
-			$scope.refresh = function() {
-				Tenants.getSettings(function (res) {
-					console.log('[manage_deadlines] Current settings: ', res);
-					$scope.tenantSettings = res;
-				});
-			};
-
-			Platform.whenReady(function() {
-				$scope.refresh();
-			})
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ManageGroupsCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData) {
-
-			$scope.groups = [];
-			$scope.newGroupName = '';
-
-			$scope.getGroups = function() {
-				if(!$scope.groups) return [];
-				return $scope.groups;
-			};
-
-			$scope.removeGroup = function(i) {
-				if(!$scope.groups[i]) return;
-
-				if($scope.groups[i].is_creating) {
-					delete $scope.groups[i];
-					return;
-				}
-
-				$scope.groups[i].is_deleting = true;
-
-                $scope.save();
-			};
-
-			$scope.cancelRemoval = function (i) {
-				if(!$scope.groups[i]) return;
-				$scope.groups[i].is_deleting = false;
-			};
-
-			$scope.save = function() {
-
-				var promises = [];
-
-				for(var i in $scope.groups) {
-					if(!$scope.groups.hasOwnProperty(i)) continue;
-
-					var group = $scope.groups[i];
-
-					if(group.is_deleting && !group.is_primary) {
-						promises.push(Groups.delete({id: group.id}).$promise);
-						console.log("\t [groups.save] REMOVED, DELETE-> Group #" + i + ': ', group);
-						continue;
-					}
-
-					if(group.is_creating) {
-						promises.push(Groups.create({name: group.name}).$promise);
-						console.log("\t [groups.save] NEW, CREATE-> Group #" + i + ': ', group);
-						continue;
-					}
-
-					if($scope.groupsEdit['group_' + i] && !$scope.groupsEdit['group_' + i].$pristine) {
-						promises.push(Groups.update({id: group.id, name: group.name}).$promise);
-						console.log("\t [groups.save] MODIFIED, UPDATE -> Group #" + i + ': ', group);
-						continue;
-					}
-
-					console.log("\t [groups.save] PRISTINE, NOOP -> Group #" + i + ': ', group);
-
-				}
-
-				$q.all(promises).then(function(res) {
-					console.info('[groups.save] Saved! ', res);
-					ngToast.success('Grupos alterados com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					console.error('[groups.save] Error: ', err);
-					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
-					$scope.refresh();
-				});
-			};
-
-			$scope.addGroup = function() {
-				if(!$scope.newGroupName) return;
-				if($scope.newGroupName.length < 5) return;
-
-				var group = {
-					name: $scope.newGroupName,
-					is_primary: false,
-					is_creating: true
-				};
-
-				$scope.groups.push(group);
-
-				$scope.newGroupName = '';
-                $scope.save();
-			};
-
-            $scope.updateGroup = function(value,index) {
-
-                if(!$scope.groups[index].name) return;
-                if($scope.groups[index].name.length < 5) return;
-
-				if(value !== $scope.groupsCopy[index].name){
-                    $scope.save();
-
-                }
-            };
-
-
-			$scope.refresh = function() {
-				Groups.find(function(res) {
-					$scope.groups = res.data;
-					$scope.groupsCopy = angular.copy($scope.groups);
-				});
-			};
-
-			Platform.whenReady(function() {
-				$scope.refresh();
-			});
-		});
-
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('API', function API($q, $rootScope, Config) {
@@ -5771,7 +5508,7 @@ if (!Array.prototype.find) {
 						showInLegend: true,
 						cursor: 'pointer',
 						dataLabels: {
-							enabled: false,
+							enabled: true
 						}
 					}
 				},
@@ -5784,7 +5521,11 @@ if (!Array.prototype.find) {
 					floating: true,
 					borderWidth: 1,
 					backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-					shadow: true
+					shadow: true,
+                    useHTML: true,
+                    labelFormatter: function() {
+                        return '<div style="text-align: left; width:130px;float:left;">' + this.name + '</div><div style="width:40px; float:left;text-align:right;">' + this.y + '%</div>';
+                    }
 				},
 				credits: {
 					enabled: false
@@ -5867,7 +5608,10 @@ if (!Array.prototype.find) {
 				title: {
 					text: ''
 				},
-				loading: false
+				loading: false,
+                credits: {
+                    enabled: false
+                }
 			};
 		}
 
@@ -7375,6 +7119,269 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
 	console.log("[core.load] ", namespace, file);
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ImportEducacensoCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
+
+			$scope.hasImported = false;
+			$scope.jobs = null;
+			$scope.importDetails = false;
+
+			$scope.refresh = function() {
+				Tenants.getSettings(function (res) {
+					console.log("Settings: ", res);
+					$scope.importDetails = res.educacensoImportDetails;
+				});
+
+				Tenants.getEducacensoJobs(function (res) {
+					console.log("Educacenso Jobs: ", res);
+					$scope.jobs = res.data;
+				});
+			};
+
+			$scope.beginImport = function() {
+				Modals.show(Modals.FileUploader(
+					'Enviar planilha do Educacenso',
+					'Selecione o arquivo de planilha do Educacenso recebido pelo INEP. O arquivo deve estar intacto e sem modificações, exatamente da forma como foi recebido.',
+					API.getURI('settings/educacenso/import')
+				)).then(function (file) {
+					console.log("File uploaded: ", file);
+					ngToast.success('Arquivo anexado!');
+					$scope.hasImported = true;
+
+					$scope.refresh();
+
+					$window.location.reload();
+				});
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ManageCaseWorkflowCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
+
+			$scope.static = StaticData;
+
+			$scope.groups = [];
+			$scope.settings = {};
+
+			$scope.getGroups = function() {
+				return $scope.groups;
+			};
+
+			$scope.save = function() {
+
+                for(var index_g in $scope.groups){
+                	if( index_g == 0){
+                    	var alerts = $scope.groups[index_g].settings.alerts;
+                        for(var index_a in alerts){
+                        	if(index_a != 500 && alerts[index_a] == false){
+                                ngToast.danger('O grupo Secretaria Municipal de Educação, obrigatoriamente, deve estar selecionado para todos os motivos de evasão escolar!');
+                        		return;
+							}
+						}
+                	}
+                }
+
+				var promises = [];
+
+				for(var i in $scope.groups) {
+					if(!$scope.groups.hasOwnProperty(i)) continue;
+					console.log('\t[manage_case_workflow.save] Update group: ', $scope.groups[i]);
+					promises.push( Groups.updateSettings($scope.groups[i]).$promise );
+				}
+
+				console.log('\t[manage_case_workflow.save] Update tenant: ', $scope.settings);
+				promises.push( Tenants.updateSettings($scope.settings).$promise );
+
+				$q.all(promises).then(
+					function (res) {
+						ngToast.success('Configurações salvas com sucesso!');
+						console.log('[manage_case_workflow.save] Saved! ', res);
+						$scope.refresh();
+					}, function (err) {
+						ngToast.danger('Ocorreu um erro ao salvar as configurações!');
+						console.error('[manage_case_workflow.save] Error: ', err);
+					}
+				);
+
+			};
+
+			$scope.refresh = function() {
+				Groups.find({with: 'settings'}, function(res) {
+					$scope.groups = res.data;
+				});
+
+				Tenants.getSettings(function (res) {
+					$scope.settings = res;
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.refresh();
+			})
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ManageDeadlinesCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Tenants, Groups, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.tenantSettings = {};
+
+			$scope.save = function() {
+
+				Tenants.updateSettings($scope.tenantSettings).$promise.then(
+					function (res) {
+						console.log('[manage_deadlines.save] Saved! ', res);
+						ngToast.success('Configurações salvas com sucesso!');
+						$scope.refresh();
+					},
+					function (err) {
+						console.error('[manage_deadlines.save] Error: ', err);
+						ngToast.danger('Ocorreu um erro ao atualizar as configurações');
+					}
+				);
+
+			};
+
+			$scope.refresh = function() {
+				Tenants.getSettings(function (res) {
+					console.log('[manage_deadlines] Current settings: ', res);
+					$scope.tenantSettings = res;
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.refresh();
+			})
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ManageGroupsCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData) {
+
+			$scope.groups = [];
+			$scope.newGroupName = '';
+
+			$scope.getGroups = function() {
+				if(!$scope.groups) return [];
+				return $scope.groups;
+			};
+
+			$scope.removeGroup = function(i) {
+				if(!$scope.groups[i]) return;
+
+				if($scope.groups[i].is_creating) {
+					delete $scope.groups[i];
+					return;
+				}
+
+				$scope.groups[i].is_deleting = true;
+
+                $scope.save();
+			};
+
+			$scope.cancelRemoval = function (i) {
+				if(!$scope.groups[i]) return;
+				$scope.groups[i].is_deleting = false;
+			};
+
+			$scope.save = function() {
+
+				var promises = [];
+
+				for(var i in $scope.groups) {
+					if(!$scope.groups.hasOwnProperty(i)) continue;
+
+					var group = $scope.groups[i];
+
+					if(group.is_deleting && !group.is_primary) {
+						promises.push(Groups.delete({id: group.id}).$promise);
+						console.log("\t [groups.save] REMOVED, DELETE-> Group #" + i + ': ', group);
+						continue;
+					}
+
+					if(group.is_creating) {
+						promises.push(Groups.create({name: group.name}).$promise);
+						console.log("\t [groups.save] NEW, CREATE-> Group #" + i + ': ', group);
+						continue;
+					}
+
+					if($scope.groupsEdit['group_' + i] && !$scope.groupsEdit['group_' + i].$pristine) {
+						promises.push(Groups.update({id: group.id, name: group.name}).$promise);
+						console.log("\t [groups.save] MODIFIED, UPDATE -> Group #" + i + ': ', group);
+						continue;
+					}
+
+					console.log("\t [groups.save] PRISTINE, NOOP -> Group #" + i + ': ', group);
+
+				}
+
+				$q.all(promises).then(function(res) {
+					console.info('[groups.save] Saved! ', res);
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.refresh();
+				}, function (err) {
+					console.error('[groups.save] Error: ', err);
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.refresh();
+				});
+			};
+
+			$scope.addGroup = function() {
+				if(!$scope.newGroupName) return;
+				if($scope.newGroupName.length < 5) return;
+
+				var group = {
+					name: $scope.newGroupName,
+					is_primary: false,
+					is_creating: true
+				};
+
+				$scope.groups.push(group);
+
+				$scope.newGroupName = '';
+                $scope.save();
+			};
+
+            $scope.updateGroup = function(value,index) {
+
+                if(!$scope.groups[index].name) return;
+                if($scope.groups[index].name.length < 5) return;
+
+				if(value !== $scope.groupsCopy[index].name){
+                    $scope.save();
+
+                }
+            };
+
+
+			$scope.refresh = function() {
+				Groups.find(function(res) {
+					$scope.groups = res.data;
+					$scope.groupsCopy = angular.copy($scope.groups);
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.refresh();
+			});
+		});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
