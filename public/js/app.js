@@ -702,6 +702,11 @@
 			return $scope.$parent.openedCase.case_cause_ids;
 		};
 
+        $scope.getAlertCauseId = function() {
+            if(!$scope.$parent.openedCase) return [];
+            return $scope.$parent.openedCase.alert_cause_id;
+        };
+
 		$scope.fetchCities = function(query) {
 			var data = {name: query, $hide_loading_feedback: true};
 
@@ -1108,6 +1113,164 @@
 
 })();
 (function() {
+	identify('config', 'charts.js');
+
+	angular.module('BuscaAtivaEscolar').run(function (Config) {
+		Highcharts.setOptions({
+			lang: {
+				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+				loading: ['Atualizando o gráfico...'],
+				contextButtonTitle: 'Exportar gráfico',
+				decimalPoint: ',',
+				thousandsSep: '.',
+				downloadJPEG: 'Baixar imagem JPEG',
+				downloadPDF: 'Baixar arquivo PDF',
+				downloadPNG: 'Baixar imagem PNG',
+				downloadSVG: 'Baixar vetor SVG',
+				printChart: 'Imprimir gráfico',
+				rangeSelectorFrom: 'De',
+				rangeSelectorTo: 'Para',
+				rangeSelectorZoom: 'Zoom',
+				resetZoom: 'Voltar zoom',
+				resetZoomTitle: 'Voltar zoom para nível 1:1'
+			}
+		});
+	})
+
+})();
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function() {
+	identify('config', 'on_init.js');
+
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
+		console.info("------------------------------");
+		console.info(" BUSCA ATIVA ESCOLAR");
+		console.info(" Copyright (c) LQDI Digital");
+		console.info("------------------------------");
+		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
+		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
+		console.info("------------------------------");
+
+		$.material.init();
+
+		$rootScope.$on('unauthorized', function() {
+			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
+			Auth.logout();
+			$state.go('login');
+		})
+	})
+
+})();
+(function() {
+	identify('config', 'states.js');
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+			$locationProvider.html5Mode(true);
+			$urlRouterProvider.otherwise('/dashboard');
+
+			$stateProvider
+				.state('login', {
+					url: '/login',
+					templateUrl: '/views/login.html',
+					controller: 'LoginCtrl',
+					unauthenticated: true
+				})
+				.state('dashboard', {
+					url: '/dashboard',
+					templateUrl: '/views/dashboard.html',
+					controller: 'DashboardCtrl'
+				})
+				.state('developer_mode', {
+					url: '/developer_mode',
+					templateUrl: '/views/developer/developer_dashboard.html',
+					controller: 'DeveloperCtrl',
+					unauthenticated: true
+
+				})
+				.state('settings', {
+					url: '/settings?step',
+					templateUrl: '/views/settings/manage_settings.html',
+					controller: 'SettingsCtrl'
+				})
+				.state('settings.parameterize_group', {
+					url: '/parameterize_group/{group_id}',
+					templateUrl: '/views/settings/parameterize_group.html',
+					controller: 'ParameterizeGroupCtrl'
+				})
+				.state('credits', {
+					url: '/credits',
+					templateUrl: '/views/static/credits.html',
+					controller: 'CreditsCtrl',
+					unauthenticated: true
+				})
+				.state('tenant_signup', {
+					url: '/tenant_signup',
+					templateUrl: '/views/tenant_signup/main.html',
+					controller: 'TenantSignupCtrl',
+					unauthenticated: true
+				})
+				.state('state_signup', {
+					url: '/state_signup',
+					templateUrl: '/views/state_signup/main.html',
+					controller: 'StateSignupCtrl',
+					unauthenticated: true
+				})
+
+		});
+
+})();
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
+(function() {
 
 	angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
@@ -1285,7 +1448,7 @@
             scope.dateOptions2 = {
                 formatYear: 'yyyy',
                 maxDate: new Date(),
-                startingDay: 1
+                showWeeks: false
             };
 
             scope.open1 = function() {
@@ -2234,164 +2397,6 @@
 })();
 
 (function() {
-	identify('config', 'charts.js');
-
-	angular.module('BuscaAtivaEscolar').run(function (Config) {
-		Highcharts.setOptions({
-			lang: {
-				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-				loading: ['Atualizando o gráfico...'],
-				contextButtonTitle: 'Exportar gráfico',
-				decimalPoint: ',',
-				thousandsSep: '.',
-				downloadJPEG: 'Baixar imagem JPEG',
-				downloadPDF: 'Baixar arquivo PDF',
-				downloadPNG: 'Baixar imagem PNG',
-				downloadSVG: 'Baixar vetor SVG',
-				printChart: 'Imprimir gráfico',
-				rangeSelectorFrom: 'De',
-				rangeSelectorTo: 'Para',
-				rangeSelectorZoom: 'Zoom',
-				resetZoom: 'Voltar zoom',
-				resetZoomTitle: 'Voltar zoom para nível 1:1'
-			}
-		});
-	})
-
-})();
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function() {
-	identify('config', 'on_init.js');
-
-	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
-		console.info("------------------------------");
-		console.info(" BUSCA ATIVA ESCOLAR");
-		console.info(" Copyright (c) LQDI Digital");
-		console.info("------------------------------");
-		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
-		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
-		console.info("------------------------------");
-
-		$.material.init();
-
-		$rootScope.$on('unauthorized', function() {
-			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
-			Auth.logout();
-			$state.go('login');
-		})
-	})
-
-})();
-(function() {
-	identify('config', 'states.js');
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-			$locationProvider.html5Mode(true);
-			$urlRouterProvider.otherwise('/dashboard');
-
-			$stateProvider
-				.state('login', {
-					url: '/login',
-					templateUrl: '/views/login.html',
-					controller: 'LoginCtrl',
-					unauthenticated: true
-				})
-				.state('dashboard', {
-					url: '/dashboard',
-					templateUrl: '/views/dashboard.html',
-					controller: 'DashboardCtrl'
-				})
-				.state('developer_mode', {
-					url: '/developer_mode',
-					templateUrl: '/views/developer/developer_dashboard.html',
-					controller: 'DeveloperCtrl',
-					unauthenticated: true
-
-				})
-				.state('settings', {
-					url: '/settings?step',
-					templateUrl: '/views/settings/manage_settings.html',
-					controller: 'SettingsCtrl'
-				})
-				.state('settings.parameterize_group', {
-					url: '/parameterize_group/{group_id}',
-					templateUrl: '/views/settings/parameterize_group.html',
-					controller: 'ParameterizeGroupCtrl'
-				})
-				.state('credits', {
-					url: '/credits',
-					templateUrl: '/views/static/credits.html',
-					controller: 'CreditsCtrl',
-					unauthenticated: true
-				})
-				.state('tenant_signup', {
-					url: '/tenant_signup',
-					templateUrl: '/views/tenant_signup/main.html',
-					controller: 'TenantSignupCtrl',
-					unauthenticated: true
-				})
-				.state('state_signup', {
-					url: '/state_signup',
-					templateUrl: '/views/state_signup/main.html',
-					controller: 'StateSignupCtrl',
-					unauthenticated: true
-				})
-
-		});
-
-})();
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
-
-})();
-(function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
 
@@ -2588,6 +2593,11 @@
 		if(Identity.isLoggedIn()) {
 			$state.go('dashboard');
 		}
+
+        $scope.showPassowrd = function () {
+            var field_password = document.getElementById("fld-password");
+            field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
+        }
 
 		function onLoggedIn(session) {
 
@@ -4090,6 +4100,11 @@ Highcharts.maps["countries/br/br-all"] = {
 			$scope.reason = reason;
 			$scope.canDismiss = canDismiss;
 
+            $scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
+            }
+
 			function onLoggedIn(session) {
 				$uibModalInstance.close({response: Identity.getCurrentUser()});
 			}
@@ -5111,7 +5126,7 @@ if (!Array.prototype.find) {
 			var headers = {};
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
+				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
 				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
 				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
@@ -7461,6 +7476,11 @@ function identify(namespace, file) {
 			});
 		};
 
+        $scope.showPassword = function (elementId) {
+            var field_password = document.getElementById(elementId);
+            field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
+        }
+
 		$scope.finish = function() {
 			if(!$scope.agreeTOS) return;
 
@@ -7587,7 +7607,7 @@ function identify(namespace, file) {
 				controller: 'StateBrowserCtrl'
 			})
 		})
-		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity) {
+		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -7602,6 +7622,12 @@ function identify(namespace, file) {
 			$scope.refresh = function() {
 				$scope.states = States.all($scope.query);
 			};
+
+            $scope.export = function() {
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
+                });
+            };
 			
 			$scope.refresh();
 
@@ -7693,6 +7719,11 @@ function identify(namespace, file) {
 					$scope.step = 3;
 				});
 			};
+
+            $scope.showPassowrd = function (elementId) {
+                var field_password = document.getElementById(elementId);
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            }
 
 			$scope.provisionTenant = function() {
 
@@ -8342,6 +8373,11 @@ function identify(namespace, file) {
 
                 return Utils.unpackDateFields(user, dateOnlyFields)
 			}
+
+			$scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            }
 
 			function onSaved(res) {
 				if(res.status === "ok") {
