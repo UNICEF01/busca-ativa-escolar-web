@@ -1,9 +1,86 @@
-<div class="container chart-container">
-	<highchart
-			ng-show="isReady() && hasEnoughData()"
-			id="causes-chart"
-			config="getCausesConfig()"
-			style="display: block; width: 100%; height: 550px;"
-	></highchart>
-	<div class="alert alert-info" ng-show="isReady() && !hasEnoughData()">Não há dados o suficiente para exibir o gráfico de motivos.</div>
+<div>
+    <nav class="navbar navbar-info navbar-chart-filter ">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <div class="navbar-brand">Filtros:</div>
+            </div>
+            <ul class="nav navbar-nav">
+                <li :ng-class="{'active-nav-chart active': selectedMenu === item.qtd_days}" title="{{item.title}}"
+                    ng-repeat="item in menuFilter"><a href="javascript:void(0)"
+                                                      ng-click="fetchCausesData(item.qtd_days)">{{item.name}}</a></li>
+
+                <li><a class="warning" href="javascript:void(0)" ng-click="filterShow()"><span
+                        class="glyphicon glyphicon-filter"></span> Escolha o período</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--<div class="input-group" ng-show="showFilter">-->
+    <!--<span class="input-group-addon" title="* Price" id="priceLabel">Data Inicial</span>{{dt_inicial}}-->
+    <!--<input id='inicio-dt' ui-mask="99/99/9999" type="text" ng-model="dt_inicial" class="form-control"-->
+    <!--uib-datepicker-popup="{{format}}">-->
+    <!--<span class="input-group-btn">-->
+    <!--<button type="button" class="btn btn-default" ng-click="open1()"><i-->
+    <!--class="glyphicon glyphicon-calendar"></i></button>-->
+    <!--</span>-->
+    <!--<span class="input-group-addon">Data Final</span>-->
+    <!--<input type="text" ng-model="dt_final" ui-date-mask class="form-control" placeholder="99/99/9999">-->
+    <!--<div class="input-group-btn">-->
+    <!--<button class="btn btn-default" ng-disabled="!dt_inicial || !dt_final" type="botton"-->
+    <!--ng-click="fetchCausesData('filter')">-->
+    <!--<i class="glyphicon glyphicon-search"></i>-->
+    <!--</button>-->
+    <!--</div>-->
+    <!--</div>-->
+    <div class="row" ng-show="showFilter">
+
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-addon">Data inicial</span>
+                <input type="text" class="form-control" ui-mask="99/99/9999" uib-datepicker-popup="{{format}}"
+                       ng-model="dt_inicial"
+                       is-open="popup1.opened" datepicker-options="dateOptions1" close-text="Close"
+                       show-button-bar="false"/>
+                <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="input-group">
+                <span class="input-group-addon">Data final</span>
+                <input id="dt-fim" type="text" class="form-control hackyhack" ui-mask="99/99/9999"
+                       uib-datepicker-popup="{{format}}"
+                       ng-model="dt_final"
+                       is-open="popup2.opened" datepicker-options="dateOptions2" alt-input-formats="altInputFormats"
+                       close-text="Close"
+                       show-button-bar="false"/>
+                <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+                <div class="input-group-btn">
+                    <button class="btn btn-default" ng-disabled="!dt_inicial || !dt_final" type="botton"
+                            ng-click="fetchCausesData('filter')">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="container chart-container">
+        <highchart
+                ng-show="isReady() && hasEnoughData()"
+                id="causes-chart"
+                config="getCausesConfig()"
+                style="display: block; width: 100%; height: 550px;"
+        ></highchart>
+        <div class="alert alert-warning" ng-show="isReady() && !hasEnoughData()">Não há dados o suficiente para exibir o
+            gráfico de motivos.
+        </div>
+    </div>
 </div>

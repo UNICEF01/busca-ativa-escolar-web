@@ -24,6 +24,7 @@
 						<th>Coordenador operacional</th>
 						<th ng-if="identity.can('tenants.manage')">Opções</th>
 					</tr>
+
 					<tr class="simple-filter">
 						<!--<th><input type="text" class="form-control" ng-model="query.filter.uf" ng-change="refresh()" placeholder="Filtrar por estado..." /></th>-->
                         <th>
@@ -55,62 +56,106 @@
 						<th><input type="text" class="form-control" ng-model="query.filter.operational_admin" ng-change="refresh()" placeholder="Filtrar por nome..." /></th>
 						<th ng-if="identity.can('tenants.manage')"></th>
 					</tr>
+
 				</thead>
+
 				<tbody>
 					<tr ng-repeat="(i, tenant) in tenants.data">
-						<td width="35%"><strong ng-bind="tenant.uf"></strong><br /></td>
-						<td width="35%"><strong ng-bind="tenant.name"></strong><br /></td>
-						<td width="10%">
+
+						<td><strong ng-bind="tenant.uf"></strong><br /></td>
+
+						<td><strong ng-bind="tenant.name"></strong><br /></td>
+
+						<td>
 							<span class="label label-success" uib-tooltip-html="tenant.registered_at">{{tenant.registered_at | amCalendar}}</span>
 						</td>
-						<td width="10%" ng-if="identity.can('tenants.activity')">
-							<span ng-show="tenant.activity_status === 'active'">
-								<span class="label label-success" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Ativo</span>
-							</span>
+
+						<td ng-if="identity.can('tenants.activity')">
+						<span ng-show="tenant.activity_status === 'active'">
+						<span class="label label-success" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Ativo</span>
+						</span>
 							<span ng-show="tenant.activity_status === 'inactive_30d'">
-								<span class="label label-yellow" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (30+ dias)</span>
-							</span>
+						<span class="label label-yellow" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (30+ dias)</span>
+						</span>
 							<span ng-show="tenant.activity_status === 'inactive_60d'">
-								<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (60+ dias)</span>
-							</span>
+						<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (60+ dias)</span>
+						</span>
 							<span ng-show="tenant.activity_status === 'inactive_90d'">
-								<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (90+ dias)</span>
-							</span>
+						<span class="label label-warning" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (90+ dias)</span>
+						</span>
 							<span ng-show="tenant.activity_status === 'inactive_120d'">
-								<span class="label label-danger" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (120+ dias)</span>
-							</span>
+						<span class="label label-danger" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (120+ dias)</span>
+						</span>
 							<span ng-show="tenant.activity_status === 'inactive_never'">
-								<span class="label label-info" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (nunca utilizado)</span>
-							</span>
+						<span class="label label-info" uib-tooltip-html="tenant.last_active_at | amTimeAgo">Inativo (nunca utilizado)</span>
+						</span>
 						</td>
-						<td width="5%">
-							<div ng-show="tenant.political_admin" class="{{tenant.political_admin.deleted_at ? 'text-danger' : ''}}">
-								<span ng-show="tenant.political_admin">{{tenant.political_admin.name}}</span> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="tenant.political_admin.deleted_at"></i><br />
-								<span ng-if="identity.can('tenants.contact_info')" class="label label-default"><i class="fa fa-envelope"></i> {{tenant.political_admin.email}}</span>
-								<span ng-if="identity.can('tenants.contact_info')" ng-show="tenant.political_admin.contact_phone" class="label label-default"><i class="fa fa-phone"></i> {{tenant.political_admin.contact_phone}}</span>
+
+						<td>
+
+							<div ng-show="tenant.political_admin && !tenant.political_admin.deleted_at">
+								<small><strong>Gestor político da adesão: ---------------</strong></small><br/>
+								<span ng-show="tenant.political_admin"><strong>{{tenant.political_admin.name}}</strong></span> <br />
+								<small ng-if="identity.can('tenants.contact_info')"><i class="fa fa-envelope"></i> {{tenant.political_admin.email}}</small> <br />
+								<small ng-if="identity.can('tenants.contact_info')" ng-show="tenant.political_admin.contact_phone"><i class="fa fa-phone"></i> {{tenant.political_admin.contact_phone}}</small>
 							</div>
 
-							<div class="label label-warning" ng-show="!tenant.political_admin">Gestor não cadastrado</div>
-						</td>
-						<td width="5%">
-							<div ng-show="tenant.operational_admin" ng-class="{'text-danger': tenant.operational_admin.deleted_at}">
-								<span ng-show="tenant.operational_admin">{{tenant.operational_admin.name}}</span> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="tenant.operational_admin.deleted_at"></i><br />
-								<span ng-if="identity.can('tenants.contact_info')" class="label label-default"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</span>
-								<span ng-if="identity.can('tenants.contact_info')" ng-show="tenant.operational_admin.contact_phone" class="label label-default"><i class="fa fa-phone"></i> {{tenant.operational_admin.contact_phone}}</span>
+							<div class="label label-warning" ng-show="!tenant.political_admin">Gestor da adesão não cadastrado</div>
+							<small>------------------------------------------------------</small>
+
+							<br/><br/>
+
+							<div ng-show="tenant.users">
+								<div ng-repeat="(j, user) in tenant.users">
+									<div ng-show="user && user.type=='gestor_politico' && !user.deleted_at && user.name != tenant.political_admin.name">
+										<span><strong>{{user.name}}</strong></span> <br />
+										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.email"><i class="fa fa-envelope"></i> {{user.email}}</small> <br />
+										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.work_phone"><i class="fa fa-phone"></i> {{user.work_phone}}</small>
+									</div>
+								</div>
 							</div>
 
-							<div class="label label-warning" ng-show="!tenant.operational_admin">Gestor não cadastrado</div>
 						</td>
-						<td width="5%" ng-if="identity.can('tenants.manage')">
+
+						<td>
+							<div ng-show="tenant.operational_admin && !tenant.operational_admin.deleted_at">
+								<small><strong>Coordenador operacional da adesão: ---</strong></small><br/>
+								<span ng-show="tenant.operational_admin"><strong>{{tenant.operational_admin.name}}</strong></span><br />
+								<small ng-if="identity.can('tenants.contact_info')"><i class="fa fa-envelope"></i> {{tenant.operational_admin.email}}</small><br />
+								<small ng-if="identity.can('tenants.contact_info')" ng-show="tenant.operational_admin.contact_phone"><i class="fa fa-phone"></i> {{tenant.operational_admin.contact_phone}}</small>
+							</div>
+
+							<div class="label label-warning" ng-show="!tenant.operational_admin">Coordenador da adesão não cadastrado</div>
+
+							<small>------------------------------------------------------</small>
+
+							<br/>
+
+							<div ng-show="tenant.users">
+								<div ng-repeat="(j, user) in tenant.users">
+
+									<div ng-show="user && user.type=='coordenador_operacional' && !user.deleted_at && user.name != tenant.operational_admin.name">
+										<span><strong>{{user.name}}</strong></span> <br />
+										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.email"><i class="fa fa-envelope"></i> {{user.email}}</small> <br />
+										<small ng-if="identity.can('tenants.contact_info')" ng-show="user.work_phone"><i class="fa fa-phone"></i> {{user.work_phone}}</small>
+									</div>
+
+								</div>
+							</div>
+
+						</td>
+
+						<td ng-if="identity.can('tenants.manage')">
 							<a class="btn btn-sm btn-raised btn-danger"
 							   ng-click="disableTenant(tenant)"
 							   uib-tooltip="Ao desativar um município, todos os acessos à ele serão cancelados,
-							   e ele passará a figurar novamente na lista de municípios disponíveis para adesão.
-							   Os contadores e métricas não serão removidos."
+						e ele passará a figurar novamente na lista de municípios disponíveis para adesão.
+						Os contadores e métricas não serão removidos."
 							>
 								<i class="fa fa-ban"></i> Desativar
 							</a>
 						</td>
+
 					</tr>
 				</tbody>
 			</table>

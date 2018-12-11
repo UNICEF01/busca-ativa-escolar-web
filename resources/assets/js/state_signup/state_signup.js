@@ -77,6 +77,11 @@
 			});
 		};
 
+        $scope.showPassword = function (elementId) {
+            var field_password = document.getElementById(elementId);
+            field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
+        }
+
 		$scope.finish = function() {
 			if(!$scope.agreeTOS) return;
 

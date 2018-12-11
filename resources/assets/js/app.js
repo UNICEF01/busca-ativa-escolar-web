@@ -25,6 +25,7 @@
 			'ui.select',
 			'ui.utils.masks',
 			'ui.ace',
-			'datatables'
+			'datatables',
+            'ui.mask'
 		])
 })();

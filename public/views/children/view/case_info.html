@@ -368,7 +368,15 @@
 				<label><input id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
 			</div>
 			<div class="checkbox">
-				<label><input id="fld-parents_has_siblings" name="parents_has_siblings" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_siblings" ng-true-value="1" type="checkbox"> Irmãos</label>
+				<label><input id="fld-parents_has_siblings" name="parents_has_siblings" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother" ng-true-value="1" type="checkbox"> Irmãos</label>
+			</div>
+
+			<div class="checkbox">
+				<label><input id="fld-parents_has_grandparents" name="parents_has_others" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents" ng-true-value="1" type="checkbox"> Avós</label>
+			</div>
+
+			<div class="checkbox">
+				<label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros familiares</label>
 			</div>
 		</div>
 
@@ -381,7 +389,10 @@
 				<label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="mother" type="radio"> Mãe</label>
 			</div>
 			<div class="radio">
-				<label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="siblings" type="radio"> Irmão/Irmã</label>
+				<label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="siblings" type="radio"> Irmãos</label>
+			</div>
+			<div class="radio">
+				<label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="grandparents" type="radio"> Avós</label>
 			</div>
 			<div class="radio">
 				<label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="other" type="radio"> Outros familiares</label>
@@ -465,7 +476,7 @@
 					       type="checkbox"
 					>
 
-					<strong ng-if="case.alert_cause_id == cause.alert_cause_id" class="label label-default">Motivo indicado no alerta</strong>
+					<strong ng-if="case.alert_cause_id == cause.alert_cause_id" class="badge">Motivo indicado no alerta</strong>
 					{{cause.label}}
 
 				</label>
@@ -488,7 +499,6 @@
 		</div>
 	</div>
 </div>
-
 
 <div class="panel panel-default" ng-show="isStepOpen('Pesquisa')">
 	<div class="panel-heading"><i class="fa fa-users"></i> Dados de localização</div>
@@ -566,6 +576,7 @@
 			<div class="radio" ng-repeat="id in getCaseCauseIDs()">
 				<label>
 					<i class="fa fa-check"></i> {{static.getCaseCauses()[id].label}}
+					<strong ng-if="static.getCaseCauses()[id].alert_cause_id == getAlertCauseId()" class="badge">Motivo indicado no alerta</strong>
 				</label>
 			</div>
 		</div>

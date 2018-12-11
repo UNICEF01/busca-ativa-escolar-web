@@ -7,7 +7,7 @@
 			var headers = {};
 
 			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin'}},
+				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
 				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
 				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},

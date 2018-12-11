@@ -53,6 +53,7 @@
     "angular-i18n": "^1.6.2",
     "numeral": "^1.5.6",
     "angular-datatables": "v0.6.2",
-    "datatables.net": "^1.10.19"
+    "datatables.net": "^1.10.19",
+    "angular-ui-mask": "^1.8.7"
   }
 }

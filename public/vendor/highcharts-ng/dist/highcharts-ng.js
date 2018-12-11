@@ -134,7 +134,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
             colorByPoint: true,
             dataLabels: {
               enabled: true,
-              format: '{point.percentage:.1f} %2'
+              format: '{point.percentage:.1f} %'
             }
           }
         },
@@ -163,10 +163,14 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' && module.ex
           '#8FBC8F',
           '#F08080',
           '#B0E0E6',
-          '#9ACD32',
+          '#9ACD32'
         ],
         legend: {
-          layout: 'vertical'
+          layout: 'vertical',
+          useHTML: true,
+          labelFormatter: function() {
+            return '<div>' + this.name + (this.y ? '<span title="Quantidade de casos"> ( '+ this.y +' ) '+'</span>': '') + '</div>';
+          }
         }
       };
 
