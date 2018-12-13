@@ -844,4 +844,8 @@ a.column-sorter {
   background: none;
 }
 
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 /*# sourceMappingURL=app.css.map */
