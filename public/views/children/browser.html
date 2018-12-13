@@ -21,10 +21,9 @@
 					<tr ng-repeat="(i, child) in search.results">
 						<td width="34%" style="vertical-align: middle;">
 							<strong style="font-size: 15px;">
-								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
-								{{child.name}}
+								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i><span uib-tooltip="Data de abertura: {{child.created_at | date:'dd/MM/yyyy'}}">
+								{{child.name}}</span>
 							</strong><br>
-							<!--<small uib-tooltip="Data de criação">{{child.created_at | date:"dd/MM/yyyy"}}</small><br>-->
 							<small><span uib-tooltip="Pais ou responsáveis" style="font-size: 9px;"><i class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
@@ -55,11 +54,11 @@
 								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
 							</span>
 							<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
-							<span ng-show="child.case_status === 'in_progress'">
-								<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
-								<span class="label label-info" ng-show="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
-								<span class="label label-info" ng-show="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
-								<span class="label label-success" ng-show="!child.is_late && child.child_status === 'in_school'">Concluído</span>
+							<span ng-if="child.case_status === 'in_progress'">
+								<span class="label label-danger" ng-if="child.is_late">Em atraso!</span>
+								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
+								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
+								<span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
 							</span>
 						</td>
 						<td width="6%" class="text-center" style="vertical-align: middle;">

@@ -42,6 +42,7 @@
 
 			function renderSelected(city) {
 				if(!city) return '';
+				scope.uf = city.uf;
 				return city.uf + ' / ' + city.name;
 			}
 
