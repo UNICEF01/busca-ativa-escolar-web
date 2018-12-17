@@ -844,4 +844,8 @@ a.column-sorter {
   background: none;
 }
 
+.pl-0 {
+  padding-left: 0px !important;
+}
+
 /*# sourceMappingURL=app.css.map */
