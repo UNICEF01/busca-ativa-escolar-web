@@ -1,5 +1,4 @@
 <div class="wnd-view">
-
     <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
         <div class="panel-heading clearfix">
             <div class="pull-left" ng-show="!isCreating">
@@ -57,18 +56,18 @@
                     <h5>Dados de acesso</h5>
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey"
+                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey" ng-show="user.tenant_id"
                             type="button"><i class="fa fa-key"></i> Alterar senha
                     </button>
                 </div>
             </div>
-            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey}">
+            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}">
                 <label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
                 <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required
                        ng-model="user.email">
             </div>
 
-            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey}" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
+            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}" ng-if="isTargetUserTenantBound() || isTargetUserUFBound()">
                 <label class="control-label" for="fld-group">Grupo*</label>
                 <select class="form-control" id="fld-group" ng-model="user.group_id"
                         ng-options="n.id as n.name for n in groups.data">
@@ -76,9 +75,9 @@
                 </select>
             </div>
 
-            <div class="form-group col-md-4" ng-show="showInputKey">
+            <div class="form-group col-md-4" ng-show="showInputKey || !user.tenant_id">
                 <div class="input-group">
-                    <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Alterar senha de
+                    <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de
                         acesso*</label>
                     <input type="password" autocomplete="new-password" class="form-control" id="fld-password"
                            ng-model="user.password">
