@@ -171,6 +171,15 @@
 	</div>
 </div>
 
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Alerta')">
+	<div class="panel-heading">Observações</div>
+	<div class="panel-body">
+		<div class="form-group col-md-12">
+			<p ng-bind="fields.observation"></p>
+		</div>
+	</div>
+</div>
+
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
 	<div class="panel-body">
 		<div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
