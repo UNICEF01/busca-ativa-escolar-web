@@ -529,7 +529,10 @@
 			<input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_neighborhood">
 		</div>
 
-		<app-city-select model="fields" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>
+		<!--<app-city-select model="fields" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>-->
+
+        <app-city-select model="fields" city="fields.place_city" is-uf-required="true"
+                         is-city-required="true"></app-city-select>
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-place_kind">Tipo da localização*</label>
