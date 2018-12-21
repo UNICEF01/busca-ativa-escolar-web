@@ -848,4 +848,8 @@ a.column-sorter {
   padding-left: 0px !important;
 }
 
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 /*# sourceMappingURL=app.css.map */
