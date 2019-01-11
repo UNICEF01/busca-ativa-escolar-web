@@ -852,4 +852,8 @@ a.column-sorter {
   display: block;
 }
 
+.alert-color {
+  color: #F0AD4E !important;
+}
+
 /*# sourceMappingURL=app.css.map */

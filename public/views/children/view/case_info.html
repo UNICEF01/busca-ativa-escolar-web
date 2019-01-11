@@ -648,56 +648,25 @@
 					<button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje</button>
 				</div>
 			</div>
-
-			<div class="form-group col-md-2">
-				<label class="control-label" for="fld-enroll-school_uf">UF*</label>
-				<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
-			</div>
-			<div class="form-group col-md-4 clearfix">
-				<label class="control-label" for="fld-enroll-school_city">Município*</label>
-				<input type="text" id="fld-enroll-school_city"
-				       class="form-control"
-				       ng-model="fields.school_city"
-				       ng-readonly="!canEditCurrentStep()"
-
-				       uib-typeahead="city for city in fetchCities($viewValue)"
-				       typeahead-editable="false"
-				       typeahead-no-results="schoolNoCitiesFound"
-				       typeahead-loading="schoolCitiesLoading"
-				       typeahead-focus-first="true"
-				       typeahead-template-url="city_item.html"
-				       typeahead-wait-ms="400"
-				       typeahead-min-length="3"
-				       typeahead-input-formatter="renderSelectedCity($model)"
-
-				>
-				<div ng-show="schoolCitiesLoading">
-					<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
-				</div>
-				<div ng-show="schoolNoCitiesFound">
-					<i class="fa fa-remove"></i> Nenhuma cidade encontrada
-				</div>
-			</div>
 		</div>
-
 		<div class="form-group col-md-12 clearfix">
 			<label class="control-label" for="fld-enroll-school">Nome da escola*</label>
 			<!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_name"-->
-
 			<input type="text" id="fld-enroll-school"
-			       class="form-control"
-			       ng-model="fields.school"
-
-			       uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
-			       typeahead-editable="false"
-			       typeahead-no-results="rematriculaNoSchoolsFound"
-			       typeahead-loading="rematriculaSchoolsLoading"
-			       typeahead-focus-first="true"
-			       typeahead-template-url="school_item.html"
-			       typeahead-wait-ms="400"
-			       typeahead-min-length="3"
-			       typeahead-input-formatter="renderSelectedSchool($model)"
+				   class="form-control"
+				   ng-model="fields.school"
+				   uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
+				   typeahead-editable="false"
+				   typeahead-no-results="rematriculaNoSchoolsFound"
+				   typeahead-loading="rematriculaSchoolsLoading"
+				   typeahead-focus-first="true"
+				   typeahead-template-url="school_item.html"
+				   typeahead-wait-ms="400"
+				   typeahead-min-length="3"
+				   typeahead-input-formatter="renderSelectedSchool($model)"
 			>
+
+			<small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão divergente</b></small>
 
 			<div ng-show="rematriculaSchoolsLoading">
 				<i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
@@ -707,6 +676,11 @@
 			</div>
 
 		</div>
+		<div class="form-group col-md-3">
+			<label class="control-label" for="fld-enroll-school_cep">CEP</label>
+			<input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_cep" ng-change="getAdressByCEP(fields.school_cep)" placeholder="00000-000">
+			<span ng-show="noCEF" class="alert-color"><small>CEP não encontrado!</small></span>
+		</div>
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-enroll-school_address">Endereço*</label>
@@ -714,13 +688,35 @@
 		</div>
 
 		<div class="form-group col-md-3">
-			<label class="control-label" for="fld-enroll-school_cep">CEP</label>
-			<input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_cep" placeholder="00000-000">
-		</div>
-
-		<div class="form-group col-md-3">
 			<label class="control-label" for="fld-enroll-school_neighborhood">Bairro*</label>
 			<input type="text" class="form-control" id="fld-enroll-school_neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_neighborhood">
+		</div>
+		<div class="form-group col-md-2">
+			<label class="control-label" for="fld-enroll-school_uf">UF*</label>
+			<select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
+		</div>
+		<div class="form-group col-md-4 clearfix">
+			<label class="control-label" for="fld-enroll-school_city">Município*</label>
+			<input type="text" id="fld-enroll-school_city"
+				   class="form-control"
+				   ng-model="fields.school_city"
+				   ng-readonly="!canEditCurrentStep()"
+
+				   uib-typeahead="city for city in fetchCities($viewValue)"
+				   typeahead-editable="false"
+				   typeahead-no-results="schoolNoCitiesFound"
+				   typeahead-focus-first="true"
+				   typeahead-template-url="city_item.html"
+				   typeahead-min-length="3"
+				   typeahead-input-formatter="renderSelectedCity($model)"
+
+			>
+			<div ng-show="schoolCitiesLoading">
+				<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+			</div>
+			<div ng-show="schoolNoCitiesFound">
+				<i class="fa fa-remove"></i> Nenhuma cidade encontrada
+			</div>
 		</div>
 
 		<div class="form-group col-md-6">
@@ -764,7 +760,6 @@
 
 	</div>
 </div>
-
 <div class="panel panel-default" ng-show="isStepOpen('Observacao')">
 	<div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório do período de observação</div>
 	<div class="panel-body">

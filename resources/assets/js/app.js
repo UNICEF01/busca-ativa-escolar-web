@@ -26,6 +26,7 @@
 			'ui.utils.masks',
 			'ui.ace',
 			'datatables',
-            'ui.mask'
+            'ui.mask',
+            'angular.viacep'
 		])
 })();
