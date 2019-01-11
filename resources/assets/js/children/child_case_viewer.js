@@ -223,7 +223,7 @@
                 $scope.fields.school_uf = response.uf;
                 $scope.fetchCities(response.localidade).then(function (value) {
                     $scope.fields.school_city = value[0];
-                    $scope.validateSchoolWithPlace();
+                    validateSchoolWithPlace();
                 });
             }).catch(function (responseCatch) {
                 console.log(responseCatch)
@@ -233,13 +233,14 @@
                 }, 1000);
             });
         }
-        $scope.validateSchoolWithPlace = function () {
-            if (!$scope.fields.school.city_name && !$scope.fields.school_city.name) return;
-            if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
-                $scope.avisoDivergencia = true;
-                setTimeout(function () {
-                    $scope.avisoDivergencia = false;
-                }, 5000);
+        function validateSchoolWithPlace() {
+            if ($scope.fields.school && $scope.fields.school_city) {
+                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
+                    $scope.avisoDivergencia = true;
+                    setTimeout(function () {
+                        $scope.avisoDivergencia = false;
+                    }, 5000);
+                }
             }
         }
 
