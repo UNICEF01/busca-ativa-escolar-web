@@ -244,6 +244,13 @@
             }
         }
 
+        $scope.putStateAndCity = function (value) {
+            $scope.fields.school_uf = value.uf;
+            $scope.fetchCities(value.city_name).then(function (value) {
+                $scope.fields.school_city = value[0];
+            });
+        }
+
 		function fetchStepData() {
 
             $scope.current_date = new Date();
