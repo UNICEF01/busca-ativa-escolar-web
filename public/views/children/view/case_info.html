@@ -664,6 +664,7 @@
 				   typeahead-wait-ms="400"
 				   typeahead-min-length="3"
 				   typeahead-input-formatter="renderSelectedSchool($model)"
+				   typeahead-on-select="putStateAndCity(fields.school)"
 			>
 
 			<small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão divergente</b></small>
@@ -701,7 +702,6 @@
 				   class="form-control"
 				   ng-model="fields.school_city"
 				   ng-readonly="!canEditCurrentStep()"
-
 				   uib-typeahead="city for city in fetchCities($viewValue)"
 				   typeahead-editable="false"
 				   typeahead-no-results="schoolNoCitiesFound"
