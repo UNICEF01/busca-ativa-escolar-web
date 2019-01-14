@@ -11226,7 +11226,7 @@ hr.on-light {
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.19.5 - 2016-10-24T23:13:59.551Z
+ * Version: 0.19.7 - 2017-04-15T14:28:36.790Z
  * License: MIT
  */
 /* Style when highlighting a search. */
@@ -11558,17 +11558,10 @@ body > .ui-select-bootstrap.open {
 }
 
 /* Spinner */
-.ui-select-refreshing {
+.ui-select-refreshing.glyphicon {
   position: absolute;
   right: 0;
   padding: 8px 27px;
-  top: 1px;
-  display: inline-block;
-  font-family: 'Glyphicons Halflings';
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
 }
 
 @-webkit-keyframes ui-select-spin {

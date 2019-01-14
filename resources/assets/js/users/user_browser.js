@@ -19,12 +19,17 @@
 			email: null,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true,
+			show_suspended: false,
 			max: 16,
 			page: 1,
 		};
 
 		$scope.quickAdd = false;
+
+		$scope.onCheckCanceled = function (){
+			$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+			$scope.refresh();
+		};
 
 		$scope.enableQuickAdd = function() {
 			$scope.quickAdd = true;
@@ -97,7 +102,7 @@
 		Platform.whenReady(function() {
 			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
 			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
-		})
+		});
 
 	});
 

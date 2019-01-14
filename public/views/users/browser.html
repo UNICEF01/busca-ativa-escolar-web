@@ -80,7 +80,7 @@
 							<button type="submit" class="btn btn-sm btn-raised" style="margin-left: 8px; padding: 8px 16px;"><i class="fa fa-search"></i></button>
 						</div>
 					</div>
-					<div class="form-group col-md-6">
+					<div class="form-group col-md-3">
 						<label><i class="fa fa-listl"></i> Limite de exibição</label>
 						<div class="clearfix" style="margin-top: 10px;">
 							<ul class="nav nav-pills adm-max-results-filter">
@@ -91,6 +91,12 @@
 							</ul><br />
 						</div>
 						<p ng-show="users.length > 0">Total de registros: {{total}}</p>
+					</div>
+					<div class="form-group col-md-3">
+						<label class="container_check_user_canceled">Exibir descadastrados
+							<input type="checkbox">
+							<span class="checkmark" ng-model="query.show_suspended" ng-click="onCheckCanceled()"></span>
+						</label>
 					</div>
 				</div>
 			</form>
