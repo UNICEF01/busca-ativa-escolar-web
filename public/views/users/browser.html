@@ -93,9 +93,9 @@
 						<p ng-show="users.length > 0">Total de registros: {{total}}</p>
 					</div>
 					<div class="form-group col-md-3">
-						<label class="container_check_user_canceled">Exibir descadastrados
-							<input type="checkbox">
-							<span class="checkmark" ng-model="query.show_suspended" ng-click="onCheckCanceled()"></span>
+						<label class="container_check_user_canceled" ng-click="onCheckCanceled()">Exibir descadastrados
+							<input type="checkbox" ng-model="query.show_suspended">
+							<span class="checkmark"></span>
 						</label>
 					</div>
 				</div>
