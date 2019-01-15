@@ -14,11 +14,17 @@
 			$scope.tenants = {};
 			$scope.ufs = Ufs;
 			$scope.query = {
+                show_suspended: false,
 				filter: {},
 				sort: {},
 				max: 16,
 				page: 1
 			};
+
+			$scope.showCanceledCities = function () {
+				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+				$scope.refresh();
+            }
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
