@@ -71,12 +71,13 @@
 <div class="panel panel-default" ng-show="showAll">
     <div class="panel-heading"><i class="fa fa-graduation-cap"></i> Educação</div>
     <div class="panel-body">
+        {{fields.has_been_in_school == undefined}}
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-has_been_in_school-yes">Já frequentou a escola alguma vez?*</label>
             <div ng-if="fields.has_been_in_school">
                 <label name="has_been_in_school"> Sim</label>
             </div>
-            <div class="radio" ng-if="fields.has_been_in_school === ''">
+            <div ng-if="fields.has_been_in_school == undefined">
                 <label> Não</label>
             </div>
         </div>
