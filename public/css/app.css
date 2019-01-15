@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1537973354');
+  background-image: url('../images/logo_bae_header_v2.png?1539876312');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -219,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1537973354');
+  background-image: url('../images/ico_forbidden.png?1539876312');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -306,6 +306,66 @@ footer.app-footer a.credits-btn {
 }
 .support-widget .support-widget-button:hover {
   background-color: #00b8ed;
+}
+
+.container_check_city_canceled {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin-left: 15px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.container_check_city_canceled input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+}
+
+.container_check_city_canceled:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.container_check_city_canceled input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.container_check_city_canceled input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.container_check_city_canceled .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 /*!
