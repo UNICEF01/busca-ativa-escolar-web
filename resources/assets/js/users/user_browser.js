@@ -28,7 +28,6 @@
 
 		$scope.onCheckCanceled = function (){
 			$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
-			alert($scope.query.show_suspended);
 			$scope.refresh();
 		};
 
