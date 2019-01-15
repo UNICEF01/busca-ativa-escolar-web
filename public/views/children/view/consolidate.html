@@ -1,0 +1,647 @@
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
+    <div class="panel-heading"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
+    <div class="panel-body">
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-name">Nome da criança ou adolescente</label>
+            <div type="text" class="" id="fld-name" ng-bind-html="fields.name">
+            </div>
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-dob">Data de nascimento</label>
+            <div ui-date-mask id="fld-dob"
+                 ng-model="fields.dob" placeholder="dd/mm/yyyy">{{fields.dob | date: 'dd/MM/yyyy'}}
+            </div>
+        </div>
+        <div class="form-grouo col-md-4">
+            <label class="control-label" for="fld-gender">Sexo</label>
+            <div id="fld-gender" ng-repeat="item in static.getGenders()">
+				<span ng-if="fields.gender === item.slug">
+					{{item.label}}
+				</span>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="form-group col-md-8">
+            <label class="control-label" for="fld-alert-address">Endereço*</label>
+            <div id="fld-alert-address">{{fields.place_address}}</div>
+        </div>
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-alert-cep">CEP</label>
+            <div id="fld-alert-cep">{{fields.place_cep | cep}}</div>
+        </div>
+        <!--<div class="form-group col-md-12">-->
+        <!--<label class="control-label" for="fld-alert-reference">Referência geográfica</label>-->
+        <!--<input type="text" class="form-control" id="fld-alert-reference"-->
+        <!--ng-model="fields.place_reference">-->
+        <!--</div>-->
+        {{fields.place_reference}}
+        <div class="form-group col-md-5">
+            <label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
+            <div id="fld-alert-neighborhood">{{fields.place_neighborhood}}</div>
+        </div>
+        <div class="form-group col-md-2">
+            <label class="control-label" for="fld-alert-uf">UF*</label>
+            <div> {{fields.place_uf}}
+            </div>
+        </div>
+
+        <div class="form-group col-md-5 clearfix">
+            <label class="control-label" for="fld-alert-city">Município*</label>
+            <div>
+                {{fields.place_city_name}}
+            </div>
+
+            <div ng-show="alertaCitiesLoading">
+                <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+            </div>
+            <div ng-show="alertaNoCitiesFound">
+                <i class="fa fa-remove"></i> Nenhuma cidade encontrada
+            </div>
+        </div>
+        <!--<div class="form-group col-md-12" ng-if="!fields.place_coords && fields.place_address">-->
+        <!--<div class="alert alert-danger">-->
+        <!--<strong>Endereço não identificado!</strong> Verifique se a digitação do endereço está correta. O caso-->
+        <!--não aparecerá no mapa até que um endereço válido seja informado.-->
+        <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll">
+    <div class="panel-heading"><i class="fa fa-graduation-cap"></i> Educação</div>
+    <div class="panel-body">
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-has_been_in_school-yes">Já frequentou a escola alguma vez?*</label>
+            <div ng-if="fields.has_been_in_school">
+                <label name="has_been_in_school"> Sim</label>
+            </div>
+            <div class="radio" ng-if="fields.has_been_in_school === ''">
+                <label> Não</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="!fields.has_been_in_school">
+            <label class="control-label" for="fld-reason_not_enrolled">Qual a justificativa de não ter
+                frequentado?*</label>
+            <input type="text" class="form-control" id="fld-reason_not_enrolled"
+                   ng-model="fields.reason_not_enrolled">
+        </div>
+
+        <div class="form-group col-md-6" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last_grade">Qual o último ano que frequentou?*</label>
+            <select id="fld-school_last_grade" class="form-control" ng-disabled="!canEditCurrentStep()"
+                    ng-model="fields.school_last_grade"
+                    ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+        </div>
+
+        <div class="form-group col-md-6" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last_year">Em qual ano foi cursado o último ano
+                escolar?*</label>
+            <input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year"
+                   string-to-number ng-model="fields.school_last_year">
+        </div>
+
+        <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last_status-completed">Qual o status do último ano
+                escolar?*</label>
+            <div class="radio">
+                <label><input id="fld-school_last_status-completed" name="school_last_status"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="completed"
+                              type="radio"> Completo</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-school_last_status-pending" name="school_last_status"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="pending"
+                              type="radio"> Incompleto</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano
+                escolar?*</label>
+            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age"
+                   string-to-number ng-model="fields.school_last_age">
+        </div>
+
+        <div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last">Qual a última escola cursada?*</label>
+            <!--input type="text" class="form-control" id="fld-school_last_name"  ng-model="fields.school_last_name"-->
+
+            <input type="text" id="fld-school_last"
+                   class="form-control"
+                   ng-model="fields.school_last"
+
+                   uib-typeahead="school for school in fetchSchools($viewValue, null, null)"
+                   typeahead-editable="false"
+                   typeahead-no-results="pesquisaNoSchoolsFound"
+                   typeahead-loading="pesquisaSchoolsLoading"
+                   typeahead-focus-first="true"
+                   typeahead-template-url="school_item.html"
+                   typeahead-wait-ms="400"
+                   typeahead-min-length="3"
+                   typeahead-input-formatter="renderSelectedSchool($model)"
+            >
+
+            <div ng-show="pesquisaSchoolsLoading">
+                <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
+            </div>
+            <div ng-show="pesquisaNoSchoolsFound">
+                <i class="fa fa-remove"></i> Nenhuma escola encontrada
+            </div>
+
+        </div>
+
+        <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
+            <label class="control-label" for="fld-school_last_address">Endereço da última escola cursada*</label>
+            <input type="text" class="form-control" id="fld-school_last_address"
+                   ng-model="fields.school_last_address">
+        </div>
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+                iniciar Análise Técnica</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
+    <div class="panel-heading"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
+    <div class="panel-body">
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?*</label>
+            <div class="checkbox">
+                <label><input id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
+            </div>
+            <div class="checkbox">
+                <label><input id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
+            </div>
+            <div class="checkbox">
+                <label><input id="fld-parents_has_siblings" name="parents_has_siblings"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother"
+                              ng-true-value="1" type="checkbox"> Irmãos</label>
+            </div>
+
+            <div class="checkbox">
+                <label><input id="fld-parents_has_grandparents" name="parents_has_others"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents"
+                              ng-true-value="1" type="checkbox"> Avós</label>
+            </div>
+
+            <div class="checkbox">
+                <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros familiares</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?*</label>
+            <div class="radio">
+                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
+                              value="father" type="radio"> Pai</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
+                              value="mother" type="radio"> Mãe</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
+                              value="siblings" type="radio"> Irmãos</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
+                              value="grandparents" type="radio"> Avós</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"
+                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
+                              value="other" type="radio"> Outros familiares</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-mother_name">Nome completo da mãe*</label>
+            <input type="text" class="form-control" id="fld-mother_name"
+                   ng-model="fields.mother_name">
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-guardian_name">Nome completo do responsável*</label>
+            <input type="text" class="form-control" id="fld-guardian_name"
+                   ng-model="fields.guardian_name">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_rg">RG do responsável</label>
+            <input type="text" class="form-control" id="fld-guardian_rg" ui-br-rg-mask
+                   ng-model="fields.guardian_rg">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_cpf">CPF do responsável</label>
+            <input type="tel" class="form-control" id="fld-guardian_cpf" ui-br-cpf-mask
+                   ng-model="fields.guardian_cpf" placeholder="000.000.000-00">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável (dd/mm/aaaa)</label>
+            <input type="text" ui-date-mask class="form-control" id="fld-guardian_dob"
+                   ng-model="fields.guardian_dob" placeholder="dd/mm/yyyy">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
+            <input type="text" class="form-control" id="fld-guardian_phone" ui-br-phone-number
+                   ng-model="fields.guardian_phone" placeholder="(00) 00000-0000">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_race">Raça ou etnia do responsável</label>
+            <select class="form-control" id="fld-guardian_race" ng-disabled="!canEditCurrentStep()"
+                    ng-model="fields.guardian_race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_schooling">Escolaridade do responsável</label>
+            <select class="form-control" id="fld-guardian_schooling" ng-disabled="!canEditCurrentStep()"
+                    ng-model="fields.guardian_schooling"
+                    ng-options="n.slug as n.label for n in static.getSchoolingLevels()"></select>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-guardian_job">Ocupação do responsável</label>
+            <input type="text" class="form-control" id="fld-guardian_job" ng-disabled="!canEditCurrentStep()"
+                   ng-model="fields.guardian_job">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-parents_income">Renda familiar per capita</label>
+            <select type="text" class="form-control" id="fld-parents_income" ng-disabled="!canEditCurrentStep()"
+                    ng-model="fields.parents_income"
+                    ng-options="n.slug as n.label for n in static.getIncomeRanges()"></select>
+        </div>
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+                iniciar Análise Técnica</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
+    <div class="panel-body">
+        <div class="form-group col-md-12">
+            <label class="control-label">Motivos de estar fora da escola*</label>
+            <div class="radio" ng-repeat="cause in static.getVisibleCaseCauses()"
+                 ng-if="isCheckboxChecked('case_cause_ids', cause.id)">
+                <label>
+                    <strong ng-if="child.cases[0].alert_cause_id == cause.alert_cause_id" class="badge">Motivo indicado
+                        no
+                        alerta</strong>
+                    {{cause.label}}
+
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="isHandicapped()">
+            <label class="control-label" for="fld-handicapped_at_sus-yes">A criança ou adolescente é atendida pelo SUS
+                (Sistema Único de Saúde)?*</label>
+            <div class="radio">
+                <label><input id="fld-handicapped_at_sus-yes" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="1" value="yes"
+                              type="radio"> Sim</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-handicapped_at_sus-no" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="0" value="no"
+                              type="radio"> Não</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="isHandicapped()">
+            <label class="control-label" for="fld-handicapped_reason_not_enrolled">Por qual motivo a matrícula não foi
+                realizada?*</label>
+            <select type="text" class="form-control" id="fld-handicapped_reason_not_enrolled"
+                    ng-disabled="!canEditCurrentStep()" ng-model="fields.handicapped_reason_not_enrolled"
+                    ng-options="n.slug as n.label for n in static.getHandicappedRejectReasons()"></select>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="isStepOpen('AnaliseTecnica')">
+    <div class="panel-heading"><i class="fa fa-info-circle"></i> Análise Técnica</div>
+    <div class="panel-body">
+        <div class="form-group col-md-12">
+            <label class="control-label">Motivos identificados</label>
+            <div class="radio" ng-repeat="id in getCaseCauseIDs()">
+                <label>
+                    <i class="fa fa-check"></i> {{static.getCaseCauses()[id].label}}
+                    <strong ng-if="static.getCaseCauses()[id].alert_cause_id == getAlertCauseId()" class="badge">Motivo
+                        indicado no alerta</strong>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label">Grau de risco</label>
+            <p>
+            <div class="label label-danger">{{child.risk_level | lang:'child.risk_level'}}</div>
+            </p>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-analysis_details">Detalhamento da análise*</label>
+            <textarea style="height: 100px" class="form-control" id="fld-analysis_details"
+                      ng-model="fields.analysis_details"></textarea>
+        </div>
+
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+                enviar para o supervisor institucional</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="isStepOpen('GestaoDoCaso') && identity.can('cases.assign')">
+    <div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório de gestão do caso</div>
+    <div class="panel-body">
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-actions_description">Descreva as atividades realizadas*</label>
+            <textarea style="height: 200px" class="form-control" id="fld-actions_description"
+                      ng-model="fields.actions_description"></textarea>
+        </div>
+
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+                concluir etapa</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="(showAll && isPastStep('Rematricula')) || isStepOpen('Rematricula')">
+    <div class="panel-heading"><i class="fa fa-building"></i> Dados da escola de (re)matrícula</div>
+    <div class="panel-body">
+
+        <div class="clearfix">
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-enroll-reinsertion_date">Data da (re)matrícula
+                    (dd/mm/aaaa)*</label>
+
+                <div class="clearfix">
+                    <input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date"
+                           ng-model="fields.reinsertion_date"
+                           style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                    <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
+                            ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group col-md-2">
+                <label class="control-label" for="fld-enroll-school_uf">UF*</label>
+                <select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditCurrentStep()"
+                        ng-model="fields.school_uf"
+                        ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
+            </div>
+            <div class="form-group col-md-4 clearfix">
+                <label class="control-label" for="fld-enroll-school_city">Município*</label>
+                <input type="text" id="fld-enroll-school_city"
+                       class="form-control"
+                       ng-model="fields.school_city"
+
+
+                       uib-typeahead="city for city in fetchCities($viewValue)"
+                       typeahead-editable="false"
+                       typeahead-no-results="schoolNoCitiesFound"
+                       typeahead-loading="schoolCitiesLoading"
+                       typeahead-focus-first="true"
+                       typeahead-template-url="city_item.html"
+                       typeahead-wait-ms="400"
+                       typeahead-min-length="3"
+                       typeahead-input-formatter="renderSelectedCity($model)"
+
+                >
+                <div ng-show="schoolCitiesLoading">
+                    <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+                </div>
+                <div ng-show="schoolNoCitiesFound">
+                    <i class="fa fa-remove"></i> Nenhuma cidade encontrada
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12 clearfix">
+            <label class="control-label" for="fld-enroll-school">Nome da escola*</label>
+            <!--input type="text" class="form-control" id="fld-enroll-school_name"  ng-model="fields.school_name"-->
+
+            <input type="text" id="fld-enroll-school"
+                   class="form-control"
+                   ng-model="fields.school"
+
+                   uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
+                   typeahead-editable="false"
+                   typeahead-no-results="rematriculaNoSchoolsFound"
+                   typeahead-loading="rematriculaSchoolsLoading"
+                   typeahead-focus-first="true"
+                   typeahead-template-url="school_item.html"
+                   typeahead-wait-ms="400"
+                   typeahead-min-length="3"
+                   typeahead-input-formatter="renderSelectedSchool($model)"
+            >
+
+            <div ng-show="rematriculaSchoolsLoading">
+                <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
+            </div>
+            <div ng-show="rematriculaNoSchoolsFound">
+                <i class="fa fa-remove"></i> Nenhuma escola encontrada
+            </div>
+
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-enroll-school_address">Endereço*</label>
+            <input type="text" class="form-control" id="fld-enroll-school_address"
+                   ng-model="fields.school_address">
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="control-label" for="fld-enroll-school_cep">CEP</label>
+            <input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep"
+                   ng-model="fields.school_cep" placeholder="00000-000">
+        </div>
+
+        <div class="form-group col-md-3">
+            <label class="control-label" for="fld-enroll-school_neighborhood">Bairro*</label>
+            <input type="text" class="form-control" id="fld-enroll-school_neighborhood"
+                   ng-model="fields.school_neighborhood">
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-enroll-school_contact_name">Nome do contato da gestão da
+                escola*</label>
+            <input type="text" class="form-control" id="fld-enroll-school_contact_name"
+                   ng-model="fields.school_contact_name">
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label" for="fld-enroll-school_contact_email">E-mail</label>
+            <input type="email" class="form-control" id="fld-enroll-school_contact_email"
+                   ng-model="fields.school_contact_email">
+        </div>
+        <div class="form-group col-md-3">
+            <label class="control-label" for="fld-enroll-school_contact_position">Cargo</label>
+            <input type="text" class="form-control" id="fld-enroll-school_contact_position"
+                   ng-model="fields.school_contact_position">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-enroll-school_phone">Telefone da escola*</label>
+            <input type="tel" ui-br-phone-number class="form-control" id="fld-enroll-school_phone"
+                   ng-model="fields.school_phone" placeholder="(00) 00000-0000">
+        </div>
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-enroll-school_email">E-mail da escola</label>
+            <input type="email" class="form-control" id="fld-enroll-school_email"
+                   ng-model="fields.school_email">
+        </div>
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-reinsertion_grade">Escolha abaixo em que etapa de ensino e série que a
+                criança ou adolescente foi (re)matriculada*</label>
+            <select id="fld-reinsertion_grade" class="form-control" ng-disabled="!canEditCurrentStep()"
+                    ng-model="fields.reinsertion_grade"
+                    ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-observations">Observações sobre a (re)matrícula</label>
+            <textarea style="height: 100px" class="form-control" id="fld-observations"
+                      ng-model="fields.observations"></textarea>
+        </div>
+
+        <hr/>
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+                concluir etapa</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default" ng-show="isStepOpen('Observacao')">
+    <div class="panel-heading"><i class="fa fa-info-circle"></i> Relatório do período de observação</div>
+    <div class="panel-body">
+
+        <div class="form-group col-md-6">
+            <label for="fld-obs-reinsertion_date" class="control-label">Data da (re)matrícula</label>
+            <div class="clearfix">
+                <input type="text" ui-date-mask class="form-control" id="fld-obs-reinsertion_date"
+                       ng-model="fields.reinsertion_date"
+                       style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
+                        ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
+                </button>
+                <small>Data original: {{fields.reinsertion_date_original | amDateFormat:'DD/MM/YYYY'}}</small>
+            </div>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label class="control-label" for="fld-obs-report_date">Data de registro do relatório (dd/mm/aaaa)*</label>
+            <div class="clearfix">
+                <input type="text" ui-date-mask class="form-control" id="fld-obs-report_date"
+                       ng-model="fields.report_date"
+                       style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
+                        ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje
+                </button>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12"
+             ng-show="!areDatesEqual(fields.reinsertion_date, fields.reinsertion_date_original)">
+            <label class="control-label" for="fld-obs-reinsertion_date_change_reason">Descreva o motivo da mudança na
+                data de rematrícula*</label>
+            <textarea style="height: 60px" class="form-control" id="fld-obs-reinsertion_date_change_reason"
+                      ng-model="fields.reinsertion_date_change_reason"></textarea>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-obs-is_child_still_in_school-yes">A criança ou adolescente continua na
+                escola?*</label>
+            <div class="radio">
+                <label><input id="fld-obs-is_child_still_in_school-yes" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.is_child_still_in_school" ng-value="1"
+                              name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
+            </div>
+            <div class="radio">
+                <label><input id="fld-obs-is_child_still_in_school-no" ng-disabled="!canEditCurrentStep()"
+                              ng-model="fields.is_child_still_in_school" ng-value="0"
+                              name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
+            </div>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="!fields.is_child_still_in_school">
+            <label class="control-label" for="fld-obs-evasion_reason">Descreva o motivo da nova evasão*</label>
+            <textarea style="height: 100px" class="form-control" id="fld-obs-evasion_reason"
+                      ng-model="fields.evasion_reason"></textarea>
+        </div>
+
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-obs-observations">Observações gerais</label>
+            <textarea style="height: 100px" class="form-control" id="fld-obs-observations"
+                      ng-model="fields.observations"></textarea>
+        </div>
+
+        <div class="form-group col-md-12" ng-show="canEditCurrentStep() && !canUpdateStepObservation(child)">
+            <div class="alert alert-warning">
+                <strong>Atenção</strong><br/>
+                A {{step.name}} só poderá ser cadastrada após o prazo definido nas configurações do município.
+            </div>
+        </div>
+
+        <div ng-show="editable && canEditCurrentStep()">
+            <hr/>
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && canUpdateStepObservation(child)"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && canUpdateStepObservation(child)">Salvar e concluir etapa</a>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default" ng-show="showAll || isStepOpen('Alerta')">
+    <div class="panel-heading">Observações</div>
+    <div class="panel-body">
+        <div class="form-group col-md-12">
+            <p ng-bind="fields.observation"></p>
+        </div>
+    </div>
+</div>

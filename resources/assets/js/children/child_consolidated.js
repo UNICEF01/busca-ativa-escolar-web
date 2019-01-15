@@ -15,10 +15,12 @@
 	function ChildConsolidatedCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
+		$scope.showAll = true;
 
 		$scope.refreshChildData = function(callback) {
 			return $scope.child = Children.find({id: $scope.child_id, with: 'currentStep,consolidated'}, callback);
 		};
+
 
 		$scope.fields = {};
 		$scope.child_id = $stateParams.child_id;
