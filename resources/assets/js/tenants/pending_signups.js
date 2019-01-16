@@ -19,7 +19,7 @@
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'all'}
+				filter: {status: 'pending_setup'}
 			};
 
 			$scope.refresh = function() {

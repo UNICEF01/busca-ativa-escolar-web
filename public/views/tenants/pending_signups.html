@@ -34,6 +34,7 @@
 								<option value="pending_approval">Aguardando aprovação</option>
 								<option value="pending_setup">Aguardando configuração</option>
 								<option value="rejected">Rejeitados</option>
+								<option value="canceled">Desativado</option>
 							</select>
 						</div>
 					</div>
@@ -55,10 +56,11 @@
 							<td><span ng-bind="signup.city.uf"></span></td>
 							<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
 							<td>
-								<span ng-show="signup.is_approved && signup.is_provisioned" class="label label-success">Ativo</span>
-								<span ng-show="signup.is_approved && !signup.is_provisioned" class="label label-success">Aguardando Configuração</span>
+								<span ng-show="signup.is_approved && signup.is_provisioned && !signup.deleted_at" class="label label-success">Ativo</span>
+								<span ng-show="signup.is_approved && !signup.is_provisioned && !signup.deleted_at" class="label label-success">Aguardando Configuração</span>
 								<span ng-show="!signup.is_approved && !signup.deleted_at" class="label label-warning">Aguardando Aprovação</span>
-								<span ng-show="signup.deleted_at" class="label label-danger">Rejeitados</span>
+								<span ng-show="signup.deleted_at && !signup.is_provisioned" class="label label-danger">Rejeitados</span>
+								<span ng-show="signup.deleted_at && signup.is_provisioned" class="label label-danger">Desativado</span>
 							</td>
 						</tr>
 					</tbody>
