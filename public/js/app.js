@@ -1910,6 +1910,18 @@
         };
     });
 })();
+(function () {
+    angular.module('BuscaAtivaEscolar').filter('cpf', function() {
+        return function(input) {
+            var str = input+ '';
+            str = str.replace(/\D/g,'');
+            str = str.replace(/(\d{3})(\d)/,"$1.$2");
+            str = str.replace(/(\d{3})(\d)/,"$1.$2");
+            str = str.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+            return str;
+        };
+    });
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('ngEnter', function () {
@@ -2745,26 +2757,6 @@
 
 	});
 
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 
@@ -3639,6 +3631,26 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
