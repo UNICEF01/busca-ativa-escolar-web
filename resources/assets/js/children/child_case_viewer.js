@@ -454,6 +454,7 @@
 		$scope.save = function() {
 
 			var data = Object.assign({}, $scope.step.fields);
+			console.log(data)
 
 			data = Utils.prepareDateFields(data, dateOnlyFields);
 
