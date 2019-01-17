@@ -110,9 +110,13 @@
 				<tbody>
 					<tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
 						<td width="25%">
-							<strong><i class="fa fa-user"></i> {{user.name}}</strong><br />
+							<strong>{{user.name}}</strong><br />
+							<small>
+								<strong>Cadastrado em: {{user.created_at.date | amDateFormat:'DD/MM/YYYY'}}</strong>
+							</small>
+							<br/>
 							<span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
-							<span ng-show="!!user.deleted_at" class="label label-warning">Desativado</span>
+							<span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
 						</td>
 						<td width="5%"><span ng-show="user.uf">{{user.uf}}</span></td>
 						<td width="13%"><span ng-show="user.tenant">{{user.tenant.name}}</span></td>
