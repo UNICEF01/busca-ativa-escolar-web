@@ -19,10 +19,15 @@
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'pending_setup'}
+				filter: {status: 'pending_approval'}
 			};
 
-			$scope.refresh = function() {
+            $scope.onSelectType = function() {
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
 			};
