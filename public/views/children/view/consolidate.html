@@ -136,20 +136,23 @@
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?</label>
-            <div>
+
                 <div class="col-md-12 pl-0" ng-if="fields.parents_has_father">
                     <div class="col-md-4 pl-0">
                         <label> Pai</label>
                     </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Nome:</small>
-                        </label> {{fields.aux.contatos.father.name}}
-                    </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Telefone:</small>
-                        </label> {{fields.aux.contatos.father.phone}}
+
+                    <div ng-show="fields.aux">
+                        <div class="col-md-4">
+                            <label>
+                                <small>Nome:</small>
+                            </label> {{fields.aux.contatos.father.name}}
+                        </div>
+                        <div class="col-md-4">
+                            <label>
+                                <small>Telefone:</small>
+                            </label> {{fields.aux.contatos.father.phone}}
+                        </div>
                     </div>
                 </div>
 
@@ -157,15 +160,17 @@
                     <div class="col-md-4 pl-0">
                         <label> Mãe</label>
                     </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Nome:</small>
-                        </label> {{fields.aux.contatos.mother.name}}
-                    </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Telefone:</small>
-                        </label> {{fields.aux.contatos.mother.phone}}
+                    <div ng-show="fields.aux">
+                        <div class="col-md-4">
+                            <label>
+                                <small>Nome:</small>
+                            </label> {{fields.aux.contatos.mother.name}}
+                        </div>
+                        <div class="col-md-4">
+                            <label>
+                                <small>Telefone:</small>
+                            </label> {{fields.aux.contatos.mother.phone}}
+                        </div>
                     </div>
                 </div>
 
@@ -173,22 +178,25 @@
                     <div class="col-md-4 pl-0">
                         <label> Irmãos</label>
                     </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Nome:</small>
-                        </label> {{fields.aux.contatos.siblings.name}}
-                    </div>
-                    <div class="col-md-4">
-                        <label>
-                            <small>Telefone:</small>
-                        </label> {{fields.aux.contatos.siblings.phone}}
+                    <div ng-show="fields.aux">
+                        <div class="col-md-4">
+                            <label>
+                                <small>Nome:</small>
+                            </label> {{fields.aux.contatos.siblings.name}}
+                        </div>
+                        <div class="col-md-4">
+                            <label>
+                                <small>Telefone:</small>
+                            </label> {{fields.aux.contatos.siblings.phone}}
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-12 pl-0" ng-if="fields.parents_has_grandparents">
-                    <div class="col-md-4 pl-0">
-                        <label> Avós</label>
-                    </div>
+            <div class="col-md-12 pl-0" ng-if="fields.parents_has_grandparents">
+                <div class="col-md-4 pl-0">
+                    <label> Avós</label>
+                </div>
+                <div ng-show="fields.aux">
                     <div class="col-md-4">
                         <label>
                             <small>Nome:</small>
@@ -200,11 +208,13 @@
                         </label> {{fields.aux.contatos.grandparents.phone}}
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-12 pl-0" ng-if="fields.parents_has_others">
-                    <div class="col-md-4 pl-0">
-                        <label> Outros familiares</label>
-                    </div>
+            <div class="col-md-12 pl-0" ng-if="fields.parents_has_others">
+                <div class="col-md-4 pl-0">
+                    <label> Outros familiares</label>
+                </div>
+                <div ng-show="fields.aux">
                     <div class="col-md-4">
                         <label>
                             <small>Nome:</small>
@@ -217,104 +227,104 @@
                     </div>
                 </div>
             </div>
-            <div ng-if="fields.parents_has_father == undefined">Não informado</div>
         </div>
-        <div class="form-group col-md-12">
-            <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?</label>
-            <div ng-if="fields.parents_who_is_guardian != undefined">
-                <label ng-if="fields.parents_who_is_guardian == 'father'"> Pai</label>
+    </div>
+    <div class="form-group col-md-12">
+        <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?</label>
+        <div ng-if="fields.parents_who_is_guardian != undefined">
+            <label ng-if="fields.parents_who_is_guardian == 'father'"> Pai</label>
 
-                <label ng-if="fields.parents_who_is_guardian == 'mother'"> Mãe</label>
+            <label ng-if="fields.parents_who_is_guardian == 'mother'"> Mãe</label>
 
-                <label ng-if="fields.parents_who_is_guardian == 'siblings'"> Irmãos</label>
+            <label ng-if="fields.parents_who_is_guardian == 'siblings'"> Irmãos</label>
 
-                <label ng-if="fields.parents_who_is_guardian == 'other'"> Outros familiares</label>
-            </div>
-            <div ng-if="fields.parents_who_is_guardian == undefined">Não informado</div>
-
+            <label ng-if="fields.parents_who_is_guardian == 'other'"> Outros familiares</label>
         </div>
-
-        <div class="form-group col-md-12">
-            <label class="control-label" for="fld-mother_name">Nome completo da mãe</label>
-            <div class="" id="fld-mother_name">{{fields.mother_name && fields.mother_name || 'Não informado'}}</div>
-        </div>
-
-        <div class="form-group col-md-12">
-            <label class="control-label" for="fld-guardian_name">Nome completo do responsável</label>
-            <div class="">{{fields.guardian_name && fields.guardian_name || 'Não informado'}}</div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_rg">RG do responsável</label>
-            <div class="" id="fld-guardian_rg">{{fields.guardian_rg && fields.guardian_rg || 'Não informado'}}</div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_cpf">CPF do responsável</label>
-            <div class="" id="fld-guardian_cpf">{{fields.guardian_cpf && (fields.guardian_cpf | cpf) || 'Não
-                Informado'}}
-            </div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável</label>
-            <!--<input type="text" ui-date-mask class="form-control" id="fld-guardian_dob"-->
-            <!--ng-model="fields.guardian_dob" placeholder="dd/mm/yyyy">-->
-            <div class="" id="fld-guardian_dob">{{typeof(fields.guardian_dob) != null && (fields.guardian_dob | date:
-                'dd/MM/yyyy') || 'Não Informado'}}
-            </div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
-            <div class="" id="fld-guardian_phone">{{fields.guardian_phone && (fields.guardian_phone) || 'Não
-                Informado'}}
-            </div>
-        </div>
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_race">Raça ou etnia do responsável</label>
-            <div ng-repeat="item in static.getRaces()" ng-if="item.slug === fields.guardian_race">
-                {{item.label}}
-            </div>
-            <div ng-if="fields.guardian_race == undefined">
-                Não informado
-            </div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_schooling">Escolaridade do responsável</label>
-            <div ng-repeat="item in static.getSchoolingLevels()" ng-if="item.slug === fields.guardian_schooling">
-                {{item.label}}
-            </div>
-            <div ng-if="fields.guardian_schooling == undefined">
-                Não informado
-            </div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-guardian_job">Ocupação do responsável</label>
-            <div>{{fields.guardian_job && fields.guardian_job || 'Não informado'}}</div>
-        </div>
-
-        <div class="form-group col-md-6">
-            <label class="control-label" for="fld-parents_income">Renda familiar per capita</label>
-            <div ng-repeat="item in static.getIncomeRanges()" ng-if="item.slug === fields.parents_income">
-                {{item.label && item.label || 'Não informado'}}
-            </div>
-            <div ng-if="fields.parents_income == undefined">
-                Não informado
-            </div>
-        </div>
-
-        <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
-
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
-                iniciar Análise Técnica</a>
-        </div>
+        <div ng-if="fields.parents_who_is_guardian == undefined">Não informado</div>
 
     </div>
+
+    <div class="form-group col-md-12">
+        <label class="control-label" for="fld-mother_name">Nome completo da mãe</label>
+        <div class="" id="fld-mother_name">{{fields.mother_name && fields.mother_name || 'Não informado'}}</div>
+    </div>
+
+    <div class="form-group col-md-12">
+        <label class="control-label" for="fld-guardian_name">Nome completo do responsável</label>
+        <div class="">{{fields.guardian_name && fields.guardian_name || 'Não informado'}}</div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_rg">RG do responsável</label>
+        <div class="" id="fld-guardian_rg">{{fields.guardian_rg && fields.guardian_rg || 'Não informado'}}</div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_cpf">CPF do responsável</label>
+        <div class="" id="fld-guardian_cpf">{{fields.guardian_cpf && (fields.guardian_cpf | cpf) || 'Não
+            Informado'}}
+        </div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável</label>
+        <!--<input type="text" ui-date-mask class="form-control" id="fld-guardian_dob"-->
+        <!--ng-model="fields.guardian_dob" placeholder="dd/mm/yyyy">-->
+        <div class="" id="fld-guardian_dob">{{typeof(fields.guardian_dob) != null && (fields.guardian_dob | date:
+            'dd/MM/yyyy') || 'Não Informado'}}
+        </div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
+        <div class="" id="fld-guardian_phone">{{fields.guardian_phone && (fields.guardian_phone) || 'Não
+            Informado'}}
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_race">Raça ou etnia do responsável</label>
+        <div ng-repeat="item in static.getRaces()" ng-if="item.slug === fields.guardian_race">
+            {{item.label}}
+        </div>
+        <div ng-if="fields.guardian_race == undefined">
+            Não informado
+        </div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_schooling">Escolaridade do responsável</label>
+        <div ng-repeat="item in static.getSchoolingLevels()" ng-if="item.slug === fields.guardian_schooling">
+            {{item.label}}
+        </div>
+        <div ng-if="fields.guardian_schooling == undefined">
+            Não informado
+        </div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-guardian_job">Ocupação do responsável</label>
+        <div>{{fields.guardian_job && fields.guardian_job || 'Não informado'}}</div>
+    </div>
+
+    <div class="form-group col-md-6">
+        <label class="control-label" for="fld-parents_income">Renda familiar per capita</label>
+        <div ng-repeat="item in static.getIncomeRanges()" ng-if="item.slug === fields.parents_income">
+            {{item.label && item.label || 'Não informado'}}
+        </div>
+        <div ng-if="fields.parents_income == undefined">
+            Não informado
+        </div>
+    </div>
+
+    <div ng-show="editable && canEditCurrentStep()">
+        <hr/>
+
+        <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep()" ng-click="save()">Salvar</a>
+        <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep()">Salvar e
+            iniciar Análise Técnica</a>
+    </div>
+
+</div>
 </div>
 
 <div class="panel panel-default">
