@@ -464,7 +464,7 @@
                     <label>
                         <small>Nome:</small>
                     </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.mother.name">
+                                   ng-model="fields.aux.contatos.mother.name = fields.mother_name">
                 </div>
                 <div class="col-md-6">
                     <label>
@@ -518,7 +518,7 @@
 
             <div class="checkbox">
                 <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros familiares</label>
+                              ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros</label>
             </div>
             <div class="clearfix" ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.other && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
@@ -539,7 +539,7 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?*</label>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian" ng-change="fields.guardian_name = ''"
+                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.father.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="father" type="radio"> Pai</label>
             </div>
@@ -549,19 +549,19 @@
                               value="mother" type="radio"> Mãe</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-change="fields.guardian_name = ''"
+                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.siblings.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="siblings" type="radio"> Irmãos</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian" ng-change="fields.guardian_name = ''"
+                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.grandparents.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="grandparents" type="radio"> Avós</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian" ng-change="fields.guardian_name = ''"
+                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"ng-change="fields.guardian_name = fields.aux.contatos.others.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="other" type="radio"> Outros familiares</label>
+                              value="other" type="radio"> Outros</label>
             </div>
         </div>
 
