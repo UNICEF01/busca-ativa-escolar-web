@@ -41,6 +41,7 @@
                 Object.keys($scope.query.filter).forEach( function (element) {
 					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
                 });
+                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
                 return uri;
             };
 
