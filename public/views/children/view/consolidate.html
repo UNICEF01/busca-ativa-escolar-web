@@ -27,7 +27,9 @@
         </div>
         <div class="form-group col-md-5">
             <label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
-            <div id="fld-alert-neighborhood">{{fields.place_neighborhood && fields.place_neighborhood || 'Não informado'}}</div>
+            <div id="fld-alert-neighborhood">{{fields.place_neighborhood && fields.place_neighborhood || 'Não
+                informado'}}
+            </div>
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-cep">CEP</label>
@@ -109,9 +111,9 @@
 
         <div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last">Qual a última escola cursada?</label>
-           <div>
-               {{fields.school_last_name && fields.school_last_name || 'Não informado'}}
-           </div>
+            <div>
+                {{fields.school_last_name && fields.school_last_name || 'Não informado'}}
+            </div>
 
             <div ng-show="pesquisaSchoolsLoading">
                 <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
@@ -134,16 +136,86 @@
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?</label>
-            <div ng-if="fields.parents_has_father != undefined">
-                <label ng-if="fields.parents_has_father"> Pai</label>
+            <div>
+                <div class="col-md-12 pl-0" ng-if="fields.parents_has_father">
+                    <div class="col-md-4 pl-0">
+                        <label> Pai</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Nome:</small>
+                        </label> {{fields.aux.contatos.father.name}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Telefone:</small>
+                        </label> {{fields.aux.contatos.father.phone}}
+                    </div>
+                </div>
 
-                <label ng-if="fields.parents_has_mother"> Mãe</label>
+                <div class="col-md-12 pl-0" ng-if="fields.parents_has_mother">
+                    <div class="col-md-4 pl-0">
+                        <label> Mãe</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Nome:</small>
+                        </label> {{fields.aux.contatos.mother.name}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Telefone:</small>
+                        </label> {{fields.aux.contatos.mother.phone}}
+                    </div>
+                </div>
 
-                <label ng-if="fields.parents_has_brother"> Irmãos</label>
+                <div class="col-md-12 pl-0" ng-if="fields.parents_has_brother">
+                    <div class="col-md-4 pl-0">
+                        <label> Irmãos</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Nome:</small>
+                        </label> {{fields.aux.contatos.siblings.name}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Telefone:</small>
+                        </label> {{fields.aux.contatos.siblings.phone}}
+                    </div>
+                </div>
 
-                <label ng-if="fields.parents_has_grandparents"> Avós</label>
+                <div class="col-md-12 pl-0" ng-if="fields.parents_has_grandparents">
+                    <div class="col-md-4 pl-0">
+                        <label> Avós</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Nome:</small>
+                        </label> {{fields.aux.contatos.grandparents.name}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Telefone:</small>
+                        </label> {{fields.aux.contatos.grandparents.phone}}
+                    </div>
+                </div>
 
-                <label ng-if="fields.parents_has_others"> Outros</label>
+                <div class="col-md-12 pl-0" ng-if="fields.parents_has_others">
+                    <div class="col-md-4 pl-0">
+                        <label> Outros familiares</label>
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Nome:</small>
+                        </label> {{fields.aux.contatos.other.name}}
+                    </div>
+                    <div class="col-md-4">
+                        <label>
+                            <small>Telefone:</small>
+                        </label> {{fields.aux.contatos.other.phone}}
+                    </div>
+                </div>
             </div>
             <div ng-if="fields.parents_has_father == undefined">Não informado</div>
         </div>
@@ -195,7 +267,8 @@
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
-            <div class="" id="fld-guardian_phone">{{fields.guardian_phone && (fields.guardian_phone) || 'Não Informado'}}
+            <div class="" id="fld-guardian_phone">{{fields.guardian_phone && (fields.guardian_phone) || 'Não
+                Informado'}}
             </div>
         </div>
         <div class="form-group col-md-6">
