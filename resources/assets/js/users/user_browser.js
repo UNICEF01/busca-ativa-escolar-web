@@ -43,8 +43,17 @@
 
 		$scope.export = function() {
 			Identity.provideToken().then(function (token) {
-				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token);
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
 			});
+		};
+
+		$scope.prepareUriToExport = function () {
+			var uri = "";
+			Object.keys($scope.query).forEach( function (element) {
+				if(element != "sort" &&  $scope.query[element] != null) uri = uri.concat("&"+element+"="+$scope.query[element]);
+			});
+			uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+			return uri;
 		};
 
 		$scope.canEditUser = function(user) {
