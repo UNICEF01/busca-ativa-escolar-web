@@ -429,6 +429,7 @@
 
     </div>
 </div>
+
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
     <div class="panel-heading"><i class="fa fa-users"></i> Sobre os pais ou responsáveis</div>
     <div class="panel-body">
@@ -439,7 +440,8 @@
                               ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
             </div>
 
-            <div class="clearfix" ng-if="(fields.parents_has_father && canEditCurrentStep()) || (fields.aux.contatos.father && !canEditCurrentStep())">
+            <div class="clearfix"
+                 ng-if="(fields.parents_has_father && canEditCurrentStep()) || (fields.aux.contatos.father && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
                     <label>
                         <small>Nome:</small>
@@ -459,7 +461,8 @@
                 <label><input id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()"
                               ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
             </div>
-            <div class="clearfix" ng-if="(fields.parents_has_mother && canEditCurrentStep()) || (fields.aux.contatos.mother && !canEditCurrentStep())">
+            <div class="clearfix"
+                 ng-if="(fields.parents_has_mother && canEditCurrentStep()) || (fields.aux.contatos.mother && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
                     <label>
                         <small>Nome:</small>
@@ -474,24 +477,47 @@
                     <input type="hidden" class="" ng-model="fields.aux.contatos.mother.slug = 'mother'">
                 </div>
             </div>
+            <label>Field</label>
+            <pre>
+            {{fields.aux.contatos | json}}
+            </pre>
+            <label>ContatosAux</label>
+            <pre>
+            {{contatosAux[2].siblings | json}}
+            </pre>
             <div class="checkbox">
                 <label><input id="fld-parents_has_siblings" name="parents_has_siblings"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother"
                               ng-true-value="1" type="checkbox"> Irmãos</label>
             </div>
-            <div class="clearfix" ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings && !canEditCurrentStep())">
-                <div class="col-md-6 pl-0">
-                    <label>
-                        <small>Nome:</small>
-                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.siblings.name">
-                </div>
-                <div class="col-md-6">
-                    <label>
-                        <small>Telefone:</small>
-                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.siblings.phone" ui-br-phone-number>
-                    <input type="hidden" class="" ng-model="fields.aux.contatos.father.slug = 'siblings'">
+
+            <div class="clearfix"
+                 ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings && !canEditCurrentStep())">
+                <button class="btn btn-raised pull-right" ng-click="addContact()">
+                    <small>Incluir mais</small>
+                    </span></button>
+                <div class="clearfix"></div>
+
+                <div ng-repeat="item in contatosAux[2].siblings">
+                    <div class="col-md-6 pl-0">
+                        <label>
+                            <small>{{item.name}}:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.siblings[$index][item.model.name]">
+                    </div>
+                    <div class="col-md-5">
+                        <label>
+                            <small>{{item.phone}}:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
+
+                    </div>
+                    <button class="btn btn-danger pull-right" ng-click="removeContact($index, {id: $index, name: 'siblings'})">
+                        <small>Remover</small>
+                        </span></button>
+                    <div class="clearfix"></div>
                 </div>
             </div>
 
@@ -500,19 +526,33 @@
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents"
                               ng-true-value="1" type="checkbox"> Avós</label>
             </div>
-            <div class="clearfix" ng-if="(fields.parents_has_grandparents && canEditCurrentStep()) || (fields.aux.contatos.grandparents && !canEditCurrentStep())">
-                <div class="col-md-6 pl-0">
-                    <label>
-                        <small>Nome:</small>
-                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.grandparents.name">
-                </div>
-                <div class="col-md-6">
-                    <label>
-                        <small>Telefone:</small>
-                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.grandparents.phone" ui-br-phone-number>
-                    <input type="hidden" class="" ng-model="fields.aux.contatos.grandparents.slug = 'grandparents'">
+            <div class="clearfix"
+                 ng-if="(fields.parents_has_grandparents && canEditCurrentStep()) || (fields.aux.contatos.grandparents && !canEditCurrentStep())">
+                <button class="btn btn-raised pull-right" ng-click="addContact()">
+                    <small>Incluir mais</small>
+                    </span></button>
+                <div class="clearfix"></div>
+
+                <div ng-repeat="item in contatosAux[3].grandparents">
+                    <div class="col-md-6 pl-0">
+                        <label>
+                            <small>{{item.name}}:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.grandparents[$index][item.model.name]">
+                    </div>
+                    <div class="col-md-5">
+                        <label>
+                            <small>{{item.phone}}:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
+
+                    </div>
+                    <button class="btn btn-danger pull-right" ng-click="removeContact($index, contatosAux[3].grandparents)">
+                        <small>Remover</small>
+                        </span></button>
+                    <div class="clearfix"></div>
                 </div>
             </div>
 
@@ -520,7 +560,8 @@
                 <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()"
                               ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros</label>
             </div>
-            <div class="clearfix" ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.other && !canEditCurrentStep())">
+            <div class="clearfix"
+                 ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.other && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
                     <label>
                         <small>Nome:</small>
@@ -539,27 +580,32 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?*</label>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.father.name"
+                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian"
+                              ng-change="fields.guardian_name = fields.aux.contatos.father.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="father" type="radio"> Pai</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.mother_name"
+                <label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian"
+                              ng-change="fields.guardian_name = fields.mother_name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="mother" type="radio"> Mãe</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.siblings.name"
+                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian"
+                              ng-change="fields.guardian_name = fields.aux.contatos.siblings.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="siblings" type="radio"> Irmãos</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.grandparents.name"
+                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian"
+                              ng-change="fields.guardian_name = fields.aux.contatos.grandparents.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="grandparents" type="radio"> Avós</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"ng-change="fields.guardian_name = fields.aux.contatos.others.name"
+                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"
+                              ng-change="fields.guardian_name = fields.aux.contatos.others.name"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
                               value="other" type="radio"> Outros</label>
             </div>
