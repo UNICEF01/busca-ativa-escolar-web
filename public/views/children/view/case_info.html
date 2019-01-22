@@ -477,44 +477,38 @@
                     <input type="hidden" class="" ng-model="fields.aux.contatos.mother.slug = 'mother'">
                 </div>
             </div>
-            <label>Field</label>
-            <pre>
-            {{fields.aux.contatos | json}}
-            </pre>
-            <label>ContatosAux</label>
-            <pre>
-            {{contatosAux[2].siblings | json}}
-            </pre>
+
             <div class="checkbox">
                 <label><input id="fld-parents_has_siblings" name="parents_has_siblings"
+                              ng-change="addContact(fields.parents_has_brother,'siblings')"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother"
                               ng-true-value="1" type="checkbox"> Irmãos</label>
             </div>
 
             <div class="clearfix"
-                 ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings && !canEditCurrentStep())">
-                <button class="btn btn-raised pull-right" ng-click="addContact()">
-                    <small>Incluir mais</small>
+                 ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings.length > 0 && !canEditCurrentStep())">
+                <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'siblings')">
+                    <small>Incluir contato</small>
                     </span></button>
                 <div class="clearfix"></div>
 
-                <div ng-repeat="item in contatosAux[2].siblings">
+                <div ng-repeat="item in fields.aux.contatos.siblings">
                     <div class="col-md-6 pl-0">
                         <label>
-                            <small>{{item.name}}:</small>
+                            <small>Nome:</small>
                         </label>
                         <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
                                ng-model="fields.aux.contatos.siblings[$index][item.model.name]">
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <label>
-                            <small>{{item.phone}}:</small>
+                            <small>Telefone:</small>
                         </label>
                         <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
                                ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
-
                     </div>
-                    <button class="btn btn-danger pull-right" ng-click="removeContact($index, {id: $index, name: 'siblings'})">
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
+                            ng-click="removeContact($index,'siblings')">
                         <small>Remover</small>
                         </span></button>
                     <div class="clearfix"></div>
@@ -523,57 +517,71 @@
 
             <div class="checkbox">
                 <label><input id="fld-parents_has_grandparents" name="parents_has_grandparents"
+                              ng-change="addContact(fields.parents_has_grandparents,'grandparents')"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents"
                               ng-true-value="1" type="checkbox"> Avós</label>
             </div>
             <div class="clearfix"
-                 ng-if="(fields.parents_has_grandparents && canEditCurrentStep()) || (fields.aux.contatos.grandparents && !canEditCurrentStep())">
-                <button class="btn btn-raised pull-right" ng-click="addContact()">
-                    <small>Incluir mais</small>
+                 ng-if="(fields.parents_has_grandparents && canEditCurrentStep()) || ((fields.aux.contatos.grandparents.length > 0) && !canEditCurrentStep())">
+                <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'grandparents')">
+                    <small>Incluir contato</small>
                     </span></button>
                 <div class="clearfix"></div>
 
-                <div ng-repeat="item in contatosAux[3].grandparents">
+                <div ng-repeat="item in fields.aux.contatos.grandparents">
                     <div class="col-md-6 pl-0">
                         <label>
-                            <small>{{item.name}}:</small>
+                            <small>Nome:</small>
                         </label>
                         <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
                                ng-model="fields.aux.contatos.grandparents[$index][item.model.name]">
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                         <label>
-                            <small>{{item.phone}}:</small>
+                            <small>Telefone:</small>
                         </label>
                         <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
                                ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
-
                     </div>
-                    <button class="btn btn-danger pull-right" ng-click="removeContact($index, contatosAux[3].grandparents)">
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
+                            ng-click="removeContact($index,'grandparents')">
                         <small>Remover</small>
                         </span></button>
                     <div class="clearfix"></div>
                 </div>
             </div>
-
             <div class="checkbox">
                 <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()"
+                              ng-change="addContact(fields.parents_has_others,'others')"
                               ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros</label>
             </div>
             <div class="clearfix"
-                 ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.other && !canEditCurrentStep())">
-                <div class="col-md-6 pl-0">
-                    <label>
-                        <small>Nome:</small>
-                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.other.name">
-                </div>
-                <div class="col-md-6">
-                    <label>
-                        <small>Telefone:</small>
-                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.other.phone" ui-br-phone-number>
-                    <input type="hidden" class="" ng-model="fields.aux.contatos.other.slug = 'other'">
+                 ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.others && !canEditCurrentStep())">
+                <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'others')">
+                    <small>Incluir contato</small>
+                    </span></button>
+                <div class="clearfix"></div>
+
+                <div ng-repeat="item in fields.aux.contatos.others">
+                    <div class="col-md-6 pl-0">
+                        <label>
+                            <small>Nome:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.others[$index][item.model.name]">
+                    </div>
+                    <div class="col-md-6">
+                        <label>
+                            <small>Telefone:</small>
+                        </label>
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
+                               ng-model="fields.aux.contatos.others[$index][item.model.phone]">
+                    </div>
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
+                            ng-click="removeContact($index,'others')">
+                        <small>Remover</small>
+                        </span></button>
+                    <div class="clearfix"></div>
                 </div>
             </div>
         </div>
@@ -593,21 +601,50 @@
             </div>
             <div class="radio">
                 <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian"
-                              ng-change="fields.guardian_name = fields.aux.contatos.siblings.name"
+                              ng-change="insertResponsible('siblings')"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="siblings" type="radio"> Irmãos</label>
+                              value="siblings" type="radio"> Irmãos
+                    <div ng-if="fields.parents_has_brother">
+                        <small ng-show="responsible.siblings">Escolha o responsável:</small>
+                        <div ng-repeat="item in responsible.siblings">
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
+                                                               ng-model="responsibleValue"
+                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                        </div>
+                    </div>
+                </label>
             </div>
             <div class="radio">
                 <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian"
-                              ng-change="fields.guardian_name = fields.aux.contatos.grandparents.name"
+                              ng-change="insertResponsible('grandparents')"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="grandparents" type="radio"> Avós</label>
+                              value="grandparents" type="radio"> Avós
+                    <div ng-if="fields.parents_has_grandparents">
+                        <br>
+                        <small ng-show="responsible.grandparents">Escolha o responsável:</small>
+                        <div ng-repeat="item in responsible.grandparents">
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
+                                                               ng-model="responsibleValue"
+                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                        </div>
+                    </div>
+                </label>
             </div>
             <div class="radio">
                 <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"
-                              ng-change="fields.guardian_name = fields.aux.contatos.others.name"
+                              ng-change="insertResponsible('others')"
                               ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="other" type="radio"> Outros</label>
+                              value="other" type="radio"> Outros
+                    <div ng-if="fields.parents_has_others">
+                        <br>
+                        <small ng-show="responsible.others">Escolha o responsável:</small>
+                        <div ng-repeat="item in responsible.others">
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
+                                                               ng-model="responsibleValue"
+                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                        </div>
+                    </div>
+                </label>
             </div>
         </div>
 

@@ -208,70 +208,34 @@
         $scope.step = {};
         $scope.tenantSettings = {};
 
+
         $scope.isMapReady = false;
         $scope.defaultMapZoom = 14;
 
         $scope.current_date = {};
-        $scope.contatosAux =
-            [
-                {
-                    father: {
-                        nome: '',
-                        telefone: ''
-                    }
-                },
-                {
-                    mother: {
-                        nome: '',
-                        telefone: ''
-                    }
-                },
-                {
-                    siblings:
-                        [
-                            {
-                                name: 'Nome',
-                                phone: 'Telefone',
-                                model: {name: 'nome', phone: 'phone'}
-                            }
-                        ]
 
-                },
-                {
-                    grandparents:
-                        [
-                            {
-                                name: 'Nome',
-                                phone: 'Telefone',
-                                model: {name: 'nome', phone: 'phone'}
-                            }
-                        ]
-                },
-                {
-                    others:
-                        [
-                            {
-                                name: 'Nome',
-                                phone: 'Telefone',
-                                model: {name: 'nome', phone: 'phone'}
-                            }
-                        ]
-                }
-            ]
+        $scope.responsible = {};
 
-        $scope.addContact = function () {
-            $scope.contatosAux[2].siblings.push(
-                {
-                    name: 'Nome',
-                    phone: 'Telefone',
-                    model: {name: 'nome', phone: 'phone'}
-                }
-            )
+        $scope.addContact = function (id, parent) {
+            if (id || (id === undefined)) {
+                $scope.fields.aux.contatos[parent].push({
+                    name: '',
+                    phone: '',
+                    isResponsible: '',
+                    model: {name: 'name', phone: 'phone'}
+                })
+            } else if (id === false) {
+                $scope.fields.aux.contatos[parent] = []
+            }
         }
 
-        $scope.removeContact = function (index, refer) {
+        $scope.removeContact = function (index, parent) {
             if (index === 0) return;
-            $scope.contatosAux[refer.index][refer.name].splice(index, 1)
+            $scope.fields.aux.contatos[parent].splice(index, 1)
+        }
+
+        $scope.insertResponsible = function (parent) {
+            $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
         }
 
         function fetchStepData() {
@@ -289,7 +253,17 @@
                 $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
                 $scope.case = step.case;
                 $scope.$parent.openStepID = $scope.step.id;
-
+                if (!$scope.fields.aux) {
+                    $scope.fields.aux = {};
+                    $scope.fields.aux.contatos = {};
+                    $scope.fields.aux = {
+                        contatos: {
+                            siblings: $scope.fields.aux.contatos.siblings || [],
+                            grandparents: $scope.fields.aux.contatos.grandparents || [],
+                            others: $scope.fields.aux.contatos.others || []
+                        }
+                    }
+                }
                 if (step.fields && step.fields.place_coords) {
                     step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
                 }
@@ -466,7 +440,7 @@
             if ($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
             if ($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
 
-            console.log("[create_alert] Looking for cities: ", data);
+            // console.log("[create_alert] Looking for cities: ", data);
 
             return Cities.search(data).$promise.then(function (res) {
                 return res.results;
@@ -479,7 +453,7 @@
             if (filter_by_uf) data.uf = filter_by_uf;
             if (filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
 
-            console.log("[create_alert] Looking for schools: ", data);
+            // console.log("[create_alert] Looking for schools: ", data);
 
             return Schools.search(data).$promise.then(function (res) {
                 return res.results;
@@ -521,7 +495,6 @@
         $scope.save = function () {
 
             var data = Object.assign({}, $scope.step.fields);
-            console.log(data)
 
             data = Utils.prepareDateFields(data, dateOnlyFields);
 
@@ -536,7 +509,7 @@
             data.type = $scope.step.step_type;
             data.id = $scope.step.id;
 
-            console.info("[child_viewer.step_editor] Saving step data: ", data);
+            // console.info("[child_viewer.step_editor] Saving step data: ", data);
 
             return CaseSteps.save(data).$promise.then(function (response) {
                 if (response.messages) {
