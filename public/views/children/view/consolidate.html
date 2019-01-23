@@ -150,7 +150,7 @@
                     <div class="col-md-6">
                         <label>
                             <small>Telefone:</small>
-                        </label> {{fields.aux.contatos.father.phone}}
+                        </label> {{fields.aux.contatos.father.phone | phone}}
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                     <div class="col-md-6">
                         <label>
                             <small>Telefone:</small>
-                        </label> {{fields.aux.contatos.mother.phone}}
+                        </label> {{fields.aux.contatos.mother.phone | phone}}
                     </div>
                 </div>
             </div>
@@ -187,7 +187,7 @@
                         <div class="col-md-6">
                             <label>
                                 <small>Telefone:</small>
-                            </label> {{item.phone}}
+                            </label> {{item.phone | phone}}
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -195,41 +195,41 @@
             </div>
 
             <div class="col-md-12 pl-0" ng-if="fields.parents_has_grandparents">
-                <div class="col-md-4 pl-0">
+                <div class="col-md-12 pl-0">
                     <label> Avós</label>
                 </div>
-                <div ng-show="fields.aux.contatos.grandparents.name">
+                <div ng-show="fields.aux.contatos.grandparents">
                     <div ng-repeat="item in fields.aux.contatos.grandparents">
 
                         <div class="col-md-6">
                             <label>
                                 <small>Nome:</small>
-                            </label> {{fields.aux.contatos.grandparents.name}}
+                            </label> {{item.name}}
                         </div>
                         <div class="col-md-6">
                             <label>
                                 <small>Telefone:</small>
-                            </label> {{fields.aux.contatos.grandparents.phone}}
+                            </label> {{item.phone | phone}}
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-12 pl-0" ng-if="fields.parents_has_others">
-                <div class="col-md-4 pl-0">
+                <div class="col-md-12 pl-0">
                     <label> Outros familiares</label>
                 </div>
-                <div ng-show="fields.aux.contatos.other.name">
+                <div ng-show="fields.aux.contatos.others">
                     <div ng-repeat="item in fields.aux.contatos.others">
                         <div class="col-md-6">
                             <label>
                                 <small>Nome:</small>
-                            </label> {{fields.aux.contatos.other.name}}
+                            </label> {{item.name}}
                         </div>
                         <div class="col-md-6">
                             <label>
                                 <small>Telefone:</small>
-                            </label> {{fields.aux.contatos.other.phone}}
+                            </label> {{item.phone | phone}}
                         </div>
                     </div>
                 </div>
