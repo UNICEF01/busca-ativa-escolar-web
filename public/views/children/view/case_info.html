@@ -439,7 +439,7 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?*</label>
             <div class="checkbox">
-                <label><input id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditCurrentStep()"
+                <label><input ng-change="checkInputParents(fields.parents_has_father, 'father')" id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditCurrentStep()"
                               ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
             </div>
 
@@ -460,7 +460,7 @@
             </div>
 
             <div class="checkbox">
-                <label><input id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()"
+                <label><input ng-change="checkInputParents(fields.parents_has_mother, 'mother')" id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()"
                               ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
             </div>
             <div class="clearfix"
@@ -469,7 +469,7 @@
                     <label>
                         <small>Nome:</small>
                     </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.mother.name = fields.mother_name">
+                                   ng-model="fields.aux.contatos.mother.name">
                 </div>
                 <div class="col-md-6">
                     <label>
@@ -523,7 +523,7 @@
                               ng-true-value="1" type="checkbox"> Avós</label>
             </div>
             <div class="clearfix"
-                 ng-if="(fields.parents_has_grandparents && canEditCurrentStep()) || ((fields.aux.contatos.grandparents.length > 0) && !canEditCurrentStep())">
+                 ng-if="fields.parents_has_grandparents">
                 <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'grandparents')">
                     <small>Incluir contato</small>
                     </span></button>

@@ -221,7 +221,6 @@
                 $scope.fields.aux.contatos[parent].push({
                     name: '',
                     phone: '',
-                    isResponsible: '',
                     model: {name: 'name', phone: 'phone'}
                 })
             } else if (id === false) {
@@ -246,6 +245,16 @@
             }
         }
 
+        $scope.checkInputParents = function (value, name) {
+            if('mother' === name){
+                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
+            }
+            if (!value) {
+                $scope.fields.aux.contatos[name].name = '';
+                $scope.fields.aux.contatos[name].phone = '';
+            }
+        }
+
         function fetchStepData() {
 
             $scope.current_date = new Date();
@@ -266,6 +275,8 @@
                     $scope.fields.aux.contatos = {};
                     $scope.fields.aux = {
                         contatos: {
+                            father: {},
+                            mother: {},
                             siblings: $scope.fields.aux.contatos.siblings || [],
                             grandparents: $scope.fields.aux.contatos.grandparents || [],
                             others: $scope.fields.aux.contatos.others || []
