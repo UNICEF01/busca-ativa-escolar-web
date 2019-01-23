@@ -242,6 +242,47 @@
             }
         }
 
+        $scope.avisoDivergencia = false;
+
+        $scope.getAdressByCEP = function (cep) {
+            if (!cep) {
+                return
+            }
+            viaCep.get(cep).then(function (response) {
+                // $scope.address = response
+                $scope.fields.school_address = response.logradouro;
+                $scope.fields.school_neighborhood = response.bairro;
+                $scope.fields.school_uf = response.uf;
+                $scope.fetchCities(response.localidade).then(function (value) {
+                    $scope.fields.school_city = value[0];
+                    validateSchoolWithPlace();
+                });
+            }).catch(function (responseCatch) {
+                console.log(responseCatch)
+                $scope.noCEF = true;
+                setTimeout(function () {
+                    $scope.noCEF = false;
+                }, 1000);
+            });
+        }
+        function validateSchoolWithPlace() {
+            if ($scope.fields.school && $scope.fields.school_city) {
+                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
+                    $scope.avisoDivergencia = true;
+                    setTimeout(function () {
+                        $scope.avisoDivergencia = false;
+                    }, 5000);
+                }
+            }
+        }
+
+        $scope.putStateAndCity = function (value) {
+            $scope.fields.school_uf = value.uf;
+            $scope.fetchCities(value.city_name).then(function (value) {
+                $scope.fields.school_city = value[0];
+            });
+        }
+
         function fetchStepData() {
 
             $scope.current_date = new Date();
