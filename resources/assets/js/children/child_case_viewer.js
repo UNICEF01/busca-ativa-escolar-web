@@ -210,48 +210,39 @@
 
 		$scope.current_date = {};
 
-        $scope.avisoDivergencia = false;
+        $scope.responsible = {};
 
-        $scope.getAdressByCEP = function (cep) {
-            if (!cep) {
-                return
+        $scope.addContact = function (id, parent) {
+            if (id || (id === undefined)) {
+                $scope.fields.aux.contatos[parent].push({
+                    name: '',
+                    phone: '',
+                    isResponsible: '',
+                    model: {name: 'name', phone: 'phone'}
+                })
+            } else if (id === false) {
+                $scope.fields.aux.contatos[parent] = []
             }
-            viaCep.get(cep).then(function (response) {
-                // $scope.address = response
-                $scope.fields.school_address = response.logradouro;
-                $scope.fields.school_neighborhood = response.bairro;
-                $scope.fields.school_uf = response.uf;
-                $scope.fetchCities(response.localidade).then(function (value) {
-                    $scope.fields.school_city = value[0];
-                    validateSchoolWithPlace();
-                });
-            }).catch(function (responseCatch) {
-                console.log(responseCatch)
-                $scope.noCEF = true;
-                setTimeout(function () {
-                    $scope.noCEF = false;
-                }, 1000);
-            });
         }
-        function validateSchoolWithPlace() {
-            if ($scope.fields.school && $scope.fields.school_city) {
-                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
-                    $scope.avisoDivergencia = true;
-                    setTimeout(function () {
-                        $scope.avisoDivergencia = false;
-                    }, 5000);
+
+        $scope.removeContact = function (index, parent) {
+            if (index === 0) return;
+            $scope.fields.aux.contatos[parent].splice(index, 1)
+        }
+
+        $scope.insertResponsible = function (parent) {
+            if (parent) {
+                if ($scope.fields.aux.contatos[parent].length > 1) {
+                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+                } else {
+                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
                 }
+            } else {
+                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
             }
         }
 
-        $scope.putStateAndCity = function (value) {
-            $scope.fields.school_uf = value.uf;
-            $scope.fetchCities(value.city_name).then(function (value) {
-                $scope.fields.school_city = value[0];
-            });
-        }
-
-		function fetchStepData() {
+        function fetchStepData() {
 
             $scope.current_date = new Date();
 
@@ -263,13 +254,23 @@
             });
 
             $scope.step.$promise.then(function (step) {
-				$scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
-				$scope.case = step.case;
-				$scope.$parent.openStepID = $scope.step.id;
-
-				if(step.fields && step.fields.place_coords) {
-					step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
-				}
+                $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
+                $scope.case = step.case;
+                $scope.$parent.openStepID = $scope.step.id;
+                if (!$scope.fields.aux) {
+                    $scope.fields.aux = {};
+                    $scope.fields.aux.contatos = {};
+                    $scope.fields.aux = {
+                        contatos: {
+                            siblings: $scope.fields.aux.contatos.siblings || [],
+                            grandparents: $scope.fields.aux.contatos.grandparents || [],
+                            others: $scope.fields.aux.contatos.others || []
+                        }
+                    }
+                }
+                if (step.fields && step.fields.place_coords) {
+                    step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
+                }
 
 			});
 
