@@ -235,7 +235,15 @@
         }
 
         $scope.insertResponsible = function (parent) {
-            $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+            if (parent) {
+                if ($scope.fields.aux.contatos[parent].length > 1) {
+                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+                } else {
+                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+                }
+            } else {
+                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+            }
         }
 
         function fetchStepData() {
