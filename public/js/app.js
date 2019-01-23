@@ -26,7 +26,8 @@
 			'ui.utils.masks',
 			'ui.ace',
 			'datatables',
-            'ui.mask'
+            'ui.mask',
+            'angular.viacep'
 		])
 })();
 (function() {
@@ -535,6 +536,7 @@
                 $scope.fields.aux.contatos[parent].push({
                     name: '',
                     phone: '',
+                    isResponsible: '',
                     model: {name: 'name', phone: 'phone'}
                 })
             } else if (id === false) {
@@ -557,6 +559,47 @@
             } else {
                 $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
             }
+        }
+
+        $scope.avisoDivergencia = false;
+
+        $scope.getAdressByCEP = function (cep) {
+            if (!cep) {
+                return
+            }
+            viaCep.get(cep).then(function (response) {
+                // $scope.address = response
+                $scope.fields.school_address = response.logradouro;
+                $scope.fields.school_neighborhood = response.bairro;
+                $scope.fields.school_uf = response.uf;
+                $scope.fetchCities(response.localidade).then(function (value) {
+                    $scope.fields.school_city = value[0];
+                    validateSchoolWithPlace();
+                });
+            }).catch(function (responseCatch) {
+                console.log(responseCatch)
+                $scope.noCEF = true;
+                setTimeout(function () {
+                    $scope.noCEF = false;
+                }, 1000);
+            });
+        }
+        function validateSchoolWithPlace() {
+            if ($scope.fields.school && $scope.fields.school_city) {
+                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
+                    $scope.avisoDivergencia = true;
+                    setTimeout(function () {
+                        $scope.avisoDivergencia = false;
+                    }, 5000);
+                }
+            }
+        }
+
+        $scope.putStateAndCity = function (value) {
+            $scope.fields.school_uf = value.uf;
+            $scope.fetchCities(value.city_name).then(function (value) {
+                $scope.fields.school_city = value[0];
+            });
         }
 
         $scope.checkInputParents = function (value, name) {
@@ -589,8 +632,6 @@
                     $scope.fields.aux.contatos = {};
                     $scope.fields.aux = {
                         contatos: {
-                            father: {},
-                            mother: {},
                             siblings: $scope.fields.aux.contatos.siblings || [],
                             grandparents: $scope.fields.aux.contatos.grandparents || [],
                             others: $scope.fields.aux.contatos.others || []
@@ -8143,19 +8184,32 @@ function identify(namespace, file) {
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'all'}
+				filter: {status: 'pending_approval'}
 			};
 
-			$scope.refresh = function() {
+            $scope.onSelectType = function() {
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
 			};
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token + $scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+                    uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                return uri;
+            };
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;
@@ -8213,11 +8267,17 @@ function identify(namespace, file) {
 			$scope.tenants = {};
 			$scope.ufs = Ufs;
 			$scope.query = {
+                show_suspended: false,
 				filter: {},
 				sort: {},
 				max: 16,
 				page: 1
 			};
+
+			$scope.showCanceledCities = function () {
+				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+				$scope.refresh();
+            }
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
@@ -8225,9 +8285,18 @@ function identify(namespace, file) {
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'tenants/export?token='+token+$scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+                return uri;
+            };
 
 			$scope.disableTenant = function(tenant) {
 
@@ -8279,12 +8348,17 @@ function identify(namespace, file) {
 			email: null,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true,
+			show_suspended: false,
 			max: 16,
 			page: 1,
 		};
 
 		$scope.quickAdd = false;
+
+		$scope.onCheckCanceled = function (){
+			$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+			$scope.refresh();
+		};
 
 		$scope.enableQuickAdd = function() {
 			$scope.quickAdd = true;
@@ -8298,8 +8372,17 @@ function identify(namespace, file) {
 
 		$scope.export = function() {
 			Identity.provideToken().then(function (token) {
-				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token);
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
 			});
+		};
+
+		$scope.prepareUriToExport = function () {
+			var uri = "";
+			Object.keys($scope.query).forEach( function (element) {
+				if(element != "sort" &&  $scope.query[element] != null) uri = uri.concat("&"+element+"="+$scope.query[element]);
+			});
+			uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+			return uri;
 		};
 
 		$scope.canEditUser = function(user) {
@@ -8357,7 +8440,7 @@ function identify(namespace, file) {
 		Platform.whenReady(function() {
 			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
 			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
-		})
+		});
 
 	});
 
