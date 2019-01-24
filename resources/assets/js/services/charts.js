@@ -173,8 +173,6 @@
 					metricData.push( (data[m][dates[i]]) ? data[m][dates[i]] : null );
 				}
 
-				alert(m);
-
 				series.push({
 					name: labels[m] ? labels[m] : m,
 					data: metricData,
