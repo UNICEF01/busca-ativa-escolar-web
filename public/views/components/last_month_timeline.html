@@ -1,4 +1,34 @@
 <div class="container chart-container">
+
+	<div class="row">
+
+		<div class="col-md-5">
+			<div class="input-group">
+				<span class="input-group-addon">Data inicial</span>
+				<input type="text" class="form-control" ng-model="firstDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close" show-button-bar="false"/>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+          		</span>
+			</div>
+		</div>
+
+		<div class="col-md-7">
+			<div class="input-group">
+				<span class="input-group-addon">Data final</span>
+				<input type="text" class="form-control" ng-model="finalDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupFinish.opened" datepicker-options="dateOptionsFinish" close-text="Close" show-button-bar="false"/>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="openFinishDate()"><i class="glyphicon glyphicon-calendar"></i></button>
+          		</span>
+				<div class="input-group-btn">
+					<button class="btn btn-default" type="botton" ng-disabled="!firstDate || !finalDate" ng-click="fetchTimelineData()">
+						<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
 	<highchart
 			ng-show="isReady()"
 			id="timeline-chart"
