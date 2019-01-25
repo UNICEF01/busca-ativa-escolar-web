@@ -19,12 +19,17 @@
 			email: null,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true,
+			show_suspended: false,
 			max: 16,
 			page: 1,
 		};
 
 		$scope.quickAdd = false;
+
+		$scope.onCheckCanceled = function (){
+			$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+			$scope.refresh();
+		};
 
 		$scope.enableQuickAdd = function() {
 			$scope.quickAdd = true;
@@ -38,8 +43,17 @@
 
 		$scope.export = function() {
 			Identity.provideToken().then(function (token) {
-				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token);
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
 			});
+		};
+
+		$scope.prepareUriToExport = function () {
+			var uri = "";
+			Object.keys($scope.query).forEach( function (element) {
+				if(element != "sort" &&  $scope.query[element] != null) uri = uri.concat("&"+element+"="+$scope.query[element]);
+			});
+			uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+			return uri;
 		};
 
 		$scope.canEditUser = function(user) {
@@ -97,7 +111,7 @@
 		Platform.whenReady(function() {
 			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
 			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
-		})
+		});
 
 	});
 

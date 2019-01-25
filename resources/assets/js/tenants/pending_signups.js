@@ -19,19 +19,32 @@
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'all'}
+				filter: {status: 'pending_approval'}
 			};
 
-			$scope.refresh = function() {
+            $scope.onSelectType = function() {
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
 			};
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token + $scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+                    uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                return uri;
+            };
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;

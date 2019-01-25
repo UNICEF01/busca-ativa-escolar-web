@@ -21,16 +21,54 @@
 				return hasEnoughData;
 			};
 
-			function fetchTimelineData() {
-				var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
-				var today = moment().format('YYYY-MM-DD');
+            scope.firstDate = null;
+            scope.finalDate = null;
+
+            //----------------------------
+            scope.popupStart = {
+                opened: false
+            };
+
+            scope.popupFinish = {
+                opened: false
+            };
+
+			scope.formatDates = 'ddMMyyyy';
+
+            scope.dateOptionsStart = {
+                formatYear: 'yyyy',
+                showWeeks: false
+            };
+
+            scope.dateOptionsFinish = {
+                formatYear: 'yyyy',
+                maxDate: new Date(),
+                showWeeks: false
+            };
+
+			scope.openStartDate = function () {
+                scope.popupStart.opened = true;
+            };
+
+            scope.openFinishDate = function () {
+                scope.popupFinish.opened = true;
+            };
+            //----------------------------
+
+			scope.fetchTimelineData= function() {
+
+				var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+				var endDate = moment().format('YYYY-MM-DD');
+
+                if( scope.firstDate != null ) startDate = moment(scope.firstDate).format('YYYY-MM-DD');
+                if( scope.finalDate != null ) endDate = moment(scope.finalDate).format('YYYY-MM-DD');
 
 				return Reports.query({
 					view: 'time_series',
 					entity: 'children',
 					dimension: 'child_status',
 					filters: {
-						date: {from: lastMonth, to: today},
+						date: {from: startDate, to: endDate},
 						case_status: ['in_progress', 'completed', 'interrupted'],
 						alert_status: ['accepted']
 					}
@@ -55,7 +93,7 @@
 
 			function getTimelineChart() {
 				var report = timelineData.response.report;
-				var chartName = 'Evolução do status dos casos nos últimos 30 dias';
+				var chartName = 'Evolução do status dos casos';
 				var labels = timelineData.labels ? timelineData.labels : {};
 
 				return Charts.generateTimelineChart(report, chartName, labels);
@@ -68,7 +106,7 @@
 			}
 
 			Platform.whenReady(function () {
-				fetchTimelineData();
+				scope.fetchTimelineData();
 			});
 		}
 

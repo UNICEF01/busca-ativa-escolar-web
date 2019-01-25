@@ -26,7 +26,8 @@
 			'ui.utils.masks',
 			'ui.ace',
 			'datatables',
-            'ui.mask'
+            'ui.mask',
+            'angular.viacep'
 		])
 })();
 (function() {
@@ -312,219 +313,306 @@
 
         });
 })();
-(function() {
-	angular.module("BuscaAtivaEscolar")
-		.controller('ChildCasesCtrl', ChildCasesCtrl)
-		.controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('child_viewer.cases', {
-					url: '/cases',
-					templateUrl: '/views/children/view/steps.html',
-					controller: 'ChildCasesCtrl'
-				})
-				.state('child_viewer.cases.view_step', {
-					url: '/{step_type}/{step_id}',
-					templateUrl: '/views/children/view/case_info.html',
-					controller: 'ChildCaseStepCtrl'
-				})
-		});
+(function () {
+    angular.module("BuscaAtivaEscolar")
+        .controller('ChildCasesCtrl', ChildCasesCtrl)
+        .controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
+        .config(function ($stateProvider) {
+            $stateProvider
+                .state('child_viewer.cases', {
+                    url: '/cases',
+                    templateUrl: '/views/children/view/steps.html',
+                    controller: 'ChildCasesCtrl'
+                })
+                .state('child_viewer.cases.view_step', {
+                    url: '/{step_type}/{step_id}',
+                    templateUrl: '/views/children/view/case_info.html',
+                    controller: 'ChildCaseStepCtrl'
+                })
+        });
 
-	function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+    function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
 
-		$scope.Decorators = Decorators;
-		$scope.Children = Children;
-		$scope.CaseSteps = CaseSteps;
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+        $scope.CaseSteps = CaseSteps;
 
-		$scope.identity = Identity;
+        $scope.identity = Identity;
 
-		$scope.child_id = $scope.$parent.child_id;
-		$scope.child = $scope.$parent.child;
+        $scope.child_id = $scope.$parent.child_id;
+        $scope.child = $scope.$parent.child;
 
-		$scope.openedCase = {};
-		$scope.openStepID = null;
+        $scope.openedCase = {};
+        $scope.openStepID = null;
 
-		$scope.child.$promise.then(openCurrentCase);
+        $scope.child.$promise.then(openCurrentCase);
 
-		function openCurrentCase(child) {
+        function openCurrentCase(child) {
 
-			console.log("[child_viewer.cases] Opening current case for child: ", child);
+            console.log("[child_viewer.cases] Opening current case for child: ", child);
 
-			$scope.openedCase = child.cases.find(function(item) {
-				if($stateParams.case_id) return item.id === $stateParams.case_id;
-				return item.case_status === 'in_progress';
-			});
+            $scope.openedCase = child.cases.find(function (item) {
+                if ($stateParams.case_id) return item.id === $stateParams.case_id;
+                return item.case_status === 'in_progress';
+            });
 
-			// Don't try to open a step; UI-Router will already open the one in the URL
-			if($stateParams.step_id) return;
-			if(!$scope.openedCase) return;
+            // Don't try to open a step; UI-Router will already open the one in the URL
+            if ($stateParams.step_id) return;
+            if (!$scope.openedCase) return;
 
-			console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
+            console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
 
-			var stepToOpen = $scope.openedCase.steps.find(function (step) {
-				return ($scope.openedCase.current_step_id === step.id);
-			});
+            var stepToOpen = $scope.openedCase.steps.find(function (step) {
+                return ($scope.openedCase.current_step_id === step.id);
+            });
 
-			console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
+            console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
 
-			$scope.openStep(stepToOpen);
-		}
+            $scope.openStep(stepToOpen);
+        }
 
-		console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
+        console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
 
-		$scope.collapseCase = function (childCase) {
-			$scope.openedCase = childCase;
-		};
+        $scope.collapseCase = function (childCase) {
+            $scope.openedCase = childCase;
+        };
 
-		$scope.isCaseCollapsed = function(childCase) {
-			if(!$scope.openedCase) return true;
-			return $scope.openedCase.id !== childCase.id;
-		};
+        $scope.isCaseCollapsed = function (childCase) {
+            if (!$scope.openedCase) return true;
+            return $scope.openedCase.id !== childCase.id;
+        };
 
-		$scope.renderStepStatusClass = function(childCase, step) {
+        $scope.renderStepStatusClass = function (childCase, step) {
 
-			var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
+            var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
 
-			if(step.is_completed) return 'step-completed' + toggleClass;
-			if(childCase.current_step_id === step.id) return 'step-current' + toggleClass;
-			return 'step-pending' + toggleClass;
-		};
+            if (step.is_completed) return 'step-completed' + toggleClass;
+            if (childCase.current_step_id === step.id) return 'step-current' + toggleClass;
+            return 'step-pending' + toggleClass;
+        };
 
-		$scope.canOpenStep = function(step) {
-			if(step.is_completed || step.id === $scope.openedCase.current_step_id) {
-				return Identity.can('cases.step.' + step.slug)
-			}
-			return false;
-		};
+        $scope.canOpenStep = function (step) {
+            if (step.is_completed || step.id === $scope.openedCase.current_step_id) {
+                return Identity.can('cases.step.' + step.slug)
+            }
+            return false;
+        };
 
-		$scope.canEditStep = function(step) {
-			return !step.is_completed && step.slug !== 'alerta';
-		};
+        $scope.canEditStep = function (step) {
+            return !step.is_completed && step.slug !== 'alerta';
+        };
 
-		$scope.openStep = function(selectedStep) {
-			if(!$scope.canOpenStep(selectedStep)) return false;
+        $scope.openStep = function (selectedStep) {
+            if (!$scope.canOpenStep(selectedStep)) return false;
 
-			$scope.openStepID = selectedStep.id;
+            $scope.openStepID = selectedStep.id;
 
-			console.log("[child_viewer.cases] Opening step: ", selectedStep);
+            console.log("[child_viewer.cases] Opening step: ", selectedStep);
 
-			$state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
-				.then(function() {
-					$timeout(refreshGoogleMap, 1000);
-				});
+            $state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
+                .then(function () {
+                    $timeout(refreshGoogleMap, 1000);
+                });
 
-		};
+        };
 
-		$scope.canCompleteStep = function(childCase, step) {
-			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
-			if(!Identity.can('cases.step.' + step.slug)) return false;
-			return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
-		};
+        $scope.canCompleteStep = function (childCase, step) {
+            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
+            if (!Identity.can('cases.step.' + step.slug)) return false;
+            return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
+        };
 
-		$scope.isPendingAssignment = function (step) {
-			return !step.is_completed && step.is_pending_assignment;
-		};
+        $scope.isPendingAssignment = function (step) {
+            return !step.is_completed && step.is_pending_assignment;
+        };
 
-		$scope.hasNextStep = function(step) {
-			if(!step) return false;
-			if(step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
-			return true;
-		};
+        $scope.hasNextStep = function (step) {
+            if (!step) return false;
+            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
+            return true;
+        };
 
-		$scope.cancelCase = function() {
+        $scope.cancelCase = function () {
 
-			Modals.show(Modals.CaseCancel())
-				.then(function (reason) {
-					if(!reason) return $q.reject();
-					return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
-				})
-				.then(function (res) {
-					ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-				});
+            Modals.show(Modals.CaseCancel())
+                .then(function (reason) {
+                    if (!reason) return $q.reject();
+                    return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+                })
+                .then(function (res) {
+                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+                });
 
-		};
+        };
 
-		function refreshGoogleMap() {
-			$timeout(function () {
-				$scope.renderMap = false;
-				$timeout(function () {
-					$scope.renderMap = true;
-				});
-			});
-		}
+        function refreshGoogleMap() {
+            $timeout(function () {
+                $scope.renderMap = false;
+                $timeout(function () {
+                    $scope.renderMap = true;
+                });
+            });
+        }
 
-		$scope.completeStep = function(step) {
+        $scope.completeStep = function (step) {
 
-			console.log("[child_viewer.cases] Attempting to complete step: ", step);
+            console.log("[child_viewer.cases] Attempting to complete step: ", step);
 
-			var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
-			var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
-				
-			if(step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
-				question = 'Tem certeza que deseja concluir a Análise Técnica?';
-				explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
-			}
+            var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
+            var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
 
-			if(step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
-				question = 'Tem certeza que deseja concluir a última etapa de observação?';
-				explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
-			}
-			
-			Modals.show(Modals.Confirm(question, explanation)).then(function () {
-				return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
-			}).then(function (response) {
+            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
+                question = 'Tem certeza que deseja concluir a Análise Técnica?';
+                explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
+            }
 
-				if(response.messages) {
-					ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
-					Utils.displayValidationErrors(response);
-					$state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
-					return;
-				}
+            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
+                question = 'Tem certeza que deseja concluir a última etapa de observação?';
+                explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
+            }
 
-				if(response.status !== "ok") {
-					ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
-					return;
-				}
+            Modals.show(Modals.Confirm(question, explanation)).then(function () {
+                return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
+            }).then(function (response) {
 
-				if(!response.hasNext) {
-					ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-					$state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-					return;
-				}
+                if (response.messages) {
+                    ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
+                    Utils.displayValidationErrors(response);
+                    $state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
+                    return;
+                }
 
-				ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
-				$state.go('child_viewer.cases.view_step', {step_type: response.nextStep.step_type, step_id: response.nextStep.id}, {reload: true});
+                if (response.status !== "ok") {
+                    ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
+                    return;
+                }
 
-			})
-		};
+                if (!response.hasNext) {
+                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+                    return;
+                }
 
-	}
+                ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
+                $state.go('child_viewer.cases.view_step', {
+                    step_type: response.nextStep.step_type,
+                    step_id: response.nextStep.id
+                }, {reload: true});
 
-	function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants) {
+            })
+        };
 
-		$scope.Decorators = Decorators;
-		$scope.Children = Children;
-		$scope.CaseSteps = CaseSteps;
-		$scope.static = StaticData;
+    }
 
-		$scope.editable = true;
-		$scope.showAll = false;
-		$scope.showTitle = true;
+    function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants) {
 
-		$scope.child_id = $scope.$parent.child_id;
-		$scope.child = $scope.$parent.child;
-		$scope.checkboxes = {};
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+        $scope.CaseSteps = CaseSteps;
+        $scope.static = StaticData;
 
-		$scope.step = {};
+        $scope.editable = true;
+        $scope.showAll = false;
+        $scope.showTitle = true;
+
+        $scope.child_id = $scope.$parent.child_id;
+        $scope.child = $scope.$parent.child;
+        $scope.checkboxes = {};
+
+        $scope.step = {};
         $scope.tenantSettings = {};
 
-		$scope.isMapReady = false;
-		$scope.defaultMapZoom = 14;
 
-		$scope.current_date = {};
+        $scope.isMapReady = false;
+        $scope.defaultMapZoom = 14;
 
-		function fetchStepData() {
+        $scope.current_date = {};
+
+        $scope.responsible = {};
+
+        $scope.addContact = function (id, parent) {
+            if (id || (id === undefined)) {
+                $scope.fields.aux.contatos[parent].push({
+                    name: '',
+                    phone: '',
+                    isResponsible: '',
+                    model: {name: 'name', phone: 'phone'}
+                })
+            } else if (id === false) {
+                $scope.fields.aux.contatos[parent] = []
+            }
+        }
+
+        $scope.removeContact = function (index, parent) {
+            if (index === 0) return;
+            $scope.fields.aux.contatos[parent].splice(index, 1)
+        }
+
+        $scope.insertResponsible = function (parent) {
+            if (parent) {
+                if ($scope.fields.aux.contatos[parent].length > 1) {
+                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+                } else {
+                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+                }
+            } else {
+                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+            }
+        }
+
+        $scope.avisoDivergencia = false;
+
+        $scope.getAdressByCEP = function (cep) {
+            if (!cep) {
+                return
+            }
+            viaCep.get(cep).then(function (response) {
+                // $scope.address = response
+                $scope.fields.school_address = response.logradouro;
+                $scope.fields.school_neighborhood = response.bairro;
+                $scope.fields.school_uf = response.uf;
+                $scope.fetchCities(response.localidade).then(function (value) {
+                    $scope.fields.school_city = value[0];
+                    validateSchoolWithPlace();
+                });
+            }).catch(function (responseCatch) {
+                console.log(responseCatch)
+                $scope.noCEF = true;
+                setTimeout(function () {
+                    $scope.noCEF = false;
+                }, 1000);
+            });
+        }
+        function validateSchoolWithPlace() {
+            if ($scope.fields.school && $scope.fields.school_city) {
+                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
+                    $scope.avisoDivergencia = true;
+                    setTimeout(function () {
+                        $scope.avisoDivergencia = false;
+                    }, 5000);
+                }
+            }
+        }
+
+        $scope.putStateAndCity = function (value) {
+            $scope.fields.school_uf = value.uf;
+            $scope.fetchCities(value.city_name).then(function (value) {
+                $scope.fields.school_city = value[0];
+            });
+        }
+
+        $scope.checkInputParents = function (value, name) {
+            if('mother' === name){
+                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
+            }
+            if (!value) {
+                $scope.fields.aux.contatos[name].name = '';
+                $scope.fields.aux.contatos[name].phone = '';
+            }
+        }
+
+        function fetchStepData() {
 
             $scope.current_date = new Date();
 
@@ -536,304 +624,317 @@
             });
 
             $scope.step.$promise.then(function (step) {
-				$scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
-				$scope.case = step.case;
-				$scope.$parent.openStepID = $scope.step.id;
+                $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
+                $scope.case = step.case;
+                $scope.$parent.openStepID = $scope.step.id;
+                if (!$scope.fields.aux) {
+                    $scope.fields.aux = {};
+                    $scope.fields.aux.contatos = {};
+                    $scope.fields.aux = {
+                        contatos: {
+                            siblings: $scope.fields.aux.contatos.siblings || [],
+                            grandparents: $scope.fields.aux.contatos.grandparents || [],
+                            others: $scope.fields.aux.contatos.others || []
+                        }
+                    }
+                }
+                if (step.fields && step.fields.place_coords) {
+                    step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
+                }
 
-				if(step.fields && step.fields.place_coords) {
-					step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
-				}
+            });
 
-			});
+        }
 
-		}
+        fetchStepData();
 
-		fetchStepData();
+        var handicappedCauseIDs = [];
+        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
 
-		var handicappedCauseIDs = [];
-		var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
+        console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
-		console.log("[core] @ChildCaseStepCtrl", $scope.step);
+        $scope.saveAndProceed = function () {
+            console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
 
-		$scope.saveAndProceed = function() {
-			console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
+            $scope.save()
+                .then(function () {
+                    return $scope.step.$promise;
+                })
+                .then(function () {
+                    $scope.$parent.completeStep($scope.step);
+                });
+        };
 
-			$scope.save()
-				.then(function() {
-					return $scope.step.$promise;
-				})
-				.then(function() {
-					$scope.$parent.completeStep($scope.step);
-				});
-		};
+        $scope.areDatesEqual = function (a, b) {
+            if (!a) return false;
+            if (!b) return false;
+            return moment(a).startOf('day').isSame(moment(b).startOf('day'));
+        };
 
-		$scope.areDatesEqual = function (a, b) {
-			if(!a) return false;
-			if(!b) return false;
-			return moment(a).startOf('day').isSame(moment(b).startOf('day'));
-		};
+        $scope.isStepOpen = function (stepClassName) {
+            if (!$scope.step) return false;
+            return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+        };
 
-		$scope.isStepOpen = function (stepClassName) {
-			if(!$scope.step) return false;
-			return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
-		};
+        $scope.hasNextStep = function () {
+            if (!$scope.step) return false;
+            if ($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
+            return true;
+        };
 
-		$scope.hasNextStep = function() {
-			if(!$scope.step) return false;
-			if($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
-			return true;
-		};
+        $scope.canEditCurrentStep = function (isEditableOnAlerts) {
+            if (!$scope.step) return false;
+            if (!$scope.$parent.openedCase) return false;
+            if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
+            return (!$scope.step.is_completed);
+        };
 
-		$scope.canEditCurrentStep = function(isEditableOnAlerts) {
-			if(!$scope.step) return false;
-			if(!$scope.$parent.openedCase) return false;
-			if(!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
-			return (!$scope.step.is_completed);
-		};
+        $scope.canAcceptAlert = function (step, fields) {
+            if (!step) return false;
+            if (!step.requires_address_update) return true;
+            return fields && fields.place_address && (fields.place_address.trim().length > 0);
+        };
 
-		$scope.canAcceptAlert = function(step, fields) {
-			if(!step) return false;
-			if(!step.requires_address_update) return true;
-			return fields && fields.place_address && (fields.place_address.trim().length > 0);
-		};
+        $scope.acceptAlert = function (childID) {
+            var data = {id: childID};
 
-		$scope.acceptAlert = function(childID) {
-			var data = {id: childID};
+            if ($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
+                data.place_address = $scope.fields.place_address;
+            }
 
-			if($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
-				data.place_address = $scope.fields.place_address;
-			}
+            Alerts.accept(data, function () {
+                $state.reload();
+            })
+        };
 
-			Alerts.accept(data, function() {
-				$state.reload();
-			})
-		};
+        $scope.rejectAlert = function (childID) {
+            Alerts.reject({id: childID}, function () {
+                $state.reload();
+            })
+        };
 
-		$scope.rejectAlert = function(childID) {
-			Alerts.reject({id: childID}, function() {
-				$state.reload();
-			})
-		};
+        $scope.isHandicapped = function () {
+            if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
 
-		$scope.isHandicapped = function() {
-			if(!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+            if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+                handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+                    return (item.is_handicapped === true);
+                });
+            }
 
-			if(!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
-				handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
-					return (item.is_handicapped === true);
-				});
-			}
+            var currentCauses = $scope.step.fields.case_cause_ids;
 
-			var currentCauses = $scope.step.fields.case_cause_ids;
+            for (var i in currentCauses) {
+                if (!currentCauses.hasOwnProperty(i)) continue;
+                var cause = currentCauses[i];
+                if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
+            }
 
-			for(var i in currentCauses) {
-				if(!currentCauses.hasOwnProperty(i)) continue;
-				var cause = currentCauses[i];
-				if(handicappedCauseIDs.indexOf(cause) !== -1) return true;
-			}
+            return false;
+        };
 
-			return false;
-		};
+        $scope.canCompleteStep = function () {
+            if (!$scope.step) return false;
+            if (!$scope.$parent.openedCase) return false;
+            return ($scope.step.id === $scope.$parent.openedCase.current_step_id && !$scope.step.is_completed && !$scope.step.is_pending_assignment);
+        };
 
-		$scope.canCompleteStep = function() {
-			if(!$scope.step) return false;
-			if(!$scope.$parent.openedCase) return false;
-			return ($scope.step.id === $scope.$parent.openedCase.current_step_id && !$scope.step.is_completed && !$scope.step.is_pending_assignment);
-		};
+        $scope.isPendingAssignment = function () {
+            if (!$scope.step) return false;
+            return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
+        };
 
-		$scope.isPendingAssignment = function () {
-			if(!$scope.step) return false;
-			return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
-		};
+        $scope.fillWithCurrentDate = function (field) {
+            $scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
+        };
 
-		$scope.fillWithCurrentDate = function (field) {
-			$scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
-		};
+        function filterOutEmptyFields(data) {
+            var filtered = {};
 
-		function filterOutEmptyFields(data) {
-			var filtered = {};
+            for (var i in data) {
+                if (!data.hasOwnProperty(i)) continue;
+                if (data[i] === null) continue;
+                if (data[i] === 'null') continue;
+                if (data[i] === undefined) continue;
+                if (("" + data[i]).trim().length <= 0) continue;
+                filtered[i] = data[i];
+            }
 
-			for(var i in data) {
-				if(!data.hasOwnProperty(i)) continue;
-				if(data[i] === null) continue;
-				if(data[i] === 'null') continue;
-				if(data[i] === undefined) continue;
-				if(("" + data[i]).trim().length <= 0) continue;
-				filtered[i] = data[i];
-			}
+            return filtered;
+        }
 
-			return filtered;
-		}
+        $scope.assignUser = function () {
 
-		$scope.assignUser = function() {
+            console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
 
-			console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
+            CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
+                .then(function (res) {
+                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, true))
+                })
+                .then(function (user) {
+                    return CaseSteps.assignUser({
+                        type: $scope.step.step_type,
+                        id: $scope.step.id,
+                        user_id: user.id
+                    }).$promise;
+                }).then(function (res) {
+                ngToast.success("Usuário atribuído!");
+                $state.reload();
+            });
 
-			CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
-				.then(function (res) {
-					if(!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-					return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, true))
-				})
-				.then(function (user) {
-					return CaseSteps.assignUser({type: $scope.step.step_type, id: $scope.step.id, user_id: user.id}).$promise;
-				}).
-				then(function (res) {
-					ngToast.success("Usuário atribuído!");
-					$state.reload();
-				});
+        };
 
-		};
+        $scope.isCheckboxChecked = function (field, value) {
+            if (!$scope.fields) return false;
+            if (!$scope.fields[field]) $scope.fields[field] = [];
+            return $scope.fields[field].indexOf(value) !== -1;
+        };
 
-		$scope.isCheckboxChecked = function(field, value) {
-			if(!$scope.fields) return false;
-			if(!$scope.fields[field]) $scope.fields[field] = [];
-			return $scope.fields[field].indexOf(value) !== -1;
-		};
+        $scope.toggleCheckbox = function (field, value) {
+            if (!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
+            var index = $scope.fields[field].indexOf(value); // Check if in list
+            if (index === -1) return $scope.fields[field].push(value); // Add to list
+            return $scope.fields[field].splice(index, 1); // Remove from list
+        };
 
-		$scope.toggleCheckbox = function (field, value) {
-			if(!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
-			var index = $scope.fields[field].indexOf(value); // Check if in list
-			if(index === -1) return $scope.fields[field].push(value); // Add to list
-			return $scope.fields[field].splice(index, 1); // Remove from list
-		};
+        $scope.getCaseCauseIDs = function () {
+            if (!$scope.$parent.openedCase) return [];
+            return $scope.$parent.openedCase.case_cause_ids;
+        };
 
-		$scope.getCaseCauseIDs = function() {
-			if(!$scope.$parent.openedCase) return [];
-			return $scope.$parent.openedCase.case_cause_ids;
-		};
-
-        $scope.getAlertCauseId = function() {
-            if(!$scope.$parent.openedCase) return [];
+        $scope.getAlertCauseId = function () {
+            if (!$scope.$parent.openedCase) return [];
             return $scope.$parent.openedCase.alert_cause_id;
         };
 
-		$scope.fetchCities = function(query) {
-			var data = {name: query, $hide_loading_feedback: true};
+        $scope.fetchCities = function (query) {
+            var data = {name: query, $hide_loading_feedback: true};
 
-			if($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
-			if($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
+            if ($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
+            if ($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
 
-			console.log("[create_alert] Looking for cities: ", data);
+            // console.log("[create_alert] Looking for cities: ", data);
 
-			return Cities.search(data).$promise.then(function (res) {
-				return res.results;
-			});
-		};
+            return Cities.search(data).$promise.then(function (res) {
+                return res.results;
+            });
+        };
 
-		$scope.fetchSchools = function(query, filter_by_uf, filter_by_city) {
-			var data = {name: query, $hide_loading_feedback: true};
+        $scope.fetchSchools = function (query, filter_by_uf, filter_by_city) {
+            var data = {name: query, $hide_loading_feedback: true};
 
-			if(filter_by_uf) data.uf = filter_by_uf;
-			if(filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
+            if (filter_by_uf) data.uf = filter_by_uf;
+            if (filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
 
-			console.log("[create_alert] Looking for schools: ", data);
+            // console.log("[create_alert] Looking for schools: ", data);
 
-			return Schools.search(data).$promise.then(function (res) {
-				return res.results;
-			});
-		};
+            return Schools.search(data).$promise.then(function (res) {
+                return res.results;
+            });
+        };
 
-		$scope.renderSelectedCity = function(city) {
-			if(!city) return '';
-			return city.uf + ' / ' + city.name;
-		};
+        $scope.renderSelectedCity = function (city) {
+            if (!city) return '';
+            return city.uf + ' / ' + city.name;
+        };
 
-		$scope.renderSelectedSchool = function(school) {
-			if(!school) return '';
-			return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
-		};
+        $scope.renderSelectedSchool = function (school) {
+            if (!school) return '';
+            return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
+        };
 
-		function clearAuxiliaryFields(fields) {
-			var auxiliaryFields = ['place_lat', 'place_lng', 'place_map_center', 'place_map_geocoded_address'];
-			var filtered = {};
+        function clearAuxiliaryFields(fields) {
+            var auxiliaryFields = ['place_lat', 'place_lng', 'place_map_center', 'place_map_geocoded_address'];
+            var filtered = {};
 
-			for(var i in fields) {
-				if(!fields.hasOwnProperty(i)) continue;
-				if(auxiliaryFields.indexOf(i) !== -1) continue;
-				filtered[i] = fields[i];
-			}
+            for (var i in fields) {
+                if (!fields.hasOwnProperty(i)) continue;
+                if (auxiliaryFields.indexOf(i) !== -1) continue;
+                filtered[i] = fields[i];
+            }
 
-			return filtered;
-		}
+            return filtered;
+        }
 
-		function unpackTypeaheadField(data, name, model) {
-			if(data[name]) {
-				data[name + '_id'] = model.id;
-				data[name + '_name'] = model.name;
-			}
+        function unpackTypeaheadField(data, name, model) {
+            if (data[name]) {
+                data[name + '_id'] = model.id;
+                data[name + '_name'] = model.name;
+            }
 
-			return data;
-		}
+            return data;
+        }
 
-		$scope.save = function() {
+        $scope.save = function () {
 
-			var data = Object.assign({}, $scope.step.fields);
+            var data = Object.assign({}, $scope.step.fields);
 
-			data = Utils.prepareDateFields(data, dateOnlyFields);
+            data = Utils.prepareDateFields(data, dateOnlyFields);
 
-			data = unpackTypeaheadField(data, 'place_city', data.place_city);
-			data = unpackTypeaheadField(data, 'school_city', data.school_city);
-			data = unpackTypeaheadField(data, 'school', data.school);
-			data = unpackTypeaheadField(data, 'school_last', data.school_last);
+            data = unpackTypeaheadField(data, 'place_city', data.place_city);
+            data = unpackTypeaheadField(data, 'school_city', data.school_city);
+            data = unpackTypeaheadField(data, 'school', data.school);
+            data = unpackTypeaheadField(data, 'school_last', data.school_last);
 
-			data = clearAuxiliaryFields(data);
-			data = filterOutEmptyFields(data);
+            data = clearAuxiliaryFields(data);
+            data = filterOutEmptyFields(data);
 
-			data.type = $scope.step.step_type;
-			data.id = $scope.step.id;
+            data.type = $scope.step.step_type;
+            data.id = $scope.step.id;
 
-			console.info("[child_viewer.step_editor] Saving step data: ", data);
+            // console.info("[child_viewer.step_editor] Saving step data: ", data);
 
-			return CaseSteps.save(data).$promise.then(function (response) {
-				if(response.messages) {
-					return Utils.displayValidationErrors(response);
-				}
+            return CaseSteps.save(data).$promise.then(function (response) {
+                if (response.messages) {
+                    return Utils.displayValidationErrors(response);
+                }
 
-				if(response.status !== "ok") {
-					ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
-					return;
-				}
+                if (response.status !== "ok") {
+                    ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
+                    return;
+                }
 
-				if(response.updated) {
-					fetchStepData(); // Updates data
-				}
+                if (response.updated) {
+                    fetchStepData(); // Updates data
+                }
 
-				ngToast.success("Os campos da etapa foram salvos com sucesso!");
-			})
-		}
+                ngToast.success("Os campos da etapa foram salvos com sucesso!");
+            })
+        }
 
-        $scope.diffDaysBetweenSteps = function (a, b){
+        $scope.diffDaysBetweenSteps = function (a, b) {
             const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
             const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
             return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
         };
 
-        $scope.canUpdateStepObservation = function (child){
+        $scope.canUpdateStepObservation = function (child) {
             var time_for_next_step = 0;
-            if($scope.step.slug=="1a_observacao"){
+            if ($scope.step.slug == "1a_observacao") {
                 time_for_next_step = $scope.tenantSettings.stepDeadlines["1a_observacao"];
                 var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
                 return permission;
 
             }
-            if($scope.step.slug=="2a_observacao"){
+            if ($scope.step.slug == "2a_observacao") {
                 time_for_next_step = $scope.tenantSettings.stepDeadlines["2a_observacao"];
                 var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
                 return permission;
             }
-            if($scope.step.slug=="3a_observacao"){
+            if ($scope.step.slug == "3a_observacao") {
                 time_for_next_step = $scope.tenantSettings.stepDeadlines["3a_observacao"];
                 var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
                 return permission;
             }
-            if($scope.step.slug=="4a_observacao"){
+            if ($scope.step.slug == "4a_observacao") {
                 time_for_next_step = $scope.tenantSettings.stepDeadlines["4a_observacao"];
                 var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
                 return permission;
             }
         };
 
-	}
+    }
 })();
 (function() {
 
@@ -892,10 +993,12 @@
 	function ChildConsolidatedCtrl($scope, $state, $stateParams, Children, Decorators, Utils) {
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
+		$scope.showAll = true;
 
 		$scope.refreshChildData = function(callback) {
 			return $scope.child = Children.find({id: $scope.child_id, with: 'currentStep,consolidated'}, callback);
 		};
+
 
 		$scope.fields = {};
 		$scope.child_id = $stateParams.child_id;
@@ -1508,16 +1611,54 @@
 				return hasEnoughData;
 			};
 
-			function fetchTimelineData() {
-				var lastMonth = moment().subtract(30, 'days').format('YYYY-MM-DD');
-				var today = moment().format('YYYY-MM-DD');
+            scope.firstDate = null;
+            scope.finalDate = null;
+
+            //----------------------------
+            scope.popupStart = {
+                opened: false
+            };
+
+            scope.popupFinish = {
+                opened: false
+            };
+
+			scope.formatDates = 'ddMMyyyy';
+
+            scope.dateOptionsStart = {
+                formatYear: 'yyyy',
+                showWeeks: false
+            };
+
+            scope.dateOptionsFinish = {
+                formatYear: 'yyyy',
+                maxDate: new Date(),
+                showWeeks: false
+            };
+
+			scope.openStartDate = function () {
+                scope.popupStart.opened = true;
+            };
+
+            scope.openFinishDate = function () {
+                scope.popupFinish.opened = true;
+            };
+            //----------------------------
+
+			scope.fetchTimelineData= function() {
+
+				var startDate = moment().subtract(30, 'days').format('YYYY-MM-DD');
+				var endDate = moment().format('YYYY-MM-DD');
+
+                if( scope.firstDate != null ) startDate = moment(scope.firstDate).format('YYYY-MM-DD');
+                if( scope.finalDate != null ) endDate = moment(scope.finalDate).format('YYYY-MM-DD');
 
 				return Reports.query({
 					view: 'time_series',
 					entity: 'children',
 					dimension: 'child_status',
 					filters: {
-						date: {from: lastMonth, to: today},
+						date: {from: startDate, to: endDate},
 						case_status: ['in_progress', 'completed', 'interrupted'],
 						alert_status: ['accepted']
 					}
@@ -1542,7 +1683,7 @@
 
 			function getTimelineChart() {
 				var report = timelineData.response.report;
-				var chartName = 'Evolução do status dos casos nos últimos 30 dias';
+				var chartName = 'Evolução do status dos casos';
 				var labels = timelineData.labels ? timelineData.labels : {};
 
 				return Charts.generateTimelineChart(report, chartName, labels);
@@ -1555,7 +1696,7 @@
 			}
 
 			Platform.whenReady(function () {
-				fetchTimelineData();
+				scope.fetchTimelineData();
 			});
 		}
 
@@ -1898,6 +2039,28 @@
 	});
 
 })();
+(function () {
+    angular.module('BuscaAtivaEscolar').filter('cep', function () {
+        return function (input) {
+            var str = input + '';
+            str = str.replace(/\D/g, '');
+            str = str.replace(/^(\d{2})(\d{3})(\d)/, "$1.$2-$3");
+            return str;
+        };
+    });
+})();
+(function () {
+    angular.module('BuscaAtivaEscolar').filter('cpf', function() {
+        return function(input) {
+            var str = input+ '';
+            str = str.replace(/\D/g,'');
+            str = str.replace(/(\d{3})(\d)/,"$1.$2");
+            str = str.replace(/(\d{3})(\d)/,"$1.$2");
+            str = str.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+            return str;
+        };
+    });
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('ngEnter', function () {
@@ -1930,6 +2093,20 @@
         };
     });
 
+})();
+(function () {
+    angular.module('BuscaAtivaEscolar').filter('phone', function() {
+        return function(input) {
+            var str = input+ '';
+            str = str.replace(/\D/g,'');
+            if(str.length === 11 ){
+                str=str.replace(/^(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');
+            }else{
+                str=str.replace(/^(\d{2})(\d{4})(\d{4})/,'($1) $2-$3');
+            }
+            return str;
+        };
+    });
 })();
 (function() {
 
@@ -3608,6 +3785,26 @@ Highcharts.maps["countries/br/br-all"] = {
 	}]
 };
 (function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
+(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
@@ -3821,26 +4018,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 
 	});
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 
@@ -5584,7 +5761,14 @@ if (!Array.prototype.find) {
 			var data = {};
 			var dates = Object.keys(report);
 
-			// Translates ￿date -> metric to metric -> date; prepares list of categories
+            var colors = [];
+            colors['out_of_school'] = '#f44336';
+            colors['in_school'] = '#4885f4';
+            colors['cancelled'] = '#f49117';
+            colors['in_observation'] = '#f4ec2b';
+            colors['completed'] = '#1df40a';
+
+            // Translates ￿date -> metric to metric -> date; prepares list of categories
 			for(var date in report) {
 
 				if(!report.hasOwnProperty(date)) continue;
@@ -5616,7 +5800,8 @@ if (!Array.prototype.find) {
 
 				series.push({
 					name: labels[m] ? labels[m] : m,
-					data: metricData
+					data: metricData,
+					color: labels[m] ? colors[m] : ''
 				});
 			}
 
@@ -8045,19 +8230,32 @@ function identify(namespace, file) {
 				max: 16,
 				page: 1,
 				sort: {created_at: 'desc'},
-				filter: {status: 'all'}
+				filter: {status: 'pending_approval'}
 			};
 
-			$scope.refresh = function() {
+            $scope.onSelectType = function() {
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
 				$scope.signups = TenantSignups.getPending($scope.query);
 				return $scope.signups.$promise;
 			};
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token + $scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+                    uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                return uri;
+            };
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;
@@ -8115,11 +8313,17 @@ function identify(namespace, file) {
 			$scope.tenants = {};
 			$scope.ufs = Ufs;
 			$scope.query = {
+                show_suspended: false,
 				filter: {},
 				sort: {},
 				max: 16,
 				page: 1
 			};
+
+			$scope.showCanceledCities = function () {
+				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+				$scope.refresh();
+            }
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
@@ -8127,9 +8331,18 @@ function identify(namespace, file) {
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'tenants/export?token='+token+$scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+                return uri;
+            };
 
 			$scope.disableTenant = function(tenant) {
 
@@ -8181,12 +8394,17 @@ function identify(namespace, file) {
 			email: null,
 			with: 'tenant',
 			sort: {},
-			show_suspended: true,
+			show_suspended: false,
 			max: 16,
 			page: 1,
 		};
 
 		$scope.quickAdd = false;
+
+		$scope.onCheckCanceled = function (){
+			$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+			$scope.refresh();
+		};
 
 		$scope.enableQuickAdd = function() {
 			$scope.quickAdd = true;
@@ -8200,8 +8418,17 @@ function identify(namespace, file) {
 
 		$scope.export = function() {
 			Identity.provideToken().then(function (token) {
-				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token);
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
 			});
+		};
+
+		$scope.prepareUriToExport = function () {
+			var uri = "";
+			Object.keys($scope.query).forEach( function (element) {
+				if(element != "sort" &&  $scope.query[element] != null) uri = uri.concat("&"+element+"="+$scope.query[element]);
+			});
+			uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+			return uri;
 		};
 
 		$scope.canEditUser = function(user) {
@@ -8259,7 +8486,7 @@ function identify(namespace, file) {
 		Platform.whenReady(function() {
 			$scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
 			console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
-		})
+		});
 
 	});
 

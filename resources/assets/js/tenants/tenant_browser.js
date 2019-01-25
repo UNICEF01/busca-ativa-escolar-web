@@ -14,11 +14,17 @@
 			$scope.tenants = {};
 			$scope.ufs = Ufs;
 			$scope.query = {
+                show_suspended: false,
 				filter: {},
 				sort: {},
 				max: 16,
 				page: 1
 			};
+
+			$scope.showCanceledCities = function () {
+				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+				$scope.refresh();
+            }
 
 			$scope.refresh = function() {
 				$scope.tenants = Tenants.all($scope.query);
@@ -26,9 +32,18 @@
 
 			$scope.export = function() {
 				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token);
+					window.open(Config.getAPIEndpoint() + 'tenants/export?token='+token+$scope.prepareUriToExport());
 				});
 			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+                return uri;
+            };
 
 			$scope.disableTenant = function(tenant) {
 

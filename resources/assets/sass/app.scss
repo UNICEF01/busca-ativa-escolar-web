@@ -13,6 +13,8 @@
 @import 'components/app_footer';
 @import 'components/loading_feedback';
 @import 'components/support_widget';
+@import 'components/user_browser';
+@import 'components/tenants';
 
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
 
@@ -282,4 +284,7 @@ a.column-sorter {
 }
 .dropdown:hover .dropdown-menu {
 	display: block;
+}
+.alert-color {
+	color: #F0AD4E !important;
 }

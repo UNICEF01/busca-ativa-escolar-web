@@ -136,7 +136,14 @@
 			var data = {};
 			var dates = Object.keys(report);
 
-			// Translates ￿date -> metric to metric -> date; prepares list of categories
+            var colors = [];
+            colors['out_of_school'] = '#f44336';
+            colors['in_school'] = '#4885f4';
+            colors['cancelled'] = '#f49117';
+            colors['in_observation'] = '#f4ec2b';
+            colors['completed'] = '#1df40a';
+
+            // Translates ￿date -> metric to metric -> date; prepares list of categories
 			for(var date in report) {
 
 				if(!report.hasOwnProperty(date)) continue;
@@ -168,7 +175,8 @@
 
 				series.push({
 					name: labels[m] ? labels[m] : m,
-					data: metricData
+					data: metricData,
+					color: labels[m] ? colors[m] : ''
 				});
 			}
 
