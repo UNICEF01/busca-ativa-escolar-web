@@ -1232,6 +1232,164 @@
 
 })();
 (function() {
+	identify('config', 'charts.js');
+
+	angular.module('BuscaAtivaEscolar').run(function (Config) {
+		Highcharts.setOptions({
+			lang: {
+				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+				loading: ['Atualizando o gráfico...'],
+				contextButtonTitle: 'Exportar gráfico',
+				decimalPoint: ',',
+				thousandsSep: '.',
+				downloadJPEG: 'Baixar imagem JPEG',
+				downloadPDF: 'Baixar arquivo PDF',
+				downloadPNG: 'Baixar imagem PNG',
+				downloadSVG: 'Baixar vetor SVG',
+				printChart: 'Imprimir gráfico',
+				rangeSelectorFrom: 'De',
+				rangeSelectorTo: 'Para',
+				rangeSelectorZoom: 'Zoom',
+				resetZoom: 'Voltar zoom',
+				resetZoomTitle: 'Voltar zoom para nível 1:1'
+			}
+		});
+	})
+
+})();
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function() {
+	identify('config', 'on_init.js');
+
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
+		console.info("------------------------------");
+		console.info(" BUSCA ATIVA ESCOLAR");
+		console.info(" Copyright (c) LQDI Digital");
+		console.info("------------------------------");
+		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
+		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
+		console.info("------------------------------");
+
+		$.material.init();
+
+		$rootScope.$on('unauthorized', function() {
+			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
+			Auth.logout();
+			$state.go('login');
+		})
+	})
+
+})();
+(function() {
+	identify('config', 'states.js');
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+			$locationProvider.html5Mode(true);
+			$urlRouterProvider.otherwise('/dashboard');
+
+			$stateProvider
+				.state('login', {
+					url: '/login',
+					templateUrl: '/views/login.html',
+					controller: 'LoginCtrl',
+					unauthenticated: true
+				})
+				.state('dashboard', {
+					url: '/dashboard',
+					templateUrl: '/views/dashboard.html',
+					controller: 'DashboardCtrl'
+				})
+				.state('developer_mode', {
+					url: '/developer_mode',
+					templateUrl: '/views/developer/developer_dashboard.html',
+					controller: 'DeveloperCtrl',
+					unauthenticated: true
+
+				})
+				.state('settings', {
+					url: '/settings?step',
+					templateUrl: '/views/settings/manage_settings.html',
+					controller: 'SettingsCtrl'
+				})
+				.state('settings.parameterize_group', {
+					url: '/parameterize_group/{group_id}',
+					templateUrl: '/views/settings/parameterize_group.html',
+					controller: 'ParameterizeGroupCtrl'
+				})
+				.state('credits', {
+					url: '/credits',
+					templateUrl: '/views/static/credits.html',
+					controller: 'CreditsCtrl',
+					unauthenticated: true
+				})
+				.state('tenant_signup', {
+					url: '/tenant_signup',
+					templateUrl: '/views/tenant_signup/main.html',
+					controller: 'TenantSignupCtrl',
+					unauthenticated: true
+				})
+				.state('state_signup', {
+					url: '/state_signup',
+					templateUrl: '/views/state_signup/main.html',
+					controller: 'StateSignupCtrl',
+					unauthenticated: true
+				})
+
+		});
+
+})();
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
+(function() {
 
 	angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
@@ -2432,164 +2590,6 @@
 
 })();
 
-(function() {
-	identify('config', 'charts.js');
-
-	angular.module('BuscaAtivaEscolar').run(function (Config) {
-		Highcharts.setOptions({
-			lang: {
-				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-				loading: ['Atualizando o gráfico...'],
-				contextButtonTitle: 'Exportar gráfico',
-				decimalPoint: ',',
-				thousandsSep: '.',
-				downloadJPEG: 'Baixar imagem JPEG',
-				downloadPDF: 'Baixar arquivo PDF',
-				downloadPNG: 'Baixar imagem PNG',
-				downloadSVG: 'Baixar vetor SVG',
-				printChart: 'Imprimir gráfico',
-				rangeSelectorFrom: 'De',
-				rangeSelectorTo: 'Para',
-				rangeSelectorZoom: 'Zoom',
-				resetZoom: 'Voltar zoom',
-				resetZoomTitle: 'Voltar zoom para nível 1:1'
-			}
-		});
-	})
-
-})();
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function() {
-	identify('config', 'on_init.js');
-
-	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
-		console.info("------------------------------");
-		console.info(" BUSCA ATIVA ESCOLAR");
-		console.info(" Copyright (c) LQDI Digital");
-		console.info("------------------------------");
-		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
-		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
-		console.info("------------------------------");
-
-		$.material.init();
-
-		$rootScope.$on('unauthorized', function() {
-			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
-			Auth.logout();
-			$state.go('login');
-		})
-	})
-
-})();
-(function() {
-	identify('config', 'states.js');
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-			$locationProvider.html5Mode(true);
-			$urlRouterProvider.otherwise('/dashboard');
-
-			$stateProvider
-				.state('login', {
-					url: '/login',
-					templateUrl: '/views/login.html',
-					controller: 'LoginCtrl',
-					unauthenticated: true
-				})
-				.state('dashboard', {
-					url: '/dashboard',
-					templateUrl: '/views/dashboard.html',
-					controller: 'DashboardCtrl'
-				})
-				.state('developer_mode', {
-					url: '/developer_mode',
-					templateUrl: '/views/developer/developer_dashboard.html',
-					controller: 'DeveloperCtrl',
-					unauthenticated: true
-
-				})
-				.state('settings', {
-					url: '/settings?step',
-					templateUrl: '/views/settings/manage_settings.html',
-					controller: 'SettingsCtrl'
-				})
-				.state('settings.parameterize_group', {
-					url: '/parameterize_group/{group_id}',
-					templateUrl: '/views/settings/parameterize_group.html',
-					controller: 'ParameterizeGroupCtrl'
-				})
-				.state('credits', {
-					url: '/credits',
-					templateUrl: '/views/static/credits.html',
-					controller: 'CreditsCtrl',
-					unauthenticated: true
-				})
-				.state('tenant_signup', {
-					url: '/tenant_signup',
-					templateUrl: '/views/tenant_signup/main.html',
-					controller: 'TenantSignupCtrl',
-					unauthenticated: true
-				})
-				.state('state_signup', {
-					url: '/state_signup',
-					templateUrl: '/views/state_signup/main.html',
-					controller: 'StateSignupCtrl',
-					unauthenticated: true
-				})
-
-		});
-
-})();
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
-
-})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
@@ -7052,289 +7052,290 @@ if (!Array.prototype.find) {
 		});
 
 })();
-(function() {
-
-	identify("core", "utils.js");
-
-	var app = angular.module('BuscaAtivaEscolar');
-
-	app
-		.run(function() {
-			Array.prototype.shuffle = function() {
-				var i = this.length, j, temp;
-				if ( i == 0 ) return this;
-				while ( --i ) {
-					j = Math.floor( Math.random() * ( i + 1 ) );
-					temp = this[i];
-					this[i] = this[j];
-					this[j] = temp;
-				}
-				return this;
-			};
+(function () {
+
+    identify("core", "utils.js");
+
+    var app = angular.module('BuscaAtivaEscolar');
+
+    app
+        .run(function () {
+            Array.prototype.shuffle = function () {
+                var i = this.length, j, temp;
+                if (i == 0) return this;
+                while (--i) {
+                    j = Math.floor(Math.random() * (i + 1));
+                    temp = this[i];
+                    this[i] = this[j];
+                    this[j] = temp;
+                }
+                return this;
+            };
+
+            Array.prototype.clone = function () {
+                return this.slice(0);
+            };
+
+        })
+        .filter('orderObjectBy', function () {
+            return function (items, field, reverse) {
+                var filtered = [];
+
+                angular.forEach(items, function (item) {
+                    filtered.push(item);
+                });
+
+                filtered.sort(function (a, b) {
+                    return (a[field] > b[field] ? 1 : -1);
+                });
+
+                if (reverse) filtered.reverse();
+
+                return filtered;
+            };
+        })
+        .factory('Utils', function (ngToast) {
+
+            function generateRandomID() {
+                return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
+            }
+
+            function convertISOtoBRDate(iso_date) {
+                if (!iso_date) return '';
+                return iso_date.split('-').reverse().join('/');
+            }
+
+            function convertBRtoISODate(br_date) {
+                if (!br_date) return '';
+                return br_date.split('/').reverse().join('-');
+            }
+
+            function prepareDateFields(data, dateOnlyFields) {
+                for (var i in data) {
+                    if (!data.hasOwnProperty(i)) continue;
+                    if (dateOnlyFields.indexOf(i) === -1) continue;
+
+                    if (!data[i]) continue;
+                    if (("" + data[i]).length <= 0) continue;
+
+                    data[i] = stripTimeFromTimestamp(data[i]);
+
+                    if (("" + data[i]).toLowerCase() === "invalid date") {
+                        data[i] = null;
+                    }
+                }
 
-			Array.prototype.clone = function() {
-				return this.slice(0);
-			};
-
-		})
-		.filter('orderObjectBy', function() {
-			return function(items, field, reverse) {
-				var filtered = [];
+                return data;
+            }
 
-				angular.forEach(items, function(item) {
-					filtered.push(item);
-				});
+            function prepareCityFields(data, cityFields) {
+                for (var i in data) {
+                    if (!data.hasOwnProperty(i)) continue;
+                    if (cityFields.indexOf(i) === -1) continue;
 
-				filtered.sort(function (a, b) {
-					return (a[field] > b[field] ? 1 : -1);
-				});
-
-				if(reverse) filtered.reverse();
-
-				return filtered;
-			};
-		})
-		.factory('Utils', function(ngToast) {
-
-			function generateRandomID() {
-				return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
-			}
+                    data[i + '_id'] = data[i] ? data[i].id : null;
+                    data[i + '_name'] = data[i] ? data[i].name : null;
+                }
 
-			function convertISOtoBRDate(iso_date) {
-				if(!iso_date) return '';
-				return iso_date.split('-').reverse().join('/');
-			}
+                return data;
+            }
 
-			function convertBRtoISODate(br_date) {
-				if(!br_date) return '';
-				return br_date.split('/').reverse().join('-');
-			}
+            function unpackDateFields(data, dateOnlyFields) {
 
-			function prepareDateFields(data, dateOnlyFields) {
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
+                for (var i in data) {
+                    if (!data.hasOwnProperty(i)) continue;
+                    if (dateOnlyFields.indexOf(i) === -1) continue;
+                    if (typeof(data[i]) === 'date') {
+                        data[i] = new Date(data[i] + " 00:00:00");
+                    }
+                }
+                return data;
+            }
 
-					if(!data[i]) continue;
-					if(("" + data[i]).length <= 0) continue;
+            function stripTimeFromTimestamp(timestamp) {
+                return moment(timestamp).format('YYYY-MM-DD');
+            }
 
-					data[i] = stripTimeFromTimestamp(data[i]);
+            function displayValidationErrors(response) {
+                if (!response || !response.messages) return false;
 
-					if(("" + data[i]).toLowerCase() === "invalid date") {
-						data[i] = null;
-					}
-				}
+                for (var i in response.messages) {
+                    if (!response.messages.hasOwnProperty(i)) continue;
+                    ngToast.danger(response.messages[i])
+                }
 
-				return data;
-			}
+                return true;
+            }
 
-			function prepareCityFields(data, cityFields) {
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(cityFields.indexOf(i) === -1) continue;
+            function filter(obj, predicate) {
+                if (obj.constructor === Array) return obj.filter(predicate);
 
-					data[i + '_id'] = data[i] ? data[i].id : null;
-					data[i + '_name'] = data[i] ? data[i].name : null;
-				}
+                var result = {}, key;
 
-				return data;
-			}
+                for (key in obj) {
+                    if (obj.hasOwnProperty(key) && !!predicate(obj[key])) {
+                        result[key] = obj[key];
+                    }
+                }
 
-			function unpackDateFields(data, dateOnlyFields) {
-				for(var i in data) {
-					if(!data.hasOwnProperty(i)) continue;
-					if(dateOnlyFields.indexOf(i) === -1) continue;
+                return result;
+            }
 
-					data[i] = new Date(data[i] + " 00:00:00");
-				}
+            function extract(field, obj, predicate) {
+                var filtered = filter(obj, predicate);
+                var result = [];
 
-				return data;
-			}
+                for (var i in filtered) {
+                    if (!filtered.hasOwnProperty(i)) continue;
+                    result.push(filtered[i][field]);
+                }
 
-			function stripTimeFromTimestamp(timestamp) {
-				return moment(timestamp).format('YYYY-MM-DD');
-			}
+                return result;
+            }
 
-			function displayValidationErrors(response) {
-				if(!response || !response.messages) return false;
+            function pluck(collection, value_column, key_column) {
+                var hasKeyColumn = !!key_column;
+                var plucked = (hasKeyColumn) ? {} : [];
 
-				for(var i in response.messages) {
-					if(!response.messages.hasOwnProperty(i)) continue;
-					ngToast.danger(response.messages[i])
-				}
+                for (var i in collection) {
+                    if (!collection.hasOwnProperty(i)) continue;
 
-				return true;
-			}
+                    var value = collection[i][value_column] ? collection[i][value_column] : null;
 
-			function filter(obj, predicate) {
-				if(obj.constructor === Array) return obj.filter(predicate);
+                    if (!hasKeyColumn) {
+                        plucked.push(value);
+                        continue;
+                    }
 
-				var result = {}, key;
+                    var key = collection[i][key_column] ? collection[i][key_column] : i;
+                    plucked[key] = value;
 
-				for (key in obj) {
-					if (obj.hasOwnProperty(key) && !!predicate(obj[key])) {
-						result[key] = obj[key];
-					}
-				}
+                }
 
-				return result;
-			}
-
-			function extract(field, obj, predicate) {
-				var filtered = filter(obj, predicate);
-				var result = [];
-
-				for(var i in filtered) {
-					if(!filtered.hasOwnProperty(i)) continue;
-					result.push(filtered[i][field]);
-				}
-
-				return result;
-			}
-
-			function pluck(collection, value_column, key_column) {
-				var hasKeyColumn = !!key_column;
-				var plucked = (hasKeyColumn) ? {} : [];
-
-				for(var i in collection) {
-					if(!collection.hasOwnProperty(i)) continue;
-
-					var value = collection[i][value_column] ? collection[i][value_column] : null;
-
-					if(!hasKeyColumn) {
-						plucked.push(value);
-						continue;
-					}
-
-					var key = collection[i][key_column] ? collection[i][key_column] : i;
-					plucked[key] = value;
-
-				}
-
-				return plucked;
-			}
-
-			function search(object, callback) {
-				for(var i in object) {
-					if(!object.hasOwnProperty(i)) continue;
-					if(callback(object[i])) return object[i];
-				}
-
-				return false;
-			}
-
-			function validateFields(data, requiredFields) {
-				var invalid = [];
-
-				for(var i in requiredFields) {
-					if(!requiredFields.hasOwnProperty(i)) continue;
-					if(data[requiredFields[i]]) continue;
-
-					invalid.push(requiredFields[i]);
-				}
-
-				return invalid;
-			}
-
-			function isValid(data, requiredFields, fieldNames, message) {
-				var invalidFields = validateFields(data, requiredFields);
-
-				if(invalidFields.length <= 0) return true;
-
-				message += invalidFields
-					.map(function (field) {
-						return fieldNames[field] || field;
-					})
-					.join(", ");
-
-				ngToast.danger(message);
-
-				return false;
-			}
-
-			function basename(str) {
-				var base = ("" + str).substring(str.lastIndexOf('/') + 1);
-
-				if(base.lastIndexOf(".") !== -1) {
-					base = base.substring(0, base.lastIndexOf("."));
-				}
-
-				return base;
-			}
-
-			function renderCallStack(stack, knownRootPaths) {
-				if(!stack) return ['[ empty stack! ]'];
-
-				var messages = [];
-				var maxCalls = 12;
-				var numCalls = 0;
-
-				for(var callNum in stack) {
-
-					if(numCalls++ > maxCalls) {
-						messages.push("[ snip ... other " + (stack.length - numCalls) +  " calls in stack ]");
-						return messages;
-					}
-
-					if(!stack.hasOwnProperty(callNum)) continue;
-					var c = stack[callNum];
-
-					messages.push(
-						'at '
-						+ (c.class ? c.class : '[root]')
-						+ (c.type ? c.type : '@')
-						+ (c.function ? c.function : '[anonymous function]')
-						+ '()'
-						+ ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
-					);
-				}
-
-				return messages;
-
-			}
-
-			return {
-				stripTimeFromTimestamp: stripTimeFromTimestamp,
-				prepareDateFields: prepareDateFields,
-				prepareCityFields: prepareCityFields,
-				unpackDateFields: unpackDateFields,
-				convertISOtoBRDate: convertISOtoBRDate,
-				displayValidationErrors: displayValidationErrors,
-				convertBRtoISODate: convertBRtoISODate,
-				generateRandomID: generateRandomID,
-				validateFields: validateFields,
-				renderCallStack: renderCallStack,
-				isValid: isValid,
-				basename: basename,
-				filter: filter,
-				extract: extract,
-				pluck: pluck,
-				search: search,
-			};
-		})
-		.directive('stringToNumber', function() {
-			return {
-				require: 'ngModel',
-				link: function(scope, element, attrs, ngModel) {
-					ngModel.$parsers.push(function(value) {
-						return '' + value;
-					});
-					ngModel.$formatters.push(function(value) {
-						return parseFloat(value);
-					});
-				}
-			};
-		})
-		.filter('parseDate', function() {
-			return function(input) {
-				return new Date(input);
-			};
-		});
+                return plucked;
+            }
+
+            function search(object, callback) {
+                for (var i in object) {
+                    if (!object.hasOwnProperty(i)) continue;
+                    if (callback(object[i])) return object[i];
+                }
+
+                return false;
+            }
+
+            function validateFields(data, requiredFields) {
+                var invalid = [];
+
+                for (var i in requiredFields) {
+                    if (!requiredFields.hasOwnProperty(i)) continue;
+                    if (data[requiredFields[i]]) continue;
+
+                    invalid.push(requiredFields[i]);
+                }
+
+                return invalid;
+            }
+
+            function isValid(data, requiredFields, fieldNames, message) {
+                var invalidFields = validateFields(data, requiredFields);
+
+                if (invalidFields.length <= 0) return true;
+
+                message += invalidFields
+                    .map(function (field) {
+                        return fieldNames[field] || field;
+                    })
+                    .join(", ");
+
+                ngToast.danger(message);
+
+                return false;
+            }
+
+            function basename(str) {
+                var base = ("" + str).substring(str.lastIndexOf('/') + 1);
+
+                if (base.lastIndexOf(".") !== -1) {
+                    base = base.substring(0, base.lastIndexOf("."));
+                }
+
+                return base;
+            }
+
+            function renderCallStack(stack, knownRootPaths) {
+                if (!stack) return ['[ empty stack! ]'];
+
+                var messages = [];
+                var maxCalls = 12;
+                var numCalls = 0;
+
+                for (var callNum in stack) {
+
+                    if (numCalls++ > maxCalls) {
+                        messages.push("[ snip ... other " + (stack.length - numCalls) + " calls in stack ]");
+                        return messages;
+                    }
+
+                    if (!stack.hasOwnProperty(callNum)) continue;
+                    var c = stack[callNum];
+
+                    messages.push(
+                        'at '
+                        + (c.class ? c.class : '[root]')
+                        + (c.type ? c.type : '@')
+                        + (c.function ? c.function : '[anonymous function]')
+                        + '()'
+                        + ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
+                    );
+                }
+
+                return messages;
+
+            }
+
+            return {
+                stripTimeFromTimestamp: stripTimeFromTimestamp,
+                prepareDateFields: prepareDateFields,
+                prepareCityFields: prepareCityFields,
+                unpackDateFields: unpackDateFields,
+                convertISOtoBRDate: convertISOtoBRDate,
+                displayValidationErrors: displayValidationErrors,
+                convertBRtoISODate: convertBRtoISODate,
+                generateRandomID: generateRandomID,
+                validateFields: validateFields,
+                renderCallStack: renderCallStack,
+                isValid: isValid,
+                basename: basename,
+                filter: filter,
+                extract: extract,
+                pluck: pluck,
+                search: search,
+            };
+        })
+        .directive('stringToNumber', function () {
+            return {
+                require: 'ngModel',
+                link: function (scope, element, attrs, ngModel) {
+                    ngModel.$parsers.push(function (value) {
+                        return '' + value;
+                    });
+                    ngModel.$formatters.push(function (value) {
+                        return parseFloat(value);
+                    });
+                }
+            };
+        })
+        .filter('parseDate', function () {
+            return function (input) {
+                return new Date(input);
+            };
+        });
 
 })();
 
 function identify(namespace, file) {
-	console.log("[core.load] ", namespace, file);
+    console.log("[core.load] ", namespace, file);
 }
 (function() {
 
