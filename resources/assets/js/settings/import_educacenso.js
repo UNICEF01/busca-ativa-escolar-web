@@ -25,13 +25,17 @@
 					'Selecione o arquivo de planilha do Educacenso recebido pelo INEP. O arquivo deve estar intacto e sem modificações, exatamente da forma como foi recebido.',
 					API.getURI('settings/educacenso/import')
 				)).then(function (file) {
-					console.log("File uploaded: ", file);
-					ngToast.success('Arquivo anexado!');
-					$scope.hasImported = true;
 
-					$scope.refresh();
+					if(file.status == "error"){
+                        ngToast.danger('Arquivo inválido!');
+                        $scope.hasImported = false;
+                        $scope.refresh();
+					}else{
+                        ngToast.success('Arquivo importado com sucesso!');
+                        $scope.hasImported = true;
+                        $scope.refresh();
+					}
 
-					$window.location.reload();
 				});
 			};
 
