@@ -91,9 +91,7 @@
                 for (var i in data) {
                     if (!data.hasOwnProperty(i)) continue;
                     if (dateOnlyFields.indexOf(i) === -1) continue;
-                    if (typeof(data[i]) === 'date') {
-                        data[i] = new Date(data[i] + " 00:00:00");
-                    }
+                    data[i] = new Date(data[i] + " 00:00:00");
                 }
                 return data;
             }
