@@ -5,7 +5,7 @@
 
 		<div ng-repeat="(i, case) in child.cases" class="panel panel-default case-container">
 			<div class="panel-heading" ng-click="collapseCase(case)">
-				#{{case.name}}
+				#{{case.name}} <i class="fa fa-arrow-down"></i>
 				<span ng-show="case.case_status === 'cancelled'" class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
 				<span ng-show="case.case_status === 'interrupted'" class="label label-danger">Reincidiu {{case.updated_at | amTimeAgo}}</span>
 				<span ng-show="case.case_status === 'completed'" class="label label-success">Concluído {{case.updated_at | amTimeAgo}}</span>
