@@ -267,6 +267,12 @@
                    ng-model="fields.cns">
         </div>
 
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
+            <input type="tel" class="form-control" id="fld-codnis" ng-readonly="!canEditCurrentStep()"
+                   ng-model="fields.nis">
+        </div>
+
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
