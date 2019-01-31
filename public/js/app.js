@@ -4587,7 +4587,7 @@ if (!Array.prototype.find) {
 				controller: 'ReportViewerCtrl'
 			})
 		})
-		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Modals, Utils, Cities, StaticData, Language, Reports, Identity, Charts) {
+		.controller('ReportViewerCtrl', function ($scope, $rootScope, moment, Platform, Modals, Utils, Cities, StaticData, Language, Reports, Identity, Charts, ngToast) {
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
@@ -4608,6 +4608,12 @@ if (!Array.prototype.find) {
 				dimension: 'cause',
 				view: 'chart'
 			};
+
+			$scope.avaliable_graph = true;
+
+			$scope.showGraph = function () {
+				return $scope.avaliable_graph;
+            }
 
 			function onInit() {
 				$scope.ready = true;
@@ -4772,6 +4778,16 @@ if (!Array.prototype.find) {
 					if($scope.current.view !== "list") {
 						$scope.chartConfig = getChartConfig();
 					}
+
+					//if response has property named 'tenant' set value to $scope.avaliable_graph
+					if(res.response.hasOwnProperty('tenant')){
+                        $scope.avaliable_graph = res.response.tenant;
+                        if($scope.avaliable_graph==false) ngToast.danger('Este município ainda não fez adesão ao Busca Ativa Escolar!!');
+					}else{
+                        $scope.avaliable_graph = true;
+					}
+
+                    window.scrollTo(1, 1);
 
 				});
 
