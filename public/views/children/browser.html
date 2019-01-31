@@ -52,6 +52,7 @@
 								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
 								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
 								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+								<span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
 							</span>
 							<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
 							<span ng-if="child.case_status === 'in_progress'">
