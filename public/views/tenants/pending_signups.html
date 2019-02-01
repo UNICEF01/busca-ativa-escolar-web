@@ -192,7 +192,8 @@
 				<div ng-show="signup.is_approved && !signup.is_provisioned">
 					<div class="alert alert-success"><strong>Adesão aprovada!</strong> Aguardando a configuração inicial pelo Gestor Político do município.</div>
 					<div><a class="btn btn-raised btn-primary" ng-click="resendNotification(signup)"><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a></div>
-					<div><a class="btn btn-raised btn-info" ng-click="resendNotification(signup)"><i class="fa fa-copy"></i> Copiar URL</a></div>
+					<div><a class="btn btn-raised btn-info" ng-click="copyText()" ngclipboard data-clipboard-text="{{signup.provision_url}}"><i class="fa fa-copy"></i> Copiar URL</a></div>
+					<p>{{msgCopy}}</p>
 					<div class="form-group">
 						<label class="control-label">URL para configuração inicial:</label>
 						<input class="form-control" value="{{signup.provision_url}}" />
