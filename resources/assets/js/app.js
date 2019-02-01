@@ -27,6 +27,7 @@
 			'ui.ace',
 			'datatables',
             'ui.mask',
-            'angular.viacep'
+            'angular.viacep',
+			'ngclipboard',
 		])
 })();
