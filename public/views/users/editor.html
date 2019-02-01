@@ -108,14 +108,20 @@
 
             <h5>Contatos</h5>
 
+            {{user.work_phone.length}}<br>
+            {{user.personal_mobile}}<br>
+            {{user.work_mobile}}
+
+
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number
+                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12"
                        ng-model="user.work_phone" placeholder="(00) 00000-0000">
             </div>
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number
+                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-pattern='^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
+'
                        ng-model="user.work_mobile" placeholder="(00) 00000-0000">
             </div>
 
