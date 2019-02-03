@@ -22,6 +22,13 @@
 				filter: {status: 'pending_approval'}
 			};
 
+			$scope.copyText = function(){
+				$scope.msgCopy = "URL COPIADA";
+				setTimeout(function(){ $scope.msgCopy = '';}, 500);
+
+
+			}
+
             $scope.onSelectType = function() {
                 $scope.query.page = 1;
                 $scope.refresh();

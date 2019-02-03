@@ -10,21 +10,19 @@
 			<div class="panel-body">
 				<p>Você pode importar a planilha de evasões escolares do Educacenso do INEP diretamente para a plataforma. Os casos do Educacenso são importados como alertas pendentes. Esta ação pode ser realizada pelo Coordenador(a) Operacional ou pelo(a) Supervisor(a) Educacional.</p>
 
+				<br/>
+				
 				<div class="alert alert-warning" ng-show="importDetails.has_imported">
 					<strong>Você já importou um arquivo Educacenso!</strong> Se você importar novamente, os alertas poderão ser duplicados na plataforma!
-					<br />Repita o processo somente se você tiver uma nova planilha.
+					<br />Repita o processo somente se você tiver uma nova planilha ou se o <i>status</i> da importação apresentar erro.
 				</div>
 
-				<div class="alert alert-danger" ng-show="importDetails.has_imported">
-					<strong>Atenção!</strong>
-					<br />Arquivos muito grandes demandam muito tempo para processamento. Acompanhe o status da importação logo abaixo.
+				<div class="alert alert-warning">
+					<i class="fa fa-warning"></i> Neste momento, a plataforma importa apenas a relação de alunos na faixa etária de 4 a 17 anos matriculados no Censo de 2017 e não localizados no Censo de 2018
 				</div>
+				<a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a>
 
-				<!--a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a -->
-
-				<a class="btn btn-danger btn-raised btn-lg">Importação temporariamente desativada</a>
-
-				<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora.</div>
+				<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora. Arquivos muito grandes podem levar bastante tempo.</div>
 
 				<p ng-show="!$parent.isEditing">Esse procedimento é opcional. Caso não deseje importar a planilha, basta clicar no botão "Concluir" abaixo.</p>
 				<p ng-show="!$parent.isEditing">Você pode importar a planilha em outro momento, na tela "Configurações".</p>
@@ -42,6 +40,7 @@
 						<th>Data e hora</th>
 						<th>Status</th>
 						<th>Solicitante</th>
+						<th>Notificação</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -54,6 +53,7 @@
 							<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-ban"></i> Erro</span>
 						</td>
 						<td><span ng-bind="job.user.name"></span></td>
+						<td><span ng-show="job.errors.length > 0">{{job.errors[0]}}</span></td>
 					</tr>
 					</tbody>
 				</table>
