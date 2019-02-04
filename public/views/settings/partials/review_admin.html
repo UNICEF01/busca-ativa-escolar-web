@@ -36,16 +36,16 @@
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-work-phone">Telefone fixo institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-phone" ng-model="user.phone" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-work-phone" ng-model="user.phone" placeholder="(00) 00000-0000">
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-work-mobile" ng-model="user.mobile" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-work-mobile" ng-model="user.mobile" placeholder="(00) 00000-0000">
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-confirm-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-confirm-personal-mobile" ng-model="user.personal_mobile" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-personal-mobile" ng-model="user.personal_mobile" placeholder="(00) 00000-0000">
 			</div>
 
 			<div class="form-group col-md-6">
