@@ -271,7 +271,7 @@
 						|| Identity.getType() === 'superuser'
 				}
 
-				if(filter_id === 'city_id') {
+				if(filter_id === 'city') {
 					return Identity.getType() === 'gestor_nacional'
 						|| Identity.getType() === 'superuser'
 						|| Identity.getType() === 'gestor_estadual'

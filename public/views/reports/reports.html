@@ -240,15 +240,28 @@
 	<div class="col-md-9">
 
 
-		<div class="alert alert-danger" ng-show="!showGraph()">
-			Este município ainda não fez adesão ao Busca Ativa Escolar!
+		<div class="panel has-subnav-tabs panel-default" ng-show="!showGraph()">
+			<div class="panel-heading">
+				<h3><i class="material-icons">error_outline</i> Município não cadastrado</h3>
+			</div>
+		
+			<div class="panel-body">
+				<h2>Este município ainda não fez adesão ao Busca Ativa Escolar!</h2>
+			</div>
 		</div>
 
-		<div class="alert alert-warning" ng-show="reportData.response.records_total == 0 && showGraph()">
-			Filtro selecionado não retornou resultados
+
+		<div class="panel has-subnav-tabs panel-default" ng-show="reportData.response.records_total == 0 && showGraph()">
+			<div class="panel-heading">
+				<h3><i class="material-icons">error_outline</i> Dados não encontrados</h3>
+			</div>
+		
+			<div class="panel-body">
+				<h2>Filtro selecionado não retornou resultados</h2>
+			</div>
 		</div>
 
-		<div class="panel has-subnav-tabs panel-default" ng-show="showGraph()">
+		<div class="panel has-subnav-tabs panel-default" ng-show="showGraph() && reportData.response.records_total != 0">
 			<div class="panel-heading">
 				<h3><i class="material-icons">show_chart</i> Relatórios</h3>
 			</div>
