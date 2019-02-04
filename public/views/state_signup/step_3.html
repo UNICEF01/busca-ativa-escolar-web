@@ -37,11 +37,11 @@
 
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-co-work-phone">Telefone fixo*</label>
-			<input type="tel" ui-br-phone-number class="form-control" required id="fld-co-work-phone" ng-model="$parent.form.coordinator.phone" placeholder="(00) 00000-0000">
+			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" required id="fld-co-work-phone" ng-model="$parent.form.coordinator.phone" placeholder="(00) 00000-0000">
 		</div>
 		<div class="form-group col-md-6">
 			<label class="control-label" for="fld-co-work-mobile">Telefone celular</label>
-			<input type="tel" ui-br-phone-number class="form-control" id="fld-co-work-mobile" ng-model="$parent.form.coordinator.mobile" placeholder="(00) 00000-0000">
+			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-co-work-mobile" ng-model="$parent.form.coordinator.mobile" placeholder="(00) 00000-0000">
 		</div>
 
 		<hr />

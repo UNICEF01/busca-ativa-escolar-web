@@ -77,12 +77,12 @@
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-phone">Telefone da mãe ou responsável</label>
-						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number placeholder="(00) 00000-0000">
+						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-father-phone">Telefone do pai ou responsável</label>
-						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number placeholder="(00) 00000-0000">
+						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
 					</div>
 				</div>
 			</div>

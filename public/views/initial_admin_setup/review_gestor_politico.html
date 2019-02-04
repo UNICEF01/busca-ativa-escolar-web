@@ -37,16 +37,16 @@
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-work-phone">Telefone fixo institucional*</label>
-				<input type="tel" ui-br-phone-number class="form-control" required id="fld-gp-work-phone" name="gp_work_phone" ng-model="admins.political.phone" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" required id="fld-gp-work-phone" name="gp_work_phone" ng-model="admins.political.phone" placeholder="(00) 00000-0000">
 			</div>
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-work-mobile" name="gp_work_mobile" ng-model="admins.political.mobile" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-gp-work-mobile" name="gp_work_mobile" ng-model="admins.political.mobile" placeholder="(00) 00000-0000">
 			</div>
 
 			<div class="form-group col-md-6">
 				<label class="control-label" for="fld-gp-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number class="form-control" id="fld-gp-personal-mobile" name="gp_personal_mobile" ng-model="admins.political.personal_mobile" placeholder="(00) 00000-0000">
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-gp-personal-mobile" name="gp_personal_mobile" ng-model="admins.political.personal_mobile" placeholder="(00) 00000-0000">
 			</div>
 
 			<div class="form-group col-md-6">

@@ -131,13 +131,13 @@
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-mother-phone">Telefone da mãe ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-mother-phone" ui-br-phone-number
+            <input type="tel" class="form-control" id="fld-alert-mother-phone" ui-br-phone-number ng-minlength="12"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_phone" placeholder="(00) 00000-0000">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-father-phone">Telefone do pai ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-father-phone" ui-br-phone-number
+            <input type="tel" class="form-control" id="fld-alert-father-phone" ui-br-phone-number ng-minlength="12"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.father_phone" placeholder="(00) 00000-0000">
         </div>
     </div>
@@ -471,7 +471,7 @@
                     <label>
                         <small>Telefone:</small>
                     </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.father.phone" ui-br-phone-number>
+                                    ng-model="fields.aux.contatos.father.phone" ui-br-phone-number ng-minlength="12">
                 </div>
             </div>
 
@@ -492,7 +492,7 @@
                     <label>
                         <small>Telefone:</small>
                     </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.mother.phone" ui-br-phone-number>
+                                    ng-model="fields.aux.contatos.mother.phone" ui-br-phone-number ng-minlength="12">
                 </div>
             </div>
 
@@ -522,7 +522,7 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
                                ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -558,7 +558,7 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
                                ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -592,7 +592,7 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
                                ng-model="fields.aux.contatos.others[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -696,7 +696,7 @@
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
-            <input type="text" class="form-control" id="fld-guardian_phone" ui-br-phone-number
+            <input type="text" class="form-control" id="fld-guardian_phone" ui-br-phone-number ng-minlength="12"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_phone" placeholder="(00) 00000-0000">
         </div>
 
@@ -1043,7 +1043,7 @@
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-enroll-school_phone">Telefone da escola*</label>
-            <input type="tel" ui-br-phone-number class="form-control" id="fld-enroll-school_phone"
+            <input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-enroll-school_phone"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.school_phone" placeholder="(00) 00000-0000">
         </div>
         <div class="form-group col-md-6">
