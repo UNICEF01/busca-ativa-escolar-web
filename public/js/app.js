@@ -1146,14 +1146,15 @@
 
 			$scope.query = {
                 name: null,
-                submitter_name: null,
+				submitter_name: null,
                 sort: {},
                 max: 16,
-                page: 1
+				page: 1,
+				show_suspended: false
             };
 
             $scope.search = {};
-
+			
 			$scope.getAlertCauseName = function() {
 				if(!$scope.child) return 'err:no_child_open';
 				if(!$scope.child.alert) return 'err:no_alert_data';
