@@ -4615,7 +4615,7 @@ if (!Array.prototype.find) {
 
 			$scope.showGraph = function () {
 				return $scope.avaliable_graph;
-            }
+            };
 
 			function onInit() {
 				$scope.ready = true;
@@ -4784,7 +4784,7 @@ if (!Array.prototype.find) {
 					//if response has property named 'tenant' set value to $scope.avaliable_graph
 					if(res.response.hasOwnProperty('tenant')){
                         $scope.avaliable_graph = res.response.tenant;
-                        if($scope.avaliable_graph==false) ngToast.danger('Este município ainda não fez adesão ao Busca Ativa Escolar!!');
+                        if($scope.avaliable_graph==false) ngToast.danger('Este município ainda não fez adesão ao Busca Ativa Escolar!');
 					}else{
                         $scope.avaliable_graph = true;
 					}
