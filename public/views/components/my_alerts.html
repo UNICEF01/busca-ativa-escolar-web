@@ -18,8 +18,8 @@
 					<span class="label label-warning" ng-show="alert.alert_status === 'pending'">Pendente de aprovação</span>
 				</td>
 				<td>
-					<span class="label label-primary" ng-show="alert.deadline_status === 'normal'">No prazo</span>
-					<span class="label label-warning" ng-show="alert.deadline_status === 'late'">Em atraso</span>
+					<span class="label label-primary" ng-show="alert.deadline_status === 'normal' && !alert.alert_status === 'rejected'">No prazo</span>
+					<span class="label label-warning" ng-show="alert.deadline_status === 'late' && !alert.alert_status === 'rejected'">Em atraso</span>
 				</td>
 				<td><span ng-bind="alert.created_at | amCalendar" uib-tooltip-html="alert.created_at.format('YYYY-MM-DD')"></span></td>
 			</tr>

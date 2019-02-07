@@ -52,6 +52,7 @@
 								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
 								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
 								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+								<span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
 							</span>
 							<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
 							<span ng-if="child.case_status === 'in_progress'">
@@ -100,11 +101,7 @@
 				<label class="control-label" for="filter-full-address">Por endereço</label>
 				<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, nome da rua...">
 			</div>
-			<div class="form-group" style="margin-top: 5px">
-				<label class="control-label" for="filter-status-sent">Por status do alerta</label>
-				<div class="checkbox"><label for="filter-status-sent"><input type="checkbox" id="filter-status-sent" checklist-model="query.alert_status" checklist-value="'accepted'" name="filter-alert_status_accepted"> Aceito</label></div>
-				<div class="checkbox"><label for="filter-status-rejected"><input type="checkbox" id="filter-status-rejected" checklist-model="query.alert_status" checklist-value="'rejected'" name="filter-alert_status_rejected"> Rejeitado</label></div>
-			</div>
+			
 			<div class="form-group" style="margin-top: 5px">
 				<label class="control-label" for="filter-status-in_progress">Por status do caso</label>
 				<div class="checkbox"><label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress"  checklist-model="query.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress"> Em andamento</label></div>

@@ -25,17 +25,21 @@
 						<label class="control-label" for="fld-dob">Data de nascimento</label>
 						<input type="tel" class="form-control" id="fld-dob" ng-model="alert.dob" ui-date-mask placeholder="dd/mm/yyyy">
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-3">
 						<label class="control-label" for="fld-rg">RG</label>
 						<input type="tel" class="form-control" id="fld-rg" ng-model="alert.rg" ui-br-rg-mask>
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-3">
 						<label class="control-label" for="fld-cpf">CPF</label>
 						<input type="tel" class="form-control" id="fld-cpf" ng-model="alert.cpf" ui-br-cpf-mask placeholder="000.000.000-00">
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group col-md-3">
 						<label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
 						<input type="tel" class="form-control" id="fld-codnis" ng-model="alert.nis">
+					</div>
+					<div class="form-group col-md-3">
+						<label class="control-label" for="fld-codcns">CNS (Cartão Nacional do SUS)</label>
+						<input type="tel" class="form-control" id="fld-codcns" ng-model="alert.cns" maxlength="15">
 					</div>
 					<div class="form-group col-md-12">
 						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o principal motivo identificado:</label>
@@ -73,12 +77,12 @@
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-mother-phone">Telefone da mãe ou responsável</label>
-						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number placeholder="(00) 00000-0000">
+						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
 					</div>
 
 					<div class="form-group col-md-6">
 						<label class="control-label" for="fld-father-phone">Telefone do pai ou responsável</label>
-						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number placeholder="(00) 00000-0000">
+						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
 					</div>
 				</div>
 			</div>
