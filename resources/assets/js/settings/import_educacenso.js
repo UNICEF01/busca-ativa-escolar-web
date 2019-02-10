@@ -27,10 +27,13 @@
 				)).then(function (file) {
 
 					if(file.status == "error"){
-                        ngToast.danger('Arquivo inválido!');
+
+						ngToast.danger('Arquivo inválido! '+ file.reason);
                         $scope.hasImported = false;
-                        $scope.refresh();
+						$scope.refresh();
+						
 					}else{
+
                         ngToast.success('Arquivo importado com sucesso!');
                         $scope.hasImported = true;
                         $scope.refresh();
