@@ -1,0 +1,124 @@
+<div>
+    <div class="panel panel-default">
+        
+        <div class="panel-heading clearfix">
+            <h3 class="pull-left">Escolas localizadas no Educacenso</h3>
+        </div>
+
+        <div class="panel-body">
+
+                <p>Essa é a relação de escolas localizadas no processo de importação dos dados do Educacenso. Preencha os campos de email e celular para notificar as escolas. Cada instituicão terá acesso a lista de alunos não localizados no censo de 2018 e poderá fornecer os dados das crianças para liberação dos alertas pendentes</p>
+
+                <br/>    
+                
+                
+                <div class="row">
+                        
+                    <div class="form-group col-md-3">
+                        <label class="container_check_school">
+                            <input type="checkbox" > Selecionar todas
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                        
+                </div>
+            
+                <div class="container-scholls">
+
+                    <div class="row">
+
+                        <div class="form-group col-md-1">
+                            
+                        </div>
+                    
+                        <div class="form-group col-md-3">
+                            <strong>ESCOLA</strong><br/>
+                        </div>
+                    
+                        <div class="form-group  col-md-2">
+                            <strong>Celular</strong>
+                        </div>
+                    
+                        <div class="form-group  col-md-2">
+                            <strong>Telefone</strong>
+                        </div>
+                    
+                        <div class="form-group  col-md-2">
+                            <strong for="exampleInputEmail">Email</strong>
+                        </div>
+                    
+                        <div class="form-group  col-md-2">
+                            <div class="span_status_title">
+                                <strong>Status</strong><br/>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                    <div class="row" ng-repeat="(i, school) in schools">
+
+                        <div class="form-group col-md-1 text-center">
+                            <label class="container_check_school">
+                                <input type="checkbox" >
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                            <strong>{{school.name}}</strong><br/>
+                            <small>COD INEP: {{school.id}}</small><br/>
+                            <small>{{school.city_name}}/ {{school.uf}}</small>
+                        </div>
+
+                        <div class="form-group  col-md-2">
+                            <input type="text" class="form-control" id="exampleInputCelular" placeholder="celular">
+                        </div>
+
+                        <div class="form-group  col-md-2">
+                            <input type="text" class="form-control" id="exampleInputTelefone" placeholder="">
+                        </div>
+
+                        <div class="form-group  col-md-2">
+                                <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email">
+                            </div>
+
+                        <div class="form-group  col-md-2">
+
+                            <div class="span_status">
+                                <span>Enviado</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row paginator">
+
+                        <div class="col-xs-3 text-left">
+                            <a class="btn btn-primary btn-raised" uib-tooltip="Página anterior" style="">
+                                <i class="fa fa-arrow-left"></i>
+                            </a>
+                        </div>
+
+                        <div class="col-xs-6 text-center">
+                            <a class="btn btn-default" popover-title="Pular para página" popover-class="popover-paginator">
+                                <strong>Página de 14</strong>
+                            </a>
+                        </div>
+
+                        <div class="col-xs-3 text-right">
+                            <a class="btn btn-primary btn-raised" uib-tooltip="Próxima página" style="">
+                                <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+
+                </div>
+
+        </div>
+
+        <div class="panel-footer">
+            <p class="text-right"><button class="btn btn-primary btn-raised"><i class="fa fa-envelope"></i> Enviar mensagens/ SMS</button></p>
+        </div>
+    </div>
+</div>
