@@ -14,12 +14,13 @@
 				<td><span ng-bind="alert.name"></span></td>
 				<td><span ng-bind="alert.current_step"></span></td>
 				<td>
+					<span class="label label-success" ng-show="alert.alert_status === 'accepted'">Aceito</span>
 					<span class="label label-danger" ng-show="alert.alert_status === 'rejected'">Rejeitado</span>
 					<span class="label label-warning" ng-show="alert.alert_status === 'pending'">Pendente de aprovação</span>
 				</td>
 				<td>
-					<span class="label label-primary" ng-show="alert.deadline_status === 'normal' && !alert.alert_status === 'rejected'">No prazo</span>
-					<span class="label label-warning" ng-show="alert.deadline_status === 'late' && !alert.alert_status === 'rejected'">Em atraso</span>
+					<span class="label label-primary" ng-show="alert.deadline_status === 'normal' && alert.alert_status !== 'rejected'">No prazo</span>
+					<span class="label label-warning" ng-show="alert.deadline_status === 'late' && alert.alert_status !== 'rejected'">Em atraso</span>
 				</td>
 				<td><span ng-bind="alert.created_at | amCalendar" uib-tooltip-html="alert.created_at.format('YYYY-MM-DD')"></span></td>
 			</tr>
