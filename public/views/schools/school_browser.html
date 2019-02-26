@@ -9,8 +9,7 @@
 
                 <p>Essa é a relação de escolas localizadas no processo de importação dos dados do Educacenso. Preencha os campos de email e celular para notificar as escolas. Cada instituicão terá acesso a lista de alunos não localizados no censo de 2018 e poderá fornecer os dados das crianças para liberação dos alertas pendentes</p>
 
-                <br/>    
-                
+                <br/>   
                 
                 <div class="row">
                         
@@ -21,7 +20,7 @@
                         </label>
                     </div>
                         
-                </div>
+                </div>                
             
                 <div class="container-scholls">
 
@@ -77,16 +76,16 @@
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input type="text" class="form-control" id="exampleInputCelular" placeholder="celular">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="changeSchool(school)" ng-model="school.school_cell_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input type="text" class="form-control" id="exampleInputTelefone" placeholder="">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="changeSchool(school)" ng-model="school.school_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                                <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email">
-                            </div>
+                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="changeSchool(school)" ng-model="school.school_email">
+                        </div>
 
                         <div class="form-group  col-md-1">
                             <div class="span_status">
