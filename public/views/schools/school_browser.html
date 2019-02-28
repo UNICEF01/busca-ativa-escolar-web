@@ -11,11 +11,14 @@
 
                 <br/>   
                 
+                <div class="alert alert-success" ng-show="msg_success">Mensagens encaminhadas com sucesso</div>
+                <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
+
                 <div class="row">
                         
                     <div class="form-group col-md-3">
                         <label class="container_check_school">
-                            <input type="checkbox" > Selecionar todas
+                            <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
                             <span class="checkmark"></span>
                         </label>
                     </div>
@@ -64,7 +67,7 @@
 
                         <div class="form-group col-md-1 text-center">
                             <label class="container_check_school">
-                                <input type="checkbox" >
+                                <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -76,15 +79,15 @@
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="changeSchool(school)" ng-model="school.school_cell_phone">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onChangeSchool(school)" ng-model="school.school_cell_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="changeSchool(school)" ng-model="school.school_phone">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="onChangeSchool(school)" ng-model="school.school_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="changeSchool(school)" ng-model="school.school_email">
+                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onChangeSchool(school)" ng-model="school.school_email">
                         </div>
 
                         <div class="form-group  col-md-1">
@@ -128,7 +131,7 @@
         </div>
 
         <div class="panel-footer">
-            <p class="text-right"><button class="btn btn-primary btn-raised"><i class="fa fa-envelope"></i> Enviar mensagens/ SMS</button></p>
+            <p class="text-right"><button class="btn btn-primary btn-raised" ng-click="sendnotification()"><i class="fa fa-envelope"></i> Enviar mensagens/ SMS</button></p>
         </div>
     </div>
 </div>
