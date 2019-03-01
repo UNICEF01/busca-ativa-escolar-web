@@ -14,7 +14,6 @@
 			$scope.identity = Identity;
 			$scope.schools = [];
 			
-			$scope.copy_schools = [];
 			$scope.selected = {
 				schools: []
 			};
@@ -35,11 +34,11 @@
 				}else{
 					$scope.selected.schools = [];
 				}
-			}
+			};
 
-            $scope.onChangeSchool = function(scholl){
-                var school_in_array = $scope.schools.find( function(element_in_array) { return element_in_array.id === scholl.id } );
-                school_in_array = scholl;
+            $scope.onChangeSchool = function(school){
+                var school_in_array = $scope.schools.find( function(element_in_array) { return element_in_array.id === school.id } );
+                school_in_array = school;
                 Schools.update(school_in_array).$promise.then($scope.onSaved);
             };
 			
@@ -54,16 +53,34 @@
 			$scope.sendnotification = function(){
 				
 				Modals.show(
-					Modals.Confirm(
-						'Confirma o envio do email para as seguintes escolas '+
-						'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso'
-					))
-					.then(function () {
-						return Schools.send_notifications().$promise;
+					Modals.ConfirmEmail(
+						'Confirma o envio de sms e email para as seguintes escolas?',
+						'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+						$scope.selected.schools
+					)).then(function () {
+						return Schools.send_notifications($scope.selected.schools).$promise;
 					})
 					.then(function (res) {
 						
-						ngToast.danger('Ocorreu um erro ao encaminhar as mensagens!');
+						if(res.status == "error"){
+
+							ngToast.danger(res.message);
+							$scope.msg_success = false;
+							$scope.msg_error = true;
+
+							$scope.refresh();
+							window.scrollTo(0, 0);
+							
+						}else{
+	
+							ngToast.success(res.message);
+							$scope.msg_success = true;
+							$scope.msg_error = false;
+
+							$scope.refresh();
+							window.scrollTo(0, 0);
+						}
+
 						
 					});
 
