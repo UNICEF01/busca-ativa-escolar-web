@@ -22,8 +22,16 @@
                             <span class="checkmark"></span>
                         </label>
                     </div>
+                    <div class="form-group col-md-3">
+                        Ano Educacenso
+                    </div>
+                    <div class="form-group col-md-3">
+                        Quantidade por página
+                    </div>
                         
-                </div>                
+                </div>  
+                
+                <br/>
             
                 <div class="container-scholls">
 
@@ -63,7 +71,7 @@
                     
                     </div>
 
-                    <div class="row" ng-repeat="(i, school) in schools">
+                    <div class="row" ng-repeat="(i, school) in schools.data">
 
                         <div class="form-group col-md-1 text-center">
                             <label class="container_check_school">
@@ -79,15 +87,15 @@
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onChangeSchool(school)" ng-model="school.school_cell_phone">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onModifySchool(school)" ng-model="school.school_cell_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="onChangeSchool(school)" ng-model="school.school_phone">
+                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="onModifySchool(school)" ng-model="school.school_phone">
                         </div>
 
                         <div class="form-group  col-md-2">
-                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onChangeSchool(school)" ng-model="school.school_email">
+                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onModifySchool(school)" ng-model="school.school_email">
                         </div>
 
                         <div class="form-group  col-md-1">
@@ -106,27 +114,7 @@
 
                 </div>
 
-                <div class="row paginator">
-
-                        <div class="col-xs-3 text-left">
-                            <a class="btn btn-primary btn-raised" uib-tooltip="Página anterior" style="">
-                                <i class="fa fa-arrow-left"></i>
-                            </a>
-                        </div>
-
-                        <div class="col-xs-6 text-center">
-                            <a class="btn btn-default" popover-title="Pular para página" popover-class="popover-paginator">
-                                <strong>Página de 14</strong>
-                            </a>
-                        </div>
-
-                        <div class="col-xs-3 text-right">
-                            <a class="btn btn-primary btn-raised" uib-tooltip="Próxima página" style="">
-                                <i class="fa fa-arrow-right"></i>
-                            </a>
-                        </div>
-
-                </div>
+                <app-paginator collection="schools" query="query" on-refresh="refresh"></app-paginator>
 
         </div>
 
