@@ -65,7 +65,7 @@
 								$scope.refresh();
 								window.scrollTo(0, 0);
 							}else{
-								ngToast.success(res.message);
+								ngToast.warning(res.message);
 								$scope.msg_success = true;
 								$scope.msg_error = false;
 								$scope.refresh();
