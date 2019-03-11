@@ -81,6 +81,12 @@
 					$scope.schools = angular.copy(res);
 				});
 			};
+
+			$scope.setMaxResults = function(max) {
+				$scope.query.max = max;
+				$scope.query.page = 1;
+				$scope.refresh();
+			};
 			
 			Platform.whenReady(function() {
                 $scope.refresh();

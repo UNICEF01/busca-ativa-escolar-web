@@ -22,16 +22,32 @@
                             <span class="checkmark"></span>
                         </label>
                     </div>
+
                     <div class="form-group col-md-3">
-                        Ano Educacenso
+                        <label class="container_year_educacenso">
+                            <select>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                            </select> Ano do Educacenso
+                        </label>
                     </div>
-                    <div class="form-group col-md-3">
-                        Quantidade por página
+                    
+                    <div class="form-group col-md-6">
+                        <div class="clearfix" style="margin-top: 10px;">
+                            <ul class="nav nav-pills adm-max-results-filter">
+                                <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
+                                <li ng-class="{active: query.max==15}"><a ng-click="setMaxResults(15)">15</a></li>
+                                <li ng-class="{active: query.max==30}"><a ng-click="setMaxResults(30)">30</a></li>
+                                <li ng-class="{active: query.max==60}"><a ng-click="setMaxResults(60)">60</a></li>
+                                <li ng-class="{active: query.max==100}"><a ng-click="setMaxResults(100)">100</a></li>
+                                <li><a><strong>Quantidade por página</strong></a></li>
+                            </ul>
+                        </div>
                     </div>
                         
                 </div>  
                 
-                <br/>
+                <hr>
             
                 <div class="container-scholls">
 
