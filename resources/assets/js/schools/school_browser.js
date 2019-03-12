@@ -41,8 +41,10 @@
 				if(res.status === "ok") {
 					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
 					return;
+				}else{
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+					$scope.refresh();
 				}
-				ngToast.danger("Ocorreu um erro ao salvar a escola!: ", res.status);
 			};
 
 			$scope.sendnotification = function(){
