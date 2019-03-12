@@ -6,7 +6,7 @@
 				url: '/schools',
 				templateUrl: '/views/schools/school_browser.html',
 				controller: 'SchoolBrowserCtrl'
-			})
+			});
 		})
 		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
                    
@@ -47,15 +47,20 @@
 
 			$scope.sendnotification = function(){
 
+				//remove objects without email
+				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
+					return school.school_email != null;
+				});
+
 				if($scope.selected.schools.length > 0){
 					
 					Modals.show(
 						Modals.ConfirmEmail(
 							'Confirma o envio de sms e email para as seguintes escolas?',
 							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-							$scope.selected.schools
+							schools_to_send_notification
 						)).then(function () {
-							return Schools.send_notifications($scope.selected.schools).$promise;
+							return Schools.send_notifications(schools_to_send_notification).$promise;
 						})
 						.then(function (res) {
 							if(res.status == "error"){
@@ -78,6 +83,8 @@
 
 			$scope.refresh = function() {                
                 Schools.all_educacenso($scope.query, function(res) {
+					$scope.check_all_schools = false;
+					$scope.selected.schools = [];
 					$scope.schools = angular.copy(res);
 				});
 			};
