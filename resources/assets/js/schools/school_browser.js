@@ -34,7 +34,11 @@
 			};
 
             $scope.onModifySchool = function(school){
-                Schools.update(school).$promise.then($scope.onSaved);
+				if(school.school_email == null || school.school_email==""){
+					ngToast.danger("Email inválido!"); 
+				}else{
+					Schools.update(school).$promise.then($scope.onSaved);
+				}
             };
 			
 			$scope.onSaved = function(res) {
@@ -51,10 +55,14 @@
 
 				//remove objects without email
 				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					return school.school_email != null;
+					if(school.school_email != null && school.school_email != ""){
+						return true;
+					}else{
+						return false;
+					}
 				});
 
-				if($scope.selected.schools.length > 0){
+				if(schools_to_send_notification.length > 0){
 					
 					Modals.show(
 						Modals.ConfirmEmail(

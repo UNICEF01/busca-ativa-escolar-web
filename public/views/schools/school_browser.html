@@ -58,7 +58,7 @@
                         </div>
                     
                         <div class="form-group col-md-3">
-                            <strong>ESCOLA</strong><br/>
+                            <strong>Escola</strong><br/>
                         </div>
                     
                         <div class="form-group  col-md-2">
@@ -70,12 +70,13 @@
                         </div>
                     
                         <div class="form-group  col-md-2">
-                            <strong for="exampleInputEmail">Email</strong>
+                            <strong for="exampleInputEmail">Email*</strong>
                         </div>
                     
                         <div class="form-group  col-md-1">
                             <div class="span_status_title">
                                 <strong>Status</strong><br/>
+                                <strong>Emails</strong>
                             </div>
                         </div>
 
@@ -118,7 +119,7 @@
                             <div class="span_status">
                                 <div ng-show="school.emailJob.length > 0">
                                     <div ng-repeat="(j, email) in school.emailJob">
-                                        <small ng-show="email.status==='pending''"><strong>{{j+1}}º </strong>Pendente</smal>
+                                        <small ng-show="email.status==='pending'"><strong>{{j+1}}º </strong>Pendente</small>
                                         <small ng-show="email.status==='accepted'"><strong>{{j+1}}º </strong>Encaminhado</small>
                                         <small ng-show="email.status==='rejected'"><strong>{{j+1}}º </strong>Rejeitado</small>
                                         <small ng-show="email.status==='delivered'"><strong>{{j+1}}º </strong>Entregue</small>
@@ -138,6 +139,8 @@
                                 <span>2/50</span>
                             </div>
                         </div>
+
+                        <div class="form-group  col-md-12"><hr></div>
 
                     </div>
 
