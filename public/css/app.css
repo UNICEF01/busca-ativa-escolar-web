@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1539876312');
+  background-image: url('../images/logo_bae_header_v2.png?1552224219');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -219,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1539876312');
+  background-image: url('../images/ico_forbidden.png?1552224219');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -504,7 +504,19 @@ footer.app-footer a.credits-btn {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-top: 25px;
+  margin-top: 20px;
+}
+
+.container_year_educacenso {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin-top: 20px;
 }
 
 .container_check_school input {

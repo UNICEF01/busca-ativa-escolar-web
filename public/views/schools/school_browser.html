@@ -11,7 +11,7 @@
 
                 <br/>   
                 
-                <div class="alert alert-success" ng-show="msg_success">Mensagens encaminhadas com sucesso</div>
+                <div class="alert alert-warning" ng-show="msg_success">Mensagens encaminhadas para fila de envio</div>
                 <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
 
                 <div class="row">
@@ -22,16 +22,32 @@
                             <span class="checkmark"></span>
                         </label>
                     </div>
+
                     <div class="form-group col-md-3">
-                        Ano Educacenso
+                        <label class="container_year_educacenso">
+                            <select>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                            </select> Ano do Educacenso
+                        </label>
                     </div>
-                    <div class="form-group col-md-3">
-                        Quantidade por página
+                    
+                    <div class="form-group col-md-6">
+                        <div class="clearfix" style="margin-top: 10px;">
+                            <ul class="nav nav-pills adm-max-results-filter">
+                                <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
+                                <li ng-class="{active: query.max==15}"><a ng-click="setMaxResults(15)">15</a></li>
+                                <li ng-class="{active: query.max==30}"><a ng-click="setMaxResults(30)">30</a></li>
+                                <li ng-class="{active: query.max==60}"><a ng-click="setMaxResults(60)">60</a></li>
+                                <li ng-class="{active: query.max==100}"><a ng-click="setMaxResults(100)">100</a></li>
+                                <li><a><strong>Quantidade por página</strong></a></li>
+                            </ul>
+                        </div>
                     </div>
                         
                 </div>  
                 
-                <br/>
+                <hr>
             
                 <div class="container-scholls">
 
@@ -42,7 +58,7 @@
                         </div>
                     
                         <div class="form-group col-md-3">
-                            <strong>ESCOLA</strong><br/>
+                            <strong>Escola</strong><br/>
                         </div>
                     
                         <div class="form-group  col-md-2">
@@ -54,12 +70,13 @@
                         </div>
                     
                         <div class="form-group  col-md-2">
-                            <strong for="exampleInputEmail">Email</strong>
+                            <strong for="exampleInputEmail">Email*</strong>
                         </div>
                     
                         <div class="form-group  col-md-1">
                             <div class="span_status_title">
                                 <strong>Status</strong><br/>
+                                <strong>Emails</strong>
                             </div>
                         </div>
 
@@ -100,7 +117,20 @@
 
                         <div class="form-group  col-md-1">
                             <div class="span_status">
-                                <span>Enviado</span>
+                                <div ng-show="school.emailJob.length > 0">
+                                    <div ng-repeat="(j, email) in school.emailJob">
+                                        <small ng-show="email.status==='pending'"><strong>{{j+1}}º </strong>Pendente</small>
+                                        <small ng-show="email.status==='accepted'"><strong>{{j+1}}º </strong>Encaminhado</small>
+                                        <small ng-show="email.status==='rejected'"><strong>{{j+1}}º </strong>Rejeitado</small>
+                                        <small ng-show="email.status==='delivered'"><strong>{{j+1}}º </strong>Entregue</small>
+                                        <small ng-show="email.status==='failed'"><strong>{{j+1}}º </strong>Erro</small>
+                                        <small ng-show="email.status==='opened'"><strong>{{j+1}}º </strong>Lido</small>
+                                        <small ng-show="email.status==='clicked'"><strong>{{j+1}}º </strong>Lido</small>
+                                        <small ng-show="email.status==='unsubscribed'"><strong>{{j+1}}º </strong>Cancelado</small>
+                                        <small ng-show="email.status==='complained'"><strong>{{j+1}}º </strong>Denunciado</small>
+                                        <small ng-show="email.status==='stored'"><strong>{{j+1}}º </strong>Salvo</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -109,6 +139,8 @@
                                 <span>2/50</span>
                             </div>
                         </div>
+
+                        <div class="form-group  col-md-12"><hr></div>
 
                     </div>
 
