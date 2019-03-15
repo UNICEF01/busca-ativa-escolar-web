@@ -34,12 +34,8 @@
 			};
 
             $scope.onModifySchool = function(school){
-				if(school.school_email == null || school.school_email==""){
-					ngToast.danger("Email inválido!"); 
-				}else{
-					Schools.update(school).$promise.then($scope.onSaved);
-				}
-            };
+				Schools.update(school).$promise.then($scope.onSaved);
+			};
 			
 			$scope.onSaved = function(res) {
 				if(res.status === "ok") {
