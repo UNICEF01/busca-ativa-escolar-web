@@ -15,7 +15,9 @@
 			$scope.schools = {};
 			$scope.msg_success = false;
 			$scope.msg_error = false;
+			$scope.avaliable_years_educacenso = [2017, 2018];
 			$scope.query = {
+				year_educacenso: 2018,
 				sort: {},
 				show_suspended: false,
 				max: 5,

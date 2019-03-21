@@ -25,9 +25,7 @@
 
                     <div class="form-group col-md-3">
                         <label class="container_year_educacenso">
-                            <select>
-                                <option value="2018">2018</option>
-                                <option value="2017">2017</option>
+                            <select ng-model="query.year_educacenso" ng-options="option for option in avaliable_years_educacenso track by option" ng-change="refresh()">                                
                             </select> Ano do Educacenso
                         </label>
                     </div>
