@@ -89,7 +89,12 @@
 
 			};
 
-			$scope.refresh = function() {                
+			$scope.onSelectYear = function() {
+				$scope.query.page = 1;
+				$scope.query.max = 5;
+				$scope.refresh();
+			};
+				$scope.refresh = function() {                
                 Schools.all_educacenso($scope.query, function(res) {
 					$scope.check_all_schools = false;
 					$scope.selected.schools = [];
