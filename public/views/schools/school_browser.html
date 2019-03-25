@@ -25,7 +25,7 @@
 
                     <div class="form-group col-md-3">
                         <label class="container_year_educacenso">
-                            <select ng-model="query.year_educacenso" ng-options="option for option in avaliable_years_educacenso track by option" ng-change="refresh()">                                
+                            <select ng-model="query.year_educacenso" ng-options="option for option in avaliable_years_educacenso track by option" ng-change="onSelectYear()">                                
                             </select> Ano do Educacenso
                         </label>
                     </div>
@@ -134,7 +134,7 @@
 
                         <div class="form-group  col-md-1">
                             <div class="span_status">
-                                <span>2/50</span>
+                                <span>{{school.count_with_cep}} / {{school.count_children}}</span>
                             </div>
                         </div>
 
