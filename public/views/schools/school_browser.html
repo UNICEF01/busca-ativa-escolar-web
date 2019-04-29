@@ -55,7 +55,7 @@
                             
                         </div>
                     
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <strong>Escola</strong><br/>
                         </div>
                     
@@ -63,24 +63,20 @@
                             <strong>Celular</strong>
                         </div>
                     
-                        <div class="form-group  col-md-2">
-                            <strong>Telefone</strong>
-                        </div>
-                    
-                        <div class="form-group  col-md-2">
+                        <div class="form-group  col-md-3">
                             <strong for="exampleInputEmail">Email*</strong>
                         </div>
                     
-                        <div class="form-group  col-md-1">
+                        <div class="form-group  col-md-2">
                             <div class="span_status_title">
-                                <strong>Status</strong><br/>
-                                <strong>Emails</strong>
+                                <strong>Status Emails <span class="badge" uib-tooltip="Status dos emails encaminhados para as escolas">?</span></strong>
                             </div>
                         </div>
 
-                        <div class="form-group  col-md-1">
+                        <div class="form-group  col-md-2">
                             <div class="span_status_title">
-                                <strong>Cadastro</strong><br/>
+                                <strong title="">Status <span class="badge" uib-tooltip="Quantidade de crianças com endereços completos / Quantidade de crianças encontradas no Educacenso">?</span></strong><br/>
+                                <small>Preenchimento do endereço</small>
                             </div>
                         </div>
                     
@@ -95,7 +91,7 @@
                             </label>
                         </div>
 
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-2">
                             <strong>{{school.name}}</strong><br/>
                             <small>COD INEP: {{school.id}}</small><br/>
                             <small>{{school.city_name}}/ {{school.uf}}</small>
@@ -105,15 +101,11 @@
                             <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onModifySchool(school)" ng-model="school.school_cell_phone">
                         </div>
 
-                        <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputTelefone" placeholder="Telefone"  ng-blur="onModifySchool(school)" ng-model="school.school_phone">
-                        </div>
-
-                        <div class="form-group  col-md-2">
+                        <div class="form-group  col-md-3">
                             <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onModifySchool(school)" ng-model="school.school_email">
                         </div>
 
-                        <div class="form-group  col-md-1">
+                        <div class="form-group  col-md-2">
                             <div class="span_status">
                                 <div ng-show="school.emailJob.length > 0">
                                     <div ng-repeat="(j, email) in school.emailJob">
@@ -132,7 +124,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group  col-md-1">
+                        <div class="form-group  col-md-2">
                             <div class="span_status">
                                 <span>{{school.count_with_cep}} / {{school.count_children}}</span>
                             </div>

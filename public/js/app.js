@@ -5514,6 +5514,8 @@ if (!Array.prototype.find) {
 								window.scrollTo(0, 0);
 							}
 						});
+				}else{
+					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
 				}
 
 			};
