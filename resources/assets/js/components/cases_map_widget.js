@@ -21,16 +21,18 @@
 				console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
 			};
 
-			scope.isMapReady = function() {
-				return scope.mapReady;
-			};
-
 			scope.reloadMap = function() {
 				scope.mapReady = false;
 				$timeout(function() {
 					scope.mapReady = true;
 				}, 10);
 			};
+
+			scope.showMaps = function () {
+				scope.isMapReady = function() {
+					return scope.mapReady;
+				};
+			}
 
 			uiGmapGoogleMapApi.then(function (maps) {
 				scope.refresh();
