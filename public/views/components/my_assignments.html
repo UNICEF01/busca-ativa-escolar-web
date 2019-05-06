@@ -41,10 +41,23 @@
 						<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
 					</td>
 					<td width="8%" style="vertical-align: middle;">
-						<span class="label label-danger" ng-show="child.is_late">Em atraso!</span>
-						<span class="label label-info" ng-show="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
-						<span class="label label-info" ng-show="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
-						<span class="label label-success" ng-show="!child.is_late && child.child_status === 'in_school'">Concluído</span>
+						<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
+						<span class="label label-default" ng-show="child.case_status == 'cancelled'">
+								Cancelado
+								<span ng-show="child.cancel_reason == 'duplicate'">| Motivo: Caso duplicado</span>
+								<span ng-show="child.cancel_reason == 'death'">| Motivo: Óbito</span>
+								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
+								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
+								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+								<span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
+							</span>
+						<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
+						<span ng-if="child.case_status === 'in_progress'">
+							<span class="label label-danger" ng-if="child.is_late">Em atraso!</span>
+							<span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
+							<span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
+							<span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
+						</span>
 					</td>
 					<td width="6%" class="text-center" style="vertical-align: middle;">
 						<div class="btn-group">
