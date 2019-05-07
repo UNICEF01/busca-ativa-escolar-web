@@ -10,7 +10,7 @@
 		})
 		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
 			$scope.identity = Identity;
-			
+
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
@@ -42,7 +42,7 @@
             };
 
 			$scope.static = StaticData;
-
+			
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
