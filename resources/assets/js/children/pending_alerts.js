@@ -21,6 +21,7 @@
                 sort: {},
                 max: 16,
 				page: 1,
+				neighborhood: null,
 				show_suspended: false
             };
 
@@ -41,7 +42,7 @@
             };
 
 			$scope.static = StaticData;
-
+			
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
@@ -79,7 +80,6 @@
 					$scope.child = {};
 				});
 			};
-
 
 			Platform.whenReady(function() {
 				$scope.causes = StaticData.getAlertCauses();
