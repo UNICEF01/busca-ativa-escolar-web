@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1552224219');
+  background-image: url('../images/logo_bae_header_v2.png?1553175723');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -219,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1552224219');
+  background-image: url('../images/ico_forbidden.png?1553175723');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
