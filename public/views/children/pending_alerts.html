@@ -42,10 +42,13 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="child in children.data" ng-click="preview(child)" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
-								<td><span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i></td>
 								<td>
-									<span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
-									<div ng-show="child.submitter.group.name" class="pull-right"><small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small> <i class="fa fa-group"></i></div>
+									<strong><span ng-bind="child.name"></span></strong> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i> <br/>
+									<small><i class="fa fa-map-marker"></i> {{child.alert.place_address}} - {{child.alert.place_neighborhood}} - {{child.alert.cep}} </small>
+								</td>
+								<td>
+									<strong><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></strong><br>
+									<div ng-show="child.submitter.group.name" class="pull-right"><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
 								</td>
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
 								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
