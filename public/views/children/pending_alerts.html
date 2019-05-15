@@ -1,6 +1,6 @@
 <div>
 
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="panel panel-default">
 			<div class="panel-heading clearfix">
 				<h3 class="pull-left"><i class="fa fa-bell"></i> Alertas pendentes | {{children.meta.pagination.total}}</h3>
@@ -37,21 +37,22 @@
 								<th><column-sorter on-change="refresh" model="query.sort" field="'alert_submitter_id'">Agente</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="query.sort" field="'place_neighborhood'">Bairro</column-sorter></th>
 								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="child in children.data" ng-click="preview(child)" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
 								<td>
-									<strong><span ng-bind="child.name"></span></strong> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i> <br/>
-									<small><i class="fa fa-map-marker"></i> {{child.alert.place_address}} - {{child.alert.place_neighborhood}} - {{child.alert.cep}} </small>
+									<span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i>
 								</td>
 								<td>
-									<strong><span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span></strong><br>
+									<span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
 									<div ng-show="child.submitter.group.name" class="pull-right"><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
 								</td>
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
 								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
+								<td><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>
 							</tr>
 						</tbody>
 					</table>
@@ -79,172 +80,183 @@
 
 		</div>
 	</div>
-	<div class="col-md-4 collumn-fixed">
-		<form class="panel panel-default" ng-show="child && child.id" ng-submit="accept(child)">
-			<div class="panel-heading">
-				<h3><i class="fa fa-child"></i> {{child.name}}</h3>
+
+	<!-- Modal -->
+	<div class="modal fade" id="modalChild" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel"><i class="fa fa-child"></i> {{child.name}}</h4>
+				</div>
+				<div class="modal-body">
+					<div class="col-md-12 collumn-fixed">
+						<form ng-show="child && child.id" ng-submit="accept(child)">
+							<div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
+
+							<div ng-show="child.alert_status=='rejected'" class="alert alert-danger"><strong>Alerta rejeitado!</strong> Este alerta foi rejeitado e não pode ser mais aprovado.</div>
+
+							<div class="panel">
+								<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
+								<div class="panel-body">
+
+									<div class="row">
+										<div class="form-group col-md-12">
+											<label class="control-label">Nome da criança ou adolescente</label>
+											<p><span ng-bind="child.alert.name"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.gender || child.alert.race || child.alert.dob">
+										<div class="form-grouo col-md-4" ng-show="child.alert.gender">
+											<label class="control-label">Gênero</label>
+											<p><span ng-bind="child.alert.gender | lang:'child.gender'"></span></p>
+										</div>
+										<div class="form-grouo col-md-4" ng-show="child.alert.race">
+											<label class="control-label">Raça / Etnia</label>
+											<p><span ng-bind="child.alert.race | lang:'child.race'"></span></p>
+										</div>
+										<div class="form-group col-md-4" ng-show="child.alert.dob">
+											<label class="control-label">Data de nascimento</label>
+											<p><span ng-bind="child.alert.dob | amDateFormat:'DD/MM/YYYY'"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.rg || child.alert.cpf || child.alert.nis">
+										<div class="form-group col-md-4" ng-show="child.alert.rg">
+											<label class="control-label">RG</label>
+											<p><span ng-bind="child.alert.rg"></span></p>
+										</div>
+										<div class="form-group col-md-4" ng-show="child.alert.cpf">
+											<label class="control-label">CPF</label>
+											<p><span ng-bind="child.alert.cpf | brCpf"></span></p>
+										</div>
+										<div class="form-group col-md-4" ng-show="child.alert.nis">
+											<label class="control-label">NIS (Número de Identificação Social)</label>
+											<p><span ng-bind="child.alert.nis"></span></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="form-group col-md-12">
+											<label class="control-label">Por que a criança ou adolescente está fora da escola?</label>
+											<p><span ng-bind="getAlertCauseName()"></span></p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="panel">
+								<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
+								<div class="panel-body">
+
+									<div class="row" ng-show="child.alert.mother_name || child.alert.father_name">
+										<div class="form-group col-md-6" ng-show="child.alert.mother_name">
+											<label class="control-label">Nome da mãe ou responsável</label>
+											<p><span ng-bind="child.alert.mother_name"></span></p>
+										</div>
+
+										<div class="form-group col-md-6" ng-show="child.alert.father_name">
+											<label class="control-label">Nome do pai ou responsável</label>
+											<p><span ng-bind="child.alert.father_name"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.mother_rg || child.alert.father_rg">
+										<div class="form-group col-md-6" ng-show="child.alert.mother_rg">
+											<label class="control-label">RG da mãe ou responsável</label>
+											<p><span ng-bind="child.alert.mother_rg"></span></p>
+										</div>
+
+										<div class="form-group col-md-6" ng-show="child.alert.father_rg">
+											<label class="control-label">RG do pai ou responsável</label>
+											<p><span ng-bind="child.alert.father_rg"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.mother_phone || child.alert.father_phone">
+										<div class="form-group col-md-6" ng-show="child.alert.mother_phone">
+											<label class="control-label">Telefone da mãe ou responsável</label>
+											<p><span ng-bind="child.alert.mother_phone | brPhoneNumber"></span></p>
+										</div>
+
+										<div class="form-group col-md-6" ng-show="child.alert.father_phone">
+											<label class="control-label">Telefone do pai ou responsável</label>
+											<p><span ng-bind="child.alert.father_phone | brPhoneNumber"></span></p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="panel">
+								<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
+								<div class="panel-body">
+									<div ng-show="!canAcceptAlert(child)" class="alert alert-warning"><strong>Endereço do alerta pendente!</strong> Antes de prosseguir, dialogue com a escola para entender melhor a situação desse caso.</div>
+
+									<div class="row" ng-show="child.requires_address_update || child.alert.place_address || child.alert.place_cep">
+										<div class="form-group col-md-8" ng-show="child.requires_address_update || child.alert.place_address">
+											<label class="control-label">Endereço</label>
+											<p><input type="text" class="form-control" required ng-model="child.alert.place_address" placeholder="Indique o endereço do alerta..." /></p>
+										</div>
+										<div class="form-group col-md-4" ng-show="child.alert.place_cep">
+											<label class="control-label">CEP</label>
+											<p><span ng-bind="child.alert.place_cep | brCep"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.place_reference">
+										<div class="form-group col-md-12">
+											<label class="control-label">Referência geográfica</label>
+											<p><span ng-bind="child.alert.place_reference"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.requires_address_update || child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name">
+										<div class="form-group col-md-5" ng-show="child.requires_address_update || child.alert.place_neighborhood">
+											<label class="control-label">Bairro</label>
+											<p><input type="text" class="form-control" required ng-model="child.alert.place_neighborhood" placeholder="Indique o bairro..." /></p>
+										</div>
+										<div class="form-group col-md-2" ng-show="child.alert.place_uf">
+											<label class="control-label">UF</label>
+											<p><span ng-bind="child.alert.place_uf"></span></p>
+										</div>
+										<div class="form-group col-md-5" ng-show="child.alert.place_city_name">
+											<label class="control-label">Município</label>
+											<p><span ng-bind="child.alert.place_city_name"></span></p>
+										</div>
+									</div>
+
+									<div class="row" ng-show="child.alert.place_phone || child.alert.place_mobile">
+										<div class="form-group col-md-6" ng-show="child.alert.place_phone">
+											<label class="control-label">Telefone residencial</label>
+											<p><span ng-bind="child.alert.place_phone | brPhoneNumber"></span></p>
+										</div>
+										<div class="form-group col-md-6" ng-show="child.alert.place_mobile">
+											<label class="control-label">Telefone celular</label>
+											<p><span ng-bind="child.alert.place_mobile | brPhoneNumber"></span></p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="panel">
+								<div class="panel-heading">Observações</div>
+								<div class="form-group col-md-12">
+									<p ng-bind="child.alert.observation"></p>
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn  no-animate btn-warning" ng-show="!canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-warning"></i> Endereço do alerta pendente!</button>
+					<button type="submit" class="btn btn-raised no-animate btn-success" ng-click="accept(child)" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-check"></i> Aceitar alerta</button>
+					<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected'"><i class="fa fa-ban"></i> Rejeitar alerta</button>
+					<br/><br/>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar janela</button>
+				</div>
 			</div>
-			<div class="panel-body">
-
-				<div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
-
-				<div ng-show="child.alert_status=='rejected'" class="alert alert-danger"><strong>Alerta rejeitado!</strong> Este alerta foi rejeitado e não pode ser mais aprovado.</div>
-
-				<div class="panel panel-default">
-					<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
-					<div class="panel-body">
-
-						<div class="row">
-							<div class="form-group col-md-12">
-								<label class="control-label">Nome da criança ou adolescente</label>
-								<p><span ng-bind="child.alert.name"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.gender || child.alert.race || child.alert.dob">
-							<div class="form-grouo col-md-4" ng-show="child.alert.gender">
-								<label class="control-label">Gênero</label>
-								<p><span ng-bind="child.alert.gender | lang:'child.gender'"></span></p>
-							</div>
-							<div class="form-grouo col-md-4" ng-show="child.alert.race">
-								<label class="control-label">Raça / Etnia</label>
-								<p><span ng-bind="child.alert.race | lang:'child.race'"></span></p>
-							</div>
-							<div class="form-group col-md-4" ng-show="child.alert.dob">
-								<label class="control-label">Data de nascimento</label>
-								<p><span ng-bind="child.alert.dob | amDateFormat:'DD/MM/YYYY'"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.rg || child.alert.cpf || child.alert.nis">
-							<div class="form-group col-md-4" ng-show="child.alert.rg">
-								<label class="control-label">RG</label>
-								<p><span ng-bind="child.alert.rg"></span></p>
-							</div>
-							<div class="form-group col-md-4" ng-show="child.alert.cpf">
-								<label class="control-label">CPF</label>
-								<p><span ng-bind="child.alert.cpf | brCpf"></span></p>
-							</div>
-							<div class="form-group col-md-4" ng-show="child.alert.nis">
-								<label class="control-label">NIS (Número de Identificação Social)</label>
-								<p><span ng-bind="child.alert.nis"></span></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="form-group col-md-12">
-								<label class="control-label">Por que a criança ou adolescente está fora da escola?</label>
-								<p><span ng-bind="getAlertCauseName()"></span></p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="panel panel-default">
-					<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
-					<div class="panel-body">
-
-						<div class="row" ng-show="child.alert.mother_name || child.alert.father_name">
-							<div class="form-group col-md-6" ng-show="child.alert.mother_name">
-								<label class="control-label">Nome da mãe ou responsável</label>
-								<p><span ng-bind="child.alert.mother_name"></span></p>
-							</div>
-
-							<div class="form-group col-md-6" ng-show="child.alert.father_name">
-								<label class="control-label">Nome do pai ou responsável</label>
-								<p><span ng-bind="child.alert.father_name"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.mother_rg || child.alert.father_rg">
-							<div class="form-group col-md-6" ng-show="child.alert.mother_rg">
-								<label class="control-label">RG da mãe ou responsável</label>
-								<p><span ng-bind="child.alert.mother_rg"></span></p>
-							</div>
-
-							<div class="form-group col-md-6" ng-show="child.alert.father_rg">
-								<label class="control-label">RG do pai ou responsável</label>
-								<p><span ng-bind="child.alert.father_rg"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.mother_phone || child.alert.father_phone">
-							<div class="form-group col-md-6" ng-show="child.alert.mother_phone">
-								<label class="control-label">Telefone da mãe ou responsável</label>
-								<p><span ng-bind="child.alert.mother_phone | brPhoneNumber"></span></p>
-							</div>
-
-							<div class="form-group col-md-6" ng-show="child.alert.father_phone">
-								<label class="control-label">Telefone do pai ou responsável</label>
-								<p><span ng-bind="child.alert.father_phone | brPhoneNumber"></span></p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="panel panel-default">
-					<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
-					<div class="panel-body">
-						<div ng-show="!canAcceptAlert(child)" class="alert alert-warning"><strong>Endereço do alerta pendente!</strong> Antes de prosseguir, dialogue com a escola para entender melhor a situação desse caso.</div>
-
-						<div class="row" ng-show="child.requires_address_update || child.alert.place_address || child.alert.place_cep">
-							<div class="form-group col-md-8" ng-show="child.requires_address_update || child.alert.place_address">
-								<label class="control-label">Endereço</label>
-								<p><input type="text" class="form-control" required ng-model="child.alert.place_address" placeholder="Indique o endereço do alerta..." /></p>
-							</div>
-							<div class="form-group col-md-4" ng-show="child.alert.place_cep">
-								<label class="control-label">CEP</label>
-								<p><span ng-bind="child.alert.place_cep | brCep"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.place_reference">
-							<div class="form-group col-md-12">
-								<label class="control-label">Referência geográfica</label>
-								<p><span ng-bind="child.alert.place_reference"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.requires_address_update || child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name">
-							<div class="form-group col-md-5" ng-show="child.requires_address_update || child.alert.place_neighborhood">
-								<label class="control-label">Bairro</label>
-								<p><input type="text" class="form-control" required ng-model="child.alert.place_neighborhood" placeholder="Indique o bairro..." /></p>
-							</div>
-							<div class="form-group col-md-2" ng-show="child.alert.place_uf">
-								<label class="control-label">UF</label>
-								<p><span ng-bind="child.alert.place_uf"></span></p>
-							</div>
-							<div class="form-group col-md-5" ng-show="child.alert.place_city_name">
-								<label class="control-label">Município</label>
-								<p><span ng-bind="child.alert.place_city_name"></span></p>
-							</div>
-						</div>
-
-						<div class="row" ng-show="child.alert.place_phone || child.alert.place_mobile">
-							<div class="form-group col-md-6" ng-show="child.alert.place_phone">
-								<label class="control-label">Telefone residencial</label>
-								<p><span ng-bind="child.alert.place_phone | brPhoneNumber"></span></p>
-							</div>
-							<div class="form-group col-md-6" ng-show="child.alert.place_mobile">
-								<label class="control-label">Telefone celular</label>
-								<p><span ng-bind="child.alert.place_mobile | brPhoneNumber"></span></p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="panel panel-default">
-					<div class="panel-heading">Observações</div>
-					<div class="form-group col-md-12">
-						<p ng-bind="child.alert.observation"></p>
-					</div>
-				</div>
-			</div>
-			<div class="panel-footer clearfix">
-				<button type="submit" class="btn btn-raised no-animate btn-success" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-check"></i> Aceitar</button>
-				<div class="btn  no-animate btn-warning" ng-show="!canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-warning"></i> Endereço do alerta pendente!</div>
-				<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected'"><i class="fa fa-ban"></i> Rejeitar</button>
-			</div>
-		</form>
+		</div>
 	</div>
 
 </div>
