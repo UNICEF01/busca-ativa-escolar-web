@@ -30,13 +30,12 @@
                 place_kind_null: true,
             };
 
-
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.search = {};
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
-                $anchorScroll('#');
+                $('.body_filter').toggle();
             };
 
             $scope.resetQuery = function () {
@@ -83,6 +82,10 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(6).notSortable()
             ];
+
+            $('.children_filter').click(function() {
+                $('.body_filter').toggle();
+            })
 
 
         });

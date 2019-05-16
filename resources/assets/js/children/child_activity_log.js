@@ -11,7 +11,7 @@
 					controller: 'ChildActivityLogCtrl'
 				})
 		});
-				
+
 	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
 
 		$scope.Decorators = Decorators;
