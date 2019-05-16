@@ -1143,7 +1143,6 @@
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
-
 			$scope.query = {
                 name: null,
 				submitter_name: null,
@@ -1180,7 +1179,6 @@
 
 			$scope.preview = function(child) {
 				$scope.child = child;
-
 				$('#modalChild').modal();
 			};
 
