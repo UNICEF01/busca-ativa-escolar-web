@@ -35,7 +35,6 @@
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
-                $('.body_filter').toggle();
             };
 
             $scope.resetQuery = function () {
@@ -82,11 +81,6 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(6).notSortable()
             ];
-
-            $('.children_filter').click(function() {
-                $('.body_filter').toggle();
-            })
-
 
         });
 })();
