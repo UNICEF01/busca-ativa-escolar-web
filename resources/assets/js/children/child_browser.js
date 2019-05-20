@@ -79,7 +79,7 @@
 
             //Configura a linguagem na diretiva dt-column-defs=""
             $scope.dtColumnDefs = [
-                DTColumnDefBuilder.newColumnDef(6).notSortable()
+                DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
 
         });
