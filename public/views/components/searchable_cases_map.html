@@ -1,14 +1,22 @@
-<div ng-if="isMapReady()">
+<div>
 
-	<div class="clearfix">
+	<div class="clearfix"  ng-if="isMapReady()">
 		<app-city-select on-select="onSearch"></app-city-select>
 	</div>
+	<div class="text-center"  ng-if="!isMapReady()">
+	<span class="glyphicon glyphicon-map-marker" style="font-size: 50px; color: #EA4335"></span>
+		<p>Clique no botão VER MAPA para ver a localização do casos</p>
+		<button type="button" class="btn btn-raised btn-info" ng-click="showMaps()"><i class="glyphicon glyphicon glyphicon-eye-open"></i> Ver Mapa</button>
+	</div>
 
-	<ui-gmap-google-map events="ctrl.events" center="mapCenter" zoom="mapZoom" draggable="true" style="height: 400px">
+
+	<ui-gmap-google-map events="ctrl.events" center="mapCenter" zoom="mapZoom" draggable="true" style="height: 400px" ng-if="isMapReady()">
 		<ui-gmap-markers idKey="'id'" models='coordinates' coords="'self'" type="'cluster'" typeOptions="clustererOptions" click="onMarkerClick"></ui-gmap-markers>
 	</ui-gmap-google-map>
 
-	<div class="legend">
+
+
+	<div class="legend" ng-if="isMapReady()">
 		<table class="table">
 			<thead>
 				<tr>

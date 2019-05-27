@@ -151,7 +151,7 @@
 					controller: 'ChildActivityLogCtrl'
 				})
 		});
-				
+
 	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
 
 		$scope.Decorators = Decorators;
@@ -258,13 +258,11 @@
                 place_kind_null: true,
             };
 
-
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.search = {};
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
-                $anchorScroll('#');
             };
 
             $scope.resetQuery = function () {
@@ -309,9 +307,8 @@
 
             //Configura a linguagem na diretiva dt-column-defs=""
             $scope.dtColumnDefs = [
-                DTColumnDefBuilder.newColumnDef(6).notSortable()
+                DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
-
 
         });
 })();
@@ -1150,6 +1147,7 @@
                 sort: {},
                 max: 16,
 				page: 1,
+				neighborhood: null,
 				show_suspended: false
             };
 
@@ -1170,7 +1168,7 @@
             };
 
 			$scope.static = StaticData;
-
+			
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
@@ -1178,7 +1176,8 @@
 			};
 
 			$scope.preview = function(child) {
-				$scope.child = child;
+				$scope.child = child
+				$('#modalChild').modal();
 			};
 
 			$scope.canAcceptAlert = function(child) {
@@ -1199,6 +1198,7 @@
 				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
 					$scope.refresh();
 					$scope. child = {};
+					$('#modalChild').modal('hide');
 				});
 			};
 
@@ -1206,9 +1206,9 @@
 				Alerts.reject({id: child.id}, function() {
 					$scope.refresh();
 					$scope.child = {};
+					$('#modalChild').modal('hide');
 				});
 			};
-
 
 			Platform.whenReady(function() {
 				$scope.causes = StaticData.getAlertCauses();
@@ -1229,8 +1229,6 @@
 			})
 		})
 		.controller('UserAlertsCtrlCtrl', function () {
-
-
 		});
 
 })();
@@ -1257,16 +1255,18 @@
 				console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
 			};
 
-			scope.isMapReady = function() {
-				return scope.mapReady;
-			};
-
 			scope.reloadMap = function() {
 				scope.mapReady = false;
 				$timeout(function() {
 					scope.mapReady = true;
 				}, 10);
 			};
+
+			scope.showMaps = function () {
+				scope.isMapReady = function() {
+					return scope.mapReady;
+				};
+			}
 
 			uiGmapGoogleMapApi.then(function (maps) {
 				scope.refresh();
@@ -1283,6 +1283,7 @@
 	});
 
 })();
+
 (function () {
 
     angular.module('BuscaAtivaEscolar').directive('causesChart', function ($timeout, moment, Platform, Reports, Charts) {
@@ -2340,7 +2341,7 @@
 					}
 				}
 			};
-			
+
 			scope.onSearch = function(givenUf, givenCity) {
 				console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
 
@@ -2371,9 +2372,7 @@
 				console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
 			};
 
-			scope.isMapReady = function() {
-				return scope.mapReady;
-			};
+
 
 			scope.reloadMap = function() {
 				scope.mapReady = false;
@@ -2390,6 +2389,12 @@
 
 			};
 
+			scope.showMaps = function () {
+				scope.isMapReady = function() {
+					return scope.mapReady;
+				};
+			}
+
 			uiGmapGoogleMapApi.then(function (maps) {
 				scope.refresh();
 			});
@@ -2404,6 +2409,7 @@
 	});
 
 })();
+
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('appSupportWidget', function (Modals) {
@@ -3792,13 +3798,12 @@ Highcharts.maps["countries/br/br-all"] = {
 		var Child = {
 			parents: function(child) {
 				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' / ' : '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
 					+ (child.father_name || '');
 			}
 		};
 
 		var Step = {
-
 		};
 
 		return {
@@ -5525,7 +5530,8 @@ if (!Array.prototype.find) {
 				$scope.query.max = 5;
 				$scope.refresh();
 			};
-				$scope.refresh = function() {                
+
+			$scope.refresh = function() {
                 Schools.all_educacenso($scope.query, function(res) {
 					$scope.check_all_schools = false;
 					$scope.selected.schools = [];

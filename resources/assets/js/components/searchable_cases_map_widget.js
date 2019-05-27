@@ -15,7 +15,7 @@
 					}
 				}
 			};
-			
+
 			scope.onSearch = function(givenUf, givenCity) {
 				console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
 
@@ -46,9 +46,7 @@
 				console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
 			};
 
-			scope.isMapReady = function() {
-				return scope.mapReady;
-			};
+
 
 			scope.reloadMap = function() {
 				scope.mapReady = false;
@@ -64,6 +62,12 @@
 				scope.ctrl.map.setZoom(zoom);
 
 			};
+
+			scope.showMaps = function () {
+				scope.isMapReady = function() {
+					return scope.mapReady;
+				};
+			}
 
 			uiGmapGoogleMapApi.then(function (maps) {
 				scope.refresh();
