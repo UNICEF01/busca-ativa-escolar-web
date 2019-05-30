@@ -34,7 +34,7 @@
 						
 					}else{
 
-                        ngToast.success('Arquivo importado com sucesso!');
+                        ngToast.warning('Arquivo importado com sucesso!');
                         $scope.hasImported = true;
                         $scope.refresh();
 					}

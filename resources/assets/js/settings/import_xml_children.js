@@ -2,8 +2,13 @@
 	angular.module('BuscaAtivaEscolar')
 		.controller('ImportXLSChildrenCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
 
+			$scope.hasImported = false;
+			$scope.jobs = null;
+
 			$scope.refresh = function() {
-				console.log("refresh...");
+				Tenants.getXlsChildrenJobs(function (res) {
+					$scope.jobs = res.data;
+				});
 			};
 
 			$scope.beginImport = function() {
@@ -21,7 +26,7 @@
 
 					}else{
 
-						ngToast.success('Arquivo encaminhado para fila de processamento');
+						ngToast.warning('Arquivo encaminhado para fila de processamento');
 						$scope.hasImported = true;
 						$scope.refresh();
 					}
