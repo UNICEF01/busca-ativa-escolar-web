@@ -21,6 +21,7 @@
                 sort: {},
                 max: 16,
 				page: 1,
+				neighborhood: null,
 				show_suspended: false
             };
 
@@ -41,7 +42,7 @@
             };
 
 			$scope.static = StaticData;
-
+			
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
@@ -49,7 +50,8 @@
 			};
 
 			$scope.preview = function(child) {
-				$scope.child = child;
+				$scope.child = child
+				$('#modalChild').modal();
 			};
 
 			$scope.canAcceptAlert = function(child) {
@@ -70,6 +72,7 @@
 				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
 					$scope.refresh();
 					$scope. child = {};
+					$('#modalChild').modal('hide');
 				});
 			};
 
@@ -77,9 +80,9 @@
 				Alerts.reject({id: child.id}, function() {
 					$scope.refresh();
 					$scope.child = {};
+					$('#modalChild').modal('hide');
 				});
 			};
-
 
 			Platform.whenReady(function() {
 				$scope.causes = StaticData.getAlertCauses();
