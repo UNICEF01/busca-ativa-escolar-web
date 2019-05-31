@@ -1,0 +1,53 @@
+<div class="panel panel-default">
+
+	<div class="panel-heading">
+		<h3><i class="fa fa-upload"></i> Importação de arquivo XLS</h3>
+	</div>
+
+	<div class="panel-body">
+		<p>Nessa tela você pode importar a planilha de crianças e/ou adolescentes. Os casos do arquivo são importados como alertas aprovados. Esta ação pode ser realizada pelo Coordenador(a) Operacional ou pelo(a) Supervisor(a) Institucional da EDUCAÇÃO. Clique no botão azul para baixar o arquivo padrão para importação. Clique no botão verde para fazer o upload.</p>
+
+		<br/>
+
+		<div class="alert alert-warning" ng-show="jobs.length > 0">
+			<strong>Você já importou um arquivo XLS!</strong>
+			<br />Repita o processo somente se você tiver uma nova planilha ou se o <i>status</i> da importação apresentar erro.
+		</div>
+
+		<div class="text-right">
+			<a href="https://buscaativaescolar.org.br/downloads/padrao_importacao2.xlsx" class="btn btn-info btn-raised btn-lg"><i class="fa fa-download"></i> Baixar arquivo padrão</a> <a class="btn btn-success btn-raised btn-lg" ng-click="beginImport()" ng-show="!hasImported"><i class="fa fa-upload"></i> Importar arquivo XLS</a>
+		</div>
+
+		<br/>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Data e hora</th>
+					<th>Status</th>
+					<th>Solicitante</th>
+					<th>Notificação</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="(i, job) in jobs">
+					<td><span ng-bind="job.created_at | amCalendar"></span></td>
+					<td>
+						<span class="label label-warning" ng-show="job.status === 'pending'"><i class="fa fa-clock-o"></i> Na fila</span>
+						<span class="label label-warning" ng-show="job.status === 'processing'"><i class="fa fa-cog"></i> Processando</span>
+						<span class="label label-success" ng-show="job.status === 'completed'"><i class="fa fa-check"></i> Concluído</span>
+						<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-ban"></i> Erro</span>
+					</td>
+					<td><span ng-bind="job.user.name"></span></td>
+					<td><span ng-show="job.errors.length > 0">{{job.errors[0]}}</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<a class="btn btn-info pull-right" ng-click="refresh()"><i class="fa fa-refresh"></i> Atualizar status</a>
+	</div>
+
+</div>
