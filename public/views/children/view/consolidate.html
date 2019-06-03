@@ -346,13 +346,10 @@
             <div class="radio" ng-repeat="cause in static.getVisibleCaseCauses()"
                  ng-if="isCheckboxChecked('case_cause_ids', cause.id)">
                 <label>
-                    <strong ng-if="child.cases[0].alert_cause_id == cause.alert_cause_id" class="badge">Motivo indicado
-                        no
-                        alerta</strong>
                     {{cause.label}}
-
                 </label>
             </div>
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">

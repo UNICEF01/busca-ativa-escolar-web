@@ -738,7 +738,7 @@
 </div>
 
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
+    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar1</div>
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label">Motivos de estar fora da escola*</label>
@@ -754,12 +754,11 @@
                            type="checkbox"
                     >
 
-                    <strong ng-if="case.alert_cause_id == cause.alert_cause_id" class="badge">Motivo indicado no
-                        alerta</strong>
                     {{cause.label}}
 
                 </label>
             </div>
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">
@@ -877,10 +876,9 @@
             <div class="radio" ng-repeat="id in getCaseCauseIDs()">
                 <label>
                     <i class="fa fa-check"></i> {{static.getCaseCauses()[id].label}}
-                    <strong ng-if="static.getCaseCauses()[id].alert_cause_id == getAlertCauseId()" class="badge">Motivo
-                        indicado no alerta</strong>
                 </label>
             </div>
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12">
