@@ -736,30 +736,26 @@
 
     </div>
 </div>
-
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
+    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar1</div>
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label">Motivos de estar fora da escola*</label>
-            <div class="radio" ng-repeat="cause in static.getVisibleCaseCauses()">
+            <div class="radio" ng-repeat="(key, cause) in static.getVisibleCaseCauses()">
                 <label>
                     <input name="case_cause_{{cause.id}}"
                            ng-disabled="!canEditCurrentStep()"
-                           ng-model="checkboxes.case_cause_checkbox[cause.id]"
-                           ng-change="toggleCheckbox('case_cause_ids', cause.id)"
+                           ng-model="checkboxes[cause.id]"
                            ng-checked="isCheckboxChecked('case_cause_ids', cause.id)"
+                           ng-click="toggleCheckbox('case_cause_ids', cause.id)"
                            ng-true-value="1"
                            ng-false-value="0"
                            type="checkbox"
                     >
-
-                    <strong ng-if="case.alert_cause_id == cause.alert_cause_id" class="badge">Motivo indicado no
-                        alerta</strong>
                     {{cause.label}}
-
                 </label>
             </div>
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">
@@ -877,10 +873,9 @@
             <div class="radio" ng-repeat="id in getCaseCauseIDs()">
                 <label>
                     <i class="fa fa-check"></i> {{static.getCaseCauses()[id].label}}
-                    <strong ng-if="static.getCaseCauses()[id].alert_cause_id == getAlertCauseId()" class="badge">Motivo
-                        indicado no alerta</strong>
                 </label>
             </div>
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12">

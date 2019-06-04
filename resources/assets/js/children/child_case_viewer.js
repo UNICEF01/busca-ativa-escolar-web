@@ -473,10 +473,12 @@
         $scope.isCheckboxChecked = function (field, value) {
             if (!$scope.fields) return false;
             if (!$scope.fields[field]) $scope.fields[field] = [];
-            return $scope.fields[field].indexOf(value) !== -1;
+            var value = $scope.fields[field].indexOf(value) !== -1;
+            return value;
         };
 
         $scope.toggleCheckbox = function (field, value) {
+
             if (!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
             var index = $scope.fields[field].indexOf(value); // Check if in list
             if (index === -1) return $scope.fields[field].push(value); // Add to list
@@ -555,6 +557,9 @@
 
             var data = Object.assign({}, $scope.step.fields);
 
+            console.log(data);
+
+
             data = Utils.prepareDateFields(data, dateOnlyFields);
 
             data = unpackTypeaheadField(data, 'place_city', data.place_city);
@@ -568,7 +573,7 @@
             data.type = $scope.step.step_type;
             data.id = $scope.step.id;
 
-            // console.info("[child_viewer.step_editor] Saving step data: ", data);
+            console.info("[child_viewer.step_editor] Saving step data: ", data);
 
             return CaseSteps.save(data).$promise.then(function (response) {
                 if (response.messages) {
