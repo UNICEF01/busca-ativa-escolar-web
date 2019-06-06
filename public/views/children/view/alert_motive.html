@@ -1,6 +1,7 @@
 <div class="radio" ng-repeat="motive in static.getAlertCauses()" ng-if="child.cases[0].alert_cause_id == motive.id">
-    <br>
-    <div class="alert alert-info text-center">
-        O motivo escolhido na criação do Alerta foi: <strong>{{motive.label}}</strong>
-    </div>
+    <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    O motivo escolhido na criação do Alerta foi:
+    <strong>{{motive.label}}</strong>
 </div>
+
+

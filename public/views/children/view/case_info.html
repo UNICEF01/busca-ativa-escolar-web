@@ -737,10 +737,13 @@
     </div>
 </div>
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
-    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar1</div>
+    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
     <div class="panel-body">
         <div class="form-group col-md-12">
+            <div ng-include="'/views/children/view/alert_motive.html'"></div>
+
             <label class="control-label">Motivos de estar fora da escola*</label>
+
             <div class="radio" ng-repeat="(key, cause) in static.getVisibleCaseCauses()">
                 <label>
                     <input name="case_cause_{{cause.id}}"
@@ -755,7 +758,6 @@
                     {{cause.label}}
                 </label>
             </div>
-            <div ng-include="'/views/children/view/alert_motive.html'"></div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">
