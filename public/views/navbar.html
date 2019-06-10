@@ -37,20 +37,26 @@
                                 class="fa fa-exclamation-triangle"></i> Meus alertas</a></li>
                     </ul>
                 </li>
+
                 <li ng-show="identity.can('cases.view')" ui-sref-active="active"><a ui-sref="child_browser"><i
                         class="fa fa-list"></i> Casos</a></li>
+
                 <li ng-show="identity.can('reports.view')" ui-sref-active="active"><a ui-sref="reports"><i
                         class="fa fa-line-chart"></i> Relatórios</a></li>
+
                 <li ng-show="identity.can('users.view')" ui-sref-active="active"><a ui-sref="user_browser"><i
                         class="fa fa-users"></i> Usuários</a></li>
+
                 <li ng-show="identity.can('tenants.view')" ui-sref-active="active"><a ui-sref="tenant_browser"><i
                         class="fa fa-university"></i> Municípios</a></li>
+
                 <li ng-show="identity.can('ufs.view')" ui-sref-active="active"><a ui-sref="state_browser"><i
                         class="fa fa-map-o"></i> Estados</a></li>
-                <li ng-show="identity.can('settings.manage') || identity.can('settings.educacenso') || identity.can('groups.manage')"
+
+                <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
                     ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
-                <li ng-show="identity.can('settings.educacenso')"
+                <li ng-show="identity.manageImports()"
                     ui-sref-active="active"><a ui-sref="school_browser"><i class="fa fa-university"></i> Escolas</a></li>
             </ul>
 

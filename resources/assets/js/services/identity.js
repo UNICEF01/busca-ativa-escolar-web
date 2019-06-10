@@ -135,6 +135,24 @@
 			});
 		}
 
+		function manageImports(){
+			if ( isLoggedIn() ){
+
+				if( getType() == "coordenador_operacional" ){
+					return true;
+				}
+
+				if ( getType() == "supervisor_institucional" && "group" in getCurrentUser() && getCurrentUser().group.is_primary){
+					return true;
+ 				}
+
+				return false;
+
+			}else{
+				return false;
+			}
+		}
+
 		return {
 			getCurrentUser: getCurrentUser,
 			getCurrentTenant: getCurrentTenant,
@@ -151,7 +169,8 @@
 			setTokenProvider: setTokenProvider,
 			setUserProvider: setUserProvider,
 			provideToken: provideToken,
-			disconnect: disconnect
+			disconnect: disconnect,
+			manageImports: manageImports
 		}
 
 	});
