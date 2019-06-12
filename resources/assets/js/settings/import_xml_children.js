@@ -2,7 +2,6 @@
 	angular.module('BuscaAtivaEscolar')
 		.controller('ImportXLSChildrenCtrl', function ($scope, $window, Modals, API, Tenants, ngToast) {
 
-			$scope.hasImported = false;
 			$scope.jobs = null;
 
 			$scope.refresh = function() {
@@ -21,13 +20,11 @@
 					if(file.status == "error"){
 
 						ngToast.danger('Erro na importação! '+ file.reason);
-						$scope.hasImported = false;
 						$scope.refresh();
 
 					}else{
 
 						ngToast.warning('Arquivo encaminhado para fila de processamento');
-						$scope.hasImported = true;
 						$scope.refresh();
 					}
 
