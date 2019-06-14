@@ -8,7 +8,7 @@
 
 	@include scale-to-parent-edges;
 
-	&.feedback-visible { display: block; z-index: 10000000 !important;; }
+	&.feedback-visible { display: block; z-index: 500 !important;; }
 
 	.feedback-spinner {
 		@include place-at(calc(50% - 100px), calc(50% - 100px));

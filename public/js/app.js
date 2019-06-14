@@ -5633,7 +5633,7 @@ if (!Array.prototype.find) {
 			}
 
 			function provideToken() {
-
+				
 				// TODO: refresh with endpoint if first time on page
 
 				// Isn't even logged in
