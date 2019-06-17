@@ -273,7 +273,7 @@ footer.app-footer a.credits-btn {
 }
 .loading-feedback.feedback-visible {
   display: block;
-  z-index: 10000000 !important;
+  z-index: 500 !important;
 }
 .loading-feedback .feedback-spinner {
   position: absolute;
