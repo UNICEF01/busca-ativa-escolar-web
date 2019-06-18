@@ -27,7 +27,7 @@
 					<th>Status</th>
 					<th>Solicitante</th>
 					<th>Notificação</th>
-					<th>Observações</th>
+					<th>Repetidos</th>
 					<th>Total de importações</th>
 				</tr>
 			</thead>
@@ -42,7 +42,15 @@
 					</td>
 					<td><span ng-bind="job.user.name"></span></td>
 					<td><span ng-show="job.errors.length > 0">{{job.errors[0]}}</span></td>
-					<td><span ng-bind="job.observations"></span></td>
+					<td>
+						<div ng-repeat="(j, duplicated) in job.duplicateds">
+							<p>
+								Nome: {{duplicated.name}} <br/>
+								Mãe ou responsável: {{duplicated.name}} <br/>
+								Data do cadastro: {{duplicated.created_at | amCalendar}}
+							</p>
+						</div>
+					</td>
 					<td><span ng-bind="job.total_records"></span></td>
 				</tr>
 			</tbody>
