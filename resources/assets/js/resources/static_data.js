@@ -39,12 +39,16 @@
 			function isReady() {
 				return getNumChains() > 0;
 			}
+			// Ordena pelo valor do indice do objeto
+			function orderMotives(value) {
+				return _.orderBy(value, ['label'], ['asc']);
+			}
 
 			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
-			function getAlertCauses() { return (data.AlertCause) ? data.AlertCause : []; }
-			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? data.VisibleAlertCause : []; }
+			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
+			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
 			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
-			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? data.VisibleCaseCause : []; }
+			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
 			function getGenders() { return (data.Gender) ? data.Gender : []; }
 			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
 			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
