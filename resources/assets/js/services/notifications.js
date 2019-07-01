@@ -25,7 +25,7 @@
 			function setup() {
 				refresh(true);
 
-				$interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+				// $interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
 
 				$rootScope.$on('auth.logged_in', function() {
 					notifications = [];
