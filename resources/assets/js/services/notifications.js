@@ -18,7 +18,7 @@
 				UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
 					notifications = res.data;
 					isBusy = false;
-					emitToastsOnNewNotifications(isFirstRefresh);
+					// emitToastsOnNewNotifications(isFirstRefresh);
 				});
 			}
 
