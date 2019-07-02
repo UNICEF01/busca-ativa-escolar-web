@@ -18,14 +18,14 @@
 				UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
 					notifications = res.data;
 					isBusy = false;
-					emitToastsOnNewNotifications(isFirstRefresh);
+					// emitToastsOnNewNotifications(isFirstRefresh);
 				});
 			}
 
 			function setup() {
 				refresh(true);
 
-				$interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
+				// $interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
 
 				$rootScope.$on('auth.logged_in', function() {
 					notifications = [];
