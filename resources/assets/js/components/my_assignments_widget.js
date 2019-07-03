@@ -45,12 +45,30 @@
                 console.log("[widget.my_assignments] Loading assignments...");
                 isReady = false;
 
-                Children.search({assigned_user_id: Identity.getCurrentUserID()}, function (data) {
-                    console.log("[widget.my_assignments] Loaded: ", data.results);
-
-                    scope.children = data.results;
-                    isReady = true;
-                });
+                Children.search(
+                    {
+                        assigned_user_id: Identity.getCurrentUserID(),
+                        name: '',
+                        step_name: '',
+                        cause_name: '',
+                        assigned_user_name: '',
+                        location_full: '',
+                        alert_status: ['accepted'],
+                        case_status: ['in_progress'],
+                        risk_level: ['low', 'medium', 'high'],
+                        age: {from: 0, to: 100},
+                        age_null: true,
+                        gender: ['male', 'female', 'undefined'],
+                        gender_null: true,
+                        place_kind: ['rural', 'urban'],
+                        place_kind_null: true
+                    },
+                    function (data) {
+                        //console.log("[widget.my_assignments] Loaded: ", data.results);
+                        scope.children = data.results;
+                        isReady = true;
+                    }
+                );
             };
 
             scope.getChildren = function () {
