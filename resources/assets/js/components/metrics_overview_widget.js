@@ -12,7 +12,7 @@
 					entity: 'children',
 					dimension: 'deadline_status',
 					filters: {
-						case_status: ['in_progress', 'completed', 'interrupted'],
+						case_status: ['in_progress'],
 						alert_status: ['accepted']
 					}
 				}, function (data) {

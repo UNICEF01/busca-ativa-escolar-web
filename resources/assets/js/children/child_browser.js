@@ -22,7 +22,6 @@
                 alert_status: ['accepted'],
                 case_status: ['in_progress'],
                 risk_level: ['low', 'medium', 'high'],
-                age: {from: 0, to: 50},
                 age_null: true,
                 gender: ['male', 'female', 'undefined'],
                 gender_null: true,
