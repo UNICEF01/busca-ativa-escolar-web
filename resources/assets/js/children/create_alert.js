@@ -12,6 +12,8 @@
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
+			$scope.disableCreateAlertButton = false;
+
 
 			$scope.alert = {};
 
@@ -33,6 +35,8 @@
 
 			$scope.createAlert = function() {
 
+				$scope.disableCreateAlertButton = true;
+
 				// TODO: validate fields
 
 				var data = $scope.alert;
@@ -52,6 +56,9 @@
 					}
 
 					ngToast.success('Alerta registrado com sucesso!');
+
+					$scope.disableCreateAlertButton = false;
+
 
 					if(Identity.getType() === 'agente_comunitario') {
 						$state.go('dashboard');
