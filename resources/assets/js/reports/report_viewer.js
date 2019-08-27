@@ -44,10 +44,10 @@
 
 				$scope.filters = {
 					//deadline_status: ['normal', 'delayed'],
-					period: {from: lastWeek, to: today},
+					// period: {from: lastWeek, to: today},
 					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
-					child_status: ['in_school', 'in_observation', 'out_of_school'],
+					child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted'],
 					age: {from: 0, to: 99},
 					age_ranges: [
 						'0-3',
@@ -76,7 +76,7 @@
 						entity: 'children',
 						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id'],
 						filters: [
-							'date',
+							// 'date',
 							'case_status',
 							'child_status',
 							'alert_status',
@@ -145,7 +145,7 @@
 				};
 
 				$scope.fields = {
-					period: 'Período',
+					// period: 'Período',
 					child_status: 'Status da criança',
 					deadline_status: 'Status do andamento',
 					alert_status: 'Status do alerta',
@@ -230,12 +230,12 @@
 
 				params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
 
-				if(params.filters.period.from || params.filters.period.to) {
-					params.filters.date = {
-						from: (params.filters.period.from) ? moment(params.filters.period.from).format('YYYY-MM-DD') : null,
-						to: (params.filters.period.to) ? moment(params.filters.period.to).format('YYYY-MM-DD') : null,
-					};
-				}
+				// if(params.filters.period.from || params.filters.period.to) {
+				// 	params.filters.date = {
+				// 		from: (params.filters.period.from) ? moment(params.filters.period.from).format('YYYY-MM-DD') : null,
+				// 		to: (params.filters.period.to) ? moment(params.filters.period.to).format('YYYY-MM-DD') : null,
+				// 	};
+				// }
 
 				if(params.format === 'xls') {
 					return Reports.query(params).$promise;
