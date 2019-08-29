@@ -8939,7 +8939,7 @@ function identify(namespace, file) {
 
 				if(res.messages) return Utils.displayValidationErrors(res);
 
-				ngToast.danger("Ocorreu um erro ao salvar o usuário: ", res.status);
+				ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
 			}
 
 		});
