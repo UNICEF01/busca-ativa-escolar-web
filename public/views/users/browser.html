@@ -7,6 +7,10 @@
 		</div>
 		<div class="panel-body">
 
+			<a href="#" ng-click="info = !info" class="pull-right"><i class="fa fa-info-circle"></i> informação</a><br>
+
+			<div ng-show="info">
+
 				<p>
 				Cadastre aqui os diferentes usuários que vão participar da Busca Ativa Escolar. No momento do cadastro, você deve escolher qual o perfil do usuário.
 				</p>
@@ -19,6 +23,7 @@
 					<li class="list-group-item"><i class="fa fa-circle"></i> Técnicos verificadores: são os responsáveis por elaborar o diagnóstico e produzir análise técnica sobre os casos encontrados; </li>
 					<li class="list-group-item"><i class="fa fa-circle"></i> Agentes comunitários: são os responsáveis por fazer os primeiros alertas de crianças e adolescentes que estão fora da escola.</li>
 				</ul>
+			</div>
 
 			<form ng-submit="refresh()" name="searchUsers" class="clearfix">
 				<div class="row">
@@ -49,26 +54,43 @@
 						</div>
 					</div>
 
+					<div class="form-group col-md-12">
+						<label><i class="fa fa-user"></i> Tipo</label><br>
+						<div class="radio-inline" ng-repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search">
+							<label>
+								<input name="type" ng-model="query.type" ng-value="type" type="radio" ng-click="refresh()"> {{type | lang:'user.type' | highlight: $select.search}}
+							</label>
+						</div>
+					</div>
+<!--					<div class="form-group col-md-12" ng-if="!canFilterByTenant">-->
+<!--						<label><i class="fa fa-user"></i> Grupo</label><br>-->
+<!--						<div class="radio-inline" ng-repeat="group in  getGroups()">-->
+<!--							<label>-->
+<!--								<input name="group" ng-model="query.group_id" ng-value="group" type="radio" ng-click="refresh()"> {{group.name}}-->
+<!--							</label>-->
+<!--						</div>-->
+<!--					</div>-->
+
 					<div class="form-group col-md-6" ng-if="!canFilterByTenant">
 						<label><i class="fa fa-users"></i> Grupo</label>
 						<ui-select ng-model="query.group_id" on-select="refresh()">
 							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected.name}}</ui-select-match>
-							<ui-select-choices repeat="group.id as group in getGroups()
-							 | filter: $select.search track by group.id">
+							<ui-select-choices repeat="group.id as group in getGroups() | filter: $select.search track by group.id">
 								<div ng-bind-html="group.name | highlight: $select.search"></div>
 							</ui-select-choices>
 						</ui-select>
 					</div>
 
-					<div class="form-group col-md-6">
-						<label><i class="fa fa-user"></i> Tipo</label>
-						<ui-select ng-model="query.type" on-select="refresh()">
-							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected | lang:'user.type'}}</ui-select-match>
-							<ui-select-choices repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search">
-								<div ng-bind-html="type | lang:'user.type' | highlight: $select.search"></div>
-							</ui-select-choices>
-						</ui-select>
-					</div>
+<!--					<div class="form-group col-md-6">-->
+<!--						<label><i class="fa fa-user"></i> Tipo</label>-->
+<!--						<ui-select ng-model="query.type" on-select="refresh()">-->
+<!--							<ui-select-match allow-clear="true" placeholder="Todas">{{$select.selected | lang:'user.type'}}</ui-select-match>-->
+<!--							<ui-select-choices repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search">-->
+<!--								<div ng-bind-html="type | lang:'user.type' | highlight: $select.search"></div>-->
+<!--							</ui-select-choices>-->
+<!--						</ui-select>-->
+<!--					</div>-->
+
 
 				</div>
 

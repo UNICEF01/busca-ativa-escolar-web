@@ -21,8 +21,10 @@
 			sort: {},
 			show_suspended: false,
 			max: 16,
-			page: 1,
+			page: 1
 		};
+
+		$scope.info = false;
 
 		$scope.quickAdd = false;
 
