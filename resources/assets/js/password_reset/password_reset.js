@@ -30,7 +30,7 @@
 					$scope.isLoading = false;
 
 					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao solicitar a troca de senha: " + res.reason);
+						ngToast.danger("Erro! " + res.reason);
 						return;
 					}
 
