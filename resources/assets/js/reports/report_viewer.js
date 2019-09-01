@@ -74,7 +74,7 @@
 						name: 'Crianças e adolescentes',
 						value: 'num_children',
 						entity: 'children',
-						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id'],
+						dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id', 'race'],
 						filters: [
 							// 'date',
 							'case_status',
@@ -169,7 +169,8 @@
 					place_city_id: 'Município',
 					school_last_id: 'Última escola que frequentou',
 					city: 'Município',
-					month: 'Mês'
+					month: 'Mês',
+					race: 'Raça'
 				};
 
 				$scope.chartConfig = getChartConfig();
