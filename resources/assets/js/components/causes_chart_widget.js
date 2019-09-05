@@ -43,7 +43,7 @@
                 var searchData = {
                     view: 'linear',
                     entity: 'children',
-                    dimension: 'alert_cause_id',
+                    dimension: 'case_cause_ids',
                     filters: {
                         case_status: ['in_progress', 'completed', 'interrupted'],
                         alert_status: ['accepted']
@@ -90,7 +90,7 @@
                 var chartName = 'Divisão dos casos por motivo de evasão escolar';
                 var labels = causesData.labels ? causesData.labels : {};
 
-                return Charts.generateDimensionChart(report, chartName, labels, 'pie');
+                return Charts.generateDimensionChart(report, chartName, labels, 'bar');
             }
 
             function getCausesConfig() {
