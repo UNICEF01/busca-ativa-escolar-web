@@ -9,6 +9,9 @@
 			})
 		})
 		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
+
+			$scope.isSending = false;
+
 			$scope.identity = Identity;
 
 			$scope.children = {};
@@ -51,7 +54,9 @@
 
 			$scope.preview = function(child) {
 				$scope.child = child
-				$('#modalChild').modal();
+				$('#modalChild').modal({
+					keyboard: false,
+				});
 			};
 
 			$scope.canAcceptAlert = function(child) {
@@ -69,18 +74,23 @@
 					return;
 				}
 
+				$scope.isSending = true;
+
 				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
 					$scope.refresh();
 					$scope. child = {};
 					$('#modalChild').modal('hide');
+					$scope.isSending = false;
 				});
 			};
 
 			$scope.reject = function(child) {
+				$scope.isSending = true;
 				Alerts.reject({id: child.id}, function() {
 					$scope.refresh();
 					$scope.child = {};
 					$('#modalChild').modal('hide');
+					$scope.isSending = false;
 				});
 			};
 

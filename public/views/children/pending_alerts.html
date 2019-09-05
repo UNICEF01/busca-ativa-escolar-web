@@ -256,10 +256,11 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn  no-animate btn-warning" ng-show="!canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-warning"></i> Endereço do alerta pendente!</button>
-					<button type="submit" class="btn btn-raised no-animate btn-success" ng-click="accept(child)" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-check"></i> Aceitar alerta</button>
-					<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected'"><i class="fa fa-ban"></i> Rejeitar alerta</button>
+					<button class="btn btn-raised" ng-show="isSending == true"><i class="fa fa-warning"></i> Aguarde ...</button>
+					<button type="submit" class="btn btn-raised no-animate btn-success" ng-click="accept(child)" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected' && isSending == false"><i class="fa fa-check"></i> Aceitar alerta</button>
+					<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected' && isSending == false "><i class="fa fa-ban"></i> Rejeitar alerta</button>
 					<br/><br/>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar janela</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal" ng-show="isSending == false">Fechar janela</button>
 				</div>
 			</div>
 		</div>
