@@ -197,6 +197,16 @@
                 return false;
             }
 
+            function haveEqualsValue(name, values) {
+                var value = _.uniq(values)
+                if(value.length === 1){
+                    ngToast.danger(name + ' não podem ser iguais');
+                    return false
+                }else{
+                    return true
+                }
+            }
+
             function basename(str) {
                 var base = ("" + str).substring(str.lastIndexOf('/') + 1);
 
@@ -255,6 +265,7 @@
                 extract: extract,
                 pluck: pluck,
                 search: search,
+                haveEqualsValue: haveEqualsValue
             };
         })
         .directive('stringToNumber', function () {
