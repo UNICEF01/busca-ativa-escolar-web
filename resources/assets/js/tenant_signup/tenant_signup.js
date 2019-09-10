@@ -9,7 +9,8 @@
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Cadastre o município', 'Gestor Político', 'Cadastre o prefeito', 'Termo de Adesão']
+        $scope.stepsNames = ['Cadastre o município', 'Gestor Político', 'Cadastre o prefeito', 'Termo de Adesão'];
+
         $scope.form = {
             uf: null,
             city: null,
@@ -54,8 +55,11 @@
         };
 
         $scope.goToStep = function (step) {
+            console.log($scope.step, $scope.numSteps)
             if ($scope.step < 1) return;
-            if ($scope.step > $scope.numSteps) return;
+            if ($scope.step >= $scope.numSteps) return;
+            console.log($scope.step, $scope.numSteps)
+
 
             $scope.step = step;
             $window.scrollTo(0, 0);
@@ -66,8 +70,8 @@
 
             if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
             if ($scope.step === 3 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
-            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs',[$scope.form.admin.cpf, $scope.form.mayor.cpf])) return;
-            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes',[$scope.form.admin.name, $scope.form.mayor.name])) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.mayor.cpf])) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.mayor.name])) return;
 
             $scope.step++;
             $window.scrollTo(0, 0);
