@@ -1149,10 +1149,8 @@
 		})
 		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
 
-			$scope.isSending = false;
-
 			$scope.identity = Identity;
-
+			$scope.sendingAlert = false;
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
@@ -1213,23 +1211,21 @@
 					return;
 				}
 
-				$scope.isSending = true;
+				$scope.sendingAlert = true;
 
 				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
 					$scope.refresh();
 					$scope. child = {};
 					$('#modalChild').modal('hide');
-					$scope.isSending = false;
+					$scope.sendingAlert = false;
 				});
 			};
 
 			$scope.reject = function(child) {
-				$scope.isSending = true;
 				Alerts.reject({id: child.id}, function() {
 					$scope.refresh();
 					$scope.child = {};
 					$('#modalChild').modal('hide');
-					$scope.isSending = false;
 				});
 			};
 
