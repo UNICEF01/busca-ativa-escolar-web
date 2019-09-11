@@ -47,18 +47,19 @@
 				Children.spawnFromAlert(data).$promise.then(function (res) {
 					if(res.messages) {
 						console.warn("[create_alert] Failed validation: ", res.messages);
+						$scope.disableCreateAlertButton = false;
 						return Utils.displayValidationErrors(res);
 					}
 
 					if(!res || !res.child_id) {
 						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
+						$scope.disableCreateAlertButton = false;
 						return;
 					}
 
 					ngToast.success('Alerta registrado com sucesso!');
 
 					$scope.disableCreateAlertButton = false;
-
 
 					if(Identity.getType() === 'agente_comunitario') {
 						$state.go('dashboard');
