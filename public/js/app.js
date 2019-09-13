@@ -516,11 +516,13 @@
 
         $scope.child_id = $scope.$parent.child_id;
         $scope.child = $scope.$parent.child;
+        $scope.identity = $scope.$parent.identity;
         $scope.checkboxes = {};
 
         $scope.step = {};
         $scope.tenantSettings = {};
 
+        $scope.tenantSettingsOfCase = {};
 
         $scope.isMapReady = false;
         $scope.defaultMapZoom = 14;
@@ -617,7 +619,6 @@
             $scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
 
             Tenants.getSettings(function (res) {
-                console.log('[manage_deadlines] Current settings: ', res);
                 $scope.tenantSettings = res;
             });
 
@@ -640,8 +641,11 @@
                     step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
                 }
 
-            });
+                Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id}, function (res) {
+                    $scope.tenantSettingsOfCase = res;
+                });
 
+            });
         }
 
         fetchStepData();
@@ -684,6 +688,7 @@
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
             if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
+            if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
             return (!$scope.step.is_completed);
         };
 
@@ -914,30 +919,53 @@
 
         $scope.canUpdateStepObservation = function (child) {
             var time_for_next_step = 0;
-            if ($scope.step.slug == "1a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["1a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
+            if($scope.step && $scope.tenantSettings){
+                if ($scope.step.slug == "1a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
 
-            }
-            if ($scope.step.slug == "2a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["2a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
-            }
-            if ($scope.step.slug == "3a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["3a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
-            }
-            if ($scope.step.slug == "4a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["4a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
+                }
+                if ($scope.step.slug == "2a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "3a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "4a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
             }
         };
 
+        $scope.scopeOfCase = function () {
+            if( $scope.step.assigned_user ){
+                if($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual"){
+                    return "state";
+                }else{
+                    return "municipality";
+                }
+            }
+        }
+
+        $scope.scopeOfUser = function () {
+            if($scope.identity.getCurrentUser().type === "coordenador_estadual"
+                || $scope.identity.getCurrentUser().type === "supervisor_estadual"){
+                return "state";
+            }else{
+                return "municipality";
+            }
+        }
+
     }
+
 })();
 
 (function() {
@@ -5424,7 +5452,8 @@ if (!Array.prototype.find) {
 				find: {method: 'GET', headers: headers},
                 findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
-				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders}
+				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
+			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
 			});
 
 		});
