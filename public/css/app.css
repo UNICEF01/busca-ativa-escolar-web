@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1559826299');
+  background-image: url('../images/logo_bae_header_v2.png?1562607820');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -219,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1559826299');
+  background-image: url('../images/ico_forbidden.png?1562607820');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1098,6 +1098,76 @@ table.dataTable td {
     margin-top: 0.5em;
   }
 }
+.wizard a {
+  padding: 20px 12px 20px;
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  min-width: 19%;
+  margin-left: 0.25%;
+  text-align: right;
+  text-decoration: none;
+  font-size: 14px;
+  color: #EBEBEB;
+  background: #EBEBEB;
+  text-transform: uppercase;
+  cursor: pointer;
+  height: 80px;
+}
+
+.wizard a:hover {
+  text-decoration: none;
+}
+
+.wizard a:first-child {
+  margin-left: 0;
+}
+
+.wizard:not(.left-arrow) a:before {
+  width: 0;
+  height: 0;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
+  border-left: 30px solid #FFFFFF;
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+}
+
+.wizard:not(.left-arrow) a:after {
+  width: 0;
+  height: 0;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
+  border-left: 30px solid #EBEBEB;
+  position: absolute;
+  content: "";
+  top: 0;
+  right: -30px;
+  z-index: 2;
+}
+
+.wizard a:first-child:before,
+.wizard a:last-child:after {
+  border: none;
+}
+
+.ml-0 {
+  margin-left: 0px !important;
+}
+
+.green-color-back-arrow {
+  background: #19AFA1 !important;
+  color: white !important;
+  border-left: #19AFA1 !important;
+}
+
+.green-color-arrow:above-level a:before {
+  border-left: 30px solid #19AFA1 !important;
+  border: 1px solid red;
+}
+
 /*!
  * jsonformatter
  * 

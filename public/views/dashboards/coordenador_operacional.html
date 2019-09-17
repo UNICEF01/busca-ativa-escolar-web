@@ -1,47 +1,72 @@
 <div class="dashboard dashboard-coordenador-operacional">
+<h2><i class="material-icons">beenhere</i>Status do municipio: São Paulo</h2>
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="wizard small row ml-0 ng-cloak" ng-cloak>
+                <div>
+                <a ng-repeat="item in steps" ng-click="setCurrent(item)" ng-class="{ 'green-color-back-arrow': item.data != 'NI', 'green-color-arrow': item.data != 'NI'}">
+                    <div class="badge">
+<!--                        <div class="border"></div>-->
+                        <div class="number">{{item.nome}}</div>
+                    </div><br>
+                    <small>{{item.data}}</small>
 
-	<div class="row">
-		<div class="col-md-7">
-			<h3><i class="material-icons">map</i> Mapa de casos</h3>
+                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div class="row">
+        <div class="col-md-7">
+            <h3><i class="material-icons">map</i> Mapa de casos</h3>
 
-			<div id="dashboard-map-coordenador-operacional">
-				<cases-map></cases-map>
-			</div>
+            <div id="dashboard-map-coordenador-operacional">
+                <cases-map></cases-map>
+            </div>
 
-		</div>
-		<div class="col-md-5">
-			<h3><i class="material-icons">insert_chart</i> Visão geral da estratégia <small ng-bind="identity.getCurrentUser().tenant.name"></small></h3>
-			<metrics-overview></metrics-overview>
+        </div>
+        <div class="col-md-5">
+            <h3><i class="material-icons">insert_chart</i> Visão geral da estratégia <small
+                    ng-bind="identity.getCurrentUser().tenant.name"></small></h3>
+            <metrics-overview></metrics-overview>
 
-			<div ng-show="!tenantInfo.educacensoImportDetails.has_imported">
-				<hr />
+            <div ng-show="!tenantInfo.educacensoImportDetails.has_imported">
+                <hr/>
 
-				<h3><i class="fa fa-upload"></i> Importar alertas do Educacenso</h3>
-				<div class="alert alert-warning">
-					<strong>Estão disponíveis os resultados do Censo Escolar!</strong>
-					<p>Você pode importar automaticamente a planilha de evasões escolares do seu município na plataforma Busca Ativa Escolar.</p>
-					<p>Os casos identificados no Educacenso serão registrados como alertas pendentes de forma automática.</p>
-					<a ui-sref="settings({step: 8})" class="btn btn-default btn-raised">Importar planilha</a>
-				</div>
-			</div>
+                <h3><i class="fa fa-upload"></i> Importar alertas do Educacenso</h3>
+                <div class="alert alert-warning">
+                    <strong>Estão disponíveis os resultados do Censo Escolar!</strong>
+                    <p>Você pode importar automaticamente a planilha de evasões escolares do seu município na plataforma
+                        Busca Ativa Escolar.</p>
+                    <p>Os casos identificados no Educacenso serão registrados como alertas pendentes de forma
+                        automática.</p>
+                    <a ui-sref="settings({step: 8})" class="btn btn-default btn-raised">Importar planilha</a>
+                </div>
+            </div>
 
-			<hr />
+            <hr/>
 
-			<h3><i class="material-icons">update</i> Últimas atualizações no sistema</h3>
-			<recent-activity></recent-activity>
-		</div>
-	</div>
+            <h3><i class="material-icons">update</i> Últimas atualizações no sistema</h3>
+            <recent-activity></recent-activity>
+        </div>
+    </div>
 
-	<div class="row">
-		<div class="col-md-12">
-			<h3><i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar</h3>
-			<last-month-timeline></last-month-timeline>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar</h3>
+            <last-month-timeline></last-month-timeline>
 
-		</div>
-		<div class="col-md-12">
-			<h3><i class="material-icons">info_outline</i> Motivos dos casos</h3>
-			<causes-chart></causes-chart>
-		</div>
-	</div>
+        </div>
+        <div class="col-md-12">
+            <h3><i class="material-icons">info_outline</i> Motivos dos casos</h3>
+            <causes-chart></causes-chart>
+        </div>
+    </div>
 
 </div>
