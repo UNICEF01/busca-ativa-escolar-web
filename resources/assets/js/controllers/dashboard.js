@@ -8,7 +8,7 @@
 
         $scope.ready = false;
 
-        $scope.steps = [{name: 'Adesão', data: ''}, {name: 'Configuração', data: ''}, {name: '1º Alerta', data: ''}, {name: '1º Caso', data: ''}, {name: '1ª Rematriculas', data: ''}]
+        $scope.steps = [{name: 'Adesão', data: ''}, {name: 'Configuração', data: ''}, {name: '1º Alerta', data: ''}, {name: '1º Caso', data: ''}, {name: '1ª Rematricula', data: ''}]
 
         Reports.getStatusBar(function (data) {
             if(data.status !== 'ok') {
