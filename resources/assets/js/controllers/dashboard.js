@@ -8,8 +8,17 @@
 
         $scope.ready = false;
 
-        $scope.steps = [{name: 'Adesão', data: '01/01/2015'}, {name: 'Configuração', data: '01/01/2015'}, {name: 'Alertas', data: 'NI'}, {name: 'Casos', data: 'NI'}, {name: 'Rematriculas', data: 'NI'}]
+        $scope.steps = [{name: 'Adesão', data: ''}, {name: 'Configuração', data: ''}, {name: '1º Alerta', data: ''}, {name: '1º Caso', data: ''}, {name: '1ª Rematriculas', data: ''}]
 
+        Reports.getStatusBar(function (data) {
+            if(data.status !== 'ok') {
+                $scope.steps[0].data = data.bar.registered_at.date;
+                $scope.steps[1].data = data.bar.config.date;
+                $scope.steps[2].data = data.bar.first_alert.date;
+                $scope.steps[3].data = data.bar.first_case.date;
+                $scope.steps[4].data = data.bar.first_reinsertion_class.date;
+            }
+        });
 
         function init() {
             $scope.states.length = 0;

@@ -1120,13 +1120,14 @@ table.dataTable td {
   text-decoration: none;
   font-size: 14px;
   color: #FFFFFF;
-  background: #8BBFE6;
+  background: #CCCCCC;
   text-transform: uppercase;
   cursor: pointer;
 }
 
 .wizard a:hover {
   text-decoration: none;
+  color: #FFF;
 }
 
 .wizard a:first-child {
@@ -1136,8 +1137,8 @@ table.dataTable td {
 .wizard:not(.left-arrow) a:before {
   width: 0;
   height: 0;
-  border-top: 30px inset transparent;
-  border-bottom: 30px inset transparent;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
   border-left: 30px solid #FFFFFF;
   position: absolute;
   content: "";
@@ -1148,9 +1149,9 @@ table.dataTable td {
 .wizard:not(.left-arrow) a:after {
   width: 0;
   height: 0;
-  border-top: 30px inset transparent;
-  border-bottom: 30px inset transparent;
-  border-left: 30px solid #8BBFE6;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
+  border-left: 30px solid #CCCCCC;
   position: absolute;
   content: "";
   top: 0;
@@ -1161,9 +1162,9 @@ table.dataTable td {
 .wizard.left-arrow a:before {
   width: 0;
   height: 0;
-  border-top: 30px inset transparent;
-  border-bottom: 30px inset transparent;
-  border-right: 30px solid #8BBFE6;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
+  border-right: 30px solid #CCCCCC;
   position: absolute;
   content: "";
   top: 0;
@@ -1174,8 +1175,8 @@ table.dataTable td {
 .wizard.left-arrow a:after {
   width: 0;
   height: 0;
-  border-top: 30px inset transparent;
-  border-bottom: 30px inset transparent;
+  border-top: 40px inset transparent;
+  border-bottom: 40px inset transparent;
   border-right: 30px solid #FFFFFF;
   position: absolute;
   content: "";
@@ -1203,12 +1204,11 @@ table.dataTable td {
 
 .wizard a:last-child:not(.current) {
   /*May want another class and the :before rather than using last-child.*/
-  background-color: #3E95D6;
 }
 
 .wizard.left-arrow a:last-child:before,
 .wizard.small.left-arrow a:last-child:before {
-  border-right-color: #3E95D6;
+  border-right-color: #19AFA1;
 }
 
 .wizard .badge {
@@ -1222,22 +1222,22 @@ table.dataTable td {
 }
 
 .wizard .current, .wizard a.progress-current {
-  background: #363636;
+  background: #19AFA1;
   color: #fff;
 }
 
 .wizard a.current:after, .wizard a.progress-current:after {
-  border-left-color: #363636 !important;
+  border-left-color: #19AFA1 !important;
 }
 
 .wizard.left-arrow a.current:before, .wizard.left-arrow a.progress-current:before,
 .wizard.small.left-arrow a.current:before, .wizard.small.left-arrow a.progress-current:before {
-  border-right-color: #363636;
+  border-right-color: #19AFA1;
 }
 
 .wizard a.current .badge, .wizard a.progress-current .badge {
   background-color: #FFFFFF;
-  color: #363636;
+  color: #19AFA1;
 }
 
 .wizard.small {
@@ -1257,14 +1257,14 @@ table.dataTable td {
 .wizard.small:not(.left-arrow) a:after {
   border-top: 15px inset transparent;
   border-bottom: 15px inset transparent;
-  border-left: 15px solid #8BBFE6;
+  border-left: 15px solid #CCCCCC;
   right: -15px;
 }
 
 .wizard.small.left-arrow a:before {
   border-top: 15px inset transparent;
   border-bottom: 15px inset transparent;
-  border-right: 15px solid #8BBFE6;
+  border-right: 15px solid #CCCCCC;
   left: -15px;
   z-index: 2;
 }
@@ -1297,6 +1297,10 @@ _:-ms-fullscreen, :root .wizard.left-arrow a:before {
 
 _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   right: -29px;
+}
+
+.ml-0 {
+  margin-left: 0px !important;
 }
 
 /*!

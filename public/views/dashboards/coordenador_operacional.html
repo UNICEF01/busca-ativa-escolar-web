@@ -1,36 +1,26 @@
 <div class="dashboard dashboard-coordenador-operacional">
-<h2><i class="material-icons">beenhere</i>Status do municipio: São Paulo</h2>
+    <h2><i class="material-icons">beenhere</i>Status do municipio: São Paulo</h2>
     <br>
     <div class="row">
         <div class="col-md-12">
-<!--            <div class="wizard small row ml-0 ng-cloak" ng-cloak>-->
-<!--                <div>-->
-<!--                <a ng-repeat="item in steps" ng-click="setCurrent(item)" ng-class="{ 'green-color-back-arrow': item.data != 'NI', 'green-color-arrow': item.data != 'NI'}">-->
-<!--                    <div class="badge">-->
-<!--                        <div class="border"></div>-->
-<!--                        <div class="number">{{item.name}}</div>-->
-<!--                    </div><br>-->
-<!--                    <small>{{item.data}}</small>-->
-
-<!--                </a>-->
-<!--                </div>-->
-<!--            </div>-->
-            <div class="wizard row ng-cloak" ng-cloak>
-                <a ng-repeat="item in steps" ng-click="setCurrent(state)" ng-class="{ 'current': item.data != 'NI' }" ng-href="{{item.href}}">
+            <div class="wizard row ng-cloak text-center" ng-cloak>
+                <a ng-repeat="item in steps" ng-class="{ 'current': item.data != '' }">
                     <div class="badge">
                         <div class="border"></div>
                         <div class="number">{{$index + 1}}</div>
                     </div>
-                    {{ item.name }}
+                    {{ item.name }}<br>
+                    <small>{{item.data | dtFormat }}</small>
+
                 </a>
             </div>
         </div>
     </div>
-<br>
-<br>
-<br>
-<br>
-<br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <div class="row">
         <div class="col-md-7">
             <h3><i class="material-icons">map</i> Mapa de casos</h3>
