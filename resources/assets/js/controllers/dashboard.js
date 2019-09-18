@@ -8,8 +8,7 @@
 
         $scope.ready = false;
 
-        $scope.steps = ['Adesão', 'Configuração', 'Alertas', 'Casos', 'Rematriculas']
-        $scope.steps = [{nome: 'Adesão', data: '01/01/2015'}, {nome: 'Configuração', data: '01/01/2015'}, {nome: 'Alertas', data: 'NI'}, {nome: 'Casos', data: 'NI'}, {nome: 'Rematriculas', data: 'NI'}]
+        $scope.steps = [{name: 'Adesão', data: '01/01/2015'}, {name: 'Configuração', data: '01/01/2015'}, {name: 'Alertas', data: 'NI'}, {name: 'Casos', data: 'NI'}, {name: 'Rematriculas', data: 'NI'}]
 
 
         function init() {

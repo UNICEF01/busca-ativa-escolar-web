@@ -3,17 +3,26 @@
     <br>
     <div class="row">
         <div class="col-md-12">
-            <div class="wizard small row ml-0 ng-cloak" ng-cloak>
-                <div>
-                <a ng-repeat="item in steps" ng-click="setCurrent(item)" ng-class="{ 'green-color-back-arrow': item.data != 'NI', 'green-color-arrow': item.data != 'NI'}">
-                    <div class="badge">
+<!--            <div class="wizard small row ml-0 ng-cloak" ng-cloak>-->
+<!--                <div>-->
+<!--                <a ng-repeat="item in steps" ng-click="setCurrent(item)" ng-class="{ 'green-color-back-arrow': item.data != 'NI', 'green-color-arrow': item.data != 'NI'}">-->
+<!--                    <div class="badge">-->
 <!--                        <div class="border"></div>-->
-                        <div class="number">{{item.nome}}</div>
-                    </div><br>
-                    <small>{{item.data}}</small>
+<!--                        <div class="number">{{item.name}}</div>-->
+<!--                    </div><br>-->
+<!--                    <small>{{item.data}}</small>-->
 
+<!--                </a>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="wizard row ng-cloak" ng-cloak>
+                <a ng-repeat="item in steps" ng-click="setCurrent(state)" ng-class="{ 'current': item.data != 'NI' }" ng-href="{{item.href}}">
+                    <div class="badge">
+                        <div class="border"></div>
+                        <div class="number">{{$index + 1}}</div>
+                    </div>
+                    {{ item.name }}
                 </a>
-                </div>
             </div>
         </div>
     </div>
