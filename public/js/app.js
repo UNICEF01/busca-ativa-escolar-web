@@ -2705,7 +2705,7 @@
         Reports.getStatusBar(function (data) {
             if(data.status !== 'ok') {
                 $scope.steps[0].data = data.bar.registered_at.date;
-                $scope.steps[1].data = data.bar.config.date;
+                $scope.steps[1].data = data.bar.config.updated_at.date;
                 $scope.steps[2].data = data.bar.first_alert.date;
                 $scope.steps[3].data = data.bar.first_case.date;
                 $scope.steps[4].data = data.bar.first_reinsertion_class.date;
