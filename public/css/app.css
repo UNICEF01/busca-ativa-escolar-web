@@ -1303,6 +1303,10 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   margin-left: 0px !important;
 }
 
+.font-panel-big-number {
+  font-size: 4em;
+}
+
 /*!
  * animate.css -https://daneden.github.io/animate.css/
  * Version - 3.7.2
@@ -4885,6 +4889,13 @@ a.column-sorter {
 
 .alert-color {
   color: #F0AD4E !important;
+}
+
+#container {
+  max-width: 660px;
+  margin: auto;
+  height: 400px;
+  margin: 0 auto;
 }
 
 /*# sourceMappingURL=app.css.map */

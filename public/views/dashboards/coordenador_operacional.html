@@ -66,15 +66,16 @@
         </div>
         <div class="col-md-12">
             <h3><i class="fa fa-smile-o"></i> Rematrículas</h3>
-            <div class="col-md-6">
+            <div class="col-md-9">
                 <div class="panel panel-default">
-
+                    <donuts-chart></donuts-chart>
+                    <div class="panel-footer">Meu status quando a meta do Selo UNICEF</div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="panel panel-default">
-                    <h1 class="panel-body" ng-bind="getMetrics().report.normal || 0"></h1>
-                    <div class="panel-footer">Totais</div>
+                    <div class="panel-body font-panel-big-number text-center" ng-bind="getMetrics().report.normal || 0"></div>
+                    <div class="panel-footer text-center">Meta</div>
                 </div>
             </div>
         </div>
