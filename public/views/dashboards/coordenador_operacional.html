@@ -121,15 +121,17 @@
                             <div class="panel-footer text-center">Meta</div>
                         </div>
                         <div class="panel panel-default">
-                            <div class="panel-heading"><h5><b>Por etapas</b></h5></div>
-                            <ul>
-                                <li>Rematricula ( {{otherData.goal_box.reinsertions_classes}} )</li>
-                                <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 }} )</li>
-                                <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 }} )</li>
-                                <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3}} )</li>
-                                <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4}} )</li>
-                            </ul>
-                            <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
+                            <!--                            <div class="panel-heading"><h5><b>Por etapas</b></h5></div>-->
+                            <div class="panel-body">
+                                <ul>
+                                    <li>Rematricula ( {{otherData.goal_box.reinsertions_classes}} )</li>
+                                    <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 }} )</li>
+                                    <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 }} )</li>
+                                    <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3}} )</li>
+                                    <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4}} )</li>
+                                </ul>
+                            </div>
+                            <div class="panel-footer text-center">Por etapas</div>
                         </div>
                     </div>
                 </div>
