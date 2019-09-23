@@ -82,9 +82,9 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><h5><b>No prazo</b></h5></div>
                             <ul>
-                                <li>Pesquisa</li>
-                                <li>Análise Tẽcnica</li>
-                                <li>Gestão do Caso</li>
+                                <li>Pesquisa ( 50 )</li>
+                                <li>Análise Tẽcnica ( 100 )</li>
+                                <li>Gestão do Caso ( 30 )</li>
                             </ul>
                             <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
                         </div>
@@ -93,9 +93,9 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><h5><b>Em atraso</b></h5></div>
                             <ul>
-                                <li>Pesquisa</li>
-                                <li>Análise Tẽcnica</li>
-                                <li>Gestão do Caso</li>
+                                <li>Pesquisa ( 50 )</li>
+                                <li>Análise Tẽcnica ( 100 )</li>
+                                <li>Gestão do Caso ( 30 )</li>
                             </ul>
                             <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
                         </div>
@@ -117,16 +117,17 @@
                     <div class="col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-body font-panel-big-number text-center"
-                                 ng-bind="getMetrics().report.normal || 0"></div>
+                                 ng-bind="otherData.goal_box.goal"></div>
                             <div class="panel-footer text-center">Meta</div>
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading"><h5><b>Por etapas</b></h5></div>
                             <ul>
-                                <li>Rematricula</li>
-                                <li>Pesquisa</li>
-                                <li>Análise Tẽcnica</li>
-                                <li>Gestão do Caso</li>
+                                <li>Rematricula ( {{otherData.goal_box.reinsertions_classes}} )</li>
+                                <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 }} )</li>
+                                <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 }} )</li>
+                                <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3}} )</li>
+                                <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4}} )</li>
                             </ul>
                             <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
                         </div>

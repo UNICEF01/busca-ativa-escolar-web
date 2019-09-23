@@ -17,6 +17,7 @@
                 $scope.steps[2].data = data.bar.first_alert.date;
                 $scope.steps[3].data = data.bar.first_case.date;
                 $scope.steps[4].data = data.bar.first_reinsertion_class.date;
+                $scope.otherData = data;
             }
         });
 

@@ -2,12 +2,25 @@
 
     angular.module('BuscaAtivaEscolar').directive('donutsChart', function ($timeout, moment, Platform, Reports, Charts) {
 
-        function init(scope, element, attrs) {
+   function getDadosRematricula(scope, element, attrs) {
+       Reports.getStatusBar(function (data) {
+           if (data.status !== 'ok') {
+             init(scope, element, attrs, data);
+           }
+       });
+   }
+
+        function init(scope, element, attrs, data) {
+
+            var meta = data.goal_box.goal;
+            var atingido = data.goal_box.reinsertions_classes;
+
+            var percentualAtingido = (atingido * 100) / meta;
 
             var colors = Highcharts.getOptions().colors,
                 categories = [
-                    'Chrome',
-                    'Firefox'
+                    'alcancado',
+                    'meta'
                 ],
                 data = [
                     {
@@ -18,7 +31,7 @@
                                 'Onde estou'
                             ],
                             data: [
-                                10
+                                percentualAtingido
                             ]
                         }
                     },
@@ -30,7 +43,7 @@
                                 'Ainda falta'
                             ],
                             data: [
-                                90
+                                100 - percentualAtingido
                             ]
                         }
                     }
@@ -109,8 +122,7 @@
                             maxWidth: 400
                         },
                         chartOptions: {
-                            series: [{
-                            }, {
+                            series: [{}, {
                                 id: 'versions',
                                 dataLabels: {
                                     enabled: false
@@ -123,7 +135,7 @@
         }
 
         return {
-            link: init,
+            link: getDadosRematricula,
             replace: true,
             templateUrl: '/views/components/donuts_chart.html'
         };
