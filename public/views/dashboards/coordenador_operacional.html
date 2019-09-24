@@ -6,14 +6,14 @@
         <div class="panel-body">
             <div class="col-md-12">
                 <div class="wizard row ng-cloak text-center" ng-cloak ng-if="ready">
-                    <a ng-repeat="item in steps" ng-class="{ 'current': item.data != '' }">
+                    <a ng-repeat="item in steps" ng-class="{ 'current': item.info != '' }">
                         <div class="badge animated fadeInLeft">
                             <div class="border"></div>
                             <div class="number">{{$index + 1}}</div>
                         </div>
                         <span class="animated fadeIn">
                     {{ item.name }}<br>
-                    <small>{{item.data | dtFormat }}</small>
+                    <small>{{item.info | dtFormat }}</small>
                     </span>
 
                     </a>
@@ -21,19 +21,69 @@
             </div>
         </div>
     </div>
-
-    <div class="panel panel-default animated fadeInUp">
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 0">
         <div class="panel-body">
+            <h3>Adesão</h3>
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
             printer
             took a galley of type and scrambled it to make a type specimen book. It has survived not only five
-            centuries,
-            but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the
-            1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
-            publishing
-            software like Aldus PageMaker including versions of Lorem Ipsum
+            centuries
+        </div>
+    </div>
+
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 1">
+        <div class="panel-body">
+            <h3>Configuração</h3>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not only five
+            centuries
+        </div>
+    </div>
+
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 2">
+        <div class="panel-body">
+            <h3>1º Alerta</h3>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not only five
+            centuries
+        </div>
+    </div>
+
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 3">
+        <div class="panel-body">
+            <h3>1º Caso</h3>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not only five
+            centuries
+        </div>
+    </div>
+
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 4">
+        <div class="panel-body">
+            <h3>Rematrícula</h3>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not only five
+            centuries
+        </div>
+    </div>
+
+    <div class="panel panel-default animated fadeInUp" ng-show="showInfo == undefined">
+        <div class="panel-body">
+            <h3>Parabéns</h3>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+            printer
+            took a galley of type and scrambled it to make a type specimen book. It has survived not only five
+            centuries
         </div>
     </div>
 

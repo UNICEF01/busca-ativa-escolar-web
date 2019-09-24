@@ -8,18 +8,36 @@
 
         $scope.ready = false;
 
-        $scope.steps = [{name: 'Adesão', data: ''}, {name: 'Configuração', data: ''}, {name: '1º Alerta', data: ''}, {name: '1º Caso', data: ''}, {name: '1ª Rematricula', data: ''}]
+        $scope.steps = [
+            {name: 'Adesão', info: ''},
+            {name: 'Configuração', info: ''},
+            {name: '1º Alerta', info: ''},
+            {name: '1º Caso', info: ''},
+            {name: '1ª Rematricula', info: ''}
+        ]
 
         Reports.getStatusBar(function (data) {
-            if(data.status !== 'ok') {
-                $scope.steps[0].data = data.bar.registered_at.date;
-                $scope.steps[1].data = data.bar.config.updated_at.date;
-                $scope.steps[2].data = data.bar.first_alert.date;
-                $scope.steps[3].data = data.bar.first_case.date;
-                $scope.steps[4].data = data.bar.first_reinsertion_class.date;
+
+            if (data.status !== 'ok') {
+                $scope.steps[0].info = data.bar.registered_at.date;
+                $scope.steps[1].info = data.bar.config.updated_at.date;
+                $scope.steps[2].info = data.bar.first_alert.date;
+                $scope.steps[3].info = data.bar.first_case.date;
+                $scope.steps[4].info = data.bar.first_reinsertion_class.date;
                 $scope.otherData = data;
+
+                angular.forEach($scope.steps, function (value, key) {
+                    console.log($scope.showInfo)
+                    var actualDate = moment(value.info);
+                    if (!actualDate._i && $scope.showInfo == undefined) {
+                        $scope.showInfo = key;
+                    }
+                });
+
+
             }
         });
+
 
         function init() {
             $scope.states.length = 0;
