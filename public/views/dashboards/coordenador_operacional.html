@@ -46,25 +46,25 @@
                 <div class="panel-body">
                     <div class="col-md-3">
                         <div class="panel panel-default">
-                            <h1 class="panel-body" ng-bind="getMetrics().records_total || 0"></h1>
+                            <h1 class="panel-body" ng-bind="otherData.alert_box.alerts_created"></h1>
                             <div class="panel-footer">Total</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
-                            <h1 class="panel-body" ng-bind="getMetrics().report.normal || 0"></h1>
+                            <h1 class="panel-body" ng-bind="otherData.alert_box.alerts_accepted"></h1>
                             <div class="panel-footer">Aprovados</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
-                            <h1 class="panel-body" ng-bind="getMetrics().report.late || 0"></h1>
+                            <h1 class="panel-body" ng-bind="otherData.alert_box.alerts_pending"></h1>
                             <div class="panel-footer">Pendentes</div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="panel panel-default">
-                            <h1 class="panel-body" ng-bind="getMetrics().report.late || 0"></h1>
+                            <h1 class="panel-body" ng-bind="otherData.alert_box.alerts_rejected"></h1>
                             <div class="panel-footer">Rejeitados</div>
                         </div>
                     </div>
@@ -82,22 +82,22 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"><h5><b>No prazo</b></h5></div>
                             <ul>
-                                <li>Pesquisa ( 50 )</li>
-                                <li>Análise Tẽcnica ( 100 )</li>
-                                <li>Gestão do Caso ( 30 )</li>
+                                <li>Pesquisa ( {{ otherData.cases_box.steps_on_time.pesquisa }} )</li>
+                                <li>Análise Tẽcnica ( {{ otherData.cases_box.steps_on_time.analise_tecnica }} )</li>
+                                <li>Gestão do Caso ( {{ otherData.cases_box.steps_on_time.gestao_do_caso }} )</li>
                             </ul>
-                            <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
+                            <div class="panel-footer">Total: {{ otherData.cases_box.cases_on_time }}</div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="panel panel-default">
                             <div class="panel-heading"><h5><b>Em atraso</b></h5></div>
                             <ul>
-                                <li>Pesquisa ( 50 )</li>
-                                <li>Análise Tẽcnica ( 100 )</li>
-                                <li>Gestão do Caso ( 30 )</li>
+                                <li>Pesquisa ( {{ otherData.cases_box.steps_late.pesquisa }} )</li>
+                                <li>Análise Tẽcnica ( {{ otherData.cases_box.steps_late.analise_tecnica }} )</li>
+                                <li>Gestão do Caso ( {{ otherData.cases_box.steps_late.gestao_do_caso }} )</li>
                             </ul>
-                            <div class="panel-footer">Total: {{getMetrics().records_total || 0}}</div>
+                            <div class="panel-footer">Total: {{ otherData.cases_box.cases_late }}</div>
                         </div>
                     </div>
                 </div>

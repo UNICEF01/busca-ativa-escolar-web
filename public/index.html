@@ -42,7 +42,11 @@
 		</script>
 
 		<!-- Browser polyfills -->
-		<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+		<script>
+			/* Disable minification (remove `.min` from URL path) for more info */
+
+			(function(undefined) {}).call('object' === typeof window && window || 'object' === typeof self && self || 'object' === typeof global && global || {});
+		</script>
 
 		<!-- GMaps API (required to be loaded before vendors due to issue with ui-gmaps) -->
 		<script type="text/javascript" src="//maps.googleapis.com/maps/api/js?key=AIzaSyCZThmAFEc2CzaNzALnirK3Hl6r7suFhEY"></script>
