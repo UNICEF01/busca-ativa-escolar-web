@@ -18,6 +18,8 @@
 @import 'components/pending_alerts';
 @import 'components/scholl_browser';
 @import 'components/data_table';
+@import 'components/painel_metas';
+@import 'components/animated';
 
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
 
@@ -290,4 +292,10 @@ a.column-sorter {
 }
 .alert-color {
 	color: #F0AD4E !important;
+}
+#container {
+	max-width: 660px;
+	margin: auto;
+	height: 400px;
+	margin: 0 auto;
 }

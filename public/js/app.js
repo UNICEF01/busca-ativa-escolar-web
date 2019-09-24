@@ -1623,6 +1623,150 @@
 	});
 
 })();
+(function () {
+
+    angular.module('BuscaAtivaEscolar').directive('donutsChart', function ($timeout, moment, Platform, Reports, Charts) {
+
+   function getDadosRematricula(scope, element, attrs) {
+       Reports.getStatusBar(function (data) {
+           if (data.status !== 'ok') {
+             init(scope, element, attrs, data);
+           }
+       });
+   }
+
+        function init(scope, element, attrs, data) {
+
+            var meta = data.goal_box.goal;
+            var atingido = data.goal_box.reinsertions_classes;
+
+            var percentualAtingido = (atingido * 100) / meta;
+
+            var colors = Highcharts.getOptions().colors,
+                categories = [
+                    'alcancado',
+                    'meta'
+                ],
+                data = [
+                    {
+                        color: '#19AFA1',
+                        drilldown: {
+                            name: 'estou',
+                            categories: [
+                                'Onde estou'
+                            ],
+                            data: [
+                                percentualAtingido
+                            ]
+                        }
+                    },
+                    {
+                        color: '#9d9d9d',
+                        drilldown: {
+                            name: 'falta',
+                            categories: [
+                                'Ainda falta'
+                            ],
+                            data: [
+                                100 - percentualAtingido
+                            ]
+                        }
+                    }
+                ],
+                browserData = [],
+                versionsData = [],
+                i,
+                j,
+                dataLen = data.length,
+                drillDataLen,
+                brightness;
+
+
+// Build the data arrays
+            for (i = 0; i < dataLen; i += 1) {
+
+                // add browser data
+                browserData.push({
+                    name: categories[i],
+                    y: data[i].y,
+                    color: data[i].color
+                });
+
+                // add version data
+                drillDataLen = data[i].drilldown.data.length;
+                for (j = 0; j < drillDataLen; j += 1) {
+                    brightness = 0.2 - (j / drillDataLen) / 5;
+                    versionsData.push({
+                        name: data[i].drilldown.categories[j],
+                        y: data[i].drilldown.data[j],
+                        color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                    });
+                }
+            }
+
+            console.log(colors)
+
+// Create the chart
+            Highcharts.chart('donuts-chart', {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: ''
+                },
+                plotOptions: {
+                    pie: {
+                        shadow: false,
+                        center: ['50%', '50%']
+                    }
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                series: [{
+                    name: 'Browsers',
+                    data: browserData,
+                    size: '60%',
+                    dataLabels: {
+                        formatter: function () {
+                            return this.y > 5 ? this.point.name : null;
+                        },
+                        color: '#ffffff',
+                        distance: -30
+                    }
+                }, {
+                    name: 'Porcentagem',
+                    data: versionsData,
+                    size: '80%',
+                    innerSize: '60%',
+                    id: 'versions'
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 400
+                        },
+                        chartOptions: {
+                            series: [{}, {
+                                id: 'versions',
+                                dataLabels: {
+                                    enabled: false
+                                }
+                            }]
+                        }
+                    }]
+                }
+            });
+        }
+
+        return {
+            link: getDadosRematricula,
+            replace: true,
+            templateUrl: '/views/components/donuts_chart.html'
+        };
+    });
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').directive('appHeaderWarnings', function (Identity, Platform, Auth) {
@@ -2109,6 +2253,18 @@
 		};
 	});
 
+})();
+(function () {
+    angular.module('BuscaAtivaEscolar').filter('dtFormat', function () {
+        return function (input) {
+            console.log('Cliente Date ' + typeof input)
+            if (input) {
+                return moment(input).format('DD/MM/YYYY');
+            } else {
+                return 'aguardando'
+            }
+        };
+    });
 })();
 (function () {
     angular.module('BuscaAtivaEscolar').filter('cep', function () {
@@ -2678,22 +2834,79 @@
 	});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
 
-		$scope.identity = Identity;
-		$scope.static = StaticData;
-		$scope.tenantInfo = Tenants.getSettings();
+        $scope.identity = Identity;
+        $scope.static = StaticData;
+        $scope.tenantInfo = Tenants.getSettings();
 
-		$scope.ready = false;
+        $scope.ready = false;
 
-		Platform.whenReady(function() {
-			$scope.ready = true;
-		})
+        $scope.steps = [
+            {name: 'Adesão', info: ''},
+            {name: 'Configuração', info: ''},
+            {name: '1º Alerta', info: ''},
+            {name: '1º Caso', info: ''},
+            {name: '1ª Rematricula', info: ''}
+        ]
+
+        Reports.getStatusBar(function (data) {
+
+            if (data.status !== 'ok') {
+                $scope.steps[0].info = data.bar.registered_at.date;
+                $scope.steps[1].info = data.bar.config.updated_at.date;
+                $scope.steps[2].info = data.bar.first_alert.date;
+                $scope.steps[3].info = data.bar.first_case.date;
+                $scope.steps[4].info = data.bar.first_reinsertion_class.date;
+                $scope.otherData = data;
+
+                angular.forEach($scope.steps, function (value, key) {
+                    console.log($scope.showInfo)
+                    var actualDate = moment(value.info);
+                    if (!actualDate._i && $scope.showInfo == undefined) {
+                        $scope.showInfo = key;
+                    }
+                });
 
 
-	});
+            }
+        });
+
+
+        function init() {
+            $scope.states.length = 0;
+            for (var i = 0; i < $scope.stateCount; i++) {
+                $scope.states.push({
+                    name: 'Step ' + (i + 1).toString(),
+                    heading: 'Step ' + (i + 1).toString(),
+                    isVisible: true
+                });
+            }
+        };
+        $scope.stateCountChange = function () {
+            $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
+            init();
+        };
+
+        $scope.setCurrent = function (state) {
+            for (var i = 0; i < $scope.states.length; i++) {
+                $scope.states[i].isCurrent = false;
+            }
+            state.isCurrent = true;
+        };
+
+        $scope.states = [];
+        $scope.stateCount = 2;
+        init();
+
+        Platform.whenReady(function () {
+            $scope.ready = true;
+        })
+
+
+    });
 
 })();
 (function() {
@@ -5179,6 +5392,7 @@ if (!Array.prototype.find) {
 				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
 				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
 				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
+				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers}
 			});
 		});
 })();
@@ -5896,7 +6110,7 @@ if (!Array.prototype.find) {
 
 		function generateDimensionChart(report, seriesName, labels, chartType, yAxisLabel, valueSuffix) {
 
-			console.log("[charts] Generating dimension chart: ", seriesName, report);
+			// console.log("[charts] Generating dimension chart: ", seriesName, report);
 
 			if(!report || !seriesName || !labels) return;
 			if(!chartType) chartType = 'bar';
@@ -6078,6 +6292,11 @@ if (!Array.prototype.find) {
                 }
 			};
 		}
+
+		function generateDonutsChart(report, chartName, labels) {
+
+		}
+
 
 		return {
 			generateDimensionChart: generateDimensionChart,

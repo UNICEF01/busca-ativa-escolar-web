@@ -95,3 +95,4 @@ Vale lembrar que os requisitos de hardware podem variar de acordo com a latênci
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
+resolucao de bug com sass, apos instalar o ruby rode o seguinte comando: gem install --pre sass-css-importer

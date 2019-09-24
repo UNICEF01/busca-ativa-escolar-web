@@ -24,7 +24,7 @@
 
 		function generateDimensionChart(report, seriesName, labels, chartType, yAxisLabel, valueSuffix) {
 
-			console.log("[charts] Generating dimension chart: ", seriesName, report);
+			// console.log("[charts] Generating dimension chart: ", seriesName, report);
 
 			if(!report || !seriesName || !labels) return;
 			if(!chartType) chartType = 'bar';
@@ -206,6 +206,11 @@
                 }
 			};
 		}
+
+		function generateDonutsChart(report, chartName, labels) {
+
+		}
+
 
 		return {
 			generateDimensionChart: generateDimensionChart,
