@@ -8,6 +8,8 @@
 
         $scope.ready = false;
 
+        $scope.showInfo = 1;
+
         $scope.steps = [
             {name: 'Adesão', info: ''},
             {name: 'Configuração', info: ''},
@@ -19,22 +21,23 @@
         Reports.getStatusBar(function (data) {
 
             if (data.status !== 'ok') {
-                $scope.steps[0].info = data.bar.registered_at.date;
-                $scope.steps[1].info = data.bar.config.updated_at.date;
-                $scope.steps[2].info = data.bar.first_alert.date;
-                $scope.steps[3].info = data.bar.first_case.date;
-                $scope.steps[4].info = data.bar.first_reinsertion_class.date;
+                $scope.steps[0].info = data.bar.registered_at && data.bar.registered_at.date || 0;
+                $scope.steps[1].info = data.bar.config.updated_at && data.bar.config.updated_at.date || 0;
+                $scope.steps[2].info = 0;
+                $scope.steps[3].info = 0;
+                $scope.steps[4].info = 0;
                 $scope.otherData = data;
 
-                angular.forEach($scope.steps, function (value, key) {
-                    console.log($scope.showInfo)
-                    var actualDate = moment(value.info);
-                    if (!actualDate._i && $scope.showInfo == undefined) {
-                        $scope.showInfo = key;
+                for (var i = 0; $scope.steps.length > i; i++) {
+                    var actualDate = moment($scope.steps[i].info);
+                    if (!actualDate._i && $scope.showInfo == 1) {
+                        $scope.showInfo = i;
                     }
-                });
-
-
+                    var finish = _.includes($scope.steps[i].info, 0);
+                }
+                if (finish) {
+                    $scope.showInfo = undefined
+                }
             }
         });
 
