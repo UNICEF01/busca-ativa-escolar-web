@@ -2,13 +2,13 @@
 
     angular.module('BuscaAtivaEscolar').directive('donutsChart', function ($timeout, moment, Platform, Reports, Charts) {
 
-   function getDadosRematricula(scope, element, attrs) {
-       Reports.getStatusBar(function (data) {
-           if (data.status !== 'ok') {
-             init(scope, element, attrs, data);
-           }
-       });
-   }
+        function getDadosRematricula(scope, element, attrs) {
+            Reports.getStatusBar(function (data) {
+                if (data.status !== 'ok') {
+                    init(scope, element, attrs, data);
+                }
+            });
+        }
 
         function init(scope, element, attrs, data) {
 
@@ -16,7 +16,7 @@
             var atingido = data.goal_box.reinsertions_classes;
             scope.showDonuts = 0;
 
-            if(atingido !== 0){
+            if (atingido !== 0) {
                 scope.showDonuts = 1;
             }
 
@@ -135,7 +135,11 @@
                             }]
                         }
                     }]
-                }
+                },
+                credits: {
+                    enabled: false
+                },
+                exporting: {enabled: false}
             });
         }
 
