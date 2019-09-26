@@ -1307,6 +1307,10 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   font-size: 4em;
 }
 
+.panel-footer-gool {
+  background-color: #4CE2D4;
+}
+
 /*!
  * animate.css -https://daneden.github.io/animate.css/
  * Version - 3.7.2
