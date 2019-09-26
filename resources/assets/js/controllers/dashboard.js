@@ -19,11 +19,11 @@
         Reports.getStatusBar(function (data) {
 
             if (data.status !== 'ok') {
-                $scope.steps[0].info = data.bar.registered_at && data.bar.registered_at.date || 0;
-                $scope.steps[1].info = data.bar.config.updated_at && data.bar.config.updated_at.date || 0;
-                $scope.steps[2].info = data.bar.first_alert && data.bar.first_alert.date || 0;
-                $scope.steps[3].info = data.bar.first_case && data.bar.first_case.date || 0;
-                $scope.steps[4].info = data.bar.first_reinsertion_class && data.bar.first_reinsertion_class.date || 0;
+                $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                $scope.steps[1].info = data.bar.config.updated_at && data.bar.config.updated_at || 0;
+                $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                $scope.steps[3].info = data.bar && data.bar.first_case || 0;
+                $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
                 $scope.otherData = data;
 
                 for (var i = 0; $scope.steps.length >= i; i++) {
