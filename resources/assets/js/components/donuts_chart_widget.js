@@ -14,8 +14,13 @@
 
             var meta = data.goal_box.goal;
             var atingido = data.goal_box.reinsertions_classes;
+            scope.showDonuts = 0;
 
-            var percentualAtingido = (atingido * 100) / meta;
+            if(atingido !== 0){
+                scope.showDonuts = 1;
+            }
+
+            var percentualAtingido = Math.floor((atingido * 100) / meta);
 
             var colors = Highcharts.getOptions().colors,
                 categories = [
