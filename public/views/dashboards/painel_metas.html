@@ -76,16 +76,16 @@
             </div>
         </div>
 
-<!--        <div class="panel panel-default animated fadeInUp" ng-show="showInfo === ''">-->
-<!--            <div class="panel-body">-->
-<!--                <h3>Parabéns</h3>-->
-<!--                Lorem Ipsum is simply dummy text of the printing and typesetting-->
-<!--                industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown-->
-<!--                printer-->
-<!--                took a galley of type and scrambled it to make a type specimen book. It has survived not only five-->
-<!--                centuries-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="panel panel-default animated fadeInUp" ng-show="showInfo === ''">-->
+        <!--            <div class="panel-body">-->
+        <!--                <h3>Parabéns</h3>-->
+        <!--                Lorem Ipsum is simply dummy text of the printing and typesetting-->
+        <!--                industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown-->
+        <!--                printer-->
+        <!--                took a galley of type and scrambled it to make a type specimen book. It has survived not only five-->
+        <!--                centuries-->
+        <!--            </div>-->
+        <!--        </div>-->
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo === 0">
             <div class="panel-body">
                 <h3>Existe alguma problema, por favor entre em contato com o suporte</h3>
@@ -180,28 +180,33 @@
                         </div>
                     </div>
                     <div class="col-md-3">
+
                         <div class="panel panel-warning">
-                            <div class="panel-body font-panel-big-number text-center"
-                                 ng-bind="otherData.goal_box.goal || 0 "></div>
+                            <div class="panel-body">
+                                <div class="panel-body font-panel-big-number text-center"
+                                     ng-bind="otherData.goal_box.goal || 0 "></div>
+                            </div>
                             <div class="panel-footer panel-footer-gool text-center"><b>MINHA META</b></div>
                         </div>
 
                         <div class="panel panel-default">
                             <!--                            <div class="panel-heading"><h5><b>Por etapas</b></h5></div>-->
                             <div class="panel-body">
-                                <ul>
-                                    <li>Rematricula ( {{otherData.goal_box.reinsertions_classes || 0 }} )</li>
-                                    <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 || 0 }} )
-                                    </li>
-                                    <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 || 0 }} )
-                                    </li>
-                                    <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3 || 0}} )
-                                    </li>
-                                    <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4 || 0}} )
-                                    </li>
-                                </ul>
+                                <!--                                <ul>-->
+                                <!--                                    <li>Rematricula ( {{otherData.goal_box.reinsertions_classes || 0 }} )</li>-->
+                                <!--                                    <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 || 0 }} )-->
+                                <!--                                    </li>-->
+                                <!--                                    <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 || 0 }} )-->
+                                <!--                                    </li>-->
+                                <!--                                    <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3 || 0}} )-->
+                                <!--                                    </li>-->
+                                <!--                                    <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4 || 0}} )-->
+                                <!--                                    </li>-->
+                                <!--                                </ul>-->
+                                <div class="panel-body font-panel-big-number text-center"
+                                     ng-bind="otherData.goal_box.reinsertions_classes || 0 "></div>
                             </div>
-                            <div class="panel-footer text-center">Por etapas</div>
+                            <div class="panel-footer text-center">Total de Rematrículas</div>
                         </div>
                     </div>
                 </div>
