@@ -13,7 +13,7 @@
         function init(scope, element, attrs, data) {
 
             var meta = data.goal_box.goal;
-            var atingido = data.goal_box.reinsertions_classes;
+            var atingido = data.goal_box.reinsertions_classes && data.goal_box.reinsertions_classes || 0;
             scope.showDonuts = 0;
 
             if (atingido !== 0) {

@@ -2,7 +2,7 @@
     <div class="dashboard dashboard-coordenador-operacional">
         <div class="panel panel-default animated fadeInUp">
             <div class="panel-heading">
-                <h4><i class="material-icons">beenhere</i>Status do municipio: São Paulo</h4>
+                <h4><i class="material-icons">beenhere</i>Status do municipio: <b ng-bind="renderTenantName()"></b></h4>
             </div>
             <div class="panel-body">
                 <div class="col-md-12">
@@ -136,7 +136,7 @@
 
         <div class="col-md-6">
             <div class="panel panel-default animated fadeInUp">
-                <div class="panel-heading"><h4><i class="fa fa-list"></i> Casos</h4>
+                <div class="panel-heading"><h4><i class="fa fa-list"></i> Casos por etapa</h4>
                 </div>
                 <div class="panel-body">
                     <div class="col-md-6">
@@ -183,7 +183,7 @@
                         <div class="panel panel-warning">
                             <div class="panel-body font-panel-big-number text-center"
                                  ng-bind="otherData.goal_box.goal || 0 "></div>
-                            <div class="panel-footer panel-footer-gool text-center"><b>META</b></div>
+                            <div class="panel-footer panel-footer-gool text-center"><b>MINHA META</b></div>
                         </div>
 
                         <div class="panel panel-default">
