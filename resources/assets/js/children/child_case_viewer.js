@@ -403,25 +403,25 @@
             })
         };
 
-        $scope.isHandicapped = function () {
-            if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
-
-            if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
-                handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
-                    return (item.is_handicapped === true);
-                });
-            }
-
-            var currentCauses = $scope.step.fields.case_cause_ids;
-
-            for (var i in currentCauses) {
-                if (!currentCauses.hasOwnProperty(i)) continue;
-                var cause = currentCauses[i];
-                if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
-            }
-
-            return false;
-        };
+        // $scope.isHandicapped = function () {
+        //     if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+        //
+        //     if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+        //         handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+        //             return (item.is_handicapped === true);
+        //         });
+        //     }
+        //
+        //     var currentCauses = $scope.step.fields.case_cause_ids;
+        //
+        //     for (var i in currentCauses) {
+        //         if (!currentCauses.hasOwnProperty(i)) continue;
+        //         var cause = currentCauses[i];
+        //         if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
+        //     }
+        //
+        //     return false;
+        // };
 
         $scope.canCompleteStep = function () {
             if (!$scope.step) return false;
