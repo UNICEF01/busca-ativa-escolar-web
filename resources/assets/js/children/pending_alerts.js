@@ -32,8 +32,9 @@
 				if(!$scope.child) return 'err:no_child_open';
 				if(!$scope.child.alert) return 'err:no_alert_data';
 				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
-				if(!$scope.causes[$scope.child.alert.alert_cause_id]) return 'err:no_cause_with_id';
-				return $scope.causes[$scope.child.alert.alert_cause_id].label;
+				var indexAlertCauses = _.findIndex($scope.causes, {id: $scope.child.alert.alert_cause_id});
+				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
+				return $scope.causes[indexAlertCauses].label;
 			};
 
             $scope.setMaxResults = function(max) {
