@@ -96,3 +96,7 @@ Vale lembrar que os requisitos de hardware podem variar de acordo com a latênci
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
 resolucao de bug com sass, apos instalar o ruby rode o seguinte comando: gem install --pre sass-css-importer
+
+## Para usar o XDEBUG 
+Colocar esse parametro no fim da url:
+?XDEBUG_SESSION_START=PHPSTORM 

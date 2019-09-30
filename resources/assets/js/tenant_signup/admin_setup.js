@@ -16,7 +16,7 @@
 			var signupID = $stateParams.id;
 			var signupToken = $stateParams.token;
 
-			console.info('[admin_setup] Admin setup for signup: ', signupID, 'token=', signupToken);
+			// console.info('[admin_setup] Admin setup for signup: ', signupID, 'token=', signupToken);
 
 			$scope.step = 1;
 			$scope.numSteps = 4;
