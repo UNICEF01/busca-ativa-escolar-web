@@ -146,7 +146,7 @@
                                 <li>Pesquisa ( {{ otherData.cases_box.steps_on_time.pesquisa || 0}} )</li>
                                 <li>Análise Tẽcnica ( {{ otherData.cases_box.steps_on_time.analise_tecnica || 0}} )</li>
                                 <li>Gestão do Caso ( {{ otherData.cases_box.steps_on_time.gestao_do_caso || 0}} )</li>
-                                <li>Rematrículas ( {{ otherData.cases_box.steps_on_time.rematricula || 0}} )</li>
+                                <li>(Re)matrículas ( {{ otherData.cases_box.steps_on_time.rematricula || 0}} )</li>
                                 <li>Observação ( {{ otherData.cases_box.steps_on_time.observacao || 0}} )</li>
                             </ul>
                             <div class="panel-footer">Total: {{ otherData.cases_box.cases_on_time || 0}}</div>
@@ -159,7 +159,7 @@
                                 <li>Pesquisa ( {{ otherData.cases_box.steps_late.pesquisa || 0}} )</li>
                                 <li>Análise Tẽcnica ( {{ otherData.cases_box.steps_late.analise_tecnica || 0}} )</li>
                                 <li>Gestão do Caso ( {{ otherData.cases_box.steps_late.gestao_do_caso || 0}} )</li>
-                                <li>Rematrículas ( {{ otherData.cases_box.steps_late.rematricula || 0}} )</li>
+                                <li>(Re)matrículas ( {{ otherData.cases_box.steps_late.rematricula || 0}} )</li>
                                 <li>Observação ( {{ otherData.cases_box.steps_late.observacao || 0}} )</li>
                             </ul>
                             <div class="panel-footer">Total: {{ otherData.cases_box.cases_late || 0}}</div>
@@ -170,13 +170,13 @@
         </div>
         <div class="col-md-12" ng-if="otherData.goal_box.goal > 0">
             <div class="panel panel-default animated fadeInUp">
-                <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> Rematrículas</h4>
+                <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> (Re)matrículas</h4>
                 </div>
                 <div class="panel-body">
                     <div class="col-md-9">
                         <div class="panel panel-default">
                             <donuts-chart></donuts-chart>
-                            <div class="panel-footer">Meu status quando a meta do Selo UNICEF</div>
+                            <div class="panel-footer">Meu status Selo UNICEF</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -190,23 +190,58 @@
                         </div>
 
                         <div class="panel panel-default">
-                            <!--                            <div class="panel-heading"><h5><b>Por etapas</b></h5></div>-->
                             <div class="panel-body">
-                                <!--                                <ul>-->
-                                <!--                                    <li>Rematricula ( {{otherData.goal_box.reinsertions_classes || 0 }} )</li>-->
-                                <!--                                    <li>1ª observação ( {{otherData.goal_box.observations.qtd_observations_1 || 0 }} )-->
-                                <!--                                    </li>-->
-                                <!--                                    <li>2ª observação ( {{otherData.goal_box.observations.qtd_observations_2 || 0 }} )-->
-                                <!--                                    </li>-->
-                                <!--                                    <li>3ª observação ( {{otherData.goal_box.observations.qtd_observations_3 || 0}} )-->
-                                <!--                                    </li>-->
-                                <!--                                    <li>4ª observação ( {{otherData.goal_box.observations.qtd_observations_4 || 0}} )-->
-                                <!--                                    </li>-->
-                                <!--                                </ul>-->
+
                                 <div class="panel-body font-panel-big-number text-center"
                                      ng-bind="otherData.goal_box.reinsertions_classes || 0 "></div>
                             </div>
-                            <div class="panel-footer panel-footer-rematricula text-center">Total de Rematrículas</div>
+                            <div class="panel-footer panel-footer-rematricula text-center">Total de (Re)matrículas</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 pl-0 pr-0">
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Baixo Risco</div>
+                                <div class="panel-body">
+                                    <small>
+                                        O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de
+                                        acordo
+                                        com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o
+                                        município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
+                                        resultado sistêmico obrigatório.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Você está com <b>Médio Risco</b></div>
+                                <div class="panel-body">
+                                    <small>
+                                        O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por
+                                        cento)
+                                        de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas
+                                        com
+                                        o atingimento da meta o município poderá ser certificado com o Selo, uma vez que
+                                        a
+                                        Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">Alto Risco</div>
+                                <div class="panel-body">
+                                    <small>
+                                        O município realizou menos de 19% (dezenove por cento) de (re)matrículas, de
+                                        acordo
+                                        com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o
+                                        município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
+                                        resultado sistêmico obrigatório.
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

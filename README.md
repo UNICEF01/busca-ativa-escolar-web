@@ -100,3 +100,15 @@ resolucao de bug com sass, apos instalar o ruby rode o seguinte comando: gem ins
 ## Para usar o XDEBUG 
 Colocar esse parametro no fim da url:
 ?XDEBUG_SESSION_START=PHPSTORM 
+
+npm cache clear --force && rm -rf node_modules --force && npm install --force
+gulp-compass requires the compass ruby gem in order to compile compass. This can easily be installed via Terminal.
+
+$ gem update --system
+$ gem install compass
+Please refer the user guide
+
+Installation
+Install with npm
+
+$ npm install gulp-compass --save-dev
