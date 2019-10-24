@@ -22,6 +22,29 @@
 
             var percentualAtingido = Math.floor((atingido * 100) / meta);
 
+            var color = '#EEEEEE';
+            var text = '';
+
+            switch (true) {
+                case (percentualAtingido <= 19):
+                    color = '#ab0000';
+                    text = 'Alto Risco'
+                    break;
+                case (percentualAtingido > 19 && percentualAtingido < 50):
+                    color = '#cd7c00';
+                    text = 'Médio Risco'
+                    break;
+                case (percentualAtingido >= 50):
+                    color = '#008b00';
+                    text = 'Baixo Risco';
+                    break;
+                default:
+                    color = color
+                    console.log('Algum problema com o Donuts');
+            }
+
+
+
             var colors = Highcharts.getOptions().colors,
                 categories = [
                     'alcancado',
@@ -29,7 +52,7 @@
                 ],
                 data = [
                     {
-                        color: '#19AFA1',
+                        color: color,
                         drilldown: {
                             name: 'estou',
                             categories: [
@@ -84,15 +107,16 @@
                 }
             }
 
-            console.log(colors)
-
 // Create the chart
             Highcharts.chart('donuts-chart', {
                 chart: {
                     type: 'pie'
                 },
                 title: {
-                    text: ''
+                    text: '<span style="color:' + color + '">' +text+ '</span>',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 0
                 },
                 plotOptions: {
                     pie: {

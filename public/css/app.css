@@ -1308,7 +1308,8 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
 }
 
 .panel-footer-gool {
-  background-color: #65FBED;
+  background-color: #AD1457;
+  color: #ffffff;
 }
 
 .panel-footer-rematricula {
