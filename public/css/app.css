@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1562607820');
+  background-image: url('../images/logo_bae_header_v2.png?1571930401');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -219,7 +219,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1562607820');
+  background-image: url('../images/ico_forbidden.png?1571930401');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -1308,11 +1308,26 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
 }
 
 .panel-footer-gool {
-  background-color: #65C869;
+  background-color: #65FBED;
 }
 
 .panel-footer-rematricula {
   background-color: #4CE2D4;
+}
+
+.panel-footer-success {
+  background-color: #5CB85C;
+  color: #ffffff;
+}
+
+.panel-footer-warning {
+  background-color: #F0AD4E;
+  color: #ffffff;
+}
+
+.panel-footer-danger {
+  background-color: #D9534F;
+  color: #ffffff;
 }
 
 /*!
@@ -4890,6 +4905,7 @@ a.column-sorter {
 .pl-0 {
   padding-left: 0px !important;
 }
+
 .pr-0 {
   padding-right: 0px !important;
 }
