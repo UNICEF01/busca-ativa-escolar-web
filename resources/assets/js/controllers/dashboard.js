@@ -23,7 +23,6 @@
             var meta = data.goal_box.goal;
             var atingido = data.goal_box.reinsertions_classes && data.goal_box.reinsertions_classes || 0;
             $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-
             if (data.status !== 'ok') {
                 $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
                 $scope.steps[1].info = data.bar.config.updated_at && data.bar.config.updated_at || 0;
@@ -33,7 +32,7 @@
                 $scope.otherData = data;
 
                 for (var i = 0; $scope.steps.length >= i; i++) {
-                    var actualDate = moment($scope.steps[i].info);
+                    var actualDate = moment($scope.steps[i].info || 0);
                     if (actualDate._i === 0 && $scope.showInfo === '') {
                         $scope.showInfo = i;
                     }
