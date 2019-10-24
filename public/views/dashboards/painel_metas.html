@@ -175,8 +175,9 @@
                 <div class="panel-body">
                     <div class="col-md-9">
                         <div class="panel panel-default">
+<!--                            <div class="panel-heading panel-heading-selo">Meu status no Selo UNICEF</div>-->
+
                             <donuts-chart></donuts-chart>
-                            <div class="panel-footer">Meu status Selo UNICEF</div>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -195,11 +196,8 @@
                                 <div class="panel-body font-panel-big-number text-center"
                                      ng-bind="otherData.goal_box.reinsertions_classes || 0 "></div>
                             </div>
-                            <!--                            <div class="panel-footer panel-footer-rematricula text-center" >Total de (Re)matrículas</div>-->
-                            <div class="panel-footer text-center"
-                                 ng-class="{'panel-footer-success': percentualAtingido >= 50, 'panel-footer-warning': percentualAtingido > 19 && percentualAtingido <=49, 'panel-footer-danger': percentualAtingido <= 19}">
-                                Total de (Re)matrículas
-                            </div>
+<!--                            <div class="panel-footer panel-footer-rematricula text-center" >Total de (Re)matrículas</div>-->
+                            <div class="panel-footer text-center" ng-class="{'panel-footer-success': percentualAtingido >= 50, 'panel-footer-warning': percentualAtingido > 19 && percentualAtingido <=49, 'panel-footer-danger': percentualAtingido <= 19}">Total de (Re)matrículas</div>
 
                         </div>
                     </div>
@@ -219,8 +217,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="panel"
-                                 ng-class="{'panel-warning': percentualAtingido > 19 && percentualAtingido <=49}">
+                            <div class="panel" ng-class="{'panel-warning': percentualAtingido > 19 && percentualAtingido <=49}">
                                 <div class="panel-heading">Médio Risco</b></div>
                                 <div class="panel-body">
                                     <small>
