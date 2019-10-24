@@ -208,8 +208,20 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   font-size: 4em;
 }
 .panel-footer-gool {
-  background-color: $green-light;
+  background-color: #65FBED;
 }
 .panel-footer-rematricula {
   background-color: $green-oliva;
+}
+.panel-footer-success {
+  background-color: #5CB85C;
+  color: $white;
+}
+.panel-footer-warning {
+  background-color: #F0AD4E;
+  color: $white;
+}
+.panel-footer-danger {
+  background-color: #D9534F;
+  color: $white;
 }

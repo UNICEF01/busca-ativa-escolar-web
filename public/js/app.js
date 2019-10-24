@@ -2862,7 +2862,13 @@
             {name: '1ª Rematricula', info: ''}
         ]
 
+
+
         Reports.getStatusBar(function (data) {
+
+            var meta = data.goal_box.goal;
+            var atingido = data.goal_box.reinsertions_classes && data.goal_box.reinsertions_classes || 0;
+            $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
 
             if (data.status !== 'ok') {
                 $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
@@ -2910,9 +2916,7 @@
 
         Platform.whenReady(function () {
             $scope.ready = true;
-        })
-
-
+        });
     });
 
 })();
@@ -3206,25 +3210,6 @@
 
 	});
 
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' | ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 
@@ -4099,6 +4084,25 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
