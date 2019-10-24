@@ -1,11 +1,11 @@
 <div>
 
 
-	<div class="text-center"  ng-if="!isMapReady()">
-		<span class="glyphicon glyphicon-map-marker" style="font-size: 50px; color: #EA4335"></span>
-		<p>Clique no botão VER MAPA para ver a localização dos casos</p>
-		<button type="button" class="btn btn-raised btn-info" ng-click="showMaps()"><i class="glyphicon glyphicon glyphicon-eye-open"></i> Ver Mapa</button>
-	</div>
+<!--	<div class="text-center"  ng-if="!isMapReady()">-->
+<!--		<span class="glyphicon glyphicon-map-marker" style="font-size: 50px; color: #EA4335"></span>-->
+<!--		<p>Clique no botão VER MAPA para ver a localização dos casos</p>-->
+<!--		<button type="button" class="btn btn-raised btn-info" ng-click="showMaps()"><i class="glyphicon glyphicon glyphicon-eye-open"></i> Ver Mapa</button>-->
+<!--	</div>-->
 
 
 	<ui-gmap-google-map center="mapCenter" zoom="mapZoom" draggable="true" style="height: 400px" ng-if="isMapReady()">

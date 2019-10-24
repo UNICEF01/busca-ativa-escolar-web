@@ -13,28 +13,30 @@
             {name: 'Configuração', info: ''},
             {name: '1º Alerta', info: ''},
             {name: '1º Caso', info: ''},
-            {name: '1ª Rematricula', info: ''}
+            {name: '1ª (Re)matrícula', info: ''}
         ]
-
 
 
         Reports.getStatusBar(function (data) {
 
-            var meta = data.goal_box.goal;
-            var atingido = data.goal_box.reinsertions_classes && data.goal_box.reinsertions_classes || 0;
+            var meta = data.goal_box && data.goal_box.goal || 0;
+            var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
             $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+
             if (data.status !== 'ok') {
                 $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                $scope.steps[1].info = data.bar.config.updated_at && data.bar.config.updated_at || 0;
+                $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
                 $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
                 $scope.steps[3].info = data.bar && data.bar.first_case || 0;
                 $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
                 $scope.otherData = data;
 
                 for (var i = 0; $scope.steps.length >= i; i++) {
-                    var actualDate = moment($scope.steps[i].info || 0);
-                    if (actualDate._i === 0 && $scope.showInfo === '') {
-                        $scope.showInfo = i;
+                    if ($scope.steps[i]) {
+                        var actualDate = moment($scope.steps[i].info || 0);
+                        if (actualDate._i === 0 && $scope.showInfo === '') {
+                            $scope.showInfo = i;
+                        }
                     }
                 }
             }
