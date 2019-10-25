@@ -37,7 +37,7 @@
                 <h3>Configuração</h3>
                 O primeiro passo já foi dado! A adesão do seu município à Busca Ativa Escolar foi realizada. No entanto, esta etapa é só o começo. O seu município precisa, agora, implementar a estratégia seguindo o passo a passo necessário para que seja organizada uma equipe de trabalho e para que execute as ações previstas. Vamos lá?!
                 O próximo passo é de fundamental relevância, pois dará ao município a oportunidade de definir a melhor forma de operacionalizar a estratégia, de acordo com a sua realidade.
-                Neste sentido, a aba da plataforma <b>Configurações</b> é muito importante, pois é nela que o município vai preencher os dados relativos a: (i) <b>Customização</b> – a partir dos motivos da exclusão escolar, definição sobre quais secretarias e demais órgãos vão liderar cada caso, marcando em visualiza e notifica; (ii) <b>Prazos</b> – definição sobre o tempo necessário para a execução de cada etapa.
+                Neste sentido, a aba da plataforma <b>Configurações</b> é muito importante, pois é nela que o município vai preencher os dados relativos a: (i) <b>Customização</b> – a partir dos motivos da exclusão escolar, definição sobre quais secretarias e demais órgãos vão liderar cada caso, marcando em <i>visualiza e notifica;</i> (ii) <b>Prazos</b> – definição sobre o tempo necessário para a execução de cada etapa.
             </div>
         </div>
 
@@ -45,7 +45,7 @@
             <div class="panel-body">
                 <h3>1º Alerta</h3>
                 O seu município está devidamente configurado na plataforma da Busca Ativa Escolar!
-                Isso significa que já é possível emitir alertas e dar seguimento aos casos. Mas, o que é um alerta? É a identificação de uma criança ou um(a) adolescente fora da escola. O alerta é a porta de entrada de um caso na plataforma e o início efetivo da Busca Ativa Escolar. Ele é emitido pelo(a) agente comunitário(a) durante sua atuação territorial, ou, automaticamente, quando o município utiliza os dados da planilha do Educancenso (INEP/MEC) ou de planilha própria (dados que o próprio município já possua).
+                Isto significa que já é possível emitir alertas e dar seguimento aos casos. Mas, o que é um alerta? É a identificação de uma criança ou um(a) adolescente fora da escola. O alerta é a porta de entrada de um caso na plataforma e o início efetivo da Busca Ativa Escolar. Ele é emitido pelo(a) agente comunitário(a) durante sua atuação territorial, ou, automaticamente, quando o município utiliza os dados da planilha do EducanCenso (INEP/MEC) ou de planilha própria (dados que o próprio município já possua).
             </div>
         </div>
 
@@ -59,7 +59,7 @@
 
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 4">
             <div class="panel-body">
-                <h3>(Re)matrícula</h3>
+                <h3>(Re)Matrícula</h3>
                 Seu município já tem o primeiro alerta aprovado e o primeiro caso pronto para ser acompanhado!
 
                 Nesta fase, para cada um dos casos, o município precisa cumprir as seguintes etapas:
@@ -86,7 +86,7 @@
         <!--        </div>-->
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo === 0">
             <div class="panel-body">
-                <h3 class="text-center">Existe alguma problema com o painel de metas do selo UNICEF, por favor entre em contato com o suporte!</h3>
+                <h3 class="text-center">Existe alguma problema com o painel de metas do Selo UNICEF, por favor, entre em contato com o suporte!</h3>
             </div>
         </div>
     </div>
@@ -139,7 +139,7 @@
                                 <li>Pesquisa ( {{ otherData.cases_box.steps_on_time.pesquisa || 0}} )</li>
                                 <li>Análise Técnica ( {{ otherData.cases_box.steps_on_time.analise_tecnica || 0}} )</li>
                                 <li>Gestão do Caso ( {{ otherData.cases_box.steps_on_time.gestao_do_caso || 0}} )</li>
-                                <li>(Re)matrículas ( {{ otherData.cases_box.steps_on_time.rematricula || 0}} )</li>
+                                <li>(Re)Matrículas ( {{ otherData.cases_box.steps_on_time.rematricula || 0}} )</li>
                                 <li>Observação ( {{ otherData.cases_box.steps_on_time.observacao || 0}} )</li>
                             </ul>
                             <div class="panel-footer">Total: {{ otherData.cases_box.cases_on_time || 0}}</div>
@@ -152,7 +152,7 @@
                                 <li>Pesquisa ( {{ otherData.cases_box.steps_late.pesquisa || 0}} )</li>
                                 <li>Análise Técnica ( {{ otherData.cases_box.steps_late.analise_tecnica || 0}} )</li>
                                 <li>Gestão do Caso ( {{ otherData.cases_box.steps_late.gestao_do_caso || 0}} )</li>
-                                <li>(Re)matrículas ( {{ otherData.cases_box.steps_late.rematricula || 0}} )</li>
+                                <li>(Re)Matrículas ( {{ otherData.cases_box.steps_late.rematricula || 0}} )</li>
                                 <li>Observação ( {{ otherData.cases_box.steps_late.observacao || 0}} )</li>
                             </ul>
                             <div class="panel-footer">Total: {{ otherData.cases_box.cases_late || 0}}</div>
@@ -163,7 +163,7 @@
         </div>
         <div class="col-md-12" ng-if="otherData.goal_box.goal > 0">
             <div class="panel panel-default animated fadeInUp">
-                <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> (Re)matrículas</h4>
+                <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> (Re)Matrículas</h4>
                 </div>
                 <div class="panel-body">
                     <div class="col-md-9">
@@ -189,18 +189,18 @@
                                 <div class="panel-body font-panel-big-number text-center"
                                      ng-bind="otherData.goal_box.reinsertions_classes || 0 "></div>
                             </div>
-<!--                            <div class="panel-footer panel-footer-rematricula text-center" >Total de (Re)matrículas</div>-->
-                            <div class="panel-footer text-center" ng-class="{'panel-footer-success': percentualAtingido >= 50, 'panel-footer-warning': percentualAtingido > 19 && percentualAtingido <=49, 'panel-footer-danger': percentualAtingido <= 19}">Total de (Re)matrículas</div>
+<!--                            <div class="panel-footer panel-footer-rematricula text-center" >Total de (Re)Matrículas</div>-->
+                            <div class="panel-footer text-center" ng-class="{'panel-footer-success': percentualAtingido >= 50, 'panel-footer-warning': percentualAtingido > 19 && percentualAtingido <=49, 'panel-footer-danger': percentualAtingido <= 19}">Total de (Re)Matrículas</div>
 
                         </div>
                     </div>
                     <div class="col-md-12 pl-0 pr-0">
                         <div class="col-md-3">
-                            <div class="panel" ng-class="{'panel-success': percentualAtingido >= 50}">
-                                <div class="panel-heading">Baixo Risco</div>
+                            <div class="panel" ng-class="{'panel-danger': percentualAtingido <= 19}">
+                                <div class="panel-heading">Alto Risco</div>
                                 <div class="panel-body">
                                     <small>
-                                        O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de
+                                        O município realizou menos de 20% (vinte por cento) de (re)matrículas, de
                                         acordo
                                         com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o
                                         município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
@@ -209,6 +209,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-3">
                             <div class="panel" ng-class="{'panel-warning': percentualAtingido > 19 && percentualAtingido <=49}">
                                 <div class="panel-heading">Médio Risco</b></div>
@@ -226,11 +227,11 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <div class="panel" ng-class="{'panel-danger': percentualAtingido <= 19}">
-                                <div class="panel-heading">Alto Risco</div>
+                            <div class="panel" ng-class="{'panel-success': percentualAtingido >= 50}">
+                                <div class="panel-heading">Baixo Risco</div>
                                 <div class="panel-body">
                                     <small>
-                                        O município realizou menos de 19% (dezenove por cento) de (re)matrículas, de
+                                        O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de
                                         acordo
                                         com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o
                                         município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
@@ -239,6 +240,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
