@@ -1380,7 +1380,7 @@
                     entity: 'children',
                     dimension: 'case_cause_ids',
                     filters: {
-                        case_status: ['in_progress', 'completed', 'interrupted'],
+                        case_status: ['in_progress','cancelled', 'completed', 'interrupted'],
                         alert_status: ['accepted']
                     }
                 }
