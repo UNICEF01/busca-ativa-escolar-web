@@ -516,11 +516,13 @@
 
         $scope.child_id = $scope.$parent.child_id;
         $scope.child = $scope.$parent.child;
+        $scope.identity = $scope.$parent.identity;
         $scope.checkboxes = {};
 
         $scope.step = {};
         $scope.tenantSettings = {};
 
+        $scope.tenantSettingsOfCase = {};
 
         $scope.isMapReady = false;
         $scope.defaultMapZoom = 14;
@@ -617,7 +619,6 @@
             $scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
 
             Tenants.getSettings(function (res) {
-                console.log('[manage_deadlines] Current settings: ', res);
                 $scope.tenantSettings = res;
             });
 
@@ -640,8 +641,11 @@
                     step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
                 }
 
-            });
+                Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id}, function (res) {
+                    $scope.tenantSettingsOfCase = res;
+                });
 
+            });
         }
 
         fetchStepData();
@@ -684,6 +688,7 @@
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
             if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
+            if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
             return (!$scope.step.is_completed);
         };
 
@@ -711,25 +716,25 @@
             })
         };
 
-        $scope.isHandicapped = function () {
-            if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
-
-            if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
-                handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
-                    return (item.is_handicapped === true);
-                });
-            }
-
-            var currentCauses = $scope.step.fields.case_cause_ids;
-
-            for (var i in currentCauses) {
-                if (!currentCauses.hasOwnProperty(i)) continue;
-                var cause = currentCauses[i];
-                if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
-            }
-
-            return false;
-        };
+        // $scope.isHandicapped = function () {
+        //     if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+        //
+        //     if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+        //         handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+        //             return (item.is_handicapped === true);
+        //         });
+        //     }
+        //
+        //     var currentCauses = $scope.step.fields.case_cause_ids;
+        //
+        //     for (var i in currentCauses) {
+        //         if (!currentCauses.hasOwnProperty(i)) continue;
+        //         var cause = currentCauses[i];
+        //         if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
+        //     }
+        //
+        //     return false;
+        // };
 
         $scope.canCompleteStep = function () {
             if (!$scope.step) return false;
@@ -914,30 +919,53 @@
 
         $scope.canUpdateStepObservation = function (child) {
             var time_for_next_step = 0;
-            if ($scope.step.slug == "1a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["1a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
+            if($scope.step && $scope.tenantSettings){
+                if ($scope.step.slug == "1a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
 
-            }
-            if ($scope.step.slug == "2a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["2a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
-            }
-            if ($scope.step.slug == "3a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["3a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
-            }
-            if ($scope.step.slug == "4a_observacao") {
-                time_for_next_step = $scope.tenantSettings.stepDeadlines["4a_observacao"];
-                var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                return permission;
+                }
+                if ($scope.step.slug == "2a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "3a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "4a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
             }
         };
 
+        $scope.scopeOfCase = function () {
+            if( $scope.step.assigned_user ){
+                if($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual"){
+                    return "state";
+                }else{
+                    return "municipality";
+                }
+            }
+        }
+
+        $scope.scopeOfUser = function () {
+            if($scope.identity.getCurrentUser().type === "coordenador_estadual"
+                || $scope.identity.getCurrentUser().type === "supervisor_estadual"){
+                return "state";
+            }else{
+                return "municipality";
+            }
+        }
+
     }
+
 })();
 
 (function() {
@@ -1168,7 +1196,7 @@
 
             $scope.search = {};
 			
-			$scope.getAlertCauseName = function() {
+			$scope.getAlertCauseName = function(id) {
 				if(!$scope.child) return 'err:no_child_open';
 				if(!$scope.child.alert) return 'err:no_alert_data';
 				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
@@ -1253,55 +1281,55 @@
 		});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
-		function init(scope, element, attrs) {
+        function init(scope, element, attrs) {
 
-			scope.refresh = function() {
-				console.log('[widget.cases_map] Loading data...');
+            scope.refresh = function () {
+                console.log('[widget.cases_map] Loading data...');
 
-				Children.getMap({}, function(data) {
-					scope.coordinates = data.coordinates;
-					scope.mapCenter = data.center;
-					scope.mapZoom = data.center.zoom;
-					scope.mapReady = true;
+                Children.getMap({}, function (data) {
+                    scope.coordinates = data.coordinates;
+                    scope.mapCenter = data.center;
+                    scope.mapZoom = data.center.zoom;
+                    scope.mapReady = true;
 
-					console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
-				});
-			};
+                    console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
+                });
+            };
 
-			scope.onMarkerClick = function (marker, event, coords) {
-				console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
-			};
+            scope.onMarkerClick = function (marker, event, coords) {
+                console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
+            };
 
-			scope.reloadMap = function() {
-				scope.mapReady = false;
-				$timeout(function() {
-					scope.mapReady = true;
-				}, 10);
-			};
+            scope.reloadMap = function () {
+                scope.mapReady = false;
+                $timeout(function () {
+                    scope.mapReady = true;
+                }, 10);
+            };
 
-			scope.showMaps = function () {
-				scope.isMapReady = function() {
-					return scope.mapReady;
-				};
-			}
+            scope.isMapReady = function () {
+                return scope.mapReady;
+            };
 
-			uiGmapGoogleMapApi.then(function (maps) {
-				scope.refresh();
-			});
 
-		}
+            uiGmapGoogleMapApi.then(function (maps) {
+                scope.refresh();
+                scope.showMaps();
+            });
 
-		return {
-			link: init,
-			scope: true,
-			replace: true,
-			templateUrl: '/views/components/cases_map.html'
-		};
-	});
+        }
+
+        return {
+            link: init,
+            scope: true,
+            replace: true,
+            templateUrl: '/views/components/cases_map.html'
+        };
+    });
 
 })();
 
@@ -1593,6 +1621,183 @@
 			templateUrl: '/views/components/debug_stats.html'
 		};
 	});
+
+})();
+(function () {
+
+    angular.module('BuscaAtivaEscolar').directive('donutsChart', function ($timeout, moment, Platform, Reports, Charts) {
+
+        function getDadosRematricula(scope, element, attrs) {
+            Reports.getStatusBar(function (data) {
+                if (data.status !== 'ok') {
+                    init(scope, element, attrs, data);
+                }
+            });
+        }
+
+        function init(scope, element, attrs, data) {
+
+            var meta = data.goal_box.goal;
+            var atingido = data.goal_box.reinsertions_classes && data.goal_box.reinsertions_classes || 0;
+            scope.showDonuts = 0;
+
+            if (atingido !== 0) {
+                scope.showDonuts = 1;
+            }
+
+            var percentualAtingido = Math.floor((atingido * 100) / meta);
+
+            var color = '#EEEEEE';
+            var text = '';
+
+            switch (true) {
+                case (percentualAtingido <= 19):
+                    color = '#ab0000';
+                    text = 'Alto Risco'
+                    break;
+                case (percentualAtingido > 19 && percentualAtingido < 50):
+                    color = '#cd7c00';
+                    text = 'Médio Risco'
+                    break;
+                case (percentualAtingido >= 50):
+                    color = '#008b00';
+                    text = 'Baixo Risco';
+                    break;
+                default:
+                    color = color
+                    console.log('Algum problema com o Donuts');
+            }
+
+
+
+            var colors = Highcharts.getOptions().colors,
+                categories = [
+                    'alcancado',
+                    'meta'
+                ],
+                data = [
+                    {
+                        color: color,
+                        drilldown: {
+                            name: 'estou',
+                            categories: [
+                                'Onde estou'
+                            ],
+                            data: [
+                                percentualAtingido
+                            ]
+                        }
+                    },
+                    {
+                        color: '#9d9d9d',
+                        drilldown: {
+                            name: 'falta',
+                            categories: [
+                                'Ainda falta'
+                            ],
+                            data: [
+                                100 - percentualAtingido
+                            ]
+                        }
+                    }
+                ],
+                browserData = [],
+                versionsData = [],
+                i,
+                j,
+                dataLen = data.length,
+                drillDataLen,
+                brightness;
+
+
+// Build the data arrays
+            for (i = 0; i < dataLen; i += 1) {
+
+                // add browser data
+                browserData.push({
+                    name: categories[i],
+                    y: data[i].y,
+                    color: data[i].color
+                });
+
+                // add version data
+                drillDataLen = data[i].drilldown.data.length;
+                for (j = 0; j < drillDataLen; j += 1) {
+                    brightness = 0.2 - (j / drillDataLen) / 5;
+                    versionsData.push({
+                        name: data[i].drilldown.categories[j],
+                        y: data[i].drilldown.data[j],
+                        color: Highcharts.Color(data[i].color).brighten(brightness).get()
+                    });
+                }
+            }
+
+// Create the chart
+            Highcharts.chart('donuts-chart', {
+                chart: {
+                    type: 'pie'
+                },
+                title: {
+                    text: '<span style="color:' + color + '">' +text+ '</span>',
+                    align: 'center',
+                    verticalAlign: 'middle',
+                    y: 0
+                },
+                plotOptions: {
+                    pie: {
+                        shadow: false,
+                        center: ['50%', '50%']
+                    }
+                },
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                series: [{
+                    name: 'Browsers',
+                    data: browserData,
+                    size: '60%',
+                    dataLabels: {
+                        formatter: function () {
+                            return this.y > 5 ? this.point.name : null;
+                        },
+                        color: '#ffffff',
+                        distance: -30
+                    }
+                }, {
+                    name: 'Porcentagem',
+                    data: versionsData,
+                    size: '80%',
+                    innerSize: '60%',
+                    id: 'versions'
+                }],
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 400
+                        },
+                        chartOptions: {
+                            series: [{}, {
+                                id: 'versions',
+                                dataLabels: {
+                                    enabled: false
+                                }
+                            }]
+                        }
+                    }]
+                },
+                credits: {
+                    enabled: false
+                },
+                exporting: {enabled: false}
+            });
+        }
+
+        return {
+            link: getDadosRematricula,
+            replace: true,
+            templateUrl: '/views/components/donuts_chart.html'
+        };
+    });
 
 })();
 (function() {
@@ -2083,6 +2288,18 @@
 
 })();
 (function () {
+    angular.module('BuscaAtivaEscolar').filter('dtFormat', function () {
+        return function (input) {
+            console.log('Cliente Date ' + typeof input)
+            if (input) {
+                return moment(input).format('DD/MM/YYYY');
+            } else {
+                return 'aguardando'
+            }
+        };
+    });
+})();
+(function () {
     angular.module('BuscaAtivaEscolar').filter('cep', function () {
         return function (input) {
             var str = input + '';
@@ -2363,89 +2580,87 @@
 	});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function (moment, $timeout, uiGmapGoogleMapApi, Utils, Identity, Platform, Children, StaticData) {
+    angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function (moment, $timeout, uiGmapGoogleMapApi, Utils, Identity, Platform, Children, StaticData) {
 
-		function init(scope, element, attrs) {
+        function init(scope, element, attrs) {
 
-			scope.clustererOptions = {
-				imagePath: '/images/clusterer/m'
-			};
+            scope.clustererOptions = {
+                imagePath: '/images/clusterer/m'
+            };
 
-			scope.ctrl = {
-				events: {
-					tilesloaded: function(map) {
-						scope.ctrl.map = map;
-					}
-				}
-			};
+            scope.ctrl = {
+                events: {
+                    tilesloaded: function (map) {
+                        scope.ctrl.map = map;
+                    }
+                }
+            };
 
-			scope.onSearch = function(givenUf, givenCity) {
-				console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
+            scope.onSearch = function (givenUf, givenCity) {
+                console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
 
-				var uf = Utils.search(StaticData.getUFs(), function (uf) {
-					return (uf.code === givenUf);
-				});
+                var uf = Utils.search(StaticData.getUFs(), function (uf) {
+                    return (uf.code === givenUf);
+                });
 
-				if(uf) {
-					scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
-				}
+                if (uf) {
+                    scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
+                }
 
-			};
+            };
 
-			scope.refresh = function() {
-				console.log('[widget.searchable_cases_map] Loading data...');
+            scope.refresh = function () {
+                console.log('[widget.searchable_cases_map] Loading data...');
 
-				Children.getMap({}, function(data) {
-					scope.coordinates = data.coordinates;
-					scope.mapCenter = data.center;
-					scope.mapZoom = data.center.zoom;
-					scope.mapReady = true;
+                Children.getMap({}, function (data) {
+                    scope.coordinates = data.coordinates;
+                    scope.mapCenter = data.center;
+                    scope.mapZoom = data.center.zoom;
+                    scope.mapReady = true;
 
-					console.log("[widget.searchable_cases_map] Data loaded: ", data.coordinates, data.center);
-				});
-			};
+                    console.log("[widget.searchable_cases_map] Data loaded: ", data.coordinates, data.center);
+                });
+            };
 
-			scope.onMarkerClick = function (marker, event, coords) {
-				console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
-			};
+            scope.onMarkerClick = function (marker, event, coords) {
+                console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
+            };
 
 
+            scope.reloadMap = function () {
+                scope.mapReady = false;
+                $timeout(function () {
+                    scope.mapReady = true;
+                }, 10);
+            };
 
-			scope.reloadMap = function() {
-				scope.mapReady = false;
-				$timeout(function() {
-					scope.mapReady = true;
-				}, 10);
-			};
+            scope.lookAt = function (lat, lng, zoom) {
+                console.log("[widget.searchable_cases_map] Look at @ ", lat, lng, zoom, scope.ctrl);
 
-			scope.lookAt = function(lat, lng, zoom) {
-				console.log("[widget.searchable_cases_map] Look at @ ", lat, lng, zoom, scope.ctrl);
+                scope.ctrl.map.panTo({lat: lat, lng: lng});
+                scope.ctrl.map.setZoom(zoom);
 
-				scope.ctrl.map.panTo({lat: lat, lng: lng});
-				scope.ctrl.map.setZoom(zoom);
+            };
 
-			};
+            scope.isMapReady = function () {
+                return scope.mapReady;
+            };
 
-			scope.showMaps = function () {
-				scope.isMapReady = function() {
-					return scope.mapReady;
-				};
-			}
 
-			uiGmapGoogleMapApi.then(function (maps) {
-				scope.refresh();
-			});
+            uiGmapGoogleMapApi.then(function (maps) {
+                scope.refresh();
+            });
 
-		}
+        }
 
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/searchable_cases_map.html'
-		};
-	});
+        return {
+            link: init,
+            replace: true,
+            templateUrl: '/views/components/searchable_cases_map.html'
+        };
+    });
 
 })();
 
@@ -2650,22 +2865,81 @@
 	});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
 
-		$scope.identity = Identity;
-		$scope.static = StaticData;
-		$scope.tenantInfo = Tenants.getSettings();
+        $scope.identity = Identity;
+        $scope.static = StaticData;
+        $scope.tenantInfo = Tenants.getSettings();
 
-		$scope.ready = false;
+        $scope.ready = false;
+        $scope.showInfo = '';
+        $scope.steps = [
+            {name: 'Adesão', info: ''},
+            {name: 'Configuração', info: ''},
+            {name: '1º Alerta', info: ''},
+            {name: '1º Caso', info: ''},
+            {name: '1ª (Re)matrícula', info: ''}
+        ]
 
-		Platform.whenReady(function() {
-			$scope.ready = true;
-		})
+
+        Reports.getStatusBar(function (data) {
+
+            var meta = data.goal_box && data.goal_box.goal || 0;
+            var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+            $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+
+            if (data.status !== 'ok') {
+                $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                $scope.steps[3].info = data.bar && data.bar.first_case || 0;
+                $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                $scope.otherData = data;
+
+                for (var i = 0; $scope.steps.length >= i; i++) {
+                    if ($scope.steps[i]) {
+                        var actualDate = moment($scope.steps[i].info || 0);
+                        if (actualDate._i === 0 && $scope.showInfo === '') {
+                            $scope.showInfo = i;
+                        }
+                    }
+                }
+            }
+        });
 
 
-	});
+        function init() {
+            $scope.states.length = 0;
+            for (var i = 0; i < $scope.stateCount; i++) {
+                $scope.states.push({
+                    name: 'Step ' + (i + 1).toString(),
+                    heading: 'Step ' + (i + 1).toString(),
+                    isVisible: true
+                });
+            }
+        };
+        $scope.stateCountChange = function () {
+            $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
+            init();
+        };
+
+        $scope.setCurrent = function (state) {
+            for (var i = 0; i < $scope.states.length; i++) {
+                $scope.states[i].isCurrent = false;
+            }
+            state.isCurrent = true;
+        };
+
+        $scope.states = [];
+        $scope.stateCount = 2;
+        init();
+
+        Platform.whenReady(function () {
+            $scope.ready = true;
+        });
+    });
 
 })();
 (function() {
@@ -5151,6 +5425,7 @@ if (!Array.prototype.find) {
 				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
 				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
 				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
+				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers}
 			});
 		});
 })();
@@ -5425,7 +5700,8 @@ if (!Array.prototype.find) {
 				find: {method: 'GET', headers: headers},
                 findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
-				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders}
+				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
+			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
 			});
 
 		});
@@ -5867,7 +6143,7 @@ if (!Array.prototype.find) {
 
 		function generateDimensionChart(report, seriesName, labels, chartType, yAxisLabel, valueSuffix) {
 
-			console.log("[charts] Generating dimension chart: ", seriesName, report);
+			// console.log("[charts] Generating dimension chart: ", seriesName, report);
 
 			if(!report || !seriesName || !labels) return;
 			if(!chartType) chartType = 'bar';
@@ -6049,6 +6325,11 @@ if (!Array.prototype.find) {
                 }
 			};
 		}
+
+		function generateDonutsChart(report, chartName, labels) {
+
+		}
+
 
 		return {
 			generateDimensionChart: generateDimensionChart,
@@ -7511,6 +7792,16 @@ if (!Array.prototype.find) {
                 return false;
             }
 
+            function haveEqualsValue(name, values) {
+                var value = _.uniq(values)
+                if(value.length === 1){
+                    ngToast.danger(name + ' não podem ser iguais');
+                    return false
+                }else{
+                    return true
+                }
+            }
+
             function basename(str) {
                 var base = ("" + str).substring(str.lastIndexOf('/') + 1);
 
@@ -7569,6 +7860,7 @@ if (!Array.prototype.find) {
                 extract: extract,
                 pluck: pluck,
                 search: search,
+                haveEqualsValue: haveEqualsValue
             };
         })
         .directive('stringToNumber', function () {
@@ -7903,135 +8195,145 @@ function identify(namespace, file) {
 		});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
+    angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
 
-		$scope.static = StaticData;
+        $scope.static = StaticData;
 
-		$scope.step = 1;
-		$scope.numSteps = 5;
-		$scope.isCityAvailable = false;
+        $scope.step = 1;
+        $scope.numSteps = 5;
+        $scope.isCityAvailable = false;
 
-		$scope.form = {
-			uf: null,
-			admin: {},
-			coordinator: {}
-		};
+        $scope.stepChecks = [false, false, false, false];
+        $scope.stepsNames = ['Indique a UF', 'Gestor Estadual', 'Coordenador Estadual', 'Termo de Adesão'];
 
-		var fieldNames = {
-			cpf: 'CPF',
-			name: 'nome',
-			email: 'e-mail institucional',
-			position: 'posição',
-			institution: 'instituição',
-			password: 'senha',
-			dob: 'data de nascimento',
-			phone: 'telefone institucional',
-			mobile: 'celular institucional',
-			personal_phone: 'telefone pessoal',
-			personal_mobile: 'celular pessoal'
-		};
+        $scope.form = {
+            uf: null,
+            admin: {},
+            coordinator: {}
+        };
 
-		var messages = {
-			invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
-			invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
-		};
+        var fieldNames = {
+            cpf: 'CPF',
+            name: 'nome',
+            email: 'e-mail institucional',
+            position: 'posição',
+            institution: 'instituição',
+            password: 'senha',
+            dob: 'data de nascimento',
+            phone: 'telefone institucional',
+            mobile: 'celular institucional',
+            personal_phone: 'telefone pessoal',
+            personal_mobile: 'celular pessoal'
+        };
 
-		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredCoordinatorFields = ['email','name','cpf','dob','phone'];
+        var messages = {
+            invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
+            invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
+        };
 
-		$scope.goToStep = function (step) {
-			if($scope.step < 1) return;
-			if($scope.step >= $scope.numSteps) return;
+        var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
+        var requiredCoordinatorFields = ['email', 'name', 'cpf', 'dob', 'phone'];
 
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
+        $scope.goToStep = function (step) {
+			console.log($scope.step, $scope.numSteps)
+			if ($scope.step < 1) return;
+            if ($scope.step >= $scope.numSteps) return;
+			console.log($scope.step, $scope.numSteps)
+            $scope.step = step;
+            $window.scrollTo(0, 0);
+        };
 
-		$scope.nextStep = function() {
-			if($scope.step >= $scope.numSteps) return;
+        $scope.nextStep = function (step) {
+            if ($scope.step >= $scope.numSteps) return;
 
-			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
-			if($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
+            if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
+            if ($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.coordinator.cpf])) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.coordinator.name])) return;
 
-			$scope.step++;
-			$window.scrollTo(0, 0);
-		};
+            $scope.step++;
+            $window.scrollTo(0, 0);
+            $scope.stepChecks[step] = true;
 
-		$scope.prevStep = function() {
-			if($scope.step <= 1) return;
+        };
 
-			$scope.step--;
-			$window.scrollTo(0, 0);
-		};
+        $scope.prevStep = function () {
+            if ($scope.step <= 1) return;
 
-		$scope.onUFSelect = function(uf) {
-			console.log("UF selected: ", uf);
-			if(!uf) return;
-			$scope.checkStateAvailability(uf);
-		};
+            $scope.step--;
+            $window.scrollTo(0, 0);
+        };
 
-		$scope.checkStateAvailability = function(uf) {
+        $scope.onUFSelect = function (uf) {
+            console.log("UF selected: ", uf);
+            if (!uf) return;
+            $scope.checkStateAvailability(uf);
+        };
 
-			$scope.hasCheckedAvailability = false;
+        $scope.checkStateAvailability = function (uf) {
 
-			StateSignups.checkIfAvailable({uf: uf}, function (res) {
-				$scope.hasCheckedAvailability = true;
-				$scope.isStateAvailable = !!res.is_available;
-			});
-		};
+            $scope.hasCheckedAvailability = false;
+
+            StateSignups.checkIfAvailable({uf: uf}, function (res) {
+                $scope.hasCheckedAvailability = true;
+                $scope.isStateAvailable = !!res.is_available;
+            });
+        };
 
         $scope.showPassword = function (elementId) {
             var field_password = document.getElementById(elementId);
             field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
         }
 
-		$scope.finish = function() {
-			if(!$scope.agreeTOS) return;
+        $scope.finish = function (step) {
+            if (!$scope.agreeTOS) return;
 
-				var data = {};
-				data.admin = Object.assign({}, $scope.form.admin);
-				data.coordinator = Object.assign({}, $scope.form.coordinator);
-				data.uf = $scope.form.uf;
+            var data = {};
+            data.admin = Object.assign({}, $scope.form.admin);
+            data.coordinator = Object.assign({}, $scope.form.coordinator);
+            data.uf = $scope.form.uf;
 
-				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
-				if(!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
+            if (!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
+            if (!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
 
-				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
-				data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
+            data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+            data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
 
-				StateSignups.register(data, function (res) {
-					if(res.status === 'ok') {
-						ngToast.success('Solicitação de adesão registrada!');
-						$scope.step = 5;
-						return;
-					}
+            StateSignups.register(data, function (res) {
+                if (res.status === 'ok') {
+                    ngToast.success('Solicitação de adesão registrada!');
+                    $scope.step = 5;
+                    return;
+                }
 
-					if(res.reason === 'admin_email_in_use') {
-						$scope.step = 2;
-						return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
-					}
+                if (res.reason === 'admin_email_in_use') {
+                    $scope.step = 2;
+                    return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+                }
 
-					if(res.reason === 'coordinator_email_in_use') {
-						$scope.step = 2;
-						return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
-					}
+                if (res.reason === 'coordinator_email_in_use') {
+                    $scope.step = 2;
+                    return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
+                }
 
-					if(res.reason === 'invalid_admin_data') {
-						$scope.step = 2;
-						ngToast.danger(messages.invalid_admin);
+                if (res.reason === 'invalid_admin_data') {
+                    $scope.step = 2;
+                    ngToast.danger(messages.invalid_admin);
 
-						return Utils.displayValidationErrors(res);
-					}
+                    return Utils.displayValidationErrors(res);
+                }
 
-					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+                ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
 
-				});
+            });
+            $scope.stepChecks[step] = true;
 
-		};
 
-	});
+        };
+
+    });
 
 })();
 (function() {
@@ -8158,7 +8460,7 @@ function identify(namespace, file) {
 			var signupID = $stateParams.id;
 			var signupToken = $stateParams.token;
 
-			console.info('[admin_setup] Admin setup for signup: ', signupID, 'token=', signupToken);
+			// console.info('[admin_setup] Admin setup for signup: ', signupID, 'token=', signupToken);
 
 			$scope.step = 1;
 			$scope.numSteps = 4;
@@ -8375,142 +8677,155 @@ function identify(namespace, file) {
 		});
 
 })();
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData) {
+    angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData) {
 
-		$scope.static = StaticData;
+        $scope.static = StaticData;
 
-		$scope.step = 1;
-		$scope.numSteps = 5;
-		$scope.isCityAvailable = false;
+        $scope.step = 1;
+        $scope.numSteps = 5;
+        $scope.isCityAvailable = false;
 
-		$scope.form = {
-			uf: null,
-			city: null,
-			admin: {},
-			mayor: {}
-		};
+        $scope.stepChecks = [false, false, false, false];
+        $scope.stepsNames = ['Cadastre o município', 'Gestor Político', 'Cadastre o prefeito', 'Termo de Adesão'];
 
-		var fieldNames = {
-			cpf: 'CPF',
-			name: 'nome',
-			email: 'e-mail institucional',
-			position: 'posição',
-			institution: 'instituição',
-			password: 'senha',
-			dob: 'data de nascimento',
-			phone: 'telefone institucional',
-			mobile: 'celular institucional',
-			personal_phone: 'telefone pessoal',
-			personal_mobile: 'celular pessoal'
-		};
+        $scope.form = {
+            uf: null,
+            city: null,
+            admin: {},
+            mayor: {}
+        };
 
-		var messages = {
-			invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
-			invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
-		};
-		//Campos obrigatórios do formulario
-		var requiredAdminFields = ['email','name','cpf','dob','phone'];
-		var requiredMayorFields = ['name','cpf','dob','phone'];
+        var fieldNames = {
+            cpf: 'CPF',
+            name: 'nome',
+            email: 'e-mail institucional',
+            position: 'posição',
+            institution: 'instituição',
+            password: 'senha',
+            dob: 'data de nascimento',
+            phone: 'telefone institucional',
+            mobile: 'celular institucional',
+            personal_phone: 'telefone pessoal',
+            personal_mobile: 'celular pessoal'
+        };
 
-		$scope.fetchCities = function(query) {
-			var data = {name: query, $hide_loading_feedback: true};
-			if($scope.form.uf) data.uf = $scope.form.uf;
+        var messages = {
+            invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
+            invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
+        };
+        //Campos obrigatórios do formulario
+        var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
+        var requiredMayorFields = ['name', 'cpf', 'dob', 'phone'];
 
-			return Cities.search(data).$promise.then(function (res) {
-				return res.results;
-			});
-		};
+        $scope.fetchCities = function (query) {
+            var data = {name: query, $hide_loading_feedback: true};
+            if ($scope.form.uf) data.uf = $scope.form.uf;
 
-		$scope.renderSelectedCity = function(city) {
-			if(!city) return '';
-			return city.uf + ' / ' + city.name;
-		};
+            return Cities.search(data).$promise.then(function (res) {
+                return res.results;
+            });
+        };
 
-		$scope.goToStep = function (step) {
-			if($scope.step < 1) return;
-			if($scope.step > $scope.numSteps) return;
+        $scope.renderSelectedCity = function (city) {
+            if (!city) return '';
+            return city.uf + ' / ' + city.name;
+        };
 
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
+        $scope.goToStep = function (step) {
+            console.log($scope.step, $scope.numSteps)
+            if ($scope.step < 1) return;
+            if ($scope.step >= $scope.numSteps) return;
+            console.log($scope.step, $scope.numSteps)
 
-		$scope.nextStep = function() {
-			if($scope.step >= $scope.numSteps) return;
 
-			if($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-			if($scope.step === 3 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
+            $scope.step = step;
+            $window.scrollTo(0, 0);
+        };
 
-			$scope.step++;
-			$window.scrollTo(0, 0);
-		};
+        $scope.nextStep = function (step) {
+            if ($scope.step >= $scope.numSteps) return;
 
-		$scope.prevStep = function() {
-			if($scope.step <= 1) return;
+            if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+            if ($scope.step === 3 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.mayor.cpf])) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.mayor.name])) return;
 
-			$scope.step--;
-			$window.scrollTo(0, 0);
-		};
+            $scope.step++;
+            $window.scrollTo(0, 0);
 
-		$scope.onCitySelect = function(uf, city) {
-			if(!uf || !city) return;
-			$scope.checkCityAvailability(city);
-		};
+            $scope.stepChecks[step] = true;
 
-		$scope.checkCityAvailability = function(city) {
+        };
 
-			if(!$scope.form.uf) $scope.form.uf = city.uf;
+        $scope.prevStep = function () {
+            if ($scope.step <= 1) return;
 
-			$scope.hasCheckedAvailability = false;
+            $scope.step--;
+            $window.scrollTo(0, 0);
+        };
 
-			Cities.checkIfAvailable({id: city.id}, function (res) {
-				$scope.hasCheckedAvailability = true;
-				$scope.isCityAvailable = !!res.is_available;
-			});
-		};
+        $scope.onCitySelect = function (uf, city) {
+            if (!uf || !city) return;
+            $scope.checkCityAvailability(city);
+        };
 
-		$scope.finish = function() {
-			if(!$scope.agreeTOS) return;
+        $scope.checkCityAvailability = function (city) {
 
-				var data = {};
-				data.admin = Object.assign({}, $scope.form.admin);
-				data.mayor = Object.assign({}, $scope.form.mayor);
-				data.city = Object.assign({}, $scope.form.city);
+            if (!$scope.form.uf) $scope.form.uf = city.uf;
 
-				if(!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_gp)) return;
-				if(!Utils.isValid(data.mayor, requiredMayorFields, messages.invalid_mayor)) return;
+            $scope.hasCheckedAvailability = false;
 
-				data.city_id = (data.city) ? data.city.id : null;
-				data.admin = Utils.prepareDateFields(data.admin, ['dob']);
-				data.mayor = Utils.prepareDateFields(data.mayor, ['dob']);
+            Cities.checkIfAvailable({id: city.id}, function (res) {
+                $scope.hasCheckedAvailability = true;
+                $scope.isCityAvailable = !!res.is_available;
+            });
+        };
 
-				TenantSignups.register(data, function (res) {
-					if(res.status === 'ok') {
-						ngToast.success('Solicitação de adesão registrada!');
-						$scope.step = 5;
-						return;
-					}
+        $scope.finish = function (step) {
+            if (!$scope.agreeTOS) return;
 
-					if(res.reason === 'political_admin_email_in_use') {
-						$scope.step = 2;
-						return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
-					}
+            var data = {};
+            data.admin = Object.assign({}, $scope.form.admin);
+            data.mayor = Object.assign({}, $scope.form.mayor);
+            data.city = Object.assign({}, $scope.form.city);
 
-					if(res.reason === 'invalid_political_admin_data') {
-						$scope.step = 2;
-						ngToast.danger(messages.invalid_gp);
+            if (!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_gp)) return;
+            if (!Utils.isValid(data.mayor, requiredMayorFields, messages.invalid_mayor)) return;
 
-						return Utils.displayValidationErrors(res);
-					}
+            data.city_id = (data.city) ? data.city.id : null;
+            data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+            data.mayor = Utils.prepareDateFields(data.mayor, ['dob']);
 
-					ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+            TenantSignups.register(data, function (res) {
+                if (res.status === 'ok') {
+                    ngToast.success('Solicitação de adesão registrada!');
+                    $scope.step = 5;
+                    return;
+                }
 
-				});
+                if (res.reason === 'political_admin_email_in_use') {
+                    $scope.step = 2;
+                    return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+                }
 
-		};
+                if (res.reason === 'invalid_political_admin_data') {
+                    $scope.step = 2;
+                    ngToast.danger(messages.invalid_gp);
 
-	});
+                    return Utils.displayValidationErrors(res);
+                }
+
+                ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+
+            });
+            $scope.stepChecks[step] = true;
+
+
+        };
+
+    });
 
 })();
 (function() {

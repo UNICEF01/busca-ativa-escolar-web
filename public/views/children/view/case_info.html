@@ -32,6 +32,8 @@
     </a>
 </script>
 
+<div class="alert alert-warning" ng-show="scopeOfCase()=='state'">Caso sob a supervisão do estado.</div> <br/>
+
 <div ng-show="isPendingAssignment() && identity.can('cases.assign') " class="alert alert-warning">
     <h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
     <p>Não há nenhum usuário responsável por essa etapa!</p>

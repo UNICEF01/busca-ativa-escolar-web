@@ -95,3 +95,15 @@ Vale lembrar que os requisitos de hardware podem variar de acordo com a latênci
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     
+resolucao de bug com sass, apos instalar o ruby rode o seguinte comando: gem install --pre sass-css-importer
+
+## Para usar o XDEBUG 
+Colocar esse parametro no fim da url:
+?XDEBUG_SESSION_START=PHPSTORM 
+
+npm cache clear --force && rm -rf node_modules --force && npm install --force
+gulp-compass requires the compass ruby gem in order to compile compass. This can easily be installed via Terminal.
+###SASS
+gem update --system
+gem install compass
+sudo gem install --pre sass-css-importer

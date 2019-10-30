@@ -28,7 +28,7 @@
 
             $scope.search = {};
 			
-			$scope.getAlertCauseName = function() {
+			$scope.getAlertCauseName = function(id) {
 				if(!$scope.child) return 'err:no_child_open';
 				if(!$scope.child.alert) return 'err:no_alert_data';
 				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
