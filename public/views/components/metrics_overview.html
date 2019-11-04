@@ -1,20 +1,26 @@
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="getMetrics().records_total || 0"></h1>
-			<div class="panel-footer">casos<br /> em andamento</div>
+			<h1 class="panel-body" ng-bind="getMetrics().report.completed || 0"></h1>
+			<div class="panel-footer">Casos concluídos</div>
 		</div>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="getMetrics().report.normal || 0"></h1>
-			<div class="panel-footer">casos<br /> no prazo</div>
+			<h1 class="panel-body" ng-bind="getMetrics().report.in_progress || 0"></h1>
+			<div class="panel-footer">Casos em andamento</div>
 		</div>
 	</div>
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="getMetrics().report.late || 0"></h1>
-			<div class="panel-footer">casos<br /> atrasados</div>
+			<h1 class="panel-body" ng-bind="getMetrics().report.cancelled || 0"></h1>
+			<div class="panel-footer">Casos atrasados</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="panel panel-default">
+			<h1 class="panel-body" ng-bind="getMetrics().report.interrupted || 0"></h1>
+			<div class="panel-footer">Casos interrompidos</div>
 		</div>
 	</div>
 </div>
