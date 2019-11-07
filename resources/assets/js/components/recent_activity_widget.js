@@ -6,7 +6,7 @@
 		var isReady = false;
 
 		function refresh() {
-			return Tenants.getRecentActivity({max: 4}, function (data) {
+			return Tenants.getRecentActivity({max: 9}, function (data) {
 				log = data.data;
 				isReady = true;
 			});

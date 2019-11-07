@@ -10,10 +10,10 @@
 				return Reports.query({
 					view: 'linear',
 					entity: 'children',
-					dimension: 'deadline_status',
+					dimension: 'case_status',
 					filters: {
-						case_status: ['in_progress'],
-						alert_status: ['accepted']
+						case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+						alert_status: ['accepted', ]
 					}
 				}, function (data) {
 					metrics = data.response;
