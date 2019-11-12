@@ -95,17 +95,18 @@
 					<div class="checkbox"><label for="filter-children_status-out_of_school"><input type="checkbox" id="filter-children_status-out_of_school"  checklist-model="filters.child_status" checklist-value="'out_of_school'" name="filter-child_status-out_of_school"> Fora da escola</label></div>
 					<div class="checkbox"><label for="filter-children_status-in_school"><input type="checkbox" id="filter-children_status-in_school"  checklist-model="filters.child_status" checklist-value="'in_school'" name="filter-child_status-in_school"> Dentro da escola</label></div>
 					<div class="checkbox"><label for="filter-children_status-in_observation"><input type="checkbox" id="filter-children_status-in_observation"  checklist-model="filters.child_status" checklist-value="'in_observation'" name="filter-child_status-in_observation"> Em observação</label></div>
-					<div class="checkbox"><label for="filter-children_status-cancelled"><input type="checkbox" id="filter-children_status-cancelled"  checklist-model="filters.child_status" checklist-value="'cancelled'" name="filter-child_status-cancelled"> Cancelado</label></div>
-					<div class="checkbox"><label for="filter-children_status-interrupted"><input type="checkbox" id="filter-children_status-interrupted"  checklist-model="filters.child_status" checklist-value="'interrupted'" name="filter-child_status-interrupted"> Interrompido</label></div>
+<!--					<div class="checkbox"><label for="filter-children_status-cancelled"><input type="checkbox" id="filter-children_status-cancelled"  checklist-model="filters.child_status" checklist-value="'cancelled'" name="filter-child_status-cancelled"> Cancelado</label></div>-->
+<!--					<div class="checkbox"><label for="filter-children_status-interrupted"><input type="checkbox" id="filter-children_status-interrupted"  checklist-model="filters.child_status" checklist-value="'interrupted'" name="filter-child_status-interrupted"> Interrompido</label></div>-->
 
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_status')">
 					<label class="control-label" for="filter-status-in_progress">Por status do caso</label>
 					<div class="checkbox"><label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress"  checklist-model="filters.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress"> Em andamento</label></div>
-					<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="filters.case_status" checklist-value="'cancelled'" name="filter-case_status_cancelled"> Cancelado</label></div>
 					<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed"  checklist-model="filters.case_status" checklist-value="'completed'" name="filter-case_status_completed"> Concluído</label></div>
-					<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="filters.case_status" checklist-value="'interrupted'" name="filter-case_status_interrupted"> Interrompido</label></div>
+					<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="filters.case_status" checklist-value="'cancelled'" ng-change="checkChild('cancelled')" name="filter-case_status_cancelled"> Cancelado</label></div>
+					<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="filters.case_status" checklist-value="'interrupted'" ng-change="checkChild('interrupted')" name="filter-case_status_interrupted"> Interrompido</label></div>
+
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
