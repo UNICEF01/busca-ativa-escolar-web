@@ -4970,7 +4970,7 @@ if (!Array.prototype.find) {
 					case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
 					alert_status: ['accepted'],
 					child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted'],
-					age: {from: 0, to: 99},
+					age: {from: 0, to: 5000},
 					age_ranges: [
 						'0-3',
 						'4-5',
@@ -4987,7 +4987,8 @@ if (!Array.prototype.find) {
 					race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
 					race_null: true,
 					place_kind: ['rural', 'urban'],
-					place_kind_null: true
+					place_kind_null: true,
+					work_activity: true
 				};
 
 				$scope.entities = {
@@ -5099,6 +5100,7 @@ if (!Array.prototype.find) {
 				$scope.chartConfig = getChartConfig();
 
 				$scope.refresh();
+
 			};
 
 			$scope.clearFilter = function(name) {
@@ -5166,6 +5168,8 @@ if (!Array.prototype.find) {
 				}
 
 				$scope.reportData = Reports.query(params);
+
+				console.log(params);
 
 				return $scope.reportData.$promise;
 			}
@@ -5260,6 +5264,14 @@ if (!Array.prototype.find) {
 				return Charts.generateTimelineChart(report, chartName, labels);
 
 			}
+
+			$scope.sumValuesOfReportData = function(object) {
+				var total = 0;
+				for (const property in object) {
+					total += object[property];
+				}
+				return total;
+			};
 
 			Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
 

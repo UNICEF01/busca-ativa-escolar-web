@@ -272,23 +272,32 @@
 			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
 
 			<table class="table">
+
 				<thead>
+
 					<tr ng-if="current.view !== 'timeline'">
-						<th>{{totals[entities[current.entity].value]}}</th>
+						<!--th>{{totals[entities[current.entity].value]}}</th-->
+						<th>Dimensão - {{totals[entities[current.entity].value]}}</th>
 						<th>Qtd.</th>
 						<th>%</th>
 					</tr>
+
 					<tr ng-if="current.view !== 'timeline'">
-						<td><strong>{{fields[current.dimension]}} / Total</strong></td>
-						<td>{{reportData.response.records_total}}</td>
+						<!--td><strong>{{fields[current.dimension]}} / Total</strong></td-->
+						<td><strong>Total</strong></td>
+						<!--td>{{reportData.response.records_total}}</td-->
+						<td>{{sumValuesOfReportData(reportData.response.report)}}</td>
 						<td>100%</td>
 					</tr>
+
 					<tr ng-if="current.view === 'timeline'">
 						<th>Data</th>
 						<th>{{fields[current.dimension]}}</th>
 						<th>{{totals[entities[current.entity].value]}}</th>
 					</tr>
+
 				</thead>
+
 				<tbody ng-if="current.view !== 'timeline'">
 					<tr ng-repeat="(metric, value) in reportData.response.report">
 						<td>{{reportData.labels[metric] ? reportData.labels[metric] : metric }}</td>
@@ -296,6 +305,7 @@
 						<td>{{(value / reportData.response.records_total) | percentage}}</td>
 					</tr>
 				</tbody>
+
 				<tbody ng-if="current.view === 'timeline'"  ng-repeat="(metric, value) in reportData.response.report">
 					<tr>
 						<td><strong>{{metric | amDateFormat:'DD/MM/YYYY'}}</strong></td>
@@ -308,6 +318,7 @@
 						<td>{{value[dimension] || 0}}</td>
 					</tr>
 				</tbody>
+
 			</table>
 
 			<div class="panel-footer clearfix">
