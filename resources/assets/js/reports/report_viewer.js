@@ -337,7 +337,6 @@
             }
 
             function generateTimelineChart(entity, dimension) {
-
                 if (!$scope.ready) return false;
 
                 if (!$scope.reportData) return;
@@ -352,6 +351,14 @@
                 return Charts.generateTimelineChart(report, chartName, labels);
 
             }
+
+            $scope.sumValuesOfReportData = function (object) {
+                var final_value = 0;
+                for (const property in object) {
+                    final_value += object[property];
+                }
+                return final_value;
+            };
 
             Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
 
