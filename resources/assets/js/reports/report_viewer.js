@@ -74,7 +74,7 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
+                        dimensions: ['case_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
                         filters: [
                             // 'date',
                             'case_status',
@@ -146,6 +146,7 @@
 
                 $scope.fields = {
                     // period: 'Período',
+                    case_status: 'Status do caso',
                     child_status: 'Status da criança',
                     deadline_status: 'Status do andamento',
                     alert_status: 'Status do alerta',

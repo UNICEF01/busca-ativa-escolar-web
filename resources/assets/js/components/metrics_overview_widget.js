@@ -13,7 +13,7 @@
 					dimension: 'case_status',
 					filters: {
 						case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
-						alert_status: ['accepted', ]
+						alert_status: ['accepted'],
 					}
 				}, function (data) {
 					metrics = data.response;
