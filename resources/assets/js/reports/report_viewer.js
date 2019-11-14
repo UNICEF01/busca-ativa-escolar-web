@@ -74,7 +74,7 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['case_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
+                        dimensions: ['child_status', 'case_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'place_uf', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
                         filters: [
                             // 'date',
                             'case_status',
