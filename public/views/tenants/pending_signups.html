@@ -55,7 +55,7 @@
 						<tr ng-repeat="(i, signup) in signups.data" ng-click="preview(signup)" style="cursor: pointer;">
 							<td><span ng-bind="signup.city.name"></span></td>
 							<td><span ng-bind="signup.city.uf"></span></td>
-							<td><span ng-bind="signup.created_at | amTimeAgo" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
+							<td><span ng-bind="signup.created_at | dateFormat" uib-tooltip-html="signup.created_at | amCalendar"></span></td>
 							<td>
 								<span ng-show="signup.is_approved && signup.is_provisioned && !signup.deleted_at" class="label label-success">Aprovado e configurado</span>
 								<span ng-show="signup.is_approved && !signup.is_provisioned && !signup.deleted_at" class="label label-success">Aguardando configuração</span>
