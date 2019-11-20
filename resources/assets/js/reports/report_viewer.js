@@ -244,7 +244,7 @@
                 params.view = $scope.views[$scope.current.view].viewMode;
                 params.filters = $scope.filters;
                 params.format = (format ? format : 'json');
-
+                
                 params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
 
                 // if(params.filters.period.from || params.filters.period.to) {
