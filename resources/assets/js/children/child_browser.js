@@ -23,6 +23,7 @@
                 case_status: ['in_progress'],
                 risk_level: ['low', 'medium', 'high'],
                 age_null: true,
+                age: {from: 0, to: 10000},
                 gender: ['male', 'female', 'undefined'],
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
