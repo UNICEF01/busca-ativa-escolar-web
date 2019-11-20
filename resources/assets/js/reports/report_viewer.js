@@ -247,13 +247,6 @@
                 
                 params.filters.place_city_id = (params.filters.place_city) ? params.filters.place_city.id : null;
 
-                // if(params.filters.period.from || params.filters.period.to) {
-                // 	params.filters.date = {
-                // 		from: (params.filters.period.from) ? moment(params.filters.period.from).format('YYYY-MM-DD') : null,
-                // 		to: (params.filters.period.to) ? moment(params.filters.period.to).format('YYYY-MM-DD') : null,
-                // 	};
-                // }
-
                 if (params.format === 'xls') {
                     return Reports.query(params).$promise;
                 }
