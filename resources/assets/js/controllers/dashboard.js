@@ -16,7 +16,6 @@
             {name: '1ª (Re)matrícula', info: ''}
         ]
 
-
         Reports.getStatusBar(function (data) {
 
             var meta = data.goal_box && data.goal_box.goal || 0;
@@ -34,14 +33,13 @@
                 for (var i = 0; $scope.steps.length >= i; i++) {
                     if ($scope.steps[i]) {
                         var actualDate = moment($scope.steps[i].info || 0);
-                        if (actualDate._i === 0 && $scope.showInfo === '') {
+                        if (actualDate._i !== 0) {
                             $scope.showInfo = i;
                         }
                     }
                 }
             }
         });
-
 
         function init() {
             $scope.states.length = 0;
