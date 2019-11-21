@@ -277,16 +277,13 @@
 				<thead>
 
 					<tr ng-if="current.view !== 'timeline'">
-						<!--th>{{totals[entities[current.entity].value]}}</th-->
-						<th>Dimensão - {{totals[entities[current.entity].value]}}</th>
+						<th>Dimensão - {{fields[current.dimension]}}</th>
 						<th>Qtd.</th>
 						<th>%</th>
 					</tr>
 
 					<tr ng-if="current.view !== 'timeline'">
-						<!--td><strong>{{fields[current.dimension]}} / Total</strong></td-->
 						<td><strong>Total</strong></td>
-						<!--td>{{reportData.response.records_total}}</td-->
 						<td>{{sumValuesOfReportData(reportData.response.report)}}</td>
 						<td>100%</td>
 					</tr>
