@@ -43,8 +43,6 @@
                 var today = moment().toDate();
 
                 $scope.filters = {
-                    //deadline_status: ['normal', 'delayed'],
-                    // period: {from: lastWeek, to: today},
                     case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
                     alert_status: ['accepted'],
                     child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted'],
@@ -164,11 +162,11 @@
                     user_type: 'Tipo do usuário',
                     assigned_user: 'Usuário responsável',
                     parent_scholarity: 'Escolaridade do responsável',
-                    place_uf: 'UF da localização',
+                    place_uf: 'UF da localização da criança',
                     uf: 'UF da adesão',
                     region: 'Região',
                     city_id: 'Município da adesão',
-                    place_city_id: 'Município da localização',
+                    place_city_id: 'Município da localização da criança',
                     school_last_id: 'Última escola que frequentou',
                     city: 'Município da adesão',
                     month: 'Mês',
@@ -353,6 +351,28 @@
                     final_value += object[property];
                 }
                 return final_value;
+            };
+
+            $scope.canShowLabel = function(){
+                //can't show:
+                var permissions = {
+                    gestor_nacional: [],
+                    coordenador_operacional: ['uf', 'city_id'],
+                    gestor_politico: ['uf', 'city_id'],
+                    supervisor_institucional: ['uf', 'city_id'],
+                    gestor_estadual: ['place_uf'],
+                    coordenador_estadual: ['place_uf'],
+                    supervisor_estadual: ['place_uf']
+                };
+
+                return function (item) {
+                   if ( permissions[Identity.getCurrentUser().type].includes(item)){
+                        return false;
+                   }else{
+                       return true;
+                   }
+                };
+
             };
 
             Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top

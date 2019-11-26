@@ -30,7 +30,7 @@
 					<select id="sel-report-dimension" class="form-control"
 					        ng-model="current.dimension"
 					        ng-change="refresh()"
-					        ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions">
+					        ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions | filter:canShowLabel()">
 					</select>
 				</div>
 
