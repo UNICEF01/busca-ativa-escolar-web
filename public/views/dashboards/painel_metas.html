@@ -32,9 +32,9 @@
         <!--			centuries-->
         <!--		</div>-->
         <!--	</div>-->
-        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 1">
+        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 0">
             <div class="panel-body">
-                <h3>Configuração</h3>
+                <h3>Adesão</h3>
                 O primeiro passo já foi dado! A adesão do seu município à Busca Ativa Escolar foi realizada. No entanto,
                 esta etapa é só o começo. O seu município precisa, agora, implementar a estratégia seguindo o passo a
                 passo necessário para que seja organizada uma equipe de trabalho e para que execute as ações previstas.
@@ -53,9 +53,9 @@
             </div>
         </div>
 
-        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 2">
+        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 1">
             <div class="panel-body">
-                <h3>1º Alerta</h3>
+                <h3>Configuração</h3>
                 O seu município está devidamente configurado na plataforma da Busca Ativa Escolar!
                 Isto significa que já é possível emitir alertas e dar seguimento aos casos. Mas, o que é um alerta? É a
                 identificação de uma criança ou um(a) adolescente fora da escola. O alerta é a porta de entrada de um
@@ -65,9 +65,9 @@
             </div>
         </div>
 
-        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 3">
+        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 2">
             <div class="panel-body">
-                <h3>1º Caso</h3>
+                <h3>1º Aletra</h3>
                 Seu município já emitiu o primeiro alerta! Isto significa que pelo menos uma criança ou um(a)
                 adolescente que está fora da escola já foi localizado(a)!
                 A partir da emissão dos primeiros alertas, já é possível identificar os motivos pelos quais os meninos e
@@ -78,9 +78,9 @@
             </div>
         </div>
 
-        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 4">
+        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 3">
             <div class="panel-body">
-                <h3>(Re)Matrícula</h3>
+                <h3>1º Caso</h3>
                 Seu município já tem o primeiro alerta aprovado e o primeiro caso pronto para ser acompanhado!
 
                 Nesta fase, para cada um dos casos, o município precisa cumprir as seguintes etapas:
@@ -98,6 +98,17 @@
                 configuração da plataforma. Se o município realizou a configuração a partir da sua realidade, o
                 seguimento do fluxo dos casos vai ocorrer de forma mais eficaz e exitosa, favorecendo o fortalecimento
                 do sistema de garantia de direitos de crianças e adolescentes.
+            </div>
+        </div>
+
+        <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 4">
+            <div class="panel-body">
+                <h3>1ª (Re)Matrícula</h3>
+                Seu município chegou à etapa de (re)matrículas na execução da Busca Ativa Escolar.
+
+                É importante salientar que somente após serem seguidas as etapas de pesquisa, análise técnica e gestão do caso é que as crianças e os(as) adolescentes poderão ser devidamente (re)matriculados(as). Vale a pena frisar que a (re)matrícula é muito mais qualificada quando são compreendidos o contexto de vida e as necessidades de cada menina e cada menino que estava fora da escola.
+
+                <br>Se o seu município já está realizando (re)matrículas, parabéns! Agora é hora de garantir que as crianças e os(as) adolescentes permaneçam na escola e aprendam!
             </div>
         </div>
 
@@ -121,6 +132,11 @@
 
 
     <div class="row">
+
+        <div class="col-md-12">
+            <h3 align="center">Visão geral da estratégia <small>{{identity.getCurrentUser().tenant.name}}</small></h3> <br/>
+        </div>
+
         <div class="col-md-6">
             <div class="panel panel-default animated fadeInUp">
                 <div class="panel-heading"><h4><i class="fa fa-bell"></i> Alertas</h4>
@@ -153,7 +169,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="col-md-6">
             <div class="panel panel-default animated fadeInUp">
@@ -189,6 +204,7 @@
                 </div>
             </div>
         </div>
+
         <div class="col-md-12" ng-if="otherData.goal_box.goal > 0">
             <div class="panel panel-default animated fadeInUp">
                 <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> (Re)Matrículas</h4>

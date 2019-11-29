@@ -46,9 +46,9 @@
 					<div class="col-md-2">
 						<label class="control-label" for="filter-age-from"><strong>Por idade</strong></label><br/>
 						<span> de </span>
-						<input type="number" style="width: 40px; text-align: center" min="0" max="50" class="form-control" id="filter-age-from" ng-model="query.age.from">
+						<input type="number" style="width: 40px; text-align: center" min="0" max="5000" class="form-control" id="filter-age-from" ng-model="query.age.from">
 						<span> a </span>
-						<input type="number" style="width: 40px; text-align: center" min="0" max="50" class="form-control" id="filter-age-to" ng-model="query.age.to">
+						<input type="number" style="width: 40px; text-align: center" min="0" max="10000" class="form-control" id="filter-age-to" ng-model="query.age.to">
 						<span> anos </span>
 						<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="query.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
 					</div>
@@ -56,7 +56,6 @@
 						<label class="control-label" for="filter-gender-male"><strong>Por sexo</strong></label><br/><br/>
 						<div class="checkbox"><label for="filter-gender-male"><input type="checkbox" checklist-model="query.gender" checklist-value="'male'" name="filter-gender_male" id="filter-gender-male"> <i class="fa fa-mars"></i> Masc.</label></div><br/>
 						<div class="checkbox"><label for="filter-gender-female"><input type="checkbox" checklist-model="query.gender" checklist-value="'female'" name="filter-gender_female" id="filter-gender-female"> <i class="fa fa-venus"></i> Fem.</label></div><br/>
-						<div class="checkbox"><label for="filter-gender-undefined"><input type="checkbox" checklist-model="query.gender" checklist-value="'undefined'" name="filter-gender_undefined" id="filter-gender-undefined"> <i class="fa fa-transgender"></i> Indef.</label></div><br/>
 						<div class="checkbox"><label for="filter-gender-null"><input type="checkbox" ng-model="query.gender_null" name="filter-gender_null" id="filter-gender-null"> <i class="fa fa-block"></i> Sem info.</label></div>
 					</div>
 					<div class="col-md-2">
