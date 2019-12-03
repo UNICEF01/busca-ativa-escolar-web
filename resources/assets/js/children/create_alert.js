@@ -14,6 +14,9 @@
 			$scope.static = StaticData;
 			$scope.disableCreateAlertButton = false;
 
+			$scope.birthdayDateEnd = moment(new Date()).format('YYYY-MM-DD');
+			$scope.birthdayDateStart = moment($scope.birthdayDateEnd).subtract(100, 'years').format('YYYY-MM-DD');
+
 
 			$scope.alert = {};
 
