@@ -13,6 +13,8 @@
 				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
 				suspend: {method: 'DELETE', headers: headers},
 				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
+				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
+				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers}
 			});
 
 		});

@@ -8,7 +8,7 @@
 				controller: 'UserBrowserCtrl'
 			})
 		})
-		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData) {
+		.controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals) {
 
 		$scope.identity = Identity;
 		$scope.query = {
@@ -44,6 +44,23 @@
 		};
 
 		$scope.export = function() {
+
+			var final_uri = $scope.prepareUriToExport();
+
+			if (
+					Identity.isUserType('gestor_nacional') &&
+					(
+						 !final_uri.includes('uf') &&
+						 !final_uri.includes('type') &&
+						 !final_uri.includes('email')
+					)
+
+				)
+			{
+				Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+				return false;
+			}
+
 			Identity.provideToken().then(function (token) {
 				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
 			});
