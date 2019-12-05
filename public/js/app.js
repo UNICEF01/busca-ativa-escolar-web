@@ -4900,45 +4900,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.resetPassword = function() {
-				$scope.true = false;
-
-				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
-					$scope.isLoading = false;
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-				})
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -5319,6 +5280,45 @@ if (!Array.prototype.find) {
             Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
 
         });
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.resetPassword = function() {
+				$scope.true = false;
+
+				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
+					$scope.isLoading = false;
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+				})
+			};
+
+			$scope.refresh();
+
+		});
 
 })();
 (function() {
@@ -5796,28 +5796,24 @@ if (!Array.prototype.find) {
 
 		});
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Users', function Users(API, $resource) {
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Users', function Users(API, $resource) {
+            var headers = API.REQUIRE_AUTH;
+            var debug = true;
+            var param = debug ? '?XDEBUG_SESSION_START=PHPSTORM' : '';
+            return $resource(API.getURI('users/:id' + param), {id: '@id', with: '@with'}, {
+                myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
+                find: {method: 'GET', headers: headers},
+                create: {method: 'POST', headers: headers},
+                update: {method: 'PUT', headers: headers},
+                search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+                suspend: {method: 'DELETE', headers: headers},
+                restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
+            });
 
-			var headers = API.REQUIRE_AUTH;
-
-			var debug = true;
-
-			var param = debug ? '?XDEBUG_SESSION_START=PHPSTORM' : '';
-
-			return $resource(API.getURI('users/:id'+param), {id: '@id', with: '@with'}, {
-				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
-				find: {method: 'GET', headers: headers},
-				create: {method: 'POST', headers: headers},
-				update: {method: 'PUT', headers: headers},
-				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
-				suspend: {method: 'DELETE', headers: headers},
-				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
-			});
-
-		});
+        });
 })();
 (function() {
 
@@ -9165,7 +9161,7 @@ function identify(namespace, file) {
                     if (response.have_data) {
                         Modals.show(Modals.Confirm(
                             'Deseja prosseguir!',
-                            'Existem casos sobre a responsabilidade deste usuário, os casos deverão ser atribuidos a outro usuário do sistema. ' +
+                            'Existem casos sobre a responsabilidade deste usuário, os casos serão atribuídos ao seu usuário, clique em sim para prosseguir. ' +
 							'Quantidade por etapas: ' +
 							'Pesquisa: ' + response.pesquisa.casos + ', ' +
 							'Análise Técnica: ' + response.analise_tecnica.casos + ', ' +

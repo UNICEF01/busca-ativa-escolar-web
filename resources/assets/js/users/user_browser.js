@@ -99,7 +99,7 @@
                     if (response.have_data) {
                         Modals.show(Modals.Confirm(
                             'Deseja prosseguir!',
-                            'Existem casos sobre a responsabilidade deste usuário, os casos deverão ser atribuidos a outro usuário do sistema. ' +
+                            'Existem casos sobre a responsabilidade deste usuário, os casos serão atribuídos ao seu usuário, clique em sim para prosseguir. ' +
 							'Quantidade por etapas: ' +
 							'Pesquisa: ' + response.pesquisa.casos + ', ' +
 							'Análise Técnica: ' + response.analise_tecnica.casos + ', ' +
