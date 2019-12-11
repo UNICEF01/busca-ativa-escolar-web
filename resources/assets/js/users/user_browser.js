@@ -8,7 +8,7 @@
                 controller: 'UserBrowserCtrl'
             })
         })
-        .controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals) {
+        .controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals, Maintenance) {
 
             $scope.identity = Identity;
             $scope.query = {
@@ -100,14 +100,18 @@
                         Modals.show(Modals.Confirm(
                             'Deseja prosseguir!',
                             'Existem casos sobre a responsabilidade deste usuário, os casos serão atribuídos ao seu usuário, clique em sim para prosseguir. ' +
-							'Quantidade por etapas: ' +
-							'Pesquisa: ' + response.pesquisa.casos + ', ' +
-							'Análise Técnica: ' + response.analise_tecnica.casos + ', ' +
-							'Gestão do caso: ' + response.gestao_caso.casos + ', ' +
-							'(Ré)matrícula: ' + response.rematricula.casos + ', ' +
-							'Observação: ' + response.observacao.casos
+                            'Quantidade por etapas: ' +
+                            'Pesquisa: ' + response.pesquisa.casos + ', ' +
+                            'Análise Técnica: ' + response.analise_tecnica.casos + ', ' +
+                            'Gestão do caso: ' + response.gestao_caso.casos + ', ' +
+                            '(Ré)matrícula: ' + response.rematricula.casos + ', ' +
+                            'Observação: ' + response.observacao.casos
                         )).then(function (res) {
-                            alert('Excluidos');
+                            Maintenance.assignForAdminUser({id: user.id}, function (response) {
+                                ngToast.success(
+                                    'Usuário desativado e casos atribuidos com sucesso!'
+                                );
+                                $scope.refresh();                            });
                         });
                     } else {
                         ngToast.success('Usuário desativado!');
