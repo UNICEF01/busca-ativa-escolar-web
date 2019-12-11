@@ -5815,24 +5815,26 @@ if (!Array.prototype.find) {
 
 		});
 })();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Users', function Users(API, $resource) {
-            var headers = API.REQUIRE_AUTH;
-            var debug = true;
-            var param = debug ? '?XDEBUG_SESSION_START=PHPSTORM' : '';
-            return $resource(API.getURI('users/:id' + param), {id: '@id', with: '@with'}, {
-                myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
-                find: {method: 'GET', headers: headers},
-                create: {method: 'POST', headers: headers},
-                update: {method: 'PUT', headers: headers},
-                search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
-                suspend: {method: 'DELETE', headers: headers},
-                restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
-            });
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Users', function Users(API, $resource) {
 
-        });
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
+				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
+				find: {method: 'GET', headers: headers},
+				create: {method: 'POST', headers: headers},
+				update: {method: 'PUT', headers: headers},
+				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+				suspend: {method: 'DELETE', headers: headers},
+				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
+				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
+				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers}
+			});
+
+		});
 })();
 (function() {
 
@@ -6571,6 +6573,7 @@ if (!Array.prototype.find) {
 			}else{
 				return false;
 			}
+
 		}
 
 		return {
@@ -9079,7 +9082,7 @@ function identify(namespace, file) {
 		});
 
 })();
-(function () {
+(function() {
 
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
@@ -9124,11 +9127,28 @@ function identify(namespace, file) {
                 $scope.refresh();
             };
 
-            $scope.export = function () {
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
-                });
-            };
+		$scope.export = function() {
+
+			var final_uri = $scope.prepareUriToExport();
+
+			if (
+					Identity.isUserType('gestor_nacional') &&
+					(
+						 !final_uri.includes('uf') &&
+						 !final_uri.includes('type') &&
+						 !final_uri.includes('email')
+					)
+
+				)
+			{
+				Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+				return false;
+			}
+
+			Identity.provideToken().then(function (token) {
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
+			});
+		};
 
             $scope.prepareUriToExport = function () {
                 var uri = "";
@@ -9366,6 +9386,56 @@ function identify(namespace, file) {
 			}
 
 		});
+
+})();
+(function() {
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider) {
+            $stateProvider.state('user_report', {
+                url: '/report/users/',
+                templateUrl: '/views/users/report.html',
+                controller: 'ReportUsersCtrl'
+            })
+        })
+        .controller('ReportUsersCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals) {
+
+            $scope.reports = {};
+            $scope.lastOrder = {
+                date: null
+            };
+
+            $scope.createReport = function() {
+
+                Modals.show(
+                    Modals.Confirm(
+                        'Confirma a criação de um novo relatório?',
+                        'Esse processo pode demorar alguns minutos devido a quantidade de usuários registrados na plataforma'
+                    )).then(function () {
+                        Users.createReport().$promise
+                        .then(function (res) {
+                            $scope.lastOrder.date = res.date;
+                        });
+                    });
+
+            };
+
+            $scope.downloadFile = function(file) {
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'users/reports/download?token=' + token + "&file=" + file);
+                });
+            };
+
+            $scope.refresh = function() {
+                $scope.reports = Users.reports();
+                setInterval(function() {
+                    $scope.reports = Users.reports();
+                }, 600000);
+            };
+
+            $scope.refresh();
+
+        });
 
 })();
 //# sourceMappingURL=app.js.map

@@ -1,4 +1,4 @@
-(function () {
+(function() {
 
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
@@ -43,11 +43,28 @@
                 $scope.refresh();
             };
 
-            $scope.export = function () {
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
-                });
-            };
+		$scope.export = function() {
+
+			var final_uri = $scope.prepareUriToExport();
+
+			if (
+					Identity.isUserType('gestor_nacional') &&
+					(
+						 !final_uri.includes('uf') &&
+						 !final_uri.includes('type') &&
+						 !final_uri.includes('email')
+					)
+
+				)
+			{
+				Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+				return false;
+			}
+
+			Identity.provideToken().then(function (token) {
+				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
+			});
+		};
 
             $scope.prepareUriToExport = function () {
                 var uri = "";
