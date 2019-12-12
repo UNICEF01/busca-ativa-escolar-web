@@ -182,6 +182,7 @@
             $scope.clearFilter = function (name) {
                 $scope.filters[name] = null;
             };
+
 			/**
 			 * * @param model
 			 * Marca e desmarca de forma sincronizada os campos cancelado e interrompido do filtro child_status e case_status

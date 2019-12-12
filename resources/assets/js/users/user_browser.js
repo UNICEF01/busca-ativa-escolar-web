@@ -43,28 +43,28 @@
                 $scope.refresh();
             };
 
-		$scope.export = function() {
+		    $scope.export = function() {
 
-			var final_uri = $scope.prepareUriToExport();
+			    var final_uri = $scope.prepareUriToExport();
 
-			if (
-					Identity.isUserType('gestor_nacional') &&
-					(
-						 !final_uri.includes('uf') &&
-						 !final_uri.includes('type') &&
-						 !final_uri.includes('email')
-					)
+                if (
+                        Identity.isUserType('gestor_nacional') &&
+                        (
+                             !final_uri.includes('uf') &&
+                             !final_uri.includes('type') &&
+                             !final_uri.includes('email')
+                        )
 
-				)
-			{
-				Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
-				return false;
-			}
+                    )
+                {
+                    Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+                    return false;
+                }
 
-			Identity.provideToken().then(function (token) {
-				window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
-			});
-		};
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'users/export?token=' + token + $scope.prepareUriToExport());
+                });
+            };
 
             $scope.prepareUriToExport = function () {
                 var uri = "";
@@ -107,7 +107,9 @@
             };
 
             $scope.refresh = function () {
-                $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
+                if(Identity.can('tenants.view')) {
+                    $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
+                }
                 $scope.search = Users.search($scope.query);
             };
 
