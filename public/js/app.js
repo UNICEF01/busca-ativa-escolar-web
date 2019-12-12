@@ -5328,17 +5328,12 @@ if (!Array.prototype.find) {
 
 			var headers = API.REQUIRE_AUTH;
 
-			var debug = {
-				url:'?XDEBUG_SESSION_START=PHPSTORM',
-				active:true
-			}
-
 			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: headers},
-				getPending: {url: API.getURI('alerts/pending' + (debug.active ? debug.url : '')), isArray: false, method: 'GET', headers: headers},
+				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
 				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
-				accept: {url: API.getURI('alerts/:id/accept?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers},
-				reject: {url: API.getURI('alerts/:id/reject?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers},
+				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers},
 			});
 		});
 })();
@@ -5349,15 +5344,12 @@ if (!Array.prototype.find) {
 
 			var headers = API.REQUIRE_AUTH;
 
-			var debug = true;
-			var param = debug ? '?XDEBUG_SESSION_START=PHPSTORM' : '';
-
 			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
 				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
-				assignUser: {url: API.getURI('steps/:type/:id/assign_user'+param), method: 'POST', headers: headers}
+				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
 			});
 
 			repository.where = {
@@ -5470,11 +5462,11 @@ if (!Array.prototype.find) {
 
             var headers = API.REQUIRE_AUTH;
 
-            var debug = true;
+            var debug = false;
             var param = debug ? '?XDEBUG_SESSION_START=PHPSTORM' : '';
 
             var repository = $resource(API.getURI('maintenance/:user_id'), {user_id: '@id'}, {
-                assignForAdminUser: {url: API.getURI('maintenance/:user_id' + param), method: 'POST', headers: headers}
+                assignForAdminUser: {url: API.getURI('maintenance/:user_id'), method: 'POST', headers: headers}
             });
             return repository;
         });
@@ -5501,7 +5493,7 @@ if (!Array.prototype.find) {
 			var headers = API.REQUIRE_AUTH;
 
 			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
-				query: {url: API.getURI('reports/:entity?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers},
+				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
 				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
 				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
 				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers}
