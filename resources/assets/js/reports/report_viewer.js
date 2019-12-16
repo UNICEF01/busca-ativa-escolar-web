@@ -13,7 +13,6 @@
             $scope.identity = Identity;
             $scope.static = StaticData;
             $scope.lang = Language;
-
             $scope.ready = false;
 
             $scope.filters = {};
