@@ -22,6 +22,8 @@
             $scope.totals = {};
             $scope.fields = {};
 
+            $scope.sort = 'maxToMin';
+
             $scope.reportData = {};
 
             $scope.current = {
@@ -182,6 +184,7 @@
             $scope.clearFilter = function (name) {
                 $scope.filters[name] = null;
             };
+
 			/**
 			 * * @param model
 			 * Marca e desmarca de forma sincronizada os campos cancelado e interrompido do filtro child_status e case_status
@@ -326,7 +329,35 @@
                 var seriesName = $scope.reportData.response.seriesName ? $scope.reportData.response.seriesName : $scope.totals[$scope.entities[entity].value];
                 var labels = $scope.reportData.labels ? $scope.reportData.labels : {};
 
-                return Charts.generateDimensionChart(report, seriesName, labels);
+                var sortable = [];
+                var objSorted = {};
+                var finalLabels = {};
+
+                for (var value in report) {
+                    sortable.push([value, report[value]]);
+                }
+
+                if($scope.sort == 'minToMax'){
+                    sortable.sort(function(a, b) {
+                        return a[1] - b[1];
+                    });
+                }
+
+                if($scope.sort == 'maxToMin'){
+                    sortable.sort(function(a, b) {
+                        return b[1] - a[1];
+                    });
+                }
+
+                sortable.forEach(function(item){
+                    objSorted["_"+item[0]]=item[1]
+                });
+
+                for (var key in labels){
+                    finalLabels["_"+key] = labels[key];
+                }
+
+                return Charts.generateDimensionChart(objSorted, seriesName, finalLabels);
             }
 
             function generateTimelineChart(entity, dimension) {
@@ -376,6 +407,16 @@
             };
 
             Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
+
+            $scope.refresByMinToMax = function () {
+                $scope.sort = 'minToMax';
+                $scope.refresh();
+            };
+
+            $scope.refresByMaxToMin = function () {
+                $scope.sort = 'maxToMin';
+                $scope.refresh();
+            }
 
         });
 
