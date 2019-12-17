@@ -105,7 +105,7 @@
             $scope.getUFs = function () {
                 return StaticData.getUFs();
             };
-
+            
             $scope.refresh = function () {
                 if(Identity.can('tenants.view')) {
                     $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
@@ -118,13 +118,14 @@
                     if (response.have_data) {
                         Modals.show(Modals.Confirm(
                             'Deseja prosseguir!',
-                            'Existem casos sobre a responsabilidade deste usuário, os casos serão atribuídos ao seu usuário, clique em sim para prosseguir. ' +
+                            'Existem casos sob responsabilidade deste usuário. Ao desativá-lo, estes casos serão atribuídos a você, que deve administrá-los, repassando-os para outra pessoa que assumirá a função ou redistribuindo-os para outros profissionais. ' +
                             'Quantidade por etapas: ' +
                             'Pesquisa: ' + response.pesquisa.casos + ', ' +
                             'Análise Técnica: ' + response.analise_tecnica.casos + ', ' +
                             'Gestão do caso: ' + response.gestao_caso.casos + ', ' +
                             '(Ré)matrícula: ' + response.rematricula.casos + ', ' +
-                            'Observação: ' + response.observacao.casos
+                            'Observação: ' + response.observacao.casos + ', ' +
+                            'Clique sim para prosseguir'
                         )).then(function (res) {
                             Maintenance.assignForAdminUser({id: user.id}, function (response) {
                                 ngToast.success(
