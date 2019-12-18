@@ -267,14 +267,31 @@
 
 		<div class="panel has-subnav-tabs panel-default" ng-show="showGraph()">
 			<div class="panel-heading">
-				<h3><i class="material-icons">show_chart</i> Relatórios</h3>
+				<div class="row">
+
+					<div class="col-md-9">
+						<h3><i class="material-icons"></i> Relatórios</h3>
+					</div>
+
+					<div class="col-md-3">
+
+						<ul class="nav navbar-nav" ng-show="current.view == 'chart'">
+							<li class="dropdown">
+								<a href="/reports" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+									<strong>Ordenar<b class="caret"></b></strong></a>
+								<ul class="dropdown-menu">
+									<li><a href="#" ng-click="refresByMinToMax()"><i class="fa fa-angle-up"></i> Menor para o maior</a></li>
+									<li><a href="#" ng-click="refresByMaxToMin()"><i class="fa fa-angle-down"></i> Maior para o menor</a></li>
+								</ul>
+							</li>
+						</ul>
+
+					</div>
+
+				</div>
 			</div>
 
-			<div class="text-center" ng-show="current.view == 'chart'">
-				<button class="btn btn-info" ng-click="refresByMinToMax()"><i class="fa fa-angle-down"></i> Ordenar do menor para o maior</button> <button class="btn btn-info" ng-click="refresByMaxToMin()"><i class="fa fa-angle-up"></i> Ordenar do maior para o menor</button>
-			</div>
-
-			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 600px" id="base-chart" config="chartConfig"></highchart>
+			<highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 1000px" id="base-chart" config="chartConfig"></highchart>
 
 			<table class="table">
 

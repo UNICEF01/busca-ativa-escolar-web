@@ -13,6 +13,8 @@
 
             scope.showFilter = false;
 
+            scope.sort == 'maxToMin';
+
             scope.getCausesConfig = getCausesConfig;
 
             scope.isReady = function () {
@@ -90,7 +92,35 @@
                 var chartName = 'Divisão dos casos por motivo de evasão escolar';
                 var labels = causesData.labels ? causesData.labels : {};
 
-                return Charts.generateDimensionChart(report, chartName, labels, 'bar');
+                var sortable = [];
+                var objSorted = {};
+                var finalLabels = {};
+
+                for (var value in report) {
+                    sortable.push([value, report[value]]);
+                }
+
+                if(scope.sort == 'minToMax'){
+                    sortable.sort(function(a, b) {
+                        return a[1] - b[1];
+                    });
+                }
+
+                if(scope.sort == 'maxToMin'){
+                    sortable.sort(function(a, b) {
+                        return b[1] - a[1];
+                    });
+                }
+
+                sortable.forEach(function(item){
+                    objSorted["_"+item[0]]=item[1]
+                });
+
+                for (var key in labels){
+                    finalLabels["_"+key] = labels[key];
+                }
+
+                return Charts.generateDimensionChart(objSorted, chartName, finalLabels, 'bar');
             }
 
             function getCausesConfig() {
@@ -148,6 +178,16 @@
             scope.popup2 = {
                 opened: false
             };
+
+            scope.refresByMinToMax = function () {
+                scope.sort = 'minToMax';
+                scope.fetchCausesData(null);
+            };
+
+            scope.refresByMaxToMin = function () {
+                scope.sort = 'maxToMin';
+                scope.fetchCausesData(null);
+            }
         }
 
         return {
