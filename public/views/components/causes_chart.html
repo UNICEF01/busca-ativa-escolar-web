@@ -11,6 +11,16 @@
 
                 <li><a class="warning" href="javascript:void(0)" ng-click="filterShow()"><span
                         class="glyphicon glyphicon-filter"></span> Escolha o período</a></li>
+
+                <li class="dropdown">
+                    <a href="/dashboard" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Ordenar<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" ng-click="refresByMinToMax()"><i class="fa fa-angle-up"></i> Menor para o maior</a></li>
+                        <li><a href="#" ng-click="refresByMaxToMin()"><i class="fa fa-angle-down"></i> Maior para o menor</a></li>
+                    </ul>
+                </li>
+
             </ul>
         </div>
     </nav>
