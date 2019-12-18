@@ -50,14 +50,12 @@
 			if (
 					Identity.isUserType('gestor_nacional') &&
 					(
-						 !final_uri.includes('uf') &&
-						 !final_uri.includes('type') &&
-						 !final_uri.includes('email')
+						 !final_uri.includes('uf')
 					)
 
 				)
 			{
-				Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+				Modals.show(Modals.Alert("Atenção", "Utilize a opção Exportar todos ou faça um filtro de um estado que deseja baixar"));
 				return false;
 			}
 
