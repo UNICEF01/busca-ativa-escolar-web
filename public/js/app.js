@@ -1351,6 +1351,8 @@
 
             scope.showFilter = false;
 
+            scope.sort == 'maxToMin';
+
             scope.getCausesConfig = getCausesConfig;
 
             scope.isReady = function () {
@@ -1428,7 +1430,35 @@
                 var chartName = 'Divisão dos casos por motivo de evasão escolar';
                 var labels = causesData.labels ? causesData.labels : {};
 
-                return Charts.generateDimensionChart(report, chartName, labels, 'bar');
+                var sortable = [];
+                var objSorted = {};
+                var finalLabels = {};
+
+                for (var value in report) {
+                    sortable.push([value, report[value]]);
+                }
+
+                if(scope.sort == 'minToMax'){
+                    sortable.sort(function(a, b) {
+                        return a[1] - b[1];
+                    });
+                }
+
+                if(scope.sort == 'maxToMin'){
+                    sortable.sort(function(a, b) {
+                        return b[1] - a[1];
+                    });
+                }
+
+                sortable.forEach(function(item){
+                    objSorted["_"+item[0]]=item[1]
+                });
+
+                for (var key in labels){
+                    finalLabels["_"+key] = labels[key];
+                }
+
+                return Charts.generateDimensionChart(objSorted, chartName, finalLabels, 'bar');
             }
 
             function getCausesConfig() {
@@ -1486,6 +1516,16 @@
             scope.popup2 = {
                 opened: false
             };
+
+            scope.refresByMinToMax = function () {
+                scope.sort = 'minToMax';
+                scope.fetchCausesData(null);
+            };
+
+            scope.refresByMaxToMin = function () {
+                scope.sort = 'maxToMin';
+                scope.fetchCausesData(null);
+            }
         }
 
         return {
@@ -8309,112 +8349,6 @@ function identify(namespace, file) {
 		});
 
 })();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('pending_state_signups', {
-				url: '/pending_state_signups',
-				templateUrl: '/views/states/pending_signups.html',
-				controller: 'PendingStateSignupsCtrl'
-			})
-		})
-		.controller('PendingStateSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, StateSignups, StaticData) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-
-			$scope.signups = {};
-			$scope.signup = {};
-			$scope.query = {
-				sort: {created_at: 'desc'},
-				filter: {status: 'pending'},
-				max: 16,
-				page: 1
-			};
-
-			$scope.refresh = function() {
-				$scope.signups = StateSignups.getPending($scope.query);
-				return $scope.signups.$promise;
-			};
-
-			$scope.preview = function(signup) {
-				$scope.signup = signup;
-			};
-
-			$scope.approve = function(signup) {
-				StateSignups.approve({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.reject = function(signup) {
-				StateSignups.reject({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.updateRegistrationEmail = function(type, signup) {
-				StateSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
-					if(res.status !== "ok") {
-						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
-						return;
-					}
-
-					ngToast.success("E-mail do gestor atualizado!");
-				});
-			};
-
-			$scope.resendNotification = function(signup) {
-				StateSignups.resendNotification({id: signup.id}, function() {
-					ngToast.success('Notificação reenviada!');
-				});
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider) {
-			$stateProvider.state('state_browser', {
-				url: '/states',
-				templateUrl: '/views/states/list.html',
-				controller: 'StateBrowserCtrl'
-			})
-		})
-		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-			$scope.states = {};
-			$scope.query = {
-				filter: {},
-				sort: {},
-				max: 16,
-				page: 1
-			};
-
-			$scope.refresh = function() {
-				$scope.states = States.all($scope.query);
-			};
-
-            $scope.export = function() {
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
-                });
-            };
-			
-			$scope.refresh();
-
-		});
-
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
@@ -8554,6 +8488,112 @@ function identify(namespace, file) {
         };
 
     });
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_state_signups', {
+				url: '/pending_state_signups',
+				templateUrl: '/views/states/pending_signups.html',
+				controller: 'PendingStateSignupsCtrl'
+			})
+		})
+		.controller('PendingStateSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, StateSignups, StaticData) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.signups = {};
+			$scope.signup = {};
+			$scope.query = {
+				sort: {created_at: 'desc'},
+				filter: {status: 'pending'},
+				max: 16,
+				page: 1
+			};
+
+			$scope.refresh = function() {
+				$scope.signups = StateSignups.getPending($scope.query);
+				return $scope.signups.$promise;
+			};
+
+			$scope.preview = function(signup) {
+				$scope.signup = signup;
+			};
+
+			$scope.approve = function(signup) {
+				StateSignups.approve({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.reject = function(signup) {
+				StateSignups.reject({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.updateRegistrationEmail = function(type, signup) {
+				StateSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+					if(res.status !== "ok") {
+						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
+						return;
+					}
+
+					ngToast.success("E-mail do gestor atualizado!");
+				});
+			};
+
+			$scope.resendNotification = function(signup) {
+				StateSignups.resendNotification({id: signup.id}, function() {
+					ngToast.success('Notificação reenviada!');
+				});
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('state_browser', {
+				url: '/states',
+				templateUrl: '/views/states/list.html',
+				controller: 'StateBrowserCtrl'
+			})
+		})
+		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+			$scope.states = {};
+			$scope.query = {
+				filter: {},
+				sort: {},
+				max: 16,
+				page: 1
+			};
+
+			$scope.refresh = function() {
+				$scope.states = States.all($scope.query);
+			};
+
+            $scope.export = function() {
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
+                });
+            };
+			
+			$scope.refresh();
+
+		});
 
 })();
 (function() {
@@ -9115,7 +9155,6 @@ function identify(namespace, file) {
 
 })();
 (function() {
-
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
             $stateProvider.state('user_browser', {
@@ -9173,7 +9212,7 @@ function identify(namespace, file) {
 
                     )
                 {
-                    Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+                    Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça o filtro de um estado que deseja baixar"));
                     return false;
                 }
 
@@ -9271,7 +9310,6 @@ function identify(namespace, file) {
             });
 
         });
-
 })();
 (function() {
 

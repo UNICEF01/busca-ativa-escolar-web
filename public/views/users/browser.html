@@ -2,9 +2,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h3 class="pull-left"> <strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-users"></i> Usuários | {{search.meta.pagination.total}}</h3>
-			<a ng-show="identity.can('users.manage')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo</a>
-			<a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Exportar </a>
-			<a ng-show="identity.isUserType('gestor_nacional')" class="btn btn-primary btn-raised pull-right" ui-sref="user_report"><i class="fa fa-file-excel-o"></i> Relatórios completos</a>
+			<a ng-show="identity.can('users.manage')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo usuário</a>
+			<a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Exportar usuários</a>
+			<a ng-show="identity.isUserType('gestor_nacional')" class="btn btn-primary btn-raised pull-right" ui-sref="user_report"><i class="fa fa-file-excel-o"></i> Exportar todos</a>
 		</div>
 		<div class="panel-body">
 

@@ -1,5 +1,4 @@
 (function() {
-
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
             $stateProvider.state('user_browser', {
@@ -57,7 +56,7 @@
 
                     )
                 {
-                    Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça um filtro do que deseja baixar"));
+                    Modals.show(Modals.Alert("Atenção", "Utilize a opção Relatórios completos, ou faça o filtro de um estado que deseja baixar"));
                     return false;
                 }
 
@@ -155,5 +154,4 @@
             });
 
         });
-
 })();
