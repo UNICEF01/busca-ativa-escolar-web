@@ -53,6 +53,8 @@
                 <li ng-show="identity.can('ufs.view')" ui-sref-active="active"><a ui-sref="state_browser"><i
                         class="fa fa-map-o"></i> Estados</a></li>
 
+                <li ng-show="identity.can('cities.selo_reports')" ui-sref-active="active"><a ui-sref="reports_selo"> Selo</a></li>
+
                 <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
                     ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
