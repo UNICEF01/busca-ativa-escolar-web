@@ -140,7 +140,7 @@
 					<tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
 						<td width="25%">
 							<strong>{{user.name}}</strong><br />
-							<small>
+							<small uib-tooltip-html="user.created_at.date | dateFormat">
 								<strong>Cadastrado em: {{user.created_at.date | amDateFormat:'DD/MM/YYYY'}}</strong>
 							</small>
 							<br/>
