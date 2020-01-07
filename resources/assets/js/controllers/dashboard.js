@@ -16,6 +16,43 @@
             {name: '1ª (Re)matrícula', info: ''}
         ]
 
+        $scope.chartWithContentDownload = function () {
+            html2canvas(document.getElementById('regua'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL("image/png");
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500,
+                            logging: true,
+                            profile: true,
+                            useCORS: true,
+                            allowTaint: true
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("painel_de_metas.pdf");
+                }
+            });
+            // var minhaTabela = document.getElementById('regua').innerHTML;
+            // var style = "<style>";
+            // style = style + "table {width: 100%;font: 20px Calibri;}";
+            // style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
+            // style = style + "padding: 2px 3px;text-align: center;}";
+            // style = style + "</style>";
+            // // CRIA UM OBJETO WINDOW
+            // var win = window.open('', '', 'height=700,width=700');
+            // win.document.write('<html><head>');
+            // win.document.write('<title>Empregados</title>');   // <title> CABEÇALHO DO PDF.
+            // win.document.write(style);                                     // INCLUI UM ESTILO NA TAB HEAD
+            // win.document.write('</head>');
+            // win.document.write('<body>');
+            // win.document.write(minhaTabela);                          // O CONTEUDO DA TABELA DENTRO DA TAG BODY
+            // win.document.write('</body></html>');
+            // win.document.close(); 	                                         // FECHA A JANELA
+            // win.print();
+        }
+
+
         Reports.getStatusBar(function (data) {
 
             var meta = data.goal_box && data.goal_box.goal || 0;
