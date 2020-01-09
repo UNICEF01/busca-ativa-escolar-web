@@ -18,15 +18,6 @@
 
         $scope.chartWithContentDownload = function () {
             var cloneDom = $("#regua").clone(true);
-            // The Z-index attribute of the cloned node can be set as long as it is lower than the level of the cloned node.
-            // cloneDom.css({
-            //     "background-color": "#fafafa",
-            //     "position": "absolute",
-            //     "top": "0px",
-            //     "z-index": "-1",
-            //     "height": 798,
-            //     "width": 650
-            // });
 
             if (typeof html2canvas !== 'undefined') {
                 // The following is the processing of SVG
@@ -38,14 +29,8 @@
                     var svg = node.outerHTML.trim();
 
                     var canvas = document.createElement('canvas');
-                    // canvas.width = 800;
-                    // canvas.height = 798;
+
                     canvg(canvas, svg);
-                    // if (node.style.position) {
-                    //     canvas.style.position += node.style.position;
-                    //     canvas.style.left += node.style.left;
-                    //     canvas.style.top += node.style.top;
-                    // }
 
                     nodesToRecover.push({
                         parent: parentNode,
@@ -83,54 +68,6 @@
                 });
 
             }
-
-
-            // html2canvas(document.querySelector("#regua")).then(canvas => {
-            //
-            //     var dataURL = canvas.toDataURL("image/png");
-            //     var width = canvas.width;
-            //     var printWindow = window.open("");
-            //     $(printWindow.document.body)
-            //         .html("<img id='Image' src=" + dataURL + " style='" + width + "'></img>")
-            //         .ready(function() {
-            //             printWindow.focus();
-            //             // printWindow.print();
-            //         });
-            //
-            // });
-            // html2canvas(document.getElementById('#regua'), {
-            //     onrendered: function (canvas) {
-            //         var data = canvas.toDataURL("image/png");
-            //         var docDefinition = {
-            //             content: [{
-            //                 image: data,
-            //                 width: 500,
-            //                 logging: true,
-            //                 profile: true,
-            //                 useCORS: true,
-            //                 allowTaint: true
-            //             }]
-            //         };
-            //         pdfMake.createPdf(docDefinition).download("painel_de_metas.pdf");
-            //     }
-            // });
-            // var minhaTabela = document.getElementById('regua').innerHTML;
-            // var style = "<style>";
-            // style = style + "table {width: 100%;font: 20px Calibri;}";
-            // style = style + "table, th, td {border: solid 1px #DDD; border-collapse: collapse;";
-            // style = style + "padding: 2px 3px;text-align: center;}";
-            // style = style + "</style>";
-            // // CRIA UM OBJETO WINDOW
-            // var win = window.open('', '', 'height=700,width=700');
-            // win.document.write('<html><head>');
-            // win.document.write('<title>Empregados</title>');   // <title> CABEÇALHO DO PDF.
-            // win.document.write(style);                                     // INCLUI UM ESTILO NA TAB HEAD
-            // win.document.write('</head>');
-            // win.document.write('<body>');
-            // win.document.write(minhaTabela);                          // O CONTEUDO DA TABELA DENTRO DA TAG BODY
-            // win.document.write('</body></html>');
-            // win.document.close(); 	                                         // FECHA A JANELA
-            // win.print();
         }
 
 
