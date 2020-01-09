@@ -17,22 +17,103 @@
         ]
 
         $scope.chartWithContentDownload = function () {
-            html2canvas(document.getElementById('regua'), {
-                onrendered: function (canvas) {
-                    var data = canvas.toDataURL("image/png");
-                    var docDefinition = {
-                        content: [{
-                            image: data,
-                            width: 500,
-                            logging: true,
-                            profile: true,
-                            useCORS: true,
-                            allowTaint: true
-                        }]
-                    };
-                    pdfMake.createPdf(docDefinition).download("painel_de_metas.pdf");
-                }
-            });
+            var cloneDom = $("#regua").clone(true);
+            // The Z-index attribute of the cloned node can be set as long as it is lower than the level of the cloned node.
+            // cloneDom.css({
+            //     "background-color": "#fafafa",
+            //     "position": "absolute",
+            //     "top": "0px",
+            //     "z-index": "-1",
+            //     "height": 798,
+            //     "width": 650
+            // });
+
+            if (typeof html2canvas !== 'undefined') {
+                // The following is the processing of SVG
+                var nodesToRecover = [];
+                var nodesToRemove = [];
+                var svgElem = cloneDom.find('svg'); //divReport is the ID of the DOM that needs to be intercepted into pictures
+                svgElem.each(function (index, node) {
+                    var parentNode = node.parentNode;
+                    var svg = node.outerHTML.trim();
+
+                    var canvas = document.createElement('canvas');
+                    // canvas.width = 800;
+                    // canvas.height = 798;
+                    canvg(canvas, svg);
+                    // if (node.style.position) {
+                    //     canvas.style.position += node.style.position;
+                    //     canvas.style.left += node.style.left;
+                    //     canvas.style.top += node.style.top;
+                    // }
+
+                    nodesToRecover.push({
+                        parent: parentNode,
+                        child: node
+                    });
+                    parentNode.removeChild(node);
+
+                    nodesToRemove.push({
+                        parent: parentNode,
+                        child: canvas
+                    });
+
+                    parentNode.appendChild(canvas);
+                });
+
+                // The clone node is dynamically appended to the body.
+                $("#regua_print").append(cloneDom);
+
+                html2canvas(cloneDom, {
+                    onrendered: function (canvas) {
+                        var data = canvas.toDataURL("image/png");
+                        var docDefinition = {
+                            content: [{
+                                image: data,
+                                width: 500,
+                                logging: true,
+                                profile: true,
+                                useCORS: true,
+                                allowTaint: true
+                            }]
+                        };
+                        pdfMake.createPdf(docDefinition).download("painel_de_metas.pdf");
+                        $("#regua_print").empty();
+                    }
+                });
+
+            }
+
+
+            // html2canvas(document.querySelector("#regua")).then(canvas => {
+            //
+            //     var dataURL = canvas.toDataURL("image/png");
+            //     var width = canvas.width;
+            //     var printWindow = window.open("");
+            //     $(printWindow.document.body)
+            //         .html("<img id='Image' src=" + dataURL + " style='" + width + "'></img>")
+            //         .ready(function() {
+            //             printWindow.focus();
+            //             // printWindow.print();
+            //         });
+            //
+            // });
+            // html2canvas(document.getElementById('#regua'), {
+            //     onrendered: function (canvas) {
+            //         var data = canvas.toDataURL("image/png");
+            //         var docDefinition = {
+            //             content: [{
+            //                 image: data,
+            //                 width: 500,
+            //                 logging: true,
+            //                 profile: true,
+            //                 useCORS: true,
+            //                 allowTaint: true
+            //             }]
+            //         };
+            //         pdfMake.createPdf(docDefinition).download("painel_de_metas.pdf");
+            //     }
+            // });
             // var minhaTabela = document.getElementById('regua').innerHTML;
             // var style = "<style>";
             // style = style + "table {width: 100%;font: 20px Calibri;}";

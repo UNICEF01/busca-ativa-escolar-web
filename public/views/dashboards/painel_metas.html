@@ -143,7 +143,7 @@
         <div class="row">
 
             <div class="col-md-12">
-                <h3 align="center">Visão geral da estratégia <small>{{identity.getCurrentUser().tenant.name}}</small>
+                <h3 align="center">Visão geral da estratégia <br> <small>{{identity.getCurrentUser().tenant.name}}</small>
                 </h3> <br/>
             </div>
 
@@ -225,7 +225,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-md-9">
-                            <div class="panel panel-default">
+                            <div class="panel panel-default" id="ba_donut">
                                 <!--                            <div class="panel-heading panel-heading-selo">Meu status no Selo UNICEF</div>-->
 
                                 <donuts-chart></donuts-chart>
@@ -315,4 +315,5 @@
             </div>
         </div>
         </div>
+        <div id="regua_print"></div>
 </div>
