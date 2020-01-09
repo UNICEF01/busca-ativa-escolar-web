@@ -17,6 +17,8 @@
         ]
 
         $scope.chartWithContentDownload = function () {
+            window.scrollTo(0, 100);
+
             var cloneDom = $("#regua").clone(true);
 
             if (typeof html2canvas !== 'undefined') {
