@@ -96,7 +96,7 @@
 						<th>Nome <br /><small>da criança ou adolescente</small></th>
 						<th>Responsáveis <br /> pela criança</th>
 						<th>Risco <br /> <small> </small></th>
-						<th>Idade <br /> <small> </small></th>
+						<th>Nascimento <br /> <small> </small></th>
 						<th>Etapa <br /> <small> </small></th>
 						<th>Responsável <br /> <small>pela etapa</small></th>
 						<th>Bairro</th>
@@ -123,8 +123,8 @@
 							<div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B</div>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							<span ng-show="child.age">{{child.age | digits}} anos</span>
-							<span ng-show="!child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
+							<span ng-show="child.dob" ng-bind="child.dob | amDateFormat:'DD/MM/YYYY'" uib-tooltip-html="child.dob | dateFormat"></span>
+							<span ng-show="!child.dob"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
 						</td>
 						<td width="10%" style="vertical-align: middle;">
 							<strong>{{child.step_name}}</strong>
