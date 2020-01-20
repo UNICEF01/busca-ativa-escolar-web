@@ -1,0 +1,9 @@
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Report', function Reports(API_PUBLIC, Identity, $resource) {
+            return $resource(API_PUBLIC.getURI('report/:entity'), {entity: '@entity'}, {
+                getStatusCity: {method: 'GET', url: API_PUBLIC.getURI('report/city?city=:city&uf=:uf')},
+            });
+        });
+})();
