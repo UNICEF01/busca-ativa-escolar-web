@@ -1154,6 +1154,9 @@
                ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()"
                ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e concluir etapa</a>
+            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
+               ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Reabrir Caso</a>
+
         </div>
 
     </div>
