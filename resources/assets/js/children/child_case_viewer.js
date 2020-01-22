@@ -131,6 +131,22 @@
 
         };
 
+        $scope.reopenCase = function () {
+
+            Modals.show(Modals.CaseRestart())
+                .then(function (reason) {
+                    console.log(reason)
+                    // if (!reason) return $q.reject();
+                    // return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+                })
+                .then(function (res) {
+                    console.log(res)
+                    // ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+                    // $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+                });
+
+        };
+
         function refreshGoogleMap() {
             $timeout(function () {
                 $scope.renderMap = false;

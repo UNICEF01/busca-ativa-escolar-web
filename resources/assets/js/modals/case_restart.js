@@ -10,6 +10,7 @@
 			$scope.reason = "";
 
 			$scope.ok = function() {
+				alert('Caso Reaberto')
 				$uibModalInstance.close({response: $scope.reason});
 			};
 
