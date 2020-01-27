@@ -133,11 +133,10 @@
 
         $scope.reopenCase = function () {
 
-            Modals.show(Modals.CaseRestart())
+            Modals.show(Modals.CaseReopen())
                 .then(function (reason) {
-                    console.log(reason)
-                    // if (!reason) return $q.reject();
-                    // return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+                    if (!reason) return $q.reject();
+                    return Children.reopenCase({case_id: $scope.openedCase.id, reason: reason})
                 })
                 .then(function (res) {
                     console.log(res)
