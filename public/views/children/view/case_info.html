@@ -281,8 +281,6 @@
             <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
-            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
-               ng-show="canCompleteStep() && step.child_status!='cancelled'">Reabrir Caso</a>
         </div>
 
     </div>
