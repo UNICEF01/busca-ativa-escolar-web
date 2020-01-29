@@ -1,12 +1,62 @@
 <div class="panel panel-default">
 	<div class="panel-heading">
-
+		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-upload"></i> Educacenso</h3>
 	</div>
 	<div class="panel-body">
 
-		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-upload"></i> Sistema de importações do Educacenso em manutenção</h3>
 
+		<div class="panel panel-default">
+			<div class="panel-heading"><i class="fa fa-plus"></i> Importar novo arquivo</div>
+			<div class="panel-body">
+				<p>Você pode importar a planilha de evasões escolares do Educacenso do INEP diretamente para a plataforma. Os casos do Educacenso são importados como alertas pendentes. Esta ação pode ser realizada pelo Coordenador(a) Operacional ou pelo(a) Supervisor(a) Educacional.</p>
 
+				<br/>
+
+				<div class="alert alert-warning">
+					<i class="fa fa-warning"></i> Neste momento, a plataforma importa apenas a relação de alunos na faixa etária de 4 a 17 anos matriculados no Censo de 2018 e não localizados no Censo de 2019
+				</div>
+				<a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a>
+
+				<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora. Arquivos muito grandes podem levar bastante tempo.</div>
+
+				<p ng-show="!$parent.isEditing">Esse procedimento é opcional. Caso não deseje importar a planilha, basta clicar no botão "Concluir" abaixo.</p>
+				<p ng-show="!$parent.isEditing">Você pode importar a planilha em outro momento, na tela "Configurações".</p>
+			</div>
+		</div>
+
+		<div class="panel panel-default" ng-show="$parent.isEditing && jobs && jobs.length > 0">
+
+			<div class="panel-heading"><i class="fa fa-file-excel-o"></i> Arquivos importados</div>
+			<div class="panel-body">
+
+				<table class="table">
+					<thead>
+					<tr>
+						<th>Data e hora</th>
+						<th>Status</th>
+						<th>Solicitante</th>
+						<th>Notificação</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr ng-repeat="(i, job) in jobs">
+						<td><span ng-bind="job.created_at | amCalendar"></span></td>
+						<td>
+							<span class="label label-warning" ng-show="job.status === 'pending'"><i class="fa fa-clock-o"></i> Na fila</span>
+							<span class="label label-warning" ng-show="job.status === 'processing'"><i class="fa fa-cog"></i> Processando</span>
+							<span class="label label-success" ng-show="job.status === 'completed'"><i class="fa fa-check"></i> Concluído</span>
+							<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-ban"></i> Erro</span>
+						</td>
+						<td><span ng-bind="job.user.name"></span></td>
+						<td><span ng-show="job.errors.length > 0">{{job.errors[0]}}</span></td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="panel-footer clearfix">
+				<a class="btn btn-info pull-right" ng-click="refresh()"><i class="fa fa-refresh"></i> Atualizar status</a>
+			</div>
+		</div>
 
 	</div>
 </div>
