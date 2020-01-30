@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('CaseRestartModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
+		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
 
 			console.log("[modal] case_restart");
 
@@ -10,6 +10,7 @@
 			$scope.reason = "";
 
 			$scope.ok = function() {
+				if(!$scope.reason) return;
 				$uibModalInstance.close({response: $scope.reason});
 			};
 

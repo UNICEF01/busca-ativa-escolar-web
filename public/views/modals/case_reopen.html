@@ -1,0 +1,19 @@
+<div class="modal-template" id="md-prompt">
+	<div class="modal-header">
+		<h3 class="modal-title">Tem certeza que deseja reabrir o caso em andamento?</h3>
+	</div>
+	<div class="modal-body" ng-show="step == 1">
+		<p>O caso atual está com status: 'Em andamento'. Ao ser encerrado, o status do caso será definido como 'Fora da escola', e um novo caso na etapa <b>Pesquisa</b> será gerado.</p>
+		<p>Essa operação não pode ser desfeita!</p>
+	</div>
+	<div class="modal-body" ng-show="step == 2">
+		<p>Para reabrir o caso e reiniciá-lo como pesquisa, você deve escrever uma justificativa abaixo.</p>
+		<p>Essa operação não pode ser desfeita!</p>
+		<textarea class="form-control" placeholder="Digite aqui o motivo do encerramento..." ng-model="reason"></textarea>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="button" ng-show="step == 2 && reason" ng-click="ok()">OK, reabrir o caso</button>
+		<button class="btn btn-primary" type="button" ng-show="step == 1" ng-click="step = 2">Sim, desejo reabrir o caso</button>
+		<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+	</div>
+</div>
