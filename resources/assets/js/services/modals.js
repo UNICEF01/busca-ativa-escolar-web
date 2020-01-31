@@ -186,10 +186,10 @@
 					};
 				},
 
-				CaseRestart: function() {
+				CaseReopen: function() {
 					var params = {
-						templateUrl: '/views/modals/case_restart.html',
-						controller: 'CaseRestartModalCtrl',
+						templateUrl: '/views/modals/case_reopen.html',
+						controller: 'CaseReopenModalCtrl',
 						size: 'md',
 						resolve: {
 

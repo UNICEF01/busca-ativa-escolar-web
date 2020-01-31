@@ -18,7 +18,6 @@
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
 			}
-
 		});
 
 })();

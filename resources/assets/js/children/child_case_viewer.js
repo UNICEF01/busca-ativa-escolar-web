@@ -133,18 +133,18 @@
 
         $scope.reopenCase = function () {
 
-            Modals.show(Modals.CaseRestart())
+            Modals.show(Modals.CaseReopen())
                 .then(function (reason) {
-                    console.log(reason)
-                    // if (!reason) return $q.reject();
-                    // return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+                    if (!reason) return $q.reject();
+                    Children.reopenCase({case_id: $scope.openedCase.id, reason: reason}).$promise.then(function (res) {
+                        window.location = 'children/view/' + res.child_id + '/consolidated';
+                    });
                 })
                 .then(function (res) {
                     console.log(res)
                     // ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
                     // $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
                 });
-
         };
 
         function refreshGoogleMap() {
@@ -287,6 +287,7 @@
                 }, 1000);
             });
         }
+
         function validateSchoolWithPlace() {
             if ($scope.fields.school && $scope.fields.school_city) {
                 if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
@@ -306,7 +307,7 @@
         }
 
         $scope.checkInputParents = function (value, name) {
-            if('mother' === name){
+            if ('mother' === name) {
                 $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
             }
             if (!value) {
@@ -622,7 +623,7 @@
 
         $scope.canUpdateStepObservation = function (child) {
             var time_for_next_step = 0;
-            if($scope.step && $scope.tenantSettings){
+            if ($scope.step && $scope.tenantSettings) {
                 if ($scope.step.slug == "1a_observacao") {
                     time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
                     var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
@@ -648,21 +649,21 @@
         };
 
         $scope.scopeOfCase = function () {
-            if( $scope.step.assigned_user ){
-                if($scope.step.assigned_user.type === "coordenador_estadual"
-                    || $scope.step.assigned_user.type === "supervisor_estadual"){
+            if ($scope.step.assigned_user) {
+                if ($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual") {
                     return "state";
-                }else{
+                } else {
                     return "municipality";
                 }
             }
         }
 
         $scope.scopeOfUser = function () {
-            if($scope.identity.getCurrentUser().type === "coordenador_estadual"
-                || $scope.identity.getCurrentUser().type === "supervisor_estadual"){
+            if ($scope.identity.getCurrentUser().type === "coordenador_estadual"
+                || $scope.identity.getCurrentUser().type === "supervisor_estadual") {
                 return "state";
-            }else{
+            } else {
                 return "municipality";
             }
         }
