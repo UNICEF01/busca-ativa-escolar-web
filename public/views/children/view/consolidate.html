@@ -19,9 +19,9 @@
 					{{item.label}}
 				</span>
             </div>
-           <div ng-if="fields.gender === null">
-               Não informado
-           </div>
+            <div ng-if="fields.gender === null">
+                Não informado
+            </div>
         </div>
 
         <div class="clearfix"></div>
@@ -339,7 +339,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o motivo de exclusão escolar</div>
+    <div class="panel-heading"><i class="fa fa-exclamation-circle"></i> Sobre o caso</div>
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label">Motivos de estar fora da escola</label>
@@ -350,6 +350,14 @@
                 </label>
             </div>
             <div ng-include="'/views/children/view/alert_motive.html'"></div>
+            <div>
+                <label class="control-label" title="Casos que foram fechados">Caso(s) relacionado(s)</label>
+                <div class="radio" ng-repeat="item in child.reopen_cases">
+                    <a ng-href="children/view/{{item.id}}/consolidated" title="{{item.id}}">
+                        {{item.name}} - Criado em: {{item.created_at | date}}
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">

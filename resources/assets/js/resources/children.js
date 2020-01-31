@@ -6,7 +6,7 @@
 			var headers = API.REQUIRE_AUTH;
 
 			var Children = $resource(API.getURI('children/:id?XDEBUG_SESSION_START=PHPSTORM'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers, params: {with: 'currentStep'}},
+				find: {method: 'GET', headers: headers, params: {with: 'reopens'}},
 				update: {method: 'POST', headers: headers},
 				search: {url: API.getURI('children/search?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', isArray: false, headers: headers},
 				export: {url: API.getURI('children/export'), method: 'POST', isArray: false, headers: headers},
