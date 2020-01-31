@@ -350,7 +350,7 @@
                 </label>
             </div>
             <div ng-include="'/views/children/view/alert_motive.html'"></div>
-            <div>
+            <div ng-if="child.reopen_cases">
                 <label class="control-label" title="Casos que foram fechados">Caso(s) relacionado(s)</label>
                 <div class="radio" ng-repeat="item in child.reopen_cases">
                     <a ng-href="children/view/{{item.id}}/consolidated" title="{{item.id}}">
