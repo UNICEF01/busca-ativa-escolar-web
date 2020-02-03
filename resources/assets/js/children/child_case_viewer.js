@@ -146,7 +146,17 @@
 
                     if( $scope.identity.getType() == 'supervisor_institucional') {
                         Children.requestReopenCase({case_id: $scope.openedCase.id, reason: reason}).$promise.then(function (res) {
+
+                            if(res.status == 'success'){
+                                ngToast.success(res.result);
+                            }
+
+                            if(res.status == 'error'){
+                                ngToast.danger(res.result);
+                            }
+
                             window.location = 'children/view/' + $scope.child_id + '/consolidated';
+
                         });
                     }
                 })
