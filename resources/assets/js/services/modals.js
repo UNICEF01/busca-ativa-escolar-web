@@ -186,13 +186,13 @@
 					};
 				},
 
-				CaseReopen: function() {
+				CaseReopen: function($typeUser) {
 					var params = {
 						templateUrl: '/views/modals/case_reopen.html',
 						controller: 'CaseReopenModalCtrl',
 						size: 'md',
 						resolve: {
-
+							$typeUser: function() { return $typeUser; }
 						}
 					};
 
