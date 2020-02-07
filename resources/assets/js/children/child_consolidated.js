@@ -41,9 +41,13 @@
             return $scope.fields[field].indexOf(value) !== -1;
         };
         if ($scope.id_case_for_reopen !== '') {
-            Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: ''}).$promise.then(function (res) {
+            Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: 'request'}).$promise.then(function (res) {
                 if (res.status !== 'error') {
-                    ngToast.success("Caso reaberto com sucess!");
+                    ngToast.success(res.result);
+                    setTimeout(function () {
+                        window.location = 'children/view/' + res.child_id + '/consolidated';
+                    }, 4000);
+
                 } else {
                     ngToast.danger("Erro ao reabrir o caso!");
                 }
