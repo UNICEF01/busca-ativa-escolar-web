@@ -356,6 +356,7 @@
                     <a ng-href="children/view/{{item.id}}/consolidated" title="{{item.id}}">
                         {{item.name}} - Criado em: {{item.created_at | date}}
                     </a>
+                    <p ng-show="item.reason"> <b>Justificativa:</b> {{item.reason}}</p>
                 </div>
             </div>
         </div>
