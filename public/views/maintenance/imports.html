@@ -33,10 +33,12 @@
 		</div>
 
 		<hr />
+
 		<table class="table">
 			<thead>
 			<tr>
 				<th>Data</th>
+				<th>Cidade</th>
 				<th>Tipo</th>
 				<th>Arquivo</th>
 				<th>Progresso</th>
@@ -45,8 +47,9 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="job in jobs.data">
+			<tr ng-repeat="job in jobs">
 				<td><span ng-bind="job.created_at | amCalendar" uib-tooltip-html="job.created_at | amTimeAgo"></span></td>
+				<td><span ng-bind="job.tenant.name"></span></td>
 				<td><span ng-bind="job.type"></span></td>
 				<td><span ng-bind="job.path"></span></td>
 				<td>
@@ -63,6 +66,9 @@
 			</tr>
 			</tbody>
 		</table>
+
+		<app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+
 	</div>
 </div>
 

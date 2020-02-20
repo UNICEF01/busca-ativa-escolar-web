@@ -15,13 +15,23 @@
 
 				$scope.static = StaticData;
 
+				$scope.query = {
+					max: 5,
+					page: 1
+				};
+
+				$scope.search = {};
+
 				$scope.refresh = function() {
-					ImportJobs.all({$hide_loading_feedback: true}, function (jobs) {
-						$scope.jobs = jobs;
+					ImportJobs.all({$hide_loading_feedback: true, per_page: $scope.query.max, page: $scope.query.page}, function (jobs) {
+						$scope.jobs = jobs.data;
+						$scope.search = $scope.returnNewSearch(jobs);
+						console.log($scope.search);
 					});
 				};
 
 				$scope.jobs = {};
+
 				$scope.refresh();
 
 				$scope.newImport = function (type) {
@@ -50,6 +60,25 @@
 					if(job.total_records === 0) return '100 %';
 					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
 				};
+
+				$scope.returnNewSearch = function(jobs) {
+					return {
+						data: jobs.data,
+						meta: {
+							pagination: {
+								total: jobs.total,
+								count: jobs.per_page,
+								per_page: jobs.per_page,
+								current_page: jobs.current_page,
+								total_pages: jobs.last_page,
+								links: {
+									next: jobs.next_page_url ? jobs.next_page_url : null,
+									prev: jobs.prev_page_url ? jobs.prev_page_url : null
+								}
+							}
+						}
+					}
+				}
 
 			}
 		);
