@@ -495,6 +495,57 @@
                 });
         };
 
+        $scope.transferCase = function () {
+
+            Modals.show(Modals.CaseTransfer($scope.identity.getType()))
+
+                // .then(function (reason) {
+                //     if (!reason) return $q.reject();
+                //
+                //     if ($scope.identity.getType() === 'coordenador_operacional') {
+                //
+                //         Children.reopenCase({
+                //             case_id: $scope.openedCase.id,
+                //             reason: reason
+                //         }).$promise.then(function (res) {
+                //             if (res.status === 'success') {
+                //                 ngToast.success(res.result+ '! Redirecionando para o novo caso...');
+                //                 setTimeout(function () {
+                //                     window.location = 'children/view/' + res.child_id + '/consolidated';
+                //                 }, 4000);
+                //
+                //             } else {
+                //                 ngToast.danger(res.result);
+                //             }
+                //         });
+                //     }
+                //
+                //     if ($scope.identity.getType() === 'supervisor_institucional') {
+                //         Children.requestReopenCase({
+                //             case_id: $scope.openedCase.id,
+                //             reason: reason
+                //         }).$promise.then(function (res) {
+                //
+                //             if (res.status === 'success') {
+                //                 ngToast.success(res.result);
+                //                 setTimeout(function () {
+                //                     window.location = 'children/view/' + $scope.child_id + '/consolidated';
+                //                 }, 3000);
+                //             }
+                //
+                //             if (res.status === 'error') {
+                //                 ngToast.danger(res.result);
+                //             }
+                //         });
+                //     }
+                // })
+                //
+                // .then(function (res) {
+                //     console.log(res);
+                // });
+        };
+
+
         function refreshGoogleMap() {
             $timeout(function () {
                 $scope.renderMap = false;
@@ -4691,6 +4742,66 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+(function () {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
+
+            $scope.step = 1;
+            $scope.reason = "";
+            $scope.typeUser = $typeUser;
+            $scope.tenants = [];
+
+            $scope.defaultQuery = {
+                name: '',
+                step_name: '',
+                cause_name: '',
+                assigned_user_name: '',
+                location_full: '',
+                alert_status: ['accepted'],
+                case_status: ['in_progress'],
+                risk_level: ['low', 'medium', 'high'],
+                age_null: true,
+                age: {from: 0, to: 10000},
+                gender: ['male', 'female', 'undefined'],
+                gender_null: true,
+                place_kind: ['rural', 'urban'],
+                place_kind_null: true,
+            };
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+// Todo Criar um serviço para reaproveitar isso
+            $scope.getUFs = function () {
+                return StaticData.getUFs();
+            };
+
+            $scope.refresh = function () {
+                // if (Identity.can('tenants.view')) {
+                //     alert()
+                    $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
+                    console.log($scope.tenants);
+                // }
+            };
+
+            $scope.getTenants = function () {
+                if (!$scope.tenants || !$scope.tenants.data) return [];
+                return $scope.tenants.data;
+            };
+
+            $scope.ok = function () {
+                if (!$scope.reason) return;
+                $uibModalInstance.close({response: $scope.reason});
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
 (function() {
 
 	angular
@@ -7151,6 +7262,7 @@ if (!Array.prototype.find) {
 				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
 				find: {method: 'GET', headers: headers},
                 findByUf: {url: API.getURI('tenants/uf?XDEBUG_SESSION_START=PHPSTORM'), method: 'GET', headers: authHeaders},
+                findByUfPublic: {url: API.getURI('tenants/public/uf?XDEBUG_SESSION_START=PHPSTORM'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
 				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
 			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
@@ -8828,6 +8940,18 @@ if (!Array.prototype.find) {
 
 					return params;
 				},
+				CaseTransfer: function($typeUser) {
+					var params = {
+						templateUrl: '/views/modals/case_transfer.html',
+						controller: 'CaseTransferModalCtrl',
+						size: 'md',
+						resolve: {
+							$typeUser: function() { return $typeUser; }
+						}
+					};
+
+					return params;
+				},
 
 				CaseActivityLogEntry: function() {
 					var params = {
@@ -9402,6 +9526,147 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
     console.log("[core.load] ", namespace, file);
 }
+(function () {
+
+    angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
+
+        $scope.static = StaticData;
+
+        $scope.step = 1;
+        $scope.numSteps = 5;
+        $scope.isCityAvailable = false;
+
+        $scope.stepChecks = [false, false, false, false];
+        $scope.stepsNames = ['Indique a UF', 'Gestor Estadual', 'Coordenador Estadual', 'Termo de Adesão'];
+
+        $scope.form = {
+            uf: null,
+            admin: {},
+            coordinator: {}
+        };
+
+        var fieldNames = {
+            cpf: 'CPF',
+            name: 'nome',
+            email: 'e-mail institucional',
+            position: 'posição',
+            institution: 'instituição',
+            password: 'senha',
+            dob: 'data de nascimento',
+            phone: 'telefone institucional',
+            mobile: 'celular institucional',
+            personal_phone: 'telefone pessoal',
+            personal_mobile: 'celular pessoal'
+        };
+
+        var messages = {
+            invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
+            invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
+        };
+
+        var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
+        var requiredCoordinatorFields = ['email', 'name', 'cpf', 'dob', 'phone'];
+
+        $scope.goToStep = function (step) {
+			console.log($scope.step, $scope.numSteps)
+			if ($scope.step < 1) return;
+            if ($scope.step >= $scope.numSteps) return;
+			console.log($scope.step, $scope.numSteps)
+            $scope.step = step;
+            $window.scrollTo(0, 0);
+        };
+
+        $scope.nextStep = function (step) {
+            if ($scope.step >= $scope.numSteps) return;
+
+            if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
+            if ($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.coordinator.cpf])) return;
+            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.coordinator.name])) return;
+
+            $scope.step++;
+            $window.scrollTo(0, 0);
+            $scope.stepChecks[step] = true;
+
+        };
+
+        $scope.prevStep = function () {
+            if ($scope.step <= 1) return;
+
+            $scope.step--;
+            $window.scrollTo(0, 0);
+        };
+
+        $scope.onUFSelect = function (uf) {
+            console.log("UF selected: ", uf);
+            if (!uf) return;
+            $scope.checkStateAvailability(uf);
+        };
+
+        $scope.checkStateAvailability = function (uf) {
+
+            $scope.hasCheckedAvailability = false;
+
+            StateSignups.checkIfAvailable({uf: uf}, function (res) {
+                $scope.hasCheckedAvailability = true;
+                $scope.isStateAvailable = !!res.is_available;
+            });
+        };
+
+        $scope.showPassword = function (elementId) {
+            var field_password = document.getElementById(elementId);
+            field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
+        }
+
+        $scope.finish = function (step) {
+            if (!$scope.agreeTOS) return;
+
+            var data = {};
+            data.admin = Object.assign({}, $scope.form.admin);
+            data.coordinator = Object.assign({}, $scope.form.coordinator);
+            data.uf = $scope.form.uf;
+
+            if (!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
+            if (!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
+
+            data.admin = Utils.prepareDateFields(data.admin, ['dob']);
+            data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
+
+            StateSignups.register(data, function (res) {
+                if (res.status === 'ok') {
+                    ngToast.success('Solicitação de adesão registrada!');
+                    $scope.step = 5;
+                    return;
+                }
+
+                if (res.reason === 'admin_email_in_use') {
+                    $scope.step = 2;
+                    return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+                }
+
+                if (res.reason === 'coordinator_email_in_use') {
+                    $scope.step = 2;
+                    return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
+                }
+
+                if (res.reason === 'invalid_admin_data') {
+                    $scope.step = 2;
+                    ngToast.danger(messages.invalid_admin);
+
+                    return Utils.displayValidationErrors(res);
+                }
+
+                ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
+
+            });
+            $scope.stepChecks[step] = true;
+
+
+        };
+
+    });
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -9708,147 +9973,6 @@ function identify(namespace, file) {
 				$scope.refresh();
 			});
 		});
-
-})();
-(function () {
-
-    angular.module('BuscaAtivaEscolar').controller('StateSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, StateSignups, Cities, Modals, StaticData) {
-
-        $scope.static = StaticData;
-
-        $scope.step = 1;
-        $scope.numSteps = 5;
-        $scope.isCityAvailable = false;
-
-        $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Indique a UF', 'Gestor Estadual', 'Coordenador Estadual', 'Termo de Adesão'];
-
-        $scope.form = {
-            uf: null,
-            admin: {},
-            coordinator: {}
-        };
-
-        var fieldNames = {
-            cpf: 'CPF',
-            name: 'nome',
-            email: 'e-mail institucional',
-            position: 'posição',
-            institution: 'instituição',
-            password: 'senha',
-            dob: 'data de nascimento',
-            phone: 'telefone institucional',
-            mobile: 'celular institucional',
-            personal_phone: 'telefone pessoal',
-            personal_mobile: 'celular pessoal'
-        };
-
-        var messages = {
-            invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
-            invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
-        };
-
-        var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
-        var requiredCoordinatorFields = ['email', 'name', 'cpf', 'dob', 'phone'];
-
-        $scope.goToStep = function (step) {
-			console.log($scope.step, $scope.numSteps)
-			if ($scope.step < 1) return;
-            if ($scope.step >= $scope.numSteps) return;
-			console.log($scope.step, $scope.numSteps)
-            $scope.step = step;
-            $window.scrollTo(0, 0);
-        };
-
-        $scope.nextStep = function (step) {
-            if ($scope.step >= $scope.numSteps) return;
-
-            if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_admin)) return;
-            if ($scope.step === 3 && !Utils.isValid($scope.form.coordinator, requiredCoordinatorFields, fieldNames, messages.invalid_coordinator)) return;
-            if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.coordinator.cpf])) return;
-            if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.coordinator.name])) return;
-
-            $scope.step++;
-            $window.scrollTo(0, 0);
-            $scope.stepChecks[step] = true;
-
-        };
-
-        $scope.prevStep = function () {
-            if ($scope.step <= 1) return;
-
-            $scope.step--;
-            $window.scrollTo(0, 0);
-        };
-
-        $scope.onUFSelect = function (uf) {
-            console.log("UF selected: ", uf);
-            if (!uf) return;
-            $scope.checkStateAvailability(uf);
-        };
-
-        $scope.checkStateAvailability = function (uf) {
-
-            $scope.hasCheckedAvailability = false;
-
-            StateSignups.checkIfAvailable({uf: uf}, function (res) {
-                $scope.hasCheckedAvailability = true;
-                $scope.isStateAvailable = !!res.is_available;
-            });
-        };
-
-        $scope.showPassword = function (elementId) {
-            var field_password = document.getElementById(elementId);
-            field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-        }
-
-        $scope.finish = function (step) {
-            if (!$scope.agreeTOS) return;
-
-            var data = {};
-            data.admin = Object.assign({}, $scope.form.admin);
-            data.coordinator = Object.assign({}, $scope.form.coordinator);
-            data.uf = $scope.form.uf;
-
-            if (!Utils.isValid(data.admin, requiredAdminFields, messages.invalid_admin)) return;
-            if (!Utils.isValid(data.coordinator, requiredCoordinatorFields, messages.invalid_coordinator)) return;
-
-            data.admin = Utils.prepareDateFields(data.admin, ['dob']);
-            data.coordinator = Utils.prepareDateFields(data.coordinator, ['dob']);
-
-            StateSignups.register(data, function (res) {
-                if (res.status === 'ok') {
-                    ngToast.success('Solicitação de adesão registrada!');
-                    $scope.step = 5;
-                    return;
-                }
-
-                if (res.reason === 'admin_email_in_use') {
-                    $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
-                }
-
-                if (res.reason === 'coordinator_email_in_use') {
-                    $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
-                }
-
-                if (res.reason === 'invalid_admin_data') {
-                    $scope.step = 2;
-                    ngToast.danger(messages.invalid_admin);
-
-                    return Utils.displayValidationErrors(res);
-                }
-
-                ngToast.danger("Ocorreu um erro ao registrar a adesão: " + res.reason);
-
-            });
-            $scope.stepChecks[step] = true;
-
-
-        };
-
-    });
 
 })();
 (function() {
@@ -10344,178 +10468,6 @@ function identify(namespace, file) {
 
 })();
 (function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('pending_tenant_signups', {
-				url: '/pending_tenant_signups',
-				templateUrl: '/views/tenants/pending_signups.html',
-				controller: 'PendingTenantSignupsCtrl'
-			})
-		})
-		.controller('PendingTenantSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, TenantSignups, StaticData, Config) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-
-			$scope.signups = {};
-			$scope.signup = {};
-			$scope.query = {
-				max: 16,
-				page: 1,
-				sort: {created_at: 'desc'},
-				filter: {status: 'pending_approval'}
-			};
-
-			$scope.copyText = function(){
-				$scope.msgCopy = "URL COPIADA";
-				setTimeout(function(){ $scope.msgCopy = '';}, 500);
-
-
-			}
-
-            $scope.onSelectType = function() {
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
-
-            $scope.refresh = function() {
-				$scope.signups = TenantSignups.getPending($scope.query);
-				return $scope.signups.$promise;
-			};
-
-			$scope.export = function() {
-				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token + $scope.prepareUriToExport());
-				});
-			};
-
-            $scope.prepareUriToExport = function () {
-                var uri = "";
-                Object.keys($scope.query.filter).forEach( function (element) {
-                    uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
-                });
-                return uri;
-            };
-
-			$scope.preview = function(signup) {
-				$scope.signup = signup;
-			};
-
-			$scope.approve = function(signup) {
-				TenantSignups.approve({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.reject = function(signup) {
-				TenantSignups.reject({id: signup.id}, function() {
-					$scope.refresh();
-					$scope.signup = {};
-				});
-			};
-
-			$scope.updateRegistrationEmail = function(type, signup) {
-				TenantSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
-					if(res.status !== "ok") {
-						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
-						return;
-					}
-
-					ngToast.success("E-mail do gestor atualizado!");
-				});
-			};
-
-			$scope.resendNotification = function(signup) {
-				TenantSignups.resendNotification({id: signup.id}, function() {
-					ngToast.success('Notificação reenviada!');
-				});
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider) {
-			$stateProvider.state('tenant_browser', {
-				url: '/tenants',
-				templateUrl: '/views/tenants/list.html',
-				controller: 'TenantBrowserCtrl'
-			})
-		})
-		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity, Config, Ufs) {
-
-			$scope.identity = Identity;
-			$scope.tenants = {};
-			$scope.ufs = Ufs;
-			$scope.query = {
-                show_suspended: false,
-				filter: {},
-				sort: {},
-				max: 16,
-				page: 1
-			};
-
-			$scope.showCanceledCities = function () {
-				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
-				$scope.refresh();
-            }
-
-			$scope.refresh = function() {
-				$scope.tenants = Tenants.all($scope.query);
-			};
-
-			$scope.export = function() {
-				Identity.provideToken().then(function (token) {
-					window.open(Config.getAPIEndpoint() + 'tenants/export?token='+token+$scope.prepareUriToExport());
-				});
-			};
-
-            $scope.prepareUriToExport = function () {
-                var uri = "";
-                Object.keys($scope.query.filter).forEach( function (element) {
-					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
-                });
-                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
-                return uri;
-            };
-
-			$scope.disableTenant = function(tenant) {
-
-				Modals.show(
-					Modals.Confirm(
-						'Tem certeza que deseja cancelar o município: ' + tenant.name,
-						'Ao confirmar, os acessos do município serão cancelados, e todos os dados recebidos serão arquivados, e não poderão mais ser acessados. ' +
-						'Os alertas e lembretes não serão disparados. As estatísticas e métricas coletadas não serão apagadas'
-					))
-					.then(function () {
-						return Tenants.cancel({id: tenant.id}).$promise;
-					})
-					.then(function (res) {
-						if(res && res.status === 'ok') {
-							ngToast.success('Município cancelado com sucesso!');
-							$scope.refresh();
-							return;
-						}
-
-						ngToast.danger('Ocorreu um erro ao cancelar o município!');
-						console.error("[tenants.cancel] Failed to cancel tenant: ", res);
-					})
-
-			};
-			
-			$scope.refresh();
-
-		});
-
-})();
-(function() {
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
             $stateProvider.state('user_browser', {
@@ -10870,6 +10822,178 @@ function identify(namespace, file) {
             $scope.refresh();
 
         });
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_tenant_signups', {
+				url: '/pending_tenant_signups',
+				templateUrl: '/views/tenants/pending_signups.html',
+				controller: 'PendingTenantSignupsCtrl'
+			})
+		})
+		.controller('PendingTenantSignupsCtrl', function ($scope, $rootScope, ngToast, Identity, TenantSignups, StaticData, Config) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+
+			$scope.signups = {};
+			$scope.signup = {};
+			$scope.query = {
+				max: 16,
+				page: 1,
+				sort: {created_at: 'desc'},
+				filter: {status: 'pending_approval'}
+			};
+
+			$scope.copyText = function(){
+				$scope.msgCopy = "URL COPIADA";
+				setTimeout(function(){ $scope.msgCopy = '';}, 500);
+
+
+			}
+
+            $scope.onSelectType = function() {
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
+				$scope.signups = TenantSignups.getPending($scope.query);
+				return $scope.signups.$promise;
+			};
+
+			$scope.export = function() {
+				Identity.provideToken().then(function (token) {
+					window.open(Config.getAPIEndpoint() + 'signups/tenants/export?token=' + token + $scope.prepareUriToExport());
+				});
+			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+                    uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                return uri;
+            };
+
+			$scope.preview = function(signup) {
+				$scope.signup = signup;
+			};
+
+			$scope.approve = function(signup) {
+				TenantSignups.approve({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.reject = function(signup) {
+				TenantSignups.reject({id: signup.id}, function() {
+					$scope.refresh();
+					$scope.signup = {};
+				});
+			};
+
+			$scope.updateRegistrationEmail = function(type, signup) {
+				TenantSignups.updateRegistrationEmail({id: signup.id, type: type, email: signup.data[type].email}, function (res) {
+					if(res.status !== "ok") {
+						ngToast.danger("Falha ao atualizar o e-mail do gestor: " + res.reason);
+						return;
+					}
+
+					ngToast.success("E-mail do gestor atualizado!");
+				});
+			};
+
+			$scope.resendNotification = function(signup) {
+				TenantSignups.resendNotification({id: signup.id}, function() {
+					ngToast.success('Notificação reenviada!');
+				});
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('tenant_browser', {
+				url: '/tenants',
+				templateUrl: '/views/tenants/list.html',
+				controller: 'TenantBrowserCtrl'
+			})
+		})
+		.controller('TenantBrowserCtrl', function ($scope, $rootScope, ngToast, $state, Tenants, Modals, Identity, Config, Ufs) {
+
+			$scope.identity = Identity;
+			$scope.tenants = {};
+			$scope.ufs = Ufs;
+			$scope.query = {
+                show_suspended: false,
+				filter: {},
+				sort: {},
+				max: 16,
+				page: 1
+			};
+
+			$scope.showCanceledCities = function () {
+				$scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+				$scope.refresh();
+            }
+
+			$scope.refresh = function() {
+				$scope.tenants = Tenants.all($scope.query);
+			};
+
+			$scope.export = function() {
+				Identity.provideToken().then(function (token) {
+					window.open(Config.getAPIEndpoint() + 'tenants/export?token='+token+$scope.prepareUriToExport());
+				});
+			};
+
+            $scope.prepareUriToExport = function () {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach( function (element) {
+					uri = uri.concat("&"+element+"="+$scope.query.filter[element]);
+                });
+                uri = uri.concat("&show_suspended="+$scope.query.show_suspended);
+                return uri;
+            };
+
+			$scope.disableTenant = function(tenant) {
+
+				Modals.show(
+					Modals.Confirm(
+						'Tem certeza que deseja cancelar o município: ' + tenant.name,
+						'Ao confirmar, os acessos do município serão cancelados, e todos os dados recebidos serão arquivados, e não poderão mais ser acessados. ' +
+						'Os alertas e lembretes não serão disparados. As estatísticas e métricas coletadas não serão apagadas'
+					))
+					.then(function () {
+						return Tenants.cancel({id: tenant.id}).$promise;
+					})
+					.then(function (res) {
+						if(res && res.status === 'ok') {
+							ngToast.success('Município cancelado com sucesso!');
+							$scope.refresh();
+							return;
+						}
+
+						ngToast.danger('Ocorreu um erro ao cancelar o município!');
+						console.error("[tenants.cancel] Failed to cancel tenant: ", res);
+					})
+
+			};
+			
+			$scope.refresh();
+
+		});
 
 })();
 //# sourceMappingURL=app.js.map

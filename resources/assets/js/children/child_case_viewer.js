@@ -181,6 +181,57 @@
                 });
         };
 
+        $scope.transferCase = function () {
+
+            Modals.show(Modals.CaseTransfer($scope.identity.getType()))
+
+                // .then(function (reason) {
+                //     if (!reason) return $q.reject();
+                //
+                //     if ($scope.identity.getType() === 'coordenador_operacional') {
+                //
+                //         Children.reopenCase({
+                //             case_id: $scope.openedCase.id,
+                //             reason: reason
+                //         }).$promise.then(function (res) {
+                //             if (res.status === 'success') {
+                //                 ngToast.success(res.result+ '! Redirecionando para o novo caso...');
+                //                 setTimeout(function () {
+                //                     window.location = 'children/view/' + res.child_id + '/consolidated';
+                //                 }, 4000);
+                //
+                //             } else {
+                //                 ngToast.danger(res.result);
+                //             }
+                //         });
+                //     }
+                //
+                //     if ($scope.identity.getType() === 'supervisor_institucional') {
+                //         Children.requestReopenCase({
+                //             case_id: $scope.openedCase.id,
+                //             reason: reason
+                //         }).$promise.then(function (res) {
+                //
+                //             if (res.status === 'success') {
+                //                 ngToast.success(res.result);
+                //                 setTimeout(function () {
+                //                     window.location = 'children/view/' + $scope.child_id + '/consolidated';
+                //                 }, 3000);
+                //             }
+                //
+                //             if (res.status === 'error') {
+                //                 ngToast.danger(res.result);
+                //             }
+                //         });
+                //     }
+                // })
+                //
+                // .then(function (res) {
+                //     console.log(res);
+                // });
+        };
+
+
         function refreshGoogleMap() {
             $timeout(function () {
                 $scope.renderMap = false;
