@@ -16,7 +16,7 @@
 				$scope.static = StaticData;
 
 				$scope.query = {
-					max: 5,
+					max: 20,
 					page: 1
 				};
 
