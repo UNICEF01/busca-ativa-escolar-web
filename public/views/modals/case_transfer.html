@@ -48,14 +48,9 @@
         <textarea class="form-control" placeholder="Digite aqui a justificativa da transferência..."
                   ng-model="reason"></textarea>
     </div>
-
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-show="step == 2 && reason" ng-click="ok()">OK, reabrir o caso
-        </button>
-        <button class="btn btn-primary" type="button" ng-show="step == 1" ng-click="step = 2">Sim, desejo reabrir o
-            caso
+        <button class="btn btn-primary" type="button" ng-show="reason" ng-click="ok()">Solicitar transferência
         </button>
         <button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
     </div>
-
 </div>

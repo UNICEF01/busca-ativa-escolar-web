@@ -34,11 +34,7 @@
             };
 
             $scope.refresh = function () {
-                // if (Identity.can('tenants.view')) {
-                //     alert()
-                    $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
-                    console.log($scope.tenants);
-                // }
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
             };
 
             $scope.getTenants = function () {
@@ -48,7 +44,16 @@
 
             $scope.ok = function () {
                 if (!$scope.reason) return;
-                $uibModalInstance.close({response: $scope.reason});
+                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
+                $uibModalInstance.close(
+                    {
+                        response:
+                            {
+                                tenant_id: $scope.query.tenant_id,
+                                reason: $scope.reason,
+                                city: city
+                            }
+                    });
             };
 
             $scope.cancel = function () {
