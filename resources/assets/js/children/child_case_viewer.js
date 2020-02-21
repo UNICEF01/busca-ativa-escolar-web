@@ -187,7 +187,7 @@
                 if (!response) return $q.reject();
 
                 if ($scope.identity.getType() === 'coordenador_operacional') {
-                    Children.requestTranferCase({
+                    Children.requestTransferCase({
                         tenant_id: response.tenant_id,
                         case_id: $scope.openedCase.id,
                         reason: response.reason,
