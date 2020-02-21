@@ -198,6 +198,18 @@
 
 					return params;
 				},
+				CaseTransfer: function($typeUser) {
+					var params = {
+						templateUrl: '/views/modals/case_transfer.html',
+						controller: 'CaseTransferModalCtrl',
+						size: 'md',
+						resolve: {
+							$typeUser: function() { return $typeUser; }
+						}
+					};
+
+					return params;
+				},
 
 				CaseActivityLogEntry: function() {
 					var params = {
