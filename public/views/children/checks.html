@@ -1,0 +1,172 @@
+<!--<div class="col-md-12">-->
+
+<!--	<form name="childSearch" ng-submit="refresh()" class="panel panel-default form-inline">-->
+<!--		<div class="panel-heading">-->
+<!--			<h3><a href="#" class="children_filter"><i class="material-icons">filter_list</i></a> Filtrar</h3>-->
+<!--		</div>-->
+<!--		<div class="body_filter">-->
+<!--			<div class="panel-body">-->
+
+<!--				<div class="row">-->
+
+<!--					<div class="col-md-2">-->
+<!--						<input type="text" class="form-control" id="filter-name" ng-model="query.name" placeholder="Nome da criança...">-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<input type="text" class="form-control" id="filter-type"  ng-model="query.cause_name" placeholder="Motivo do caso...">-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<input type="text" class="form-control" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso...">-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<input type="text" class="form-control" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário...">-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, nome da rua...">-->
+<!--					</div>-->
+
+<!--					<div class="col-md-2"></div>-->
+<!--				</div>-->
+
+<!--				<div class="row">-->
+
+<!--					<div class="col-md-2">-->
+<!--						<label class="control-label" for="filter-status-in_progress"><strong>Por status do caso</strong></label><br/><br/>-->
+<!--						<div class="checkbox"><label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress"  checklist-model="query.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress"> Em andamento</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="query.case_status" checklist-value="'cancelled'" name="filter-case_status_cancelled"> Cancelado</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed"  checklist-model="query.case_status" checklist-value="'completed'" name="filter-case_status_completed"> Concluído</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="query.case_status" checklist-value="'interrupted'" name="filter-case_status_interrupted"> Interrompido</label></div>-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<label class="control-label" for="filter-risk-level-low"><strong>Por grau de risco</strong></label><br/><br/>-->
+<!--						<div class="checkbox"><label for="filter-risk-level-low"><input type="checkbox" id="filter-risk-level-low" checklist-model="query.risk_level" checklist-value="'low'" name="filter-risk_level_low"> Baixo</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-risk-level-medium"><input type="checkbox" id="filter-risk-level-medium" checklist-model="query.risk_level" checklist-value="'medium'" name="filter-risk_level_medium"> Médio</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-risk-level-high"><input type="checkbox" id="filter-risk-level-high" checklist-model="query.risk_level" checklist-value="'high'" name="filter-risk_level_high"> Alto</label></div>-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<label class="control-label" for="filter-age-from"><strong>Por idade</strong></label><br/>-->
+<!--						<span> de </span>-->
+<!--						<input type="number" style="width: 40px; text-align: center" min="0" max="50" class="form-control" id="filter-age-from" ng-model="query.age.from">-->
+<!--						<span> a </span>-->
+<!--						<input type="number" style="width: 40px; text-align: center" min="0" max="50" class="form-control" id="filter-age-to" ng-model="query.age.to">-->
+<!--						<span> anos </span>-->
+<!--						<div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="query.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<label class="control-label" for="filter-gender-male"><strong>Por sexo</strong></label><br/><br/>-->
+<!--						<div class="checkbox"><label for="filter-gender-male"><input type="checkbox" checklist-model="query.gender" checklist-value="'male'" name="filter-gender_male" id="filter-gender-male"> <i class="fa fa-mars"></i> Masc.</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-gender-female"><input type="checkbox" checklist-model="query.gender" checklist-value="'female'" name="filter-gender_female" id="filter-gender-female"> <i class="fa fa-venus"></i> Fem.</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-gender-undefined"><input type="checkbox" checklist-model="query.gender" checklist-value="'undefined'" name="filter-gender_undefined" id="filter-gender-undefined"> <i class="fa fa-transgender"></i> Indef.</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-gender-null"><input type="checkbox" ng-model="query.gender_null" name="filter-gender_null" id="filter-gender-null"> <i class="fa fa-block"></i> Sem info.</label></div>-->
+<!--					</div>-->
+<!--					<div class="col-md-2">-->
+<!--						<label class="control-label" for="filter-place_kind-rural"><strong>Por zona</strong></label><br/><br/>-->
+<!--						<div class="checkbox"><label for="filter-place_kind-rural"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'rural'" name="filter-place_kind_rural" id="filter-place_kind-rural"> Rural</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-place_kind-urban"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban"> Urbana</label></div><br/>-->
+<!--						<div class="checkbox"><label for="filter-place_kind-null"><input type="checkbox" ng-model="query.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>-->
+<!--					</div>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--			<div class="panel-footer">-->
+<!--				<div class="text-right">-->
+<!--					<button type="button" ng-click="resetQuery()" class="btn btn-default"><i class="fa fa-undo"></i> Limpar filtros</button>-->
+<!--					<button type="submit" class="btn btn-raised btn-info"><i class="fa fa-search"></i> Filtrar</button>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+<!--	</form>-->
+
+<!--</div>-->
+
+<div class="col-md-12">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3><i class="material-icons">list</i> Solicitações | {{search.stats.total_results}}</h3>
+		</div>
+		<div class="panel-body" ng-if="search.results">
+
+<!--			<div class="text-right">-->
+<!--				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>-->
+<!--			</div>-->
+
+			<br/>
+
+			<table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+				<thead>
+					<tr>
+						<th>Nome <br /><small>da criança ou adolescente</small></th>
+						<th>Responsáveis <br /> pela criança</th>
+						<th>Risco <br /> <small> </small></th>
+						<th>Idade <br /> <small> </small></th>
+						<th uib-tooltip="Usuário que fez a requisição">Requisitante <br /> <small> </small></th>
+						<th>Responsável <br /> <small>pela etapa</small></th>
+						<th>Bairro</th>
+						<th>Status <br /> <small>do caso</small></th>
+						<th width="200px" class="text-center"><br />Ações</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="(i, child) in search.results">
+						<td width="25%" style="vertical-align: middle;">
+							<strong style="font-size: 15px;">
+								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i><span uib-tooltip="Data de abertura: {{child.created_at | date:'dd/MM/yyyy'}}">
+								{{child.name}}</span>
+							</strong>
+						</td>
+						<td>
+							<span uib-tooltip="Pais ou responsáveis">
+								{{Decorators.Child.parents(child)}}
+							</span>
+						</td>
+						<td width="10%" style="vertical-align: middle;">
+							<div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
+							<div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M</div>
+							<div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B</div>
+						</td>
+						<td width="10%" style="vertical-align: middle;">
+							<span ng-show="child.age">{{child.age | digits}} anos</span>
+							<span ng-show="!child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
+						</td>
+						<td width="10%" style="vertical-align: middle;">
+							<strong>{{child.step_name}}</strong>
+						</td>
+
+						<td width="25%" style="vertical-align: middle;">
+							<span ng-show="child.assigned_user_name"><i class="fa fa-user"></i> {{child.assigned_user_name}} <br /></span>
+							<small ng-show="child.assigned_group_name" class="pull-right">{{child.assigned_group_name}} <i class="fa fa-group"></i></small>
+							<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
+						</td>
+
+						<td>
+							{{child.place_neighborhood}}
+						</td>
+						<td width="10%" style="vertical-align: middle;" class="text-center">
+							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
+							<span class="label label-default" ng-show="child.case_status == 'cancelled'">
+								Cancelado
+								<span ng-show="child.cancel_reason == 'duplicate'">| Motivo: Caso duplicado</span>
+								<span ng-show="child.cancel_reason == 'death'">| Motivo: Óbito</span>
+								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
+								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
+								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+								<span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
+							</span>
+							<span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
+							<span ng-if="child.case_status === 'in_progress'">
+								<span class="label label-danger" ng-if="child.is_late">Em atraso!</span>
+								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
+								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
+								<span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
+							</span>
+						</td>
+						<td width="10%" style="vertical-align: middle;">
+							<a ui-sref="child_viewer({child_id: child.id})" class="btn btn-success btn-sm btn-raised" uib-tooltip="Aprovar">Aprovar</a>
+							<a ui-sref="child_viewer({child_id: child.id})" class="btn btn-danger btn-sm btn-raised" uib-tooltip="Rejeitar">Rejeitar</i></a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+</div>

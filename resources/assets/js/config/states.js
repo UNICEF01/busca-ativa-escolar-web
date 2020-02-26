@@ -4,7 +4,10 @@
 	angular.module('BuscaAtivaEscolar')
 		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
 
-			$locationProvider.html5Mode(true);
+			$locationProvider.html5Mode({
+				enabled: false,
+				requireBase: true}
+				);
 			$urlRouterProvider.otherwise('/dashboard');
 
 			$stateProvider
