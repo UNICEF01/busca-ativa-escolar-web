@@ -76,7 +76,7 @@
 						</td>
 
 						<td>
-							<span class="label label-success" uib-tooltip-html="tenant.registered_at">{{tenant.registered_at | amCalendar}}</span>
+							<span class="label label-success" uib-tooltip-html="tenant.registered_at | dateFormat">{{tenant.registered_at | amCalendar}}</span>
 						</td>
 
 						<td ng-if="identity.can('tenants.activity')">

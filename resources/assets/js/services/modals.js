@@ -186,13 +186,25 @@
 					};
 				},
 
-				CaseRestart: function() {
+				CaseReopen: function($typeUser) {
 					var params = {
-						templateUrl: '/views/modals/case_restart.html',
-						controller: 'CaseRestartModalCtrl',
+						templateUrl: '/views/modals/case_reopen.html',
+						controller: 'CaseReopenModalCtrl',
 						size: 'md',
 						resolve: {
+							$typeUser: function() { return $typeUser; }
+						}
+					};
 
+					return params;
+				},
+				CaseTransfer: function($typeUser) {
+					var params = {
+						templateUrl: '/views/modals/case_transfer.html',
+						controller: 'CaseTransferModalCtrl',
+						size: 'md',
+						resolve: {
+							$typeUser: function() { return $typeUser; }
 						}
 					};
 

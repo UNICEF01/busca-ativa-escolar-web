@@ -35,7 +35,6 @@
 
             uiGmapGoogleMapApi.then(function (maps) {
                 scope.refresh();
-                scope.showMaps();
             });
 
         }

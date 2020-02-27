@@ -22,7 +22,7 @@
 					<span class="label label-primary" ng-show="alert.deadline_status === 'normal' && alert.alert_status !== 'rejected'">No prazo</span>
 					<span class="label label-warning" ng-show="alert.deadline_status === 'late' && alert.alert_status !== 'rejected'">Em atraso</span>
 				</td>
-				<td><span ng-bind="alert.created_at | amCalendar" uib-tooltip-html="alert.created_at.format('YYYY-MM-DD')"></span></td>
+				<td><span ng-bind="alert.created_at | amDateFormat:'DD/MM/YYYY'" uib-tooltip-html="alert.created_at | dateFormat"></span></td>
 			</tr>
 		</tbody>
 	</table>

@@ -228,7 +228,7 @@
         <a class="btn btn-raised btn-danger" ng-click="rejectAlert(child.id)"><i class="fa fa-ban"></i> Rejeitar</a>
     </div>
 </div>
-
+<!-- Pessquisa -->
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
     <div class="panel-heading"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
     <div class="panel-body">
@@ -281,6 +281,8 @@
             <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
+            <a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()"
+               ng-show="canCompleteStep() && step.child_status!='cancelled'">Transferir Este Caso</a>
         </div>
 
     </div>
@@ -1154,6 +1156,9 @@
                ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()"
                ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e concluir etapa</a>
+            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
+               ng-show="canCompleteStep() && step.child_status!='cancelled'">Reabrir Caso</a>
+
         </div>
 
     </div>

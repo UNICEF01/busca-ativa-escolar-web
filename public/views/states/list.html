@@ -37,34 +37,58 @@
 					</tr>
 				</thead>
 				<tbody>
+
 					<tr ng-repeat="(i, uf) in states.data">
 						<td width="20%"><strong>{{uf.uf}}</strong><br /></td>
 						<td width="20%">
-							<span class="label label-success" uib-tooltip-html="uf.created_at">{{uf.created_at | amCalendar}}</span>
+							<span class="label label-success" uib-tooltip-html="uf.created_at | dateFormat">{{uf.created_at | amCalendar}}</span>
 						</td>
 						<td width="30%">
 							<div ng-show="uf.admin">
+								<span>Gestor da adesão</span>
 								<button type="button" class="btn-text" ui-sref="admin_editor({admin_id: uf.admin.id})" ng-class="{'text-danger' : uf.admin.deleted_at}" ng-disabled="uf.admin.deleted_at">
 									<strong ng-show="uf.admin">{{uf.admin.name}}</strong> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="uf.admin.deleted_at"></i>
 								</button> <br />
 								<span ng-if="identity.can('ufs.contact_info')"><i class="fa fa-envelope"></i> {{uf.admin.email}}</span>
-
 							</div>
 
 							<div class="label label-warning" ng-show="!uf.admin">Gestor não cadastrado</div>
+
+							<br/><br/>
+
+							<div ng-repeat="(h, user) in uf.users">
+								<div ng-if=" user.type == 'gestor_estadual' && user.name != uf.admin.name">
+									<span>{{user.name}}</span>
+									<br/><span ng-if=" identity.can('ufs.contact_info') "><i class="fa fa-envelope"></i> {{user.email}}</span>
+									<br/><br/>
+								</div>
+							</div>
+
 						</td>
 						<td width="30%">
 							<div ng-show="uf.coordinator">
+								<span><strong>Coordenador da adesão</strong></span><br/>
 								<button type="button" class="btn-text" ui-sref="coordinator_editor({coordinator_id: uf.coordinator.id})" ng-class="{'text-danger' : uf.coordinator.deleted_at}" ng-disabled="uf.coordinator.deleted_at">
-									<strong ng-show="uf.coordinator">{{uf.coordinator.name}}</strong> <i class="fa fa-ban" uib-tooltip="Usuário suspenso" ng-show="uf.coordinator.deleted_at"></i>
+									<strong ng-show="uf.coordinator">{{uf.coordinator.name}}</strong> <i class="fa fa-ban" ng-show="uf.coordinator.deleted_at"></i>
 								</button> <br />
 								<span ng-if="identity.can('ufs.contact_info')"><i class="fa fa-envelope"></i> {{uf.coordinator.email}}</span>
-
 							</div>
 
-							<div class="label label-warning" ng-show="!uf.coordinator">Coordenador não cadastrado</div>
+							<div class="label label-warning" ng-show="!uf.coordinator">Coordenador da adesão não cadastrado</div>
+
+							<br/><br/>
+
+							<div ng-repeat="(h, user) in uf.users">
+								<div ng-if=" user.type == 'coordenador_estadual' && user.name != uf.coordinator.name">
+									<span>{{user.name}}</span>
+									<br/><span ng-if=" identity.can('ufs.contact_info') "><i class="fa fa-envelope"></i> {{user.email}}</span>
+									<br/><br/>
+								</div>
+							</div>
+
 						</td>
 					</tr>
+
 				</tbody>
 			</table>
 

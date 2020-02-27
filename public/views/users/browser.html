@@ -2,8 +2,9 @@
 	<div class="panel panel-default">
 		<div class="panel-heading clearfix">
 			<h3 class="pull-left"> <strong ng-show="!$parent.isEditing">3.</strong> <i class="fa fa-users"></i> Usuários | {{search.meta.pagination.total}}</h3>
-			<a ng-show="identity.can('users.manage')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo</a>
-			<a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Exportar</a>
+			<a ng-show="identity.can('users.manage')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo usuário</a>
+			<a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Exportar usuários</a>
+			<a ng-show="identity.isUserType('gestor_nacional')" class="btn btn-primary btn-raised pull-right" ui-sref="user_report"><i class="fa fa-file-excel-o"></i> Exportar todos</a>
 		</div>
 		<div class="panel-body">
 
@@ -139,7 +140,7 @@
 					<tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
 						<td width="25%">
 							<strong>{{user.name}}</strong><br />
-							<small>
+							<small uib-tooltip-html="user.created_at.date | dateFormat">
 								<strong>Cadastrado em: {{user.created_at.date | amDateFormat:'DD/MM/YYYY'}}</strong>
 							</small>
 							<br/>

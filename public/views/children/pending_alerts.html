@@ -51,7 +51,7 @@
 									<div ng-show="child.submitter.group.name" class=""><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
 								</td>
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
-								<td><span ng-bind="child.created_at | amTimeAgo" uib-tooltip-html="child.created_at | amCalendar"></span></td>
+								<td><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
 								<td><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>
 								<td><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
 							</tr>
