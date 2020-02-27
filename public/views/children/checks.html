@@ -1,9 +1,9 @@
 <div class="col-md-12">
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3><i class="material-icons">list</i> Solicitações | {{search.stats.total_results}}</h3>
+			<h3><i class="material-icons">list</i> Solicitações | {{requests.data.length}}</h3>
 		</div>
-		<div class="panel-body" ng-if="search.results">
+		<div class="panel-body" ng-if="requests.data">
 
 <!--			<div class="text-right">-->
 <!--				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>-->
@@ -22,25 +22,25 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="(i, child) in search.results">
+					<tr ng-repeat="(i, child) in requests.data">
 						<td width="25%" style="vertical-align: middle;">
 							<strong style="font-size: 15px;">
-								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i><span uib-tooltip="Data de abertura: {{child.created_at | date:'dd/MM/yyyy'}}">
-								{{child.name}}</span>
+								<i class="fa {{child.child.gender | lang:'child.gender_icon'}}" ng-show="child.child.gender"></i><span uib-tooltip="Data de abertura: {{child.child.created_at | date:'dd/MM/yyyy'}}">
+								{{child.child.name}}</span>
 							</strong><br>
 							<small uib-tooltip="Pais ou responsáveis">
-								{{Decorators.Child.parents(child)}}
+								{{Decorators.Child.parents(child.child)}}
 							</small>
 						</td>
 						<td width="20%">
-							{{child.place_neighborhood}}
+							{{child.requester.name}}
 						</td>
 						<td width="10%" style="vertical-align: middle;">
-							<span ng-show="child.age">{{child.age | digits}} anos</span>
-							<span ng-show="!child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
+							<span ng-show="child.child.age">{{child.child.age | digits}} anos</span>
+							<span ng-show="!child.child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
 						</td>
 						<td width="20%" style="vertical-align: middle;">
-							<small>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also</small>
+							<small>{{child.interrupt_reason}}</small>
 						</td>
 
 
