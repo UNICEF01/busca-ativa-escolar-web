@@ -47,7 +47,7 @@
                         <small>{{child.interrupt_reason}}</small>
                     </td>
                     <td width="20%" style="vertical-align: middle;">
-                        <span uib-tooltip="{{child.status}}">{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
+                        <span>{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
                         <small ng-if="child.status === 'requested'">Status: Solicitado</small>
                         <small ng-if="child.status === 'approved'">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'">Status: Rejeitado</small>
@@ -58,7 +58,6 @@
                         </button>
                         <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
                                 uib-tooltip="Rejeitar">Rejeitar</i></button>
-                        <p>Concluído</p>
                     </td>
                     <td ng-show="child.status !== 'requested'" width="25%" style="vertical-align: middle; text-align: center">
                         <p>Concluído</p>

@@ -196,7 +196,7 @@
                         if (res.status === 'success') {
                             ngToast.success(res.result + '! Você será redirecionado.');
                             setTimeout(function () {
-                                // window.location = 'children';
+                                window.location = 'children';
                             }, 4000);
 
                         } else {
