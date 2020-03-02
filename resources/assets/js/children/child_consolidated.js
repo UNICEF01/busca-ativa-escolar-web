@@ -23,7 +23,7 @@
 
         $scope.fields = {};
         $scope.child_id = $stateParams.child_id;
-        $scope.id_case_for_reopen = $location.search().id_request ? $location.search().id_request : '';
+        // $scope.id_case_for_reopen = $location.search().id_request ? $location.search().id_request : '';
         $scope.child = $scope.refreshChildData(function (data) {
             var consolidated = Utils.unpackDateFields(data.consolidated, dateOnlyFields)
             angular.copy(consolidated, $scope.fields);
@@ -40,19 +40,19 @@
             if (!$scope.fields[field]) $scope.fields[field] = [];
             return $scope.fields[field].indexOf(value) !== -1;
         };
-        if ($scope.id_case_for_reopen !== '') {
-            Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: 'request'}).$promise.then(function (res) {
-                if (res.status !== 'error') {
-                    ngToast.success(res.result);
-                    setTimeout(function () {
-                        window.location = 'children/view/' + res.child_id + '/consolidated';
-                    }, 4000);
-
-                } else {
-                    ngToast.danger("Erro ao reabrir o caso!");
-                }
-            });
-        }
+        // if ($scope.id_case_for_reopen !== '') {
+        //     Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: 'request'}).$promise.then(function (res) {
+        //         if (res.status !== 'error') {
+        //             ngToast.success(res.result);
+        //             setTimeout(function () {
+        //                 window.location = 'children/view/' + res.child_id + '/consolidated';
+        //             }, 4000);
+        //
+        //         } else {
+        //             ngToast.danger("Erro ao reabrir o caso!");
+        //         }
+        //     });
+        // }
 
 
         // console.log("[core] @ChildConsolidatedCtrl", $scope.child);
