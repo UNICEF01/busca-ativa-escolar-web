@@ -60,12 +60,27 @@
                 <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
                     ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
-                <li ng-show="identity.manageImports()"
-                    ui-sref-active="active"><a ui-sref="school_browser"><i class="fa fa-university"></i> Escolas</a>
+                <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)"
+                    ui-sref-active="active">
+                    <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-wrench"></i>
+                        Ferramentas
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-show="identity.manageImports()"
+                            ui-sref-active="active"><a ui-sref="school_browser"><i class="fa fa-university"></i> Escolas</a>
+                        </li>
+                        <li ng-show="identity.manageImports() && identity.getCurrentUser().type === 'coordenador_operacional'"
+                            ui-sref-active="active"><a ui-sref="checks"><i class="fa fa-exclamation-circle"></i>
+                            Solicitações</a></li>
+                    </ul>
                 </li>
-                <li ng-show="identity.manageImports()"
-                    ui-sref-active="active"><a ui-sref="checks"><i class="fa fa-exclamation-circle"></i>
-                    Solicitações</a></li>
+
+
+
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right logged-user" ng-show="platform.isReady()">

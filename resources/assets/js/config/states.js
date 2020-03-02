@@ -5,7 +5,7 @@
 		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
 
 			$locationProvider.html5Mode({
-				enabled: false,
+				enabled: true,
 				requireBase: true}
 				);
 			$urlRouterProvider.otherwise('/dashboard');

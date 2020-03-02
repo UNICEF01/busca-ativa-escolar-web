@@ -1,57 +1,68 @@
 <div class="col-md-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="material-icons">list</i> Solicitações | {{requests.data.length}}</h3>
-		</div>
-		<div class="panel-body" ng-if="requests.data">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><i class="material-icons">list</i> Solicitações | {{requests.data.length}}</h3>
+        </div>
+        <div class="panel-body" ng-if="requests.data">
 
-<!--			<div class="text-right">-->
-<!--				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>-->
-<!--			</div>-->
+            <!--			<div class="text-right">-->
+            <!--				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>-->
+            <!--			</div>-->
 
-			<br/>
+            <br/>
 
-			<table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
-				<thead>
-					<tr>
-						<th>Nome <br /><small>da criança ou adolescente</small></th>
-						<th>Requisitante <br /> <small> </small></th>
-						<th>Idade <br /> <small> </small></th>
-						<th>Motivo <br /> <small> </small></th>
-						<th width="200px" class="text-center"><br />Ações</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="(i, child) in requests.data">
-						<td width="25%" style="vertical-align: middle;">
-							<strong style="font-size: 15px;">
-								<i class="fa {{child.child.gender | lang:'child.gender_icon'}}" ng-show="child.child.gender"></i><span uib-tooltip="Data de abertura: {{child.child.created_at | date:'dd/MM/yyyy'}}">
+            <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+                <thead>
+                <tr>
+                    <th>Nome <br/><small>da criança ou adolescente</small></th>
+                    <th>Requisitante <br/> <small> </small></th>
+                    <th>Idade <br/> <small> </small></th>
+                    <th>Motivo <br/> <small> </small></th>
+                    <th>Tipo <br/> <small> </small></th>
+                    <th width="200px" class="text-center"><br/>Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(i, child) in requests.data">
+                    <td width="25%" style="vertical-align: middle;">
+                        <strong style="font-size: 15px;">
+                            <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
+                               ng-show="child.child.gender"></i><span
+                                uib-tooltip="Data de abertura: {{child.child.created_at | date:'dd/MM/yyyy'}}">
 								{{child.child.name}}</span>
-							</strong><br>
-							<small uib-tooltip="Pais ou responsáveis">
-								{{Decorators.Child.parents(child.child)}}
-							</small>
-						</td>
-						<td width="20%">
-							{{child.requester.name}}
-						</td>
-						<td width="10%" style="vertical-align: middle;">
-							<span ng-show="child.child.age">{{child.child.age | digits}} anos</span>
-							<span ng-show="!child.child.age"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
-						</td>
-						<td width="20%" style="vertical-align: middle;">
-							<small>{{child.interrupt_reason}}</small>
-						</td>
+                        </strong><br>
+                        <small uib-tooltip="Pais ou responsáveis">
+                            {{Decorators.Child.parents(child.child)}}
+                        </small>
+                    </td>
+                    <td width="20%">
+                        {{child.requester.name}}
+                    </td>
+                    <td width="10%" style="vertical-align: middle;">
+                        <span ng-show="child.child.age">{{child.child.age | digits}} anos</span>
+                        <span ng-show="!child.child.age"><span uib-tooltip="Informação não disponível"
+                                                               class="label label-default">n/d</span></span>
+                    </td>
+                    <td width="20%" style="vertical-align: middle;">
+                        <small>{{child.interrupt_reason}}</small>
+                    </td>
+                    <td width="20%" style="vertical-align: middle;">
+                        <span uib-tooltip="{{child.status}}">{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
+                        <small ng-if="child.status === 'requested'">Status: Solicitado</small>
+                        <small ng-if="child.status === 'approved'">Status: Aceita</small>
+                        <small ng-if="child.status === 'rejected'">Status: Rejeitado</small>
+                    </td>
+                    <td width="25%" style="vertical-align: middle; text-align: center">
+                        <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
+                                uib-tooltip="Aprovar">Aprovar
+                        </button>
+                        <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
+                                uib-tooltip="Rejeitar">Rejeitar</i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-
-						<td width="25%" style="vertical-align: middle; text-align: center">
-							<button ng-click="aprove()" class="btn btn-success btn-sm btn-raised" uib-tooltip="Aprovar">Aprovar</button>
-							<button ng-click="reject()" class="btn btn-danger btn-sm btn-raised" uib-tooltip="Rejeitar">Rejeitar</i></button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
