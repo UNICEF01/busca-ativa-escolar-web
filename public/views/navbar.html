@@ -2,7 +2,8 @@
     <div class="navbar-container container">
 
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items"
+                    aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
@@ -19,7 +20,8 @@
             <ul class="nav navbar-nav">
                 <li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
                 <!--<li ng-show="identity.can('alerts.spawn')"> <a ui-sref="child_create_from_alert"> <i class="fa fa-bell"></i> Criar alerta</a></li>-->
-                <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)"
+                    ui-sref-active="active">
                     <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
@@ -58,8 +60,27 @@
                 <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
                     ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
-                <li ng-show="identity.manageImports()"
-                    ui-sref-active="active"><a ui-sref="school_browser"><i class="fa fa-university"></i> Escolas</a></li>
+                <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)"
+                    ui-sref-active="active">
+                    <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-wrench"></i>
+                        Ferramentas
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-show="identity.manageImports()"
+                            ui-sref-active="active"><a ui-sref="school_browser"><i class="fa fa-university"></i> Escolas</a>
+                        </li>
+                        <li ng-show="identity.manageImports() && identity.getCurrentUser().type === 'coordenador_operacional'"
+                            ui-sref-active="active"><a ui-sref="checks"><i class="fa fa-exclamation-circle"></i>
+                            Solicitações</a></li>
+                    </ul>
+                </li>
+
+
+
+
             </ul>
 
             <ul class="nav navbar-nav navbar-right logged-user" ng-show="platform.isReady()">
