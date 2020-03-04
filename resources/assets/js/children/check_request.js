@@ -8,7 +8,7 @@
                 controller: 'CheckRequestCtrl'
             });
         })
-        .controller('CheckRequestCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder) {
+        .controller('CheckRequestCtrl', function ($scope, StaticData, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;

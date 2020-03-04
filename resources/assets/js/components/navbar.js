@@ -1,12 +1,13 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, StaticData, Notifications, Platform, Auth) {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, StaticData, Notifications, Platform, Auth, Children) {
 
 		function init(scope, element, attrs) {
+
 			scope.identity = Identity;
 			scope.auth = Auth;
 			scope.notifications = Notifications;
-			scope.platform = Platform;
+			scope.pending_requests = 0;
 
 			scope.showNotifications = true;
 
@@ -33,6 +34,13 @@
 
 				return false;
 			};
+
+			Children.requests().$promise.then( function (value) {
+				value.data.forEach( function (request) {
+					if (request.status === "requested") { scope.pending_requests += 1; }
+				});
+			});
+
 		}
 
 		return {
