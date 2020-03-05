@@ -12,6 +12,7 @@
             <br/>
 
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+                {{dtColumnDefs}}
                 <thead>
                 <tr>
                     <th>Nome <br/><small>da criança ou adolescente</small></th>
@@ -20,20 +21,23 @@
                     <th>Motivo <br/> <small> </small></th>
                     <th>Tipo <br/> <small> </small></th>
                     <th width="200px" class="text-center"><br/>Ações</th>
+                    <th ng-if="identity.getCurrentUser().type === 'supervisor_institucional'" width="200px" class="text-center"><br/><small>Data de Aceitação ou Rejeição</small></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
                     <td width="25%" style="vertical-align: middle;">
-                        <strong style="font-size: 15px;">
-                            <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
-                               ng-show="child.child.gender"></i><span
-                                uib-tooltip="Data de abertura: {{child.child.created_at | date:'dd/MM/yyyy'}}">
+                        <a ui-sref="child_viewer({child_id: child.child.id})">
+                            <strong style="font-size: 15px;">
+                                <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
+                                   ng-show="child.child.gender"></i><span
+                                    uib-tooltip="Data de abertura: {{child.child.created_at | dateFormatBr}}">
 								{{child.child.name}}</span>
-                        </strong><br>
-                        <small uib-tooltip="Pais ou responsáveis">
-                            {{Decorators.Child.parents(child.child)}}
-                        </small>
+                            </strong><br>
+                            <small uib-tooltip="Pais ou responsáveis">
+                                {{Decorators.Child.parents(child.child)}}
+                            </small>
+                        </a>
                     </td>
                     <td width="20%">
                         {{child.requester.name}}
@@ -52,16 +56,23 @@
                         <small ng-if="child.status === 'approved'">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'">Status: Rejeitado</small>
                     </td>
-                    <td ng-show="child.status === 'requested'" width="25%" style="vertical-align: middle; text-align: center">
+                    <td width="25%"
+                        style="vertical-align: middle; text-align: center">
+                        <div ng-show="child.status === 'requested'">
                         <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
                                 uib-tooltip="Aprovar">Aprovar
                         </button>
                         <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
                                 uib-tooltip="Rejeitar">Rejeitar</i></button>
+                        </div>
+                        <p ng-show="child.status !== 'requested'">Concluído</p>
+
                     </td>
-                    <td ng-show="child.status !== 'requested'" width="25%" style="vertical-align: middle; text-align: center">
-                        <p>Concluído</p>
+                    <td ng-if="identity.getCurrentUser().type === 'supervisor_institucional'" width="25%"
+                        style="vertical-align: middle; text-align: center">
+                        <small>{{child.updated_at | dateFormatBr}}</small>
                     </td>
+
                 </tr>
                 </tbody>
             </table>
