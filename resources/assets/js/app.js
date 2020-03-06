@@ -28,6 +28,6 @@
 			'datatables',
             'ui.mask',
             'angular.viacep',
-			'ngclipboard',
+			'ngclipboard'
 		])
 })();
