@@ -12,26 +12,32 @@
             <br/>
 
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
-                {{dtColumnDefs}}
                 <thead>
                 <tr>
-                    <th>Nome <br/><small>da criança ou adolescente</small></th>
-                    <th>Requisitante <br/> <small> </small></th>
-                    <th>Idade <br/> <small> </small></th>
-                    <th>Motivo <br/> <small> </small></th>
-                    <th>Tipo <br/> <small> </small></th>
-                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'" width="200px" class="text-center"><br/>Ações</th>
-                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" width="400px" class="text-center"><br/><small>Data de aceitação/rejeição</small></th>
+                    <th>Criação</th>
+                    <th>Nome</th>
+                    <th>Requisitante<br/> <small> </small></th>
+                    <th>Idade<br/> <small> </small></th>
+                    <th>Motivo<br/> <small> </small></th>
+                    <th>Tipo<br/> <small> </small></th>
+                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'" width="200px"
+                        class="text-center"><br/>Ações
+                    </th>
+                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" width="400px"
+                        class="text-center"><br/><small>Data de aceitação/rejeição</small></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
+                    <td width="10%">
+                        <b>{{child.created_at | dateFormatBr}}</b>
+                    </td>
                     <td width="25%" style="vertical-align: middle;">
                         <a ui-sref="child_viewer({child_id: child.child.id})">
                             <strong style="font-size: 15px;">
                                 <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
                                    ng-show="child.child.gender"></i><span
-                                    uib-tooltip="Data de abertura: {{child.child.created_at | dateFormatBr}}">
+                                    uib-tooltip="Abertura do caso: {{child.child.created_at | dateFormatBr}}">
 								{{child.child.name}}</span>
                             </strong><br>
                             <small uib-tooltip="Pais ou responsáveis">
@@ -59,11 +65,11 @@
                     <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'" width="25%"
                         style="vertical-align: middle; text-align: center">
                         <div ng-show="child.status === 'requested'">
-                        <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
-                                uib-tooltip="Aprovar">Aprovar
-                        </button>
-                        <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
-                                uib-tooltip="Rejeitar">Rejeitar</i></button>
+                            <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
+                                    uib-tooltip="Aprovar">Aprovar
+                            </button>
+                            <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
+                                    uib-tooltip="Rejeitar">Rejeitar</i></button>
                         </div>
                         <p ng-show="child.status !== 'requested'">Concluído</p>
 
