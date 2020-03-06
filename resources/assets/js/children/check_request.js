@@ -8,7 +8,7 @@
                 controller: 'CheckRequestCtrl'
             });
         })
-        .controller('CheckRequestCtrl', function ($scope, StaticData, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder) {
+        .controller('CheckRequestCtrl', function ($scope, StaticData, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder, DTColumnDefBuilder) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -48,7 +48,11 @@
             //Configura a linguagem na diretiva dt-options=""
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withLanguage(language);
-            $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [[0, 'asc']])
+            // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [[0, 'asc']])
+
+            $scope.dtColumnDefs = [
+                DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date')
+            ];
 
             $scope.aprove = function (child) {
 

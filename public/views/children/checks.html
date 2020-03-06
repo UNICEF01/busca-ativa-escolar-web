@@ -14,7 +14,7 @@
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
                 <tr>
-                    <th>Criação</th>
+                    <th>Data solicitação</th>
                     <th>Nome</th>
                     <th>Requisitante<br/> <small> </small></th>
                     <th>Idade<br/> <small> </small></th>
@@ -29,7 +29,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
-                    <td width="10%">
+                    <td width="15%">
                         <b>{{child.created_at | dateFormatBr}}</b>
                     </td>
                     <td width="25%" style="vertical-align: middle;">
@@ -48,7 +48,7 @@
                     <td width="20%">
                         {{child.requester.name}}
                     </td>
-                    <td width="10%" style="vertical-align: middle;">
+                    <td width="5%" style="vertical-align: middle;">
                         <span ng-show="child.child.age">{{child.child.age | digits}} anos</span>
                         <span ng-show="!child.child.age"><span uib-tooltip="Informação não disponível"
                                                                class="label label-default">n/d</span></span>
