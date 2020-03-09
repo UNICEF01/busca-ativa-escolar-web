@@ -1121,21 +1121,25 @@
                 escola?*</label>
             <div class="radio">
                 <label><input id="fld-obs-is_child_still_in_school-yes" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.is_child_still_in_school" ng-value="1"
+                              ng-model="is_child_still_in_school" ng-value="1"
                               name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
             </div>
             <div class="radio">
                 <label><input id="fld-obs-is_child_still_in_school-no" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.is_child_still_in_school" ng-value="0"
+                              ng-model="is_child_still_in_school" ng-value="0"
                               name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
             </div>
+
+            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
+               ng-show="canCompleteStep() && step.child_status!='cancelled' && is_child_still_in_school !== undefined && !is_child_still_in_school">Reabrir Caso</a>
+
         </div>
 
-        <div class="form-group col-md-12" ng-show="!fields.is_child_still_in_school">
+        <!--div class="form-group col-md-12" ng-show="!fields.is_child_still_in_school">
             <label class="control-label" for="fld-obs-evasion_reason">Descreva o motivo da nova evasão*</label>
             <textarea style="height: 100px" class="form-control" id="fld-obs-evasion_reason"
                       ng-readonly="!canEditCurrentStep()" ng-model="fields.evasion_reason"></textarea>
-        </div>
+        </div-->
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-obs-observations">Observações gerais</label>
@@ -1156,9 +1160,6 @@
                ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()"
                ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e concluir etapa</a>
-            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
-               ng-show="canCompleteStep() && step.child_status!='cancelled'">Reabrir Caso</a>
-
         </div>
 
     </div>
