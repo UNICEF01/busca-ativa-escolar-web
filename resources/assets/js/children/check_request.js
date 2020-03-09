@@ -8,7 +8,7 @@
                 controller: 'CheckRequestCtrl'
             });
         })
-        .controller('CheckRequestCtrl', function ($scope, StaticData, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('CheckRequestCtrl', function ($scope, StaticData, $anchorScroll, $httpParamSerializer, API, Children, Decorators, ngToast, DTOptionsBuilder, DTColumnDefBuilder, Modals) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -93,18 +93,30 @@
 
             };
             $scope.reject = function (child) {
-                Children.reject({
-                    id: child.id,
-                }).$promise.then(function (res) {
-                    if (res.status !== 'error') {
-                        ngToast.success(res.result);
-                        setTimeout(function () {
-                            window.location = 'checks';
-                        }, 4000);
 
+                Modals.show(Modals.CaseReject($scope.identity.getType())).then(function (response) {
+                    if (!response) return $q.reject();
+
+                    if ($scope.identity.getType() === 'coordenador_operacional') {
+                        Children.reject({
+                            id: child.id,
+                            reject_reason: response.reason
+                        }).$promise.then(function (res) {
+                            if (res.status !== 'error') {
+                                ngToast.success(res.result);
+                                setTimeout(function () {
+                                    window.location = 'checks';
+                                }, 4000);
+
+                            } else {
+                                ngToast.danger(res.result);
+                            }
+                        });
                     } else {
-                        ngToast.danger("Erro ao reabrir o caso!");
+                        ngToast.warning('Você não pode realizar essa ação.');
                     }
+                }).then(function (res) {
+                    console.log(res);
                 });
             };
         });

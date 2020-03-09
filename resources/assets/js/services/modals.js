@@ -210,6 +210,18 @@
 
 					return params;
 				},
+				CaseReject: function($typeUser) {
+					var params = {
+						templateUrl: '/views/modals/case_reject.html',
+						controller: 'CaseRejectModalCtrl',
+						size: 'md',
+						resolve: {
+							$typeUser: function() { return $typeUser; }
+						}
+					};
+
+					return params;
+				},
 
 				CaseActivityLogEntry: function() {
 					var params = {
