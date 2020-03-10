@@ -37,8 +37,16 @@
 
 			Children.requests().$promise.then( function (value) {
 				value.data.forEach( function (request) {
-					if (request.status === "requested") { scope.pending_requests += 1; }
+
+					if( Identity.isUserType("supervisor_institucional" && Identity.getCurrentUserID() === request.requester_id && request.status === "requested" ) ){
+						scope.pending_requests += 1;
+					}
+
+					if( Identity.isUserType("coordenador_operacional" && request.status === "requested" ) ){
+						scope.pending_requests += 1;
+					}
 				});
+
 			});
 
 		}
