@@ -14,22 +14,28 @@
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
                 <tr>
-                    <th>Data solicitação</th>
+                    <th></th>
+                    <th>Data</th>
                     <th>Nome</th>
                     <th>Requisitante<br/> <small> </small></th>
                     <th>Idade<br/> <small> </small></th>
-                    <th>Motivo<br/> <small> </small></th>
+                    <th>Motivo do pedido<br/> <small> </small></th>
+                    <th>Motivo da rejeição<br/> <small> </small></th>
                     <th>Tipo<br/> <small> </small></th>
-                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'" width="200px"
+                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'" width=""
                         class="text-center"><br/>Ações
                     </th>
-                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" width="400px"
+                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" width=""
                         class="text-center"><br/><small>Data de aceitação/rejeição</small></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
-                    <td width="15%">
+                    <td>
+                        <i class="fa fa-refresh" ng-show="child.type_request === 'reopen'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                        <i class="fa fa-share-square-o" ng-show="child.type_request === 'transfer'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                    </td>
+                    <td width="10%">
                         <b>{{child.created_at | dateFormatBr}}</b>
                     </td>
                     <td width="25%" style="vertical-align: middle;">
@@ -56,11 +62,14 @@
                     <td width="20%" style="vertical-align: middle;">
                         <small>{{child.interrupt_reason}}</small>
                     </td>
+                    <td style="vertical-align: middle;">
+                        <small>{{child.reject_reason}}</small>
+                    </td>
                     <td width="20%" style="vertical-align: middle;">
                         <span>{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
-                        <small ng-if="child.status === 'requested'">Status: Solicitado</small>
-                        <small ng-if="child.status === 'approved'">Status: Aceita</small>
-                        <small ng-if="child.status === 'cancelled'">Status: Rejeitado</small>
+                        <small ng-if="child.status === 'requested'" class="label label-default">Status: Solicitado</small>
+                        <small ng-if="child.status === 'approved'" class="label label-success">Status: Aceita</small>
+                        <small ng-if="child.status === 'cancelled'" class="label label-danger">Status: Rejeitado</small>
                     </td>
                     <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'" width="25%"
                         style="vertical-align: middle; text-align: center">
