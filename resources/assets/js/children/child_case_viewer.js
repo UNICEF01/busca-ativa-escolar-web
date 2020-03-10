@@ -88,6 +88,7 @@
         };
 
         $scope.openStep = function (selectedStep) {
+
             if (!$scope.canOpenStep(selectedStep)) return false;
 
             $scope.openStepID = selectedStep.id;
@@ -289,7 +290,7 @@
         $scope.step = {};
         $scope.tenantSettings = {};
 
-        $scope.tenantSettingsOfCase = {};
+        $scope.tenantSettingsOfCase = null;
 
         $scope.isMapReady = false;
         $scope.defaultMapZoom = 14;
@@ -409,8 +410,10 @@
                     step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
                 }
 
-                Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id}, function (res) {
-                    $scope.tenantSettingsOfCase = res;
+                var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id});
+
+                settingsOfTenantOfCase.$promise.then( function (res_settings) {
+                    $scope.tenantSettingsOfCase = res_settings;
                 });
 
             });
@@ -686,6 +689,7 @@
         };
 
         $scope.canUpdateStepObservation = function (child) {
+            if(!$scope.tenantSettingsOfCase){ return false; }
             var time_for_next_step = 0;
             if ($scope.step && $scope.tenantSettings) {
                 if ($scope.step.slug == "1a_observacao") {
