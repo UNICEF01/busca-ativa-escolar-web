@@ -1,0 +1,25 @@
+<div class="modal-template" id="md-prompt">
+
+    <div class="modal-header">
+        <h3 class="modal-title">Rejeitar Caso</h3>
+    </div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <p>
+                    Para rejeitar o caso você deve escrever uma justificativa.
+                </p>
+            </div>
+        </div>
+        <br>
+        <p>Justificativa:</p>
+        <textarea class="form-control" placeholder="Digite aqui a justificativa da rejeição..."
+                  ng-model="reason"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-show="reason" ng-click="ok()">Rejeitar
+        </button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+    </div>
+</div>
