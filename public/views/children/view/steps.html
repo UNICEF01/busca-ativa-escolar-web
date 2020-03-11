@@ -6,8 +6,9 @@
 		<div ng-repeat="(i, case) in child.cases" class="panel panel-default case-container">
 			<div class="panel-heading" ng-click="collapseCase(case)">
 				#{{case.name}}
+				<span ng-show="case.case_status === 'transferred'" class="label label-warn">Transferido {{case.updated_at | amTimeAgo}}</span>
 				<span ng-show="case.case_status === 'cancelled'" class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
-				<span ng-show="case.case_status === 'interrupted'" class="label label-danger">Reincidiu {{case.updated_at | amTimeAgo}}</span>
+				<span ng-show="case.case_status === 'interrupted'" class="label label-danger">Interrompido {{case.updated_at | amTimeAgo}}</span>
 				<span ng-show="case.case_status === 'completed'" class="label label-success">Concluído {{case.updated_at | amTimeAgo}}</span>
 				<span ng-show="case.case_status === 'in_progress'" class="label label-primary">Em andamento</span>
 			</div>
@@ -24,7 +25,7 @@
 						<span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
 					</div>
 				</div>
-				<div class="col-md-12" ng-show="child.child_status!='cancelled'">
+				<div class="col-md-12" ng-show="identity.can('cases.transfer') && case.case_status === 'in_progress'">
 					<a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()" style="width: 100%">Transferir caso</a>
 				</div>
 				<div class="col-md-12" ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress'">

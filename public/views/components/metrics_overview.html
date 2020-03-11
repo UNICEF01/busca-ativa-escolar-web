@@ -1,10 +1,9 @@
 <div>
+
     <h3><i class="material-icons">insert_chart</i> Casos | Total:
-        {{getMetrics().cases._in_school + getMetrics().cases._in_progress + getMetrics().cases._cancelled + getMetrics().cases._interrupted}}
+        {{getMetrics().cases._in_school + getMetrics().cases._in_progress + getMetrics().cases._cancelled}}
     </h3>
-    <!--	<pre>-->
-    <!--	{{getMetrics() | json}}-->
-    <!--	</pre>-->
+
     <div class="row">
         <div class="col-md-3">
             <div class="panel panel-default">
@@ -24,11 +23,28 @@
                 <div class="panel-footer">Cancelados</div>
             </div>
         </div>
+
+    </div>
+
+    <h3><i class="material-icons">insert_chart</i> Alterações | Total:
+        {{getMetrics().cases._interrupted + getMetrics().cases._transferred}}
+    </h3>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <h1 class="panel-body" ng-bind="getMetrics().cases._transferred || 0"></h1>
+                <div class="panel-footer">Transferências</div>
+            </div>
+        </div>
+
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._interrupted || 0"></h1>
-                <div class="panel-footer">Interrompidos</div>
+                <div class="panel-footer">Interrupções</div>
             </div>
         </div>
     </div>
+
+
 </div>

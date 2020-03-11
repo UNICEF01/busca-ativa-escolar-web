@@ -106,7 +106,7 @@
 					<div class="checkbox"><label for="filter-status-completed"><input type="checkbox" id="filter-status-completed"  checklist-model="filters.case_status" checklist-value="'completed'" name="filter-case_status_completed"> Concluído</label></div>
 					<div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled"  checklist-model="filters.case_status" checklist-value="'cancelled'" ng-change="checkChild('cancelled')" name="filter-case_status_cancelled"> Cancelado</label></div>
 					<div class="checkbox"><label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted"  checklist-model="filters.case_status" checklist-value="'interrupted'" ng-change="checkChild('interrupted')" name="filter-case_status_interrupted"> Interrompido</label></div>
-
+					<div class="checkbox"><label for="filter-status-transferred"><input type="checkbox" id="filter-status-transferred"  checklist-model="filters.case_status" checklist-value="'transferred'" ng-change="checkChild('transferred')" name="filter-case_status_transferred"> Transferido</label></div>
 				</div>
 
 				<div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
