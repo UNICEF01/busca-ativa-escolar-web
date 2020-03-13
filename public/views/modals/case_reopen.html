@@ -5,18 +5,19 @@
 	</div>
 
     <div class="modal-body" ng-show="step == 1">
-		<p>O caso atual está com status: 'Em andamento'. Ao ser encerrado, o status do caso será definido como 'Fora da escola', e um novo caso na etapa <b>Pesquisa</b> será gerado.</p>
+		<p>O caso atual está com status: 'Em andamento'. Ao ser interrompido, o status do caso será definido como 'Fora da escola', e um novo caso na etapa <b>Pesquisa</b> será reaberto.</p>
 		<p>Essa operação não pode ser desfeita!</p>
 	</div>
 
 	<div class="modal-body" ng-show="step == 2">
 		<p ng-show="typeUser == 'coordenador_operacional'">
-			Para reabrir o caso e reiniciá-lo como pesquisa, você deve escrever uma justificativa abaixo.
+			Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa.
+		<p>Essa operação não pode ser desfeita!</p>
 		</p>
 		<p ng-show="typeUser == 'supervisor_institucional'">
-			Para reabrir o caso e reiniciá-lo como pesquisa, você deve escrever uma justificativa abaixo. Uma solicitação será feita para os coordenadores operacionais do seu município.
+			Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa. Uma solicitação será enviada ao coordenador operacional do seu município autorizando ou não essa ação.
 		</p>
-		<p>Essa operação não pode ser desfeita!</p>
+
 		<textarea class="form-control" placeholder="Digite aqui o motivo do encerramento..." ng-model="reason"></textarea>
 	</div>
 
