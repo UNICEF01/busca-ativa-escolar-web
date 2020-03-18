@@ -1331,6 +1331,11 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   color: #ffffff;
 }
 
+.panel-footer-ciano {
+  background-color: #28ACE2;
+  color: #ffffff;
+}
+
 /*!
  * animate.css -https://daneden.github.io/animate.css/
  * Version - 3.7.2

@@ -21,6 +21,7 @@
             }
 
             var percentualAtingido = Math.floor((atingido * 100) / meta);
+            // var percentualAtingido = 100;
 
             var color = '#EEEEEE';
             var text = '';
@@ -39,7 +40,7 @@
                     text = 'Baixo Risco';
                     break;
                 case (percentualAtingido >= 100):
-                    color = '#28ACE2';
+                    color = '#2280aa';
                     text = 'Parabéns!';
                     break;
                 default:
