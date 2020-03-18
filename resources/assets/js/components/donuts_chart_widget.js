@@ -34,9 +34,13 @@
                     color = '#cd7c00';
                     text = 'Médio Risco'
                     break;
-                case (percentualAtingido >= 50):
+                case (percentualAtingido >= 50 && percentualAtingido < 100):
                     color = '#008b00';
                     text = 'Baixo Risco';
+                    break;
+                case (percentualAtingido >= 100):
+                    color = '#28ACE2';
+                    text = 'Parabéns!';
                     break;
                 default:
                     color = color
