@@ -394,6 +394,7 @@
             $scope.step.$promise.then(function (step) {
                 $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
                 $scope.case = step.case;
+                console.log('STEPS', $scope.case.steps);
                 $scope.$parent.openStepID = $scope.step.id;
                 if (!$scope.fields.aux) {
                     $scope.fields.aux = {};
