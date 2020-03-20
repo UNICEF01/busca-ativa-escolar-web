@@ -1931,14 +1931,12 @@
                     break;
                 case (percentualAtingido >= 100):
                     color = '#2280aa';
-                    text = 'Parabéns!';
+                    text = 'Meta Atingida!';
                     break;
                 default:
                     color = color
                     console.log('Algum problema com o Donuts');
             }
-
-
 
             var colors = Highcharts.getOptions().colors,
                 categories = [
