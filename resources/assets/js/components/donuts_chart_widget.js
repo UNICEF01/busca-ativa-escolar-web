@@ -21,6 +21,7 @@
             }
 
             var percentualAtingido = Math.floor((atingido * 100) / meta);
+            // var percentualAtingido = 100;
 
             var color = '#EEEEEE';
             var text = '';
@@ -34,16 +35,18 @@
                     color = '#cd7c00';
                     text = 'Médio Risco'
                     break;
-                case (percentualAtingido >= 50):
+                case (percentualAtingido >= 50 && percentualAtingido < 100):
                     color = '#008b00';
                     text = 'Baixo Risco';
+                    break;
+                case (percentualAtingido >= 100):
+                    color = '#2280aa';
+                    text = 'Meta Atingida!';
                     break;
                 default:
                     color = color
                     console.log('Algum problema com o Donuts');
             }
-
-
 
             var colors = Highcharts.getOptions().colors,
                 categories = [

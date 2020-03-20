@@ -1911,6 +1911,7 @@
             }
 
             var percentualAtingido = Math.floor((atingido * 100) / meta);
+            // var percentualAtingido = 100;
 
             var color = '#EEEEEE';
             var text = '';
@@ -1924,16 +1925,18 @@
                     color = '#cd7c00';
                     text = 'Médio Risco'
                     break;
-                case (percentualAtingido >= 50):
+                case (percentualAtingido >= 50 && percentualAtingido < 100):
                     color = '#008b00';
                     text = 'Baixo Risco';
+                    break;
+                case (percentualAtingido >= 100):
+                    color = '#2280aa';
+                    text = 'Meta Atingida!';
                     break;
                 default:
                     color = color
                     console.log('Algum problema com o Donuts');
             }
-
-
 
             var colors = Highcharts.getOptions().colors,
                 categories = [
@@ -3266,6 +3269,7 @@
             var meta = data.goal_box && data.goal_box.goal || 0;
             var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
             $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+            // $scope.percentualAtingido = 100;
 
             if (data.status !== 'ok') {
                 $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
