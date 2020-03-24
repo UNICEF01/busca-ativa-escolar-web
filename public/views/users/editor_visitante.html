@@ -1,0 +1,370 @@
+<div class="wnd-view">
+    <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
+
+        <div class="panel-heading clearfix">
+
+            <div class="pull-left" ng-show="!isCreating">
+                <h1>
+                    <i class="fa fa-user"></i> {{user.name}}
+                    <small>{{user.type | lang:'user.type'}}</small>
+                </h1>
+            </div>
+
+            <div class="pull-left" ng-show="isCreating">
+                <h1>
+                    <i class="fa fa-user-plus"></i> Cadastrar visitante
+                </h1>
+            </div>
+
+        </div>
+
+        <div class="panel-body">
+
+            <div class="form-group col-md-12">
+                <label class="control-label" for="fld-name">Nome*</label>
+                <input type="text" class="form-control" id="fld-name" ng-model="user.name" required>
+            </div>
+
+            <div class="form-group col-md-12">
+
+                <label class="control-label">Função ocupada no sistema*</label>
+
+                <div class="row">
+
+                    <style>
+                        .permissoes .fa-check-circle{
+                            font-size: 30px;
+                            color: green;
+                        }
+                        .permissoes .fa-times-circle{
+                            font-size: 30px;
+                            color: red;
+                        }
+                        .permissoes .type_user{
+                            cursor: pointer;
+                            opacity: 0;
+                        }
+                        .check {
+                            position: absolute;
+                            height: 30px;
+                            width: 30px;
+                            background-color: #eee;
+                            border-radius: 50%;
+                        }
+
+                        /* On mouse-over, add a grey background color */
+                        .label_check:hover input ~ .check {
+                            background-color: #ccc;
+                        }
+
+                        /* When the radio button is checked, add a blue background */
+                        .label_check input:checked ~ .check {
+                            background-color: #2196F3;
+                        }
+
+                        /* Create the indicator (the dot/circle - hidden when not checked) */
+                        .label_check:after {
+                            content: "";
+                            position: absolute;
+                            display: none;
+                        }
+
+                        /* Show the indicator (dot/circle) when checked */
+                        .label_check input:checked ~ .check:after {
+                            display: block;
+                        }
+
+                        /* Style the indicator (dot/circle) */
+                        .label_check .check:after {
+                            top: 9px;
+                            left: 9px;
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                            background: white;
+                        }
+                    </style>
+
+                    <div class="col-md-6">
+
+                        <div class="col-md-12" align="center">
+                            <label class="control-label"><strong>Nacional</strong></label>
+                        </div>
+
+                        <div class="col-md-12">
+
+                            <table width="100%" class="permissoes table table-hover">
+
+                                <tr>
+                                    <td></td>
+                                    <td align="center"><label class="control-label"><strong>Relatórios</strong></label></td>
+                                    <td align="center"><label class="control-label"><strong>Usuários</strong></label></td>
+                                    <td align="center"><label class="control-label"><strong>Casos</strong></label></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></i></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="col-md-12" align="center">
+                            <label class="control-label"><strong>Estadual</strong></label>
+                        </div>
+
+                        <div class="col-md-12">
+                            <style>
+                                .permissoes .fa-check-circle{
+                                    font-size: 30px;
+                                    color: green;
+                                }
+                                .permissoes .fa-times-circle{
+                                    font-size: 30px;
+                                    color: red;
+                                }
+                            </style>
+                            <table width="100%" class="permissoes table table-hover">
+
+                                <tr>
+                                    <td></td>
+                                    <td align="center"><label class="control-label"><strong>Relatórios</strong></label></td>
+                                    <td align="center"><label class="control-label"><strong>Usuários</strong></label></td>
+                                    <td align="center"><label class="control-label"><strong>Casos</strong></label></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></i></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <label class="label_check">
+                                            <input type="radio" name="radio" class="type_user">
+                                            <span class="check"></span>
+                                        </label>
+                                    </td>
+                                    <td align="center"><i class="fa fa-check-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></i></td>
+                                    <td align="center"><i class="fa fa-times-circle"></i></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr ng-if="canDefineUserUF()"/>
+
+            <div ng-if="canDefineUserUF()">
+
+                <div class="col-md-12">
+                    <div class="col-md-6 pl-0">
+                        <h5>Localização</h5>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-12">
+                    <label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
+                    <select class="form-control"
+                            id="fld-uf"
+                            ng-model="user.uf"
+                            ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"
+                            ng-change="onSelectUf()">
+                    </select>
+                </div>
+
+            </div>
+
+            <hr/>
+
+            <div class="col-md-12">
+                <div class="col-md-6 pl-0">
+                    <h5>Dados de acesso</h5>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey" ng-show="user.tenant_id" type="button"><i class="fa fa-key"></i> Alterar senha</button>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
+                <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required ng-model="user.email">
+            </div>
+
+            <div class="form-group col-md-6" ng-show="showInputKey || !user.tenant_id">
+                <div class="input-group">
+                    <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de acesso*</label>
+                    <input type="password" autocomplete="new-password" class="form-control" id="fld-password" ng-model="user.password">
+                    <span class="input-group-btn" uib-tooltip="Exibir a senha">
+						<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()">
+							<i class="fa fa-eye"></i>
+						</button>
+					</span>
+                </div>
+            </div>
+
+            <hr/>
+
+            <div class="col-md-12">
+                <div class="col-md-6 pl-0">
+                    <h5>Dados pessoais</h5>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-dob">Data de nascimento*</label>
+                <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-cpf">CPF*</label>
+                <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf" placeholder="000.000.000-00" required>
+            </div>
+
+            <hr/>
+
+            <div class="col-md-12">
+                <div class="col-md-6 pl-0">
+                    <h5>Contatos</h5>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-pattern='^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
+'
+                       ng-model="user.work_mobile" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
+                <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12"
+                       ng-model="user.personal_mobile" placeholder="(00) 00000-0000">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-skype-username">Skype</label>
+                <input type="text" class="form-control" id="fld-skype-username" ng-model="user.skype_username">
+            </div>
+
+            <hr/>
+
+            <div class="col-md-12">
+                <div class="col-md-6 pl-0">
+                    <h5>Endereço institucional</h5>
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                <label class="control-label" for="fld-address">Endereço institucional</label>
+                <input type="text" class="form-control" id="fld-address" ng-model="user.work_address">
+            </div>
+
+            <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false"
+                             is-city-required="false"></app-city-select>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-cep">CEP institucional</label>
+                <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep"
+                       placeholder="00000-000">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-neighborhood">Bairro</label>
+                <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood">
+            </div>
+
+            <hr/>
+
+            <div class="col-md-12">
+                <div class="col-md-6 pl-0">
+                    <h5>Dados organizacionais</h5>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-institution">Órgão</label>
+                <input type="text" class="form-control" id="fld-institution" ng-model="user.institution">
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-position">Cargo</label>
+                <input type="text" class="form-control" id="fld-position" ng-model="user.position">
+            </div>
+
+            <hr/>
+
+            <div class="clearfix">
+                <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary"><i
+                        class="fa fa-arrow-left"></i> Voltar
+                </button>
+                <button type="submit" class="btn btn-raised btn-primary pull-right"><i class="fa fa-save"></i> Salvar
+                </button>
+            </div>
+
+        </div>
+
+    </form>
+</div>
