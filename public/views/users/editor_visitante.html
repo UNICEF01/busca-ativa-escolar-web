@@ -25,190 +25,67 @@
                 <input type="text" class="form-control" id="fld-name" ng-model="user.name" required>
             </div>
 
-            <div class="form-group col-md-12">
+            <div>
 
-                <label class="control-label">Função ocupada no sistema*</label>
+                <div class="col-md-6">
 
-                <div class="row">
+                    <h5>Função ocupada no sistema</h5>
 
-                    <style>
-                        .permissoes .fa-check-circle{
-                            font-size: 30px;
-                            color: green;
-                        }
-                        .permissoes .fa-times-circle{
-                            font-size: 30px;
-                            color: red;
-                        }
-                        .permissoes .type_user{
-                            cursor: pointer;
-                            opacity: 0;
-                        }
-                        .check {
-                            position: absolute;
-                            height: 30px;
-                            width: 30px;
-                            background-color: #eee;
-                            border-radius: 50%;
-                        }
+                    <br/>
 
-                        /* On mouse-over, add a grey background color */
-                        .label_check:hover input ~ .check {
-                            background-color: #ccc;
-                        }
+                    <div>
 
-                        /* When the radio button is checked, add a blue background */
-                        .label_check input:checked ~ .check {
-                            background-color: #2196F3;
-                        }
-
-                        /* Create the indicator (the dot/circle - hidden when not checked) */
-                        .label_check:after {
-                            content: "";
-                            position: absolute;
-                            display: none;
-                        }
-
-                        /* Show the indicator (dot/circle) when checked */
-                        .label_check input:checked ~ .check:after {
-                            display: block;
-                        }
-
-                        /* Style the indicator (dot/circle) */
-                        .label_check .check:after {
-                            top: 9px;
-                            left: 9px;
-                            width: 8px;
-                            height: 8px;
-                            border-radius: 50%;
-                            background: white;
-                        }
-                    </style>
-
-                    <div class="col-md-6">
-
-                        <div class="col-md-12" align="center">
-                            <label class="control-label"><strong>Nacional</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                            <label class="form-check-label" for="exampleRadios1">
+                                Visitante nacional
+                            </label>
                         </div>
 
-                        <div class="col-md-12">
-
-                            <table width="100%" class="permissoes table table-hover">
-
-                                <tr>
-                                    <td></td>
-                                    <td align="center"><label class="control-label"><strong>Relatórios</strong></label></td>
-                                    <td align="center"><label class="control-label"><strong>Usuários</strong></label></td>
-                                    <td align="center"><label class="control-label"><strong>Casos</strong></label></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></i></td>
-                                </tr>
-                            </table>
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <div class="col-md-12" align="center">
-                            <label class="control-label"><strong>Estadual</strong></label>
-                        </div>
-
-                        <div class="col-md-12">
-                            <style>
-                                .permissoes .fa-check-circle{
-                                    font-size: 30px;
-                                    color: green;
-                                }
-                                .permissoes .fa-times-circle{
-                                    font-size: 30px;
-                                    color: red;
-                                }
-                            </style>
-                            <table width="100%" class="permissoes table table-hover">
-
-                                <tr>
-                                    <td></td>
-                                    <td align="center"><label class="control-label"><strong>Relatórios</strong></label></td>
-                                    <td align="center"><label class="control-label"><strong>Usuários</strong></label></td>
-                                    <td align="center"><label class="control-label"><strong>Casos</strong></label></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></i></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                </tr>
-
-                                <tr>
-                                    <td>
-                                        <label class="label_check">
-                                            <input type="radio" name="radio" class="type_user">
-                                            <span class="check"></span>
-                                        </label>
-                                    </td>
-                                    <td align="center"><i class="fa fa-check-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></i></td>
-                                    <td align="center"><i class="fa fa-times-circle"></i></td>
-                                </tr>
-                            </table>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                            <label class="form-check-label" for="exampleRadios2">
+                                Visitante  estadual
+                            </label>
                         </div>
 
                     </div>
 
                 </div>
+
+
+                <div class="col-md-6">
+
+                    <h5>Permissões de visualização</h5>
+
+                    <br/>
+
+                    <div>
+
+                        <table class="table table-hover table-bordered">
+                            <tr>
+                                <td align="center"><label class="form-check-label" for="inlineCheckbox1">Relatórios</label></td>
+                                <td align="center"><label class="form-check-label" for="inlineCheckbox2">Usuários</label></td>
+                                <td align="center"><label class="form-check-label" for="inlineCheckbox3">Casos</label></td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" disabled checked>
+                                </td>
+                                <td align="center">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                </td>
+                                <td align="center">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+
+                </div>
+
+
 
             </div>
 

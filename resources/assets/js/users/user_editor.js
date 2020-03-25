@@ -24,8 +24,16 @@
 			var permissions = {};
 			var dateOnlyFields = ['dob'];
 
+			var userTypeVisitantes = [];
+			var permissionsFormForVisitante = [];
+
+			$scope.perfilVisitante = { name: '' };
+			$scope.permissionsVisitantes = ['relatorios'];
+
 			Platform.whenReady(function() {
 				permissions = StaticData.getPermissions();
+				userTypeVisitantes = StaticData.getUserTypeVisitantes();
+				permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
 			});
 
 			if(!$scope.isCreating) {
@@ -75,10 +83,29 @@
 			$scope.getUserTypes = function() {
 				if(!permissions) return {};
 				if(!permissions.can_manage_types) return {};
-				return permissions.can_manage_types[ Identity.getCurrentUser().type ];
+
+				var finalPermissions = permissions.can_manage_types[ Identity.getCurrentUser().type ].filter( function( el ) {
+						return $scope.getUserTypesVisitantes().indexOf( el ) < 0;
+					} );
+
+				return finalPermissions;
+			};
+
+			$scope.getUserTypesVisitantes = function(){
+				if(!permissions) return {};
+				if(!permissions.can_manage_types) return {};
+				return userTypeVisitantes;
+			};
+
+			$scope.getPermissionsFormForVisitante = function(){
+				return permissionsFormForVisitante;
 			};
 
 			$scope.save = function() {
+
+				if( $scope.user.type === "perfil_visitante" ){
+					$scope.user.type = getFinalTypeUser();
+				}
 
 				var data = Object.assign({}, $scope.user);
 				data = Utils.prepareDateFields(data, dateOnlyFields);
@@ -105,6 +132,7 @@
                     $scope.groups = {};
                     $scope.user.uf = null;
                     $scope.user.tenant_id = null;
+                    $scope.perfilVisitante.name = '';
                 }
 			}
 
@@ -143,6 +171,28 @@
 				if(res.messages) return Utils.displayValidationErrors(res);
 
 				ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
+			}
+
+			function getFinalTypeUser() {
+            	var finalType = "";
+				for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
+					if ( arraysEqual($scope.permissionsVisitantes.filter(function(obj) { return obj }), value) && key.includes($scope.perfilVisitante.name)){
+						finalType = key;
+					}
+				}
+				return finalType;
+			}
+
+			function arraysEqual(_arr1, _arr2) {
+				if (!Array.isArray(_arr1) || ! Array.isArray(_arr2) || _arr1.length !== _arr2.length)
+					return false;
+				var arr1 = _arr1.concat().sort();
+				var arr2 = _arr2.concat().sort();
+				for (var i = 0; i < arr1.length; i++) {
+					if (arr1[i] !== arr2[i])
+						return false;
+				}
+				return true;
 			}
 
 		});

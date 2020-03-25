@@ -19,11 +19,11 @@
 
             $scope.quickAdd = ($stateParams.quick_add === 'true');
 
-            var permissions = {};
+            var userTypeVisitantes = [];
             var dateOnlyFields = ['dob'];
 
             Platform.whenReady(function() {
-                permissions = StaticData.getPermissions();
+                userTypeVisitantes = StaticData.getUserTypeVisitantes();
             });
 
             if(!$scope.isCreating) {
@@ -39,13 +39,10 @@
             };
 
             $scope.getUserTypes = function() {
-                if(!permissions) return {};
-                if(!permissions.can_manage_types) return {};
-                return permissions.can_manage_types[ Identity.getCurrentUser().type ];
+                return userTypeVisitantes;
             };
 
             $scope.canDefineUserUF = function() {
-                if(!$scope.isSuperAdmin()) return false;
                 return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
             };
 
@@ -62,14 +59,6 @@
                 Users.update(data).$promise.then(onSaved);
 
             };
-
-            $scope.onSelectFunction = function(){
-                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
-                    $scope.user.uf = null;
-                    $scope.user.tenant_id = null;
-                }
-            }
 
             function prepareUserModel(user) {
 

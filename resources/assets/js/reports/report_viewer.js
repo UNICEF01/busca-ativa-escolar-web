@@ -280,6 +280,10 @@
                 if (filter_id === 'uf') {
                     return Identity.getType() === 'gestor_nacional'
                         || Identity.getType() === 'superuser'
+                        || Identity.getType() === 'visitante_nacional_1'
+                        || Identity.getType() === 'visitante_nacional_2'
+                        || Identity.getType() === 'visitante_nacional_3'
+                        || Identity.getType() === 'visitante_nacional_4'
                 }
 
                 if (filter_id === 'city') {
@@ -287,6 +291,10 @@
                         || Identity.getType() === 'superuser'
                         || Identity.getType() === 'gestor_estadual'
                         || Identity.getType() === 'supervisor_estadual'
+                        || Identity.getType() === 'visitante_nacional_1'
+                        || Identity.getType() === 'visitante_nacional_2'
+                        || Identity.getType() === 'visitante_nacional_3'
+                        || Identity.getType() === 'visitante_nacional_4'
                 }
 
                 return true;
