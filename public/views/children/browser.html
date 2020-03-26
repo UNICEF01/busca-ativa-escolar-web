@@ -157,8 +157,9 @@
 								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
 								<span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
 								<span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
-								<span class="label label-success" ng-if="!child.is_late && child.child_status === 'transferred'">Transferido</span>
+
 							</span>
+							<span class="label label-danger" ng-show="child.case_status == 'transferred'">Transferido</span>
 						</td>
 						<td width="6%" class="text-center" style="vertical-align: middle;">
 							<div class="btn-group">
