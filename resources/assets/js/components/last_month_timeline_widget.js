@@ -69,7 +69,7 @@
 					dimension: 'child_status',
 					filters: {
 						date: {from: startDate, to: endDate},
-						case_status: ['in_progress', 'completed', 'interrupted', 'cancelled'],
+						case_status: ['in_progress', 'completed', 'interrupted', 'cancelled', 'transferred'],
 						alert_status: ['accepted']
 					}
 				}, function (data) {
