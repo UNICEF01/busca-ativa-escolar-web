@@ -146,6 +146,18 @@
                         $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
                     }
 
+                	//perfil de visitante
+                	if( user.type.includes("visitante_") ){
+						$scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
+                		if( user.type.includes("visitante_nacional") ){
+							$scope.perfilVisitante.name = "visitante_nacional";
+						}
+						if( user.type.includes("visitante_estadual") ){
+							$scope.perfilVisitante.name = "visitante_estadual";
+						}
+						$scope.user.type = "perfil_visitante";
+					}
+
                 }else{
                     $scope.groups = Groups.find();
 				}
