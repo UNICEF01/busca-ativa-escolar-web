@@ -290,7 +290,6 @@
 		$scope.refresh();
 
 		console.log("[core] @ChildActivityLogCtrl", $scope.$parent.entries);
-
 	}
 
 })();
@@ -4737,13 +4736,23 @@ Highcharts.maps["countries/br/br-all"] = {
 
 				$scope.static = StaticData;
 
+				$scope.query = {
+					max: 20,
+					page: 1
+				};
+
+				$scope.search = {};
+
 				$scope.refresh = function() {
-					ImportJobs.all({$hide_loading_feedback: true}, function (jobs) {
-						$scope.jobs = jobs;
+					ImportJobs.all({$hide_loading_feedback: true, per_page: $scope.query.max, page: $scope.query.page}, function (jobs) {
+						$scope.jobs = jobs.data;
+						$scope.search = $scope.returnNewSearch(jobs);
+						console.log($scope.search);
 					});
 				};
 
 				$scope.jobs = {};
+
 				$scope.refresh();
 
 				$scope.newImport = function (type) {
@@ -4772,6 +4781,25 @@ Highcharts.maps["countries/br/br-all"] = {
 					if(job.total_records === 0) return '100 %';
 					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
 				};
+
+				$scope.returnNewSearch = function(jobs) {
+					return {
+						data: jobs.data,
+						meta: {
+							pagination: {
+								total: jobs.total,
+								count: jobs.per_page,
+								per_page: jobs.per_page,
+								current_page: jobs.current_page,
+								total_pages: jobs.last_page,
+								links: {
+									next: jobs.next_page_url ? jobs.next_page_url : null,
+									prev: jobs.prev_page_url ? jobs.prev_page_url : null
+								}
+							}
+						}
+					}
+				}
 
 			}
 		);
@@ -7104,7 +7132,7 @@ if (!Array.prototype.find) {
 
 			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
 				find: {method: 'GET', headers: authHeaders},
-				all: {url: API.getURI('maintenance/import_jobs'), method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/import_jobs?XDEBUG_SESSION_START=PHPSTORM'), method: 'GET', headers: authHeaders},
 				upload: {url: API.getURI('maintenace/import_jobs/new'), method: 'POST', headers: authHeaders},
 				process: {url: API.getURI('maintenance/import_jobs/:id/process'), method: 'POST', headers: authHeaders}
 			});
@@ -7436,11 +7464,11 @@ if (!Array.prototype.find) {
 				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
 				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
 				find: {method: 'GET', headers: headers},
-                findByUf: {url: API.getURI('tenants/uf?XDEBUG_SESSION_START=PHPSTORM'), method: 'GET', headers: authHeaders},
                 findByUfPublic: {url: API.getURI('tenants/public/uf?XDEBUG_SESSION_START=PHPSTORM'), method: 'GET', headers: authHeaders},
+                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
 				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
 				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
-			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
+			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders}
 			});
 
 		});
