@@ -52,7 +52,7 @@
 					},
 					dev_https: {
 						label: 'V1 Dev - buscaativaescolar-web1 (Secure)',
-						api: 'https://api.dev.buscaativaescolar.org.brd/api/v1/',
+						api: 'https://api.dev.buscaativaescolar.org.br/api/v1/',
 						token: 'https://api.dev.buscaativaescolar.org.br/api/auth/token',
 					}
 				},
