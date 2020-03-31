@@ -67,7 +67,7 @@
 
 			};
 
-			console.log("[core.config] Current environment: ", window.ENVIRONMENT.SERVER_NAME);
+			// console.log("[core.config] Current environment: ", window.ENVIRONMENT.SERVER_NAME);
 
 			var hasCheckedCookie = false;
 
