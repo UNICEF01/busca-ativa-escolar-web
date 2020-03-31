@@ -83,6 +83,11 @@
 						label: 'V1 Prod - buscaativaescolar-web1 (Secure)',
 						api: 'https://api.buscaativaescolar.org.br/api/v1/',
 						token: 'https://api.buscaativaescolar.org.br/api/auth/token',
+					},
+					dev_https: {
+						label: 'V1 Dev - buscaativaescolar-web1 (Secure)',
+						api: 'https://api.dev.buscaativaescolar.org.brd/api/v1/',
+						token: 'https://api.dev.buscaativaescolar.org.br/api/auth/token',
 					}
 				},
 
@@ -91,7 +96,7 @@
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'tests_http', 'tests_https', 'prod_http', 'prod_https'],
+				ALLOWED_ENDPOINTS: ['local_http', 'tests_https', 'prod_https', 'dev_https'],
 				CURRENT_ENDPOINT: env('DEFAULT_ENDPOINT')
 
 			};
@@ -7001,6 +7006,126 @@ if (!Array.prototype.find) {
 
 })();
 (function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('school_browser', {
+				url: '/schools',
+				templateUrl: '/views/schools/school_browser.html',
+				controller: 'SchoolBrowserCtrl'
+			});
+		})
+		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
+                   
+			$scope.check_all_schools = false;
+			$scope.identity = Identity;
+			$scope.schools = {};
+			$scope.msg_success = false;
+			$scope.msg_error = false;
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019];
+			$scope.query = {
+				year_educacenso: 2019,
+				sort: {},
+				show_suspended: false,
+				max: 5,
+				page: 1
+			};
+			$scope.selected = {
+				schools: []
+			};
+			
+			$scope.onCheckSelectAll = function(){
+				if( $scope.check_all_schools ){
+					$scope.selected.schools = angular.copy($scope.schools.data);
+				}else{
+					$scope.selected.schools = [];
+				}
+			};
+
+            $scope.onModifySchool = function(school){
+				Schools.update(school).$promise.then($scope.onSaved);
+			};
+			
+			$scope.onSaved = function(res) {
+				if(res.status === "ok") {
+					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+					return;
+				}else{
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+					$scope.refresh();
+				}
+			};
+
+			$scope.sendnotification = function(){
+
+				//remove objects without email
+				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
+					if(school.school_email != null && school.school_email != ""){
+						return true;
+					}else{
+						return false;
+					}
+				});
+
+				if(schools_to_send_notification.length > 0){
+					
+					Modals.show(
+						Modals.ConfirmEmail(
+							'Confirma o envio de sms e email para as seguintes escolas?',
+							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+							schools_to_send_notification
+						)).then(function () {
+							return Schools.send_notifications(schools_to_send_notification).$promise;
+						})
+						.then(function (res) {
+							if(res.status == "error"){
+								ngToast.danger(res.message);
+								$scope.msg_success = false;
+								$scope.msg_error = true;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}else{
+								ngToast.warning(res.message);
+								$scope.msg_success = true;
+								$scope.msg_error = false;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}
+						});
+				}else{
+					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+				}
+
+			};
+
+			$scope.onSelectYear = function() {
+				$scope.query.page = 1;
+				$scope.query.max = 5;
+				$scope.refresh();
+			};
+
+			$scope.refresh = function() {
+                Schools.all_educacenso($scope.query, function(res) {
+					$scope.check_all_schools = false;
+					$scope.selected.schools = [];
+					$scope.schools = angular.copy(res);
+				});
+			};
+
+			$scope.setMaxResults = function(max) {
+				$scope.query.max = max;
+				$scope.query.page = 1;
+				$scope.refresh();
+			};
+			
+			Platform.whenReady(function() {
+                $scope.refresh();
+			});
+
+		});
+
+})();
+(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.factory('Alerts', function Alerts(API, Identity, $resource) {
@@ -7525,126 +7650,6 @@ if (!Array.prototype.find) {
 		});
 })();
 (function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('school_browser', {
-				url: '/schools',
-				templateUrl: '/views/schools/school_browser.html',
-				controller: 'SchoolBrowserCtrl'
-			});
-		})
-		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-                   
-			$scope.check_all_schools = false;
-			$scope.identity = Identity;
-			$scope.schools = {};
-			$scope.msg_success = false;
-			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019];
-			$scope.query = {
-				year_educacenso: 2019,
-				sort: {},
-				show_suspended: false,
-				max: 5,
-				page: 1
-			};
-			$scope.selected = {
-				schools: []
-			};
-			
-			$scope.onCheckSelectAll = function(){
-				if( $scope.check_all_schools ){
-					$scope.selected.schools = angular.copy($scope.schools.data);
-				}else{
-					$scope.selected.schools = [];
-				}
-			};
-
-            $scope.onModifySchool = function(school){
-				Schools.update(school).$promise.then($scope.onSaved);
-			};
-			
-			$scope.onSaved = function(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
-					return;
-				}else{
-					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
-					$scope.refresh();
-				}
-			};
-
-			$scope.sendnotification = function(){
-
-				//remove objects without email
-				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					if(school.school_email != null && school.school_email != ""){
-						return true;
-					}else{
-						return false;
-					}
-				});
-
-				if(schools_to_send_notification.length > 0){
-					
-					Modals.show(
-						Modals.ConfirmEmail(
-							'Confirma o envio de sms e email para as seguintes escolas?',
-							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-							schools_to_send_notification
-						)).then(function () {
-							return Schools.send_notifications(schools_to_send_notification).$promise;
-						})
-						.then(function (res) {
-							if(res.status == "error"){
-								ngToast.danger(res.message);
-								$scope.msg_success = false;
-								$scope.msg_error = true;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}else{
-								ngToast.warning(res.message);
-								$scope.msg_success = true;
-								$scope.msg_error = false;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}
-						});
-				}else{
-					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-				}
-
-			};
-
-			$scope.onSelectYear = function() {
-				$scope.query.page = 1;
-				$scope.query.max = 5;
-				$scope.refresh();
-			};
-
-			$scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
-					$scope.check_all_schools = false;
-					$scope.selected.schools = [];
-					$scope.schools = angular.copy(res);
-				});
-			};
-
-			$scope.setMaxResults = function(max) {
-				$scope.query.max = max;
-				$scope.query.page = 1;
-				$scope.refresh();
-			};
-			
-			Platform.whenReady(function() {
-                $scope.refresh();
-			});
-
-		});
-
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('API', function API($q, $rootScope, Config) {
@@ -7764,186 +7769,186 @@ if (!Array.prototype.find) {
 
 		});
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('Auth', function Auth($q, $rootScope, $localStorage, $http, $resource, $state, Modals, API, Identity, Config) {
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('Auth', function Auth($q, $rootScope, $localStorage, $http, $resource, $state, $location, Modals, API, Identity, Config) {
 
-			var self = this;
+            var self = this;
 
-			$localStorage.$default({
-				session: {
-					user_id: null,
-					token: null,
-					token_expires_at: null,
-					refresh_expires_at: null
-				}
-			});
+            $localStorage.$default({
+                session: {
+                    user_id: null,
+                    token: null,
+                    token_expires_at: null,
+                    refresh_expires_at: null
+                }
+            });
 
-			function requireLogin(reason) {
-				return Modals.show(Modals.Login(reason, false));
-			}
+            function requireLogin(reason) {
+                return Modals.show(Modals.Login(reason, false));
+            }
 
-			function provideToken() {
-				
-				// TODO: refresh with endpoint if first time on page
+            function provideToken() {
+                // TODO: refresh with endpoint if first time on page
+                if ($location.$$path !== '/login') {
+                    // Isn't even logged in
+                    if (!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+                }
 
-				// Isn't even logged in
-				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+                // Check if session is valid
+                if (!$localStorage.session.token || !$localStorage.session.user_id) return $q.go('login');
 
-				// Check if session is valid
-				if(!$localStorage.session.token || !$localStorage.session.user_id) return $q.go('login');
+                // Has valid token
+                if (!isTokenExpired()) return $q.resolve($localStorage.session.token);
 
-				// Has valid token
-				if(!isTokenExpired()) return $q.resolve($localStorage.session.token);
+                console.log("[auth::token.provide] Token expired! Refreshing...");
 
-				console.log("[auth::token.provide] Token expired! Refreshing...");
+                // Is logged in, but both access and refresh token are expired
+                if (isRefreshExpired()) {
+                    console.log("[auth::token.provide] Refresh token also expired! Logging out...");
+                    return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
+                }
 
-				// Is logged in, but both access and refresh token are expired
-				if(isRefreshExpired()) {
-					console.log("[auth::token.provide] Refresh token also expired! Logging out...");
-					return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
-				}
+                // Is logged in, access token expired but refresh token still valid
+                return self.refresh().then(function (session) {
+                    console.log("[auth::token.provide] Refreshed, new tokens: ", session);
+                    return session.token;
+                });
 
-				// Is logged in, access token expired but refresh token still valid
-				return self.refresh().then(function (session) {
-					console.log("[auth::token.provide] Refreshed, new tokens: ", session);
-					return session.token;
-				});
+            }
 
-			}
+            function isTokenExpired() {
+                var now = (new Date()).getTime();
+                return !Identity.isLoggedIn() || (now >= $localStorage.session.token_expires_at);
+            }
 
-			function isTokenExpired() {
-				var now = (new Date()).getTime();
-				return !Identity.isLoggedIn() || (now >= $localStorage.session.token_expires_at);
-			}
+            function isRefreshExpired() {
+                var now = (new Date()).getTime();
+                return !Identity.isLoggedIn() || (now >= $localStorage.session.refresh_expires_at);
+            }
 
-			function isRefreshExpired() {
-				var now = (new Date()).getTime();
-				return !Identity.isLoggedIn() || (now >= $localStorage.session.refresh_expires_at);
-			}
+            function handleAuthResponse(response) {
 
-			function handleAuthResponse(response) {
+                if (response.status !== 200) {
+                    console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
+                    return $q.reject(response.data);
+                }
 
-				if(response.status !== 200) {
-					console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
-					return $q.reject(response.data);
-				}
+                if (!response.data || !response.data.token) {
+                    throw new Error("invalid_token_response");
+                }
 
-				if(!response.data || !response.data.token) {
-					throw new Error("invalid_token_response");
-				}
+                $localStorage.session.token = response.data.token;
+                $localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
+                $localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
-				$localStorage.session.token = response.data.token;
-				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
-				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
+                // Auth.refresh doesn't return user/user_id, so we can't always set it
+                if (response.data.user) {
+                    Identity.setCurrentUser(response.data.user);
+                    $localStorage.session.user_id = response.data.user.id;
+                }
 
-				// Auth.refresh doesn't return user/user_id, so we can't always set it
-				if(response.data.user) {
-					Identity.setCurrentUser(response.data.user);
-					$localStorage.session.user_id = response.data.user.id;
-				}
+                validateSessionIntegrity();
 
-				validateSessionIntegrity();
+                $rootScope.$broadcast('auth.logged_in');
 
-				$rootScope.$broadcast('auth.logged_in');
+                return $localStorage.session;
+            }
 
-				return $localStorage.session;
-			}
+            function validateSessionIntegrity() {
+                if (!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
+                    throw new Error("invalid_session_integrity");
+                }
+            }
 
-			function validateSessionIntegrity() {
-				if(!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
-					throw new Error("invalid_session_integrity");
-				}
-			}
+            function handleAuthError(response) {
 
-			function handleAuthError(response) {
+                console.error("[auth::login] API error: ", response);
 
-				console.error("[auth::login] API error: ", response);
+                if (!response || !response.status || !API.isUseableError(response.status)) {
+                    console.warn("[auth::login] Error code ", response.status, " not in list of useable errors: ", useableErrors);
+                    $rootScope.$broadcast('auth.error', response);
+                }
 
-				if(!response || !response.status || !API.isUseableError(response.status)) {
-					console.warn("[auth::login] Error code ", response.status, " not in list of useable errors: ", useableErrors);
-					$rootScope.$broadcast('auth.error', response);
-				}
+                throw (response.data) ? response.data : response;
+            }
 
-				throw (response.data) ? response.data : response;
-			}
+            this.provideToken = provideToken;
+            this.requireLogin = requireLogin;
+            this.isTokenExpired = isTokenExpired;
+            this.isRefreshExpired = isRefreshExpired;
 
-			this.provideToken = provideToken;
-			this.requireLogin = requireLogin;
-			this.isTokenExpired = isTokenExpired;
-			this.isRefreshExpired = isRefreshExpired;
+            this.isLoggedIn = function () {
+                return Identity.isLoggedIn();
+            };
 
-			this.isLoggedIn = function() {
-				return Identity.isLoggedIn();
-			};
+            $rootScope.$on('identity.disconnect', this.logout);
 
-			$rootScope.$on('identity.disconnect', this.logout);
+            this.logout = function () {
+                console.log('[auth] Logging out...');
 
-			this.logout = function() {
-				console.log('[auth] Logging out...');
+                Object.assign($localStorage, {
+                    session: {
+                        user_id: null,
+                        token: null,
+                        token_expires_at: null,
+                        refresh_expires_at: null
+                    }
+                });
 
-				Object.assign($localStorage, {
-					session: {
-						user_id: null,
-						token: null,
-						token_expires_at: null,
-						refresh_expires_at: null
-					}
-				});
+                Identity.disconnect();
 
-				Identity.disconnect();
+                $rootScope.$broadcast('auth.logged_out');
+            };
 
-				$rootScope.$broadcast('auth.logged_out');
-			};
+            this.login = function (email, password) {
 
-			this.login = function(email, password) {
+                var tokenRequest = {
+                    grant_type: 'login',
+                    email: email,
+                    password: password
+                };
 
-				var tokenRequest = {
-					grant_type: 'login',
-					email: email,
-					password: password
-				};
+                var options = {
+                    accept: 'application/json',
+                };
 
-				var options = {
-					accept: 'application/json',
-				};
+                return $http
+                    .post(API.getTokenURI(), tokenRequest, options)
+                    .then(handleAuthResponse, handleAuthError);
+            };
 
-				return $http
-					.post(API.getTokenURI(), tokenRequest, options)
-					.then(handleAuthResponse, handleAuthError);
-			};
+            this.refresh = function () {
 
-			this.refresh = function() {
+                var tokenRequest = {
+                    grant_type: 'refresh',
+                    token: $localStorage.session.token
+                };
 
-				var tokenRequest = {
-					grant_type: 'refresh',
-					token: $localStorage.session.token
-				};
+                var options = {
+                    accept: 'application/json',
+                };
 
-				var options = {
-					accept: 'application/json',
-				};
+                return $http
+                    .post(API.getTokenURI(), tokenRequest, options)
+                    .then(handleAuthResponse, handleAuthError);
+            };
 
-				return $http
-					.post(API.getTokenURI(), tokenRequest, options)
-					.then(handleAuthResponse, handleAuthError);
-			};
+        })
+        .run(function (Identity, Users, Auth) {
+            Identity.setTokenProvider(Auth.provideToken);
+            Identity.setUserProvider(function (user_id, callback) {
+                if (!user_id) return;
 
-		})
-		.run(function (Identity, Users, Auth) {
-			Identity.setTokenProvider(Auth.provideToken);
-			Identity.setUserProvider(function(user_id, callback) {
-				if(!user_id) return;
+                var user = Users.myself({with: 'tenant'});
+                user.$promise.then(callback);
 
-				var user = Users.myself({with: 'tenant'});
-				user.$promise.then(callback);
+                return user;
+            });
 
-				return user;
-			});
-
-			Identity.setup();
-		})
+            Identity.setup();
+        })
 
 })();
 (function() {
