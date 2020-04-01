@@ -7789,7 +7789,7 @@ if (!Array.prototype.find) {
 				// TODO: refresh with endpoint if first time on page
 
 				// Isn't even logged in
-				if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+				// if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
 
 				// Check if session is valid
 				if(!$localStorage.session.token || !$localStorage.session.user_id) return $q.go('login');
