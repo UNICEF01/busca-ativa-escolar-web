@@ -235,6 +235,8 @@
 					return 'Casos interrompidos: criança ou adolescente que evadiu durante as etapas de observação e cujo caso não foi reaberto';
 				case 'Transferidos':
 					return 'Transferidos';
+				default:
+					return expr;
 			}
 
 		}
