@@ -73,8 +73,7 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
-                        //dimensions: ['child_status', 'case_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
+                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling', 'country_region'],
                         filters: [
                             // 'date',
                             //'case_status',
@@ -173,7 +172,8 @@
                     city: 'Município da adesão',
                     month: 'Mês',
                     race: 'Raça / Etnia',
-                    guardian_schooling: 'Escolaridade do responsável'
+                    guardian_schooling: 'Escolaridade do responsável',
+                    country_region: "Região geográfica"
                 };
 
                 $scope.chartConfig = getChartConfig();
