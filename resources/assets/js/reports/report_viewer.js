@@ -166,7 +166,7 @@
                     parent_scholarity: 'Escolaridade do responsável',
                     place_uf: 'UF da localização da criança',
                     uf: 'UF da adesão',
-                    region: 'Região',
+                    region: 'Zona Rural / Urbana',
                     city_id: 'Município da adesão',
                     place_city_id: 'Município da localização da criança',
                     school_last_id: 'Última escola que frequentou',
