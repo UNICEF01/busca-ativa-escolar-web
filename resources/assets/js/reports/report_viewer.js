@@ -39,7 +39,7 @@
 
             function onInit() {
                 $scope.ready = true;
-
+                
                 var lastWeek = moment().subtract(7, 'days').toDate();
                 var today = moment().toDate();
 
