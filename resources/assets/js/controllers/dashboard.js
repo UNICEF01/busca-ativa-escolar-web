@@ -84,7 +84,7 @@
                 $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
                 $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
                 $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                $scope.steps[3].info = data.bar && data.bar.first_case || data.bar.first_alert;
+                $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
                 $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
                 $scope.otherData = data;
 
