@@ -61,9 +61,9 @@
 					},
 					tooltip: {
 						formatter: function () {
-							return '<strong> - ' + getTranslationFor(this.x) + ': ' + this.y + ' </strong>';
+							return '<strong>' + getTranslationFor(this.x) + ': ' + this.y + ' </strong>';
 							//return 'The value for <b>' + this.x +
-								//'</b> is <b>' + this.y + '</b>';
+							// '</b> is <b>' + this.y + '</b>';
 						}
 					}
 				},

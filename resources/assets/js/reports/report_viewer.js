@@ -79,14 +79,14 @@
                             //'case_status',
                             'child_status',
                             'alert_status',
-                            'age_ranges',
-                            'gender',
-                            'place_kind',
-                            'school_last_grade',
-                            'step_slug',
+                            //'age_ranges',
+                            //'gender',
+                            //'place_kind',
+                            //'school_last_grade',
+                            //'step_slug',
                             'uf',
                             'city',
-                            'case_cause_ids'
+                            //'case_cause_ids'
                         ],
                         views: ['chart', 'timeline']
                     }
