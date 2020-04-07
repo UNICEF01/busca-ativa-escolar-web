@@ -44,7 +44,7 @@
                 var today = moment().toDate();
 
                 $scope.filters = {
-                    //case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+                    case_status: ['in_progress', 'cancelled', 'completed', 'interrupted', 'transferred'],
                     alert_status: ['accepted'],
                     child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted'],
                     age: {from: 0, to: 2000},
@@ -76,8 +76,8 @@
                         dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
                         filters: [
                             // 'date',
-                            //'case_status',
-                            'child_status',
+                            'case_status',
+                            //'child_status',
                             'alert_status',
                             //'age_ranges',
                             //'gender',
