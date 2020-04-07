@@ -8,19 +8,19 @@
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._in_school || 0"></h1>
-                <div class="panel-footer">Concluídos</div>
+                <div class="panel-footer"><i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i> Concluídos</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._in_progress || 0"></h1>
-                <div class="panel-footer">Em andamento</div>
+                <div class="panel-footer"><i uib-tooltip="Caso em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento</div>
             </div>
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._cancelled || 0"></h1>
-                <div class="panel-footer">Cancelados</div>
+                <div class="panel-footer"><i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i> Cancelados</div>
             </div>
         </div>
 
@@ -34,14 +34,14 @@
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._transferred || 0"></h1>
-                <div class="panel-footer">Transferências</div>
+                <div class="panel-footer"> Transferências</div>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._interrupted || 0"></h1>
-                <div class="panel-footer">Interrupções</div>
+                <div class="panel-footer"> Interrupções</div>
             </div>
         </div>
     </div>
