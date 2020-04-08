@@ -1,23 +1,29 @@
 <div>
 
     <h3><i class="material-icons">insert_chart</i> Casos | Total:
-        {{getMetrics().cases._in_school + getMetrics().cases._in_progress + getMetrics().cases._cancelled}}
+        {{getMetrics().cases._in_school + getMetrics().cases._in_progress + getMetrics().cases._cancelled + getMetrics().cases._in_observation}}
     </h3>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._in_school || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i> Concluídos</div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._in_progress || 0"></h1>
-                <div class="panel-footer"><i uib-tooltip="Caso em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento</div>
+                <div class="panel-footer"><i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento/ Fora da escola</div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <h1 class="panel-body" ng-bind="getMetrics().cases._in_observation || 0"></h1>
+                <div class="panel-footer"><i uib-tooltip="Dentro da escola e em observação: de 1ª a 4ª observação" class="fa fa-info-circle"></i> Em andamento/ Em observação</div>
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._cancelled || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i> Cancelados</div>
@@ -31,14 +37,14 @@
     </h3>
 
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._transferred || 0"></h1>
                 <div class="panel-footer"> Transferências</div>
             </div>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._interrupted || 0"></h1>
                 <div class="panel-footer"> Interrupções</div>

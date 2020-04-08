@@ -105,7 +105,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-6">
+	<!--div class="col-md-6">
 		<div class="panel panel-default">
 			<div class="panel-heading">Casos</div>
 			<h1 class="panel-body">
@@ -121,5 +121,28 @@
 				</div>
 			</div>
 		</div>
+	</div -->
+
+	<div class="col-md-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">Casos</div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-3" ng-bind="stats.num_children_in_school || 0"></div>
+					<div class="col-md-3" ng-bind="stats.num_children_out_of_school || 0"></div>
+					<div class="col-md-3" ng-bind="stats.num_children_in_observation || 0"></div>
+					<div class="col-md-3" ng-bind="stats.num_children_cancelled || 0"></div>
+				</div>
+			</h1>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-md-3">concluídos <i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i>&nbsp;</div>
+					<div class="col-md-3">em andamento/ fora da escola <i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i>&nbsp;</div>
+					<div class="col-md-3">em andamento/ em observação <i uib-tooltip="Dentro da escola e em observação: de 1ª a 4ª observação" class="fa fa-info-circle"></i>&nbsp;</div>
+					<div class="col-md-3">cancelados <i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i>&nbsp;</div>
+				</div>
+			</div>
+		</div>
 	</div>
+
 </div>
