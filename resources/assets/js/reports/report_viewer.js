@@ -44,7 +44,7 @@
                 var today = moment().toDate();
 
                 $scope.filters = {
-                    case_status: ['in_progress', 'cancelled', 'completed', 'interrupted', 'transferred'],
+                    //case_status: ['in_progress', 'cancelled', 'completed', 'interrupted', 'transferred'],
                     alert_status: ['accepted'],
                     child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted', 'transferred'],
                     age: {from: 0, to: 2000},
