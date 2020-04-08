@@ -1,7 +1,7 @@
 <div>
 
     <h3><i class="material-icons">insert_chart</i> Casos | Total:
-        {{getMetrics().cases._in_school + getMetrics().cases._in_progress + getMetrics().cases._cancelled + getMetrics().cases._in_observation}}
+        {{getMetrics().cases._in_school + getMetrics().cases._out_of_school + getMetrics().cases._cancelled + getMetrics().cases._in_observation}}
     </h3>
 
     <div class="row">
@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._in_progress || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases._out_of_school || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento/ Fora da escola</div>
             </div>
         </div>
