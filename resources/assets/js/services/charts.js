@@ -220,7 +220,7 @@
 
 			switch (expr) {
 				case 'Casos em andamento':
-					return 'Caso em andamento: de pesquisa até (re)matrícula';
+					return 'Casos em andamento: de pesquisa até (re)matrícula';
 				case 'Dentro da escola':
 					return 'Dentro da escola e em observação: de 1ª a 4ª observação';
 				case 'Casos concluídos':
@@ -229,10 +229,11 @@
 					return 'Casos cancelados: em qualquer etapa do processo';
 				case 'Completos':
 					return 'Completos';
+
 				case 'Em andamento':
 					return 'Em andamento';
 				case 'Casos interrompidos':
-					return 'Casos interrompidos: criança ou adolescente que evadiu durante as etapas de observação e cujo caso não foi reaberto';
+					return 'Casos interrompidos: criança ou adolescente que evadiu durante as etapas de observação';
 				case 'Transferidos':
 					return 'Transferidos';
 				default:
