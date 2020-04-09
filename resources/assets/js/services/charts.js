@@ -219,9 +219,9 @@
 		function getTranslationFor(expr) {
 
 			switch (expr) {
-				case 'Casos em andamento':
+				case 'Em andamento/ Fora da escola':
 					return 'Casos em andamento: de pesquisa até (re)matrícula';
-				case 'Dentro da escola':
+				case 'Em andamento/ Em observação':
 					return 'Dentro da escola e em observação: de 1ª a 4ª observação';
 				case 'Casos concluídos':
 					return 'Casos concluídos: caso finalizado com sucesso após a 4ª observação';
