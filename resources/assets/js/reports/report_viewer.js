@@ -73,7 +73,7 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
+                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'place_city_id', 'city_id', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
                         filters: [
                             // 'date',
                             //'case_status',
@@ -395,7 +395,7 @@
             $scope.canShowLabel = function(){
                 //can't show:
                 var permissions = {
-                    gestor_nacional: [],
+                    gestor_nacional: ['school_last_id', 'place_city_id', 'city_id'],
                     coordenador_operacional: ['uf', 'city_id'],
                     gestor_politico: ['uf', 'city_id'],
                     supervisor_institucional: ['uf', 'city_id'],
