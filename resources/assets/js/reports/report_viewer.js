@@ -56,16 +56,15 @@
                         '15-17',
                         '18',
                     ],
-
                     age_null: true,
-                    school_last_grade: null,
-                    school_last_grade_null: true,
-                    gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
-                    gender_null: true,
-                    race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
-                    race_null: true,
-                    place_kind: ['rural', 'urban'],
-                    place_kind_null: true
+                    //school_last_grade: null,
+                    //school_last_grade_null: true,
+                    //gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
+                    //gender_null: true,
+                    //race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
+                    //race_null: true,
+                    //place_kind: ['rural', 'urban'],
+                    //place_kind_null: true
                 };
 
                 $scope.entities = {
@@ -74,7 +73,7 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
+                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
                         filters: [
                             // 'date',
                             //'case_status',
