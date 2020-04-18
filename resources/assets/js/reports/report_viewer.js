@@ -291,6 +291,7 @@
                     return Identity.getType() === 'gestor_nacional'
                         || Identity.getType() === 'superuser'
                         || Identity.getType() === 'gestor_estadual'
+                        || Identity.getType() === 'coordenador_estadual'
                         || Identity.getType() === 'supervisor_estadual'
                         || Identity.getType() === 'visitante_nacional_1'
                         || Identity.getType() === 'visitante_nacional_2'
