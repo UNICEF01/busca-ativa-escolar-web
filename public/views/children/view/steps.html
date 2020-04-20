@@ -28,7 +28,8 @@
 				<div class="col-md-12" ng-show="identity.can('cases.transfer') && case.case_status === 'in_progress'">
 					<a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()" style="width: 100%">Transferir caso</a>
 				</div>
-				<div class="col-md-12" ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress'">
+
+				<div class="col-md-12" ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
 					<a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
 				</div>
 			</div>
