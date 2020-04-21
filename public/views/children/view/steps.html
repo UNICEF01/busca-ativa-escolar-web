@@ -25,7 +25,7 @@
 						<span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
 					</div>
 				</div>
-				<div class="col-md-12" ng-show="identity.can('cases.transfer') && case.case_status === 'in_progress'">
+				<div class="col-md-12" ng-show="identity.can('cases.transfer') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
 					<a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()" style="width: 100%">Transferir caso</a>
 				</div>
 
