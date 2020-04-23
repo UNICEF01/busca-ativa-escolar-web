@@ -85,14 +85,18 @@
     <div class="clearfix"></div>
 
     <div class="chart-container">
+
         <highchart
-                ng-show="isReady() && hasEnoughData()"
+                ng-show="isReadyForCausesChart() && hasEnoughDataForCausesChart()"
                 id="causes-chart"
                 config="getCausesConfig()"
                 style="display: block; width: 95%; height: 800px;"
         ></highchart>
-        <div class="alert alert-warning" ng-show="isReady() && !hasEnoughData()">Não há dados o suficiente para exibir o
+
+        <div class="alert alert-warning" ng-show="isReadyForCausesChart() && !hasEnoughDataForCausesChart()">Não há dados o suficiente para exibir o
             gráfico de motivos.
         </div>
+
     </div>
+
 </div>
