@@ -6,6 +6,53 @@
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
 
+
+        var jsonify = res => res.json();
+        var dataFetch = fetch(
+            "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/data/column-line-combination-data.json"
+        ).then(jsonify);
+        var schemaFetch = fetch(
+            "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/schema/column-line-combination-schema.json"
+        ).then(jsonify);
+
+
+
+        $scope.dataSource = {
+            chart: {},
+            caption: {
+                text: "Web visits & downloads"
+            },
+            subcaption: {
+                text: "since 2015"
+            },
+            yaxis: [
+                {
+                    plot: [
+                        {
+                            value: "Downloads",
+                            type: "column"
+                        },
+                        {
+                            value: "Web Visits",
+                            type: "line"
+                        }
+                    ]
+                }
+            ]
+        };
+
+        Promise.all([dataFetch, schemaFetch]).then(res => {
+            const data = res[0];
+            const schema = res[1];
+            const fusionTable = new FusionCharts.DataStore().createDataTable(
+                data,
+                schema
+            );
+            $scope.$apply(function() {
+                $scope.dataSource.data = fusionTable;
+            });
+        });
+
         $scope.ready = false;
         $scope.showInfo = '';
         $scope.steps = [
