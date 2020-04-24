@@ -1,0 +1,87 @@
+{
+  "_from": "fusioncharts",
+  "_id": "fusioncharts@3.15.1-sr.1",
+  "_inBundle": false,
+  "_integrity": "sha512-EKky7IAiPrWmtN7RVaumhCMQ1boB1r46QwAh0SclHeE+ut68oJ4AbaUe1Ud4vui2mGSy2mDFWETQvfMN1awpRg==",
+  "_location": "/fusioncharts",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "fusioncharts",
+    "name": "fusioncharts",
+    "escapedName": "fusioncharts",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/fusioncharts/-/fusioncharts-3.15.1-sr.1.tgz",
+  "_shasum": "17d922e63c50999da75e7f2d852f97fb1b410582",
+  "_spec": "fusioncharts",
+  "_where": "/home/unicef/Documents/www/busca-ativa-escolar-web",
+  "author": {
+    "name": "FusionCharts, Inc.",
+    "email": "support@fusioncharts.com"
+  },
+  "bugs": {
+    "url": "http://www.fusioncharts.com/contact-support/"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "@babel/runtime": "7.4.5",
+    "@fusioncharts/charts": "^3.15.1-sr.1",
+    "@fusioncharts/constructor": "^1.0.4",
+    "@fusioncharts/core": "^1.0.4",
+    "@fusioncharts/datatable": "^1.0.4",
+    "@fusioncharts/features": "^1.0.4",
+    "@fusioncharts/fusiontime": "^2.1.1",
+    "@fusioncharts/maps": "^3.15.1-sr.1",
+    "@fusioncharts/powercharts": "^3.15.1-sr.1",
+    "@fusioncharts/utils": "^1.0.4",
+    "@fusioncharts/widgets": "^3.15.1-sr.1",
+    "mutationobserver-shim": "^0.3.3",
+    "promise-polyfill": "^8.1.3"
+  },
+  "deprecated": false,
+  "description": "FusionCharts JavaScript charting framework",
+  "devDependencies": {
+    "@babel/cli": "7.4.4",
+    "terser": "^4.0.2"
+  },
+  "gitHead": "0e0beba8ed21b7d214b03cd26ae992cc469dd7fe",
+  "homepage": "http://www.fusioncharts.com/",
+  "keywords": [
+    "fusioncharts",
+    "charts",
+    "dataviz",
+    "graphs",
+    "visualization",
+    "js-charts",
+    "javascript-charts",
+    "dashboards",
+    "data-stories",
+    "bar-charts",
+    "pie-charts",
+    "line-charts",
+    "area-charts",
+    "column-charts",
+    "gantt-chart"
+  ],
+  "license": "http://www.fusioncharts.com/buy/",
+  "main": "fusioncharts.js",
+  "name": "fusioncharts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fusioncharts/fusioncharts-dist.git"
+  },
+  "scripts": {
+    "postpublish": "./scripts/build/postpublish",
+    "prepublishOnly": "./scripts/build/prepublish",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "3.15.1-sr.1"
+}
