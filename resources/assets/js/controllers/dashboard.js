@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
@@ -8,32 +8,49 @@
 
 
         var jsonify = res => res.json();
+
         var dataFetch = fetch(
-            "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/data/column-line-combination-data.json"
+            "mock/data.json"
         ).then(jsonify);
         var schemaFetch = fetch(
-            "https://s3.eu-central-1.amazonaws.com/fusion.store/ft/schema/column-line-combination-schema.json"
+            "mock/schema.json"
         ).then(jsonify);
+
+        // $http({
+        //     method: 'GET',
+        //     url: 'mock/data.json'
+        // }).then(function (response) {
+        //     var novo = [];
+        //
+        //     for (var i = 0; i < response.data.length; i++) {
+        //         var value = response.data[i];
+        //         value[2] = "20000";
+        //         novo.push(value);
+        //     }
+        //     $scope.jsonexit = novo;
+        // }, function (error) {
+        //     console.log('error');
+        // });
 
 
 
         $scope.dataSource = {
             chart: {},
             caption: {
-                text: "Web visits & downloads"
+                text: "Evolução das rematrículas"
             },
             subcaption: {
-                text: "since 2015"
+                text: "desde 2015"
             },
             yaxis: [
                 {
                     plot: [
                         {
-                            value: "Downloads",
+                            value: "Quantidade",
                             type: "column"
                         },
                         {
-                            value: "Web Visits",
+                            value: "Meta",
                             type: "line"
                         }
                     ]
@@ -48,7 +65,7 @@
                 data,
                 schema
             );
-            $scope.$apply(function() {
+            $scope.$apply(function () {
                 $scope.dataSource.data = fusionTable;
             });
         });
