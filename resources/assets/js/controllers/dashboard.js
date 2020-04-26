@@ -28,7 +28,7 @@
             $scope.dataSource = {
                 chart: {},
                 caption: {
-                    text: "Evolução das rematrículas"
+                    text: "Evolução (Re)Matrículas"
                 },
                 subcaption: {
                     text: "desde 2015"
