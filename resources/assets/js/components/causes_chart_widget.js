@@ -13,7 +13,7 @@
 
             scope.showFilter = false;
 
-            scope.sort == 'maxToMin';
+            scope.sort = 'maxToMin';
 
             scope.getCausesConfig = getCausesConfig;
 
@@ -29,7 +29,7 @@
                 scope.showFilter = !scope.showFilter;
             }
   
-          scope.menuFilter = [
+            scope.menuFilter = [
             {name: 'Tudo', title: 'Todos os registros', qtd_days: null},
             {name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7},
             {name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30},
@@ -47,7 +47,7 @@
                     entity: 'children',
                     dimension: 'case_cause_ids',
                     filters: {
-                        case_status: ['in_progress','cancelled', 'completed', 'interrupted'],
+                        case_status: ['in_progress','cancelled', 'completed', 'interrupted', 'transferred'],
                         alert_status: ['accepted']
                     }
                 }

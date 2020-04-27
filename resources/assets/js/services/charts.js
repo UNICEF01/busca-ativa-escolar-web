@@ -58,6 +58,13 @@
 					},
 					subtitle: {
 						text: ''
+					},
+					tooltip: {
+						formatter: function () {
+							return '<strong>' + getTranslationFor(this.x) + ': ' + this.y + ' </strong>';
+							//return 'The value for <b>' + this.x +
+							// '</b> is <b>' + this.y + '</b>';
+						}
 					}
 				},
 				xAxis: {
@@ -78,9 +85,7 @@
 						overflow: 'justify'
 					}
 				},
-				tooltip: {
-					valueSuffix: ' ' + valueSuffix
-				},
+
 				plotOptions: {
 					bar: {
 						dataLabels: {
@@ -211,6 +216,31 @@
 
 		}
 
+		function getTranslationFor(expr) {
+
+			switch (expr) {
+				case 'Em andamento/ Fora da escola':
+					return 'Casos em andamento: de pesquisa até (re)matrícula';
+				case 'Em andamento/ Em observação':
+					return 'Dentro da escola e em observação: de 1ª a 4ª observação';
+				case 'Casos concluídos':
+					return 'Casos concluídos: caso finalizado com sucesso após a 4ª observação';
+				case 'Casos cancelados':
+					return 'Casos cancelados: em qualquer etapa do processo';
+				case 'Completos':
+					return 'Completos';
+
+				case 'Em andamento':
+					return 'Em andamento';
+				case 'Casos interrompidos':
+					return 'Casos interrompidos: criança ou adolescente que evadiu durante as etapas de observação';
+				case 'Transferidos':
+					return 'Transferidos';
+				default:
+					return expr;
+			}
+
+		}
 
 		return {
 			generateDimensionChart: generateDimensionChart,

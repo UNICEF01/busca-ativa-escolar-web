@@ -49,6 +49,11 @@
 						label: 'V1 Prod - buscaativaescolar-web1 (Secure)',
 						api: 'https://api.buscaativaescolar.org.br/api/v1/',
 						token: 'https://api.buscaativaescolar.org.br/api/auth/token',
+					},
+					dev_https: {
+						label: 'V1 Dev - buscaativaescolar-web1 (Secure)',
+						api: 'https://api.dev.buscaativaescolar.org.br/api/v1/',
+						token: 'https://api.dev.buscaativaescolar.org.br/api/auth/token',
 					}
 				},
 
@@ -57,12 +62,12 @@
 				TOKEN_EXPIRES_IN: 3600, // 1 hour
 				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				ALLOWED_ENDPOINTS: ['local_http', 'homolog_http', 'tests_http', 'tests_https', 'prod_http', 'prod_https'],
+				ALLOWED_ENDPOINTS: ['local_http', 'tests_https', 'prod_https', 'dev_https'],
 				CURRENT_ENDPOINT: env('DEFAULT_ENDPOINT')
 
 			};
 
-			console.log("[core.config] Current environment: ", window.ENVIRONMENT.SERVER_NAME);
+			// console.log("[core.config] Current environment: ", window.ENVIRONMENT.SERVER_NAME);
 
 			var hasCheckedCookie = false;
 
