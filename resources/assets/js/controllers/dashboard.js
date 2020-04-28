@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph,  Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Charts) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
@@ -10,10 +10,6 @@
 
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
-
-
-
-
 
 
 // Todo Criar um serviço para reaproveitar isso
@@ -39,20 +35,83 @@
                 subcaption: {
                     text: "desde 2015"
                 },
+                series: "City",
                 yaxis: [
                     {
                         plot: [
                             {
-                                value: "Quantidade",
+                                value: "Unemployment",
                                 type: "column"
                             },
+
+                        ],
+                        title: "(Re)Matrículas",
+                        format: {
+                            suffix: "K"
+                        },
+                        referenceline: [
                             {
-                                value: "Meta",
-                                type: "line"
+                                label: "Meta Selo UNICEF",
+                                value: "10",
+                                // style: {
+                                //     marker: {
+                                //         "stroke-dasharray": [4, 3]
+                                //     }
+                                // }
                             }
                         ]
                     }
+                    // {
+                    //     plot: "Unemployment",
+                    //     title: "Temperature",
+                    //     format: {
+                    //         suffix: "°C"
+                    //     },
+                    //     referenceline: [
+                    //         {
+                    //             label: "Controlled Temperature",
+                    //             value: "10",
+                    //             style: {
+                    //                 marker: {
+                    //                     "stroke-dasharray": [4, 3]
+                    //                 }
+                    //             }
+                    //         }
+                    //     ]
+                    // }
                 ]
+                // yaxis: [
+                //     {
+                //         plot: "Temperature",
+                //         title: "Temperature",
+                //         format: {
+                //             suffix: "°C"
+                //         },
+                //         referenceline: [
+                //             {
+                //                 label: "Controlled Temperature",
+                //                 value: "10",
+                //                 style: {
+                //                     marker: {
+                //                         "stroke-dasharray": [4, 3]
+                //                     }
+                //                 }
+                //             }
+                //         ]
+                //     },
+                //     // {
+                //     //     plot: [
+                //     //         {
+                //     //             value: "Quantidade",
+                //     //             type: "column"
+                //     //         },
+                //     //         {
+                //     //             value: "Meta",
+                //     //             type: "line"
+                //     //         }
+                //     //     ]
+                //     // }
+                // ]
             };
 
             Promise.all([dataFetch, schemaFetch]).then(res => {
@@ -76,7 +135,7 @@
 
         $scope.refresh = function () {
             // $scope.getData();
-            if(($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)){
+            if (($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)) {
                 $scope.tenants = Graph.getReinsertEvolution({'uf': $scope.query.uf});
             }
 
@@ -89,21 +148,21 @@
         };
 
         // function dataGenerate() {
-            // $http({
-            //     method: 'GET',
-            //     url: 'mock/data.json'
-            // }).then(function (response) {
-            //     var novo = [];
-            //
-            //     for (var i = 0; i < response.data.length; i++) {
-            //         var value = response.data[i];
-            //         value[2] = "20000";
-            //         novo.push(value);
-            //     }
-            //     $scope.jsonexit = novo;
-            // }, function (error) {
-            //     console.log('error');
-            // });
+        // $http({
+        //     method: 'GET',
+        //     url: 'mock/data.json'
+        // }).then(function (response) {
+        //     var novo = [];
+        //
+        //     for (var i = 0; i < response.data.length; i++) {
+        //         var value = response.data[i];
+        //         value[2] = "20000";
+        //         novo.push(value);
+        //     }
+        //     $scope.jsonexit = novo;
+        // }, function (error) {
+        //     console.log('error');
+        // });
 
         // }
 
