@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph,  Charts) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
@@ -10,6 +10,12 @@
 
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
+
+
+
+
+
+
 // Todo Criar um serviço para reaproveitar isso
         $scope.getUFs = function () {
             return StaticData.getUFs();
@@ -69,7 +75,11 @@
         };
 
         $scope.refresh = function () {
-            $scope.getData();
+            // $scope.getData();
+            if(($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)){
+                $scope.tenants = Graph.getReinsertEvolution({'uf': $scope.query.uf});
+            }
+
         };
 
 
@@ -78,7 +88,7 @@
             return $scope.tenants.data;
         };
 
-        function dataGenerate() {
+        // function dataGenerate() {
             // $http({
             //     method: 'GET',
             //     url: 'mock/data.json'
@@ -95,7 +105,7 @@
             //     console.log('error');
             // });
 
-        }
+        // }
 
         $scope.ready = false;
         $scope.showInfo = '';
