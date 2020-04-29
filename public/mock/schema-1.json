@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Time",
+    "type": "date",
+    "format": "%e-%b-%Y"
+  },
+  {
+    "name": "Quantidade",
+    "type": "number"
+  },
+  {
+    "name": "Meta",
+    "type": "number"
+  }
+]
