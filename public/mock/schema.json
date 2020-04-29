@@ -1,15 +1,14 @@
-[
+[{
+  "name": "Date",
+  "type": "date",
+  "format": "%y-%b"
+},
   {
-    "name": "Time",
-    "type": "date",
-    "format": "%e-%b-%Y"
+    "name": "City",
+    "type": "string"
   },
   {
-    "name": "Quantidade",
-    "type": "number"
-  },
-  {
-    "name": "Meta",
+    "name": "Unemployment",
     "type": "number"
   }
 ]
