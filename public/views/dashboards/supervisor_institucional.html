@@ -3,6 +3,23 @@
 <div class="dashboard dashboard-supervisor-institucional">
 
 	<div class="row">
+		<div class="col-md-6">
+			<h3><i class="material-icons">map</i> Mapa de casos</h3>
+
+			<div id="dashboard-map-coordenador-operacional">
+				<cases-map></cases-map>
+			</div>
+
+		</div>
+		<div class="col-md-6">
+
+			<metrics-overview></metrics-overview>
+
+			<hr/>
+
+			<h3><i class="material-icons">update</i> Últimas atualizações no sistema</h3>
+			<recent-activity></recent-activity>
+		</div>
 
 		<div class="col-md-12">
 			<h3><i class="material-icons">playlist_add_check</i> Casos recebidos</h3>
@@ -12,18 +29,12 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-6">
-			<h3><i class="material-icons">update</i> Últimas atualizações no sistema</h3>
-			<recent-activity></recent-activity>
-		</div>
-		<div class="col-md-6">
-			<h3><i class="material-icons">map</i> Mapa de casos</h3>
 
-			<div id="dashboard-map-supervisor-institucional">
-				<cases-map></cases-map>
-			</div>
-
+		<div class="col-md-12">
+			<h3><i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar (30 dias)</h3>
+			<last-month-timeline></last-month-timeline>
 		</div>
+
 	</div>
 
 </div>

@@ -39,14 +39,14 @@
 
             function onInit() {
                 $scope.ready = true;
-
+                
                 var lastWeek = moment().subtract(7, 'days').toDate();
                 var today = moment().toDate();
 
                 $scope.filters = {
-                    case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
+                    //case_status: ['in_progress', 'cancelled', 'completed', 'interrupted', 'transferred'],
                     alert_status: ['accepted'],
-                    child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted'],
+                    child_status: ['in_school', 'in_observation', 'out_of_school', 'cancelled', 'interrupted', 'transferred'],
                     age: {from: 0, to: 2000},
                     age_ranges: [
                         '0-3',
@@ -57,14 +57,14 @@
                         '18',
                     ],
                     age_null: true,
-                    school_last_grade: null,
-                    school_last_grade_null: true,
-                    gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
-                    gender_null: true,
-                    race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
-                    race_null: true,
-                    place_kind: ['rural', 'urban'],
-                    place_kind_null: true
+                    //school_last_grade: null,
+                    //school_last_grade_null: true,
+                    //gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
+                    //gender_null: true,
+                    //race: Utils.pluck(StaticData.getRaces(), 'slug'), //['male', 'female', 'undefined'],
+                    //race_null: true,
+                    //place_kind: ['rural', 'urban'],
+                    //place_kind_null: true
                 };
 
                 $scope.entities = {
@@ -73,20 +73,20 @@
                         name: 'Crianças e adolescentes',
                         value: 'num_children',
                         entity: 'children',
-                        dimensions: ['child_status', 'case_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'city_id', 'place_city_id', 'school_last_id', 'race', 'guardian_schooling'],
+                        dimensions: ['child_status', 'step_slug', 'age', 'gender', 'parents_income', 'place_kind', 'work_activity', 'case_cause_ids', 'alert_cause_id', 'uf', 'place_uf', 'place_city_id', 'city_id', 'school_last_id', 'race', 'guardian_schooling', 'country_region', 'school_last_grade'],
                         filters: [
                             // 'date',
-                            'case_status',
+                            //'case_status',
                             'child_status',
                             'alert_status',
-                            'age_ranges',
-                            'gender',
-                            'place_kind',
-                            'school_last_grade',
-                            'step_slug',
+                            //'age_ranges',
+                            //'gender',
+                            //'place_kind',
+                            //'school_last_grade',
+                            //'step_slug',
                             'uf',
                             'city',
-                            'case_cause_ids'
+                            //'case_cause_ids'
                         ],
                         views: ['chart', 'timeline']
                     }
@@ -145,8 +145,8 @@
 
                 $scope.fields = {
                     // period: 'Período',
-                    case_status: 'Status do caso',
-                    child_status: 'Status da criança',
+                    //case_status: 'Status do caso',
+                    child_status: 'Status do caso',
                     deadline_status: 'Status do andamento',
                     alert_status: 'Status do alerta',
                     step_slug: 'Etapa do caso',
@@ -154,7 +154,7 @@
                     age_ranges: 'Faixa etária',
                     gender: 'Sexo',
                     parents_income: 'Faixa de renda familiar',
-                    place_kind: 'Região',
+                    place_kind: 'Zona Rural/ Urbana',
                     work_activity: 'Atividade econômica',
                     case_cause_ids: 'Motivo do Caso',
                     alert_cause_id: 'Motivo do Alerta',
@@ -172,7 +172,8 @@
                     city: 'Município da adesão',
                     month: 'Mês',
                     race: 'Raça / Etnia',
-                    guardian_schooling: 'Escolaridade do responsável'
+                    guardian_schooling: 'Escolaridade do responsável',
+                    country_region: 'Região geográfica',
                 };
 
                 $scope.chartConfig = getChartConfig();
@@ -280,13 +281,22 @@
                 if (filter_id === 'uf') {
                     return Identity.getType() === 'gestor_nacional'
                         || Identity.getType() === 'superuser'
+                        || Identity.getType() === 'visitante_nacional_1'
+                        || Identity.getType() === 'visitante_nacional_2'
+                        || Identity.getType() === 'visitante_nacional_3'
+                        || Identity.getType() === 'visitante_nacional_4'
                 }
 
                 if (filter_id === 'city') {
                     return Identity.getType() === 'gestor_nacional'
                         || Identity.getType() === 'superuser'
                         || Identity.getType() === 'gestor_estadual'
+                        || Identity.getType() === 'coordenador_estadual'
                         || Identity.getType() === 'supervisor_estadual'
+                        || Identity.getType() === 'visitante_nacional_1'
+                        || Identity.getType() === 'visitante_nacional_2'
+                        || Identity.getType() === 'visitante_nacional_3'
+                        || Identity.getType() === 'visitante_nacional_4'
                 }
 
                 return true;
@@ -386,7 +396,7 @@
             $scope.canShowLabel = function(){
                 //can't show:
                 var permissions = {
-                    gestor_nacional: [],
+                    gestor_nacional: ['school_last_id', 'place_city_id', 'city_id'],
                     coordenador_operacional: ['uf', 'city_id'],
                     gestor_politico: ['uf', 'city_id'],
                     supervisor_institucional: ['uf', 'city_id'],

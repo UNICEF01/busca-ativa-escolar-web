@@ -1,0 +1,64 @@
+{
+  "_from": "angularjs-fusioncharts",
+  "_id": "angularjs-fusioncharts@5.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-b5ld4h+PjLhM5Bzrd2uETTDN3bnKr5TMhFm6ZlmvNXqNmTPqHNTlXSqe9jvpREMqT/V2VNAUoFTRyA75mkNJQw==",
+  "_location": "/angularjs-fusioncharts",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angularjs-fusioncharts",
+    "name": "angularjs-fusioncharts",
+    "escapedName": "angularjs-fusioncharts",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angularjs-fusioncharts/-/angularjs-fusioncharts-5.0.3.tgz",
+  "_shasum": "f02227a7c5740e0998c586dd760cf8de930cc838",
+  "_spec": "angularjs-fusioncharts",
+  "_where": "/home/unicef/Documents/www/busca-ativa-escolar-web",
+  "author": {
+    "name": "FusionCharts"
+  },
+  "bugs": {
+    "url": "https://github.com/fusioncharts/angularjs-fusioncharts/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {},
+  "deprecated": false,
+  "description": "Angular plugin for FusionCharts",
+  "devDependencies": {
+    "angular": "^1.7.2",
+    "angular-mocks": "^1.7.7",
+    "ejs": "^1.0.0",
+    "fusioncharts": "^3.13.3-sr.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-uglify": "^0.6.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "jasmine-core": "^3.3.0",
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^2.0.1"
+  },
+  "homepage": "https://www.fusioncharts.com/angularjs-charts/",
+  "license": "MIT",
+  "main": "dist/angular-fusioncharts.js",
+  "name": "angularjs-fusioncharts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fusioncharts/angularjs-fusioncharts.git"
+  },
+  "scripts": {
+    "build": "npx grunt",
+    "dev": "npx grunt watch-server"
+  },
+  "version": "5.0.3"
+}

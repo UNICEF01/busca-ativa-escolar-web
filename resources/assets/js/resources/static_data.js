@@ -77,6 +77,10 @@
 			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
 			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
 
+			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
+			
+			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
+
 			function getCurrentUF() {
 				var user = Identity.getCurrentUser();
 				if(!user) return null;
@@ -116,6 +120,8 @@
 				getNumChains: getNumChains,
 				getDataFile: getDataFile,
 				getPermissions: getPermissions,
+				getUserTypeVisitantes: getUserTypeVisitantes,
+				getPermissionsFormForVisitante: getPermissionsFormForVisitante
 			};
 
 		})

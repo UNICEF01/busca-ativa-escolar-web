@@ -1,182 +1,183 @@
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('Auth', function Auth($q, $rootScope, $localStorage, $http, $resource, $state, Modals, API, Identity, Config) {
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('Auth', function Auth($q, $rootScope, $localStorage, $http, $resource, $state, $location, Modals, API, Identity, Config) {
 
-			var self = this;
+            var self = this;
 
-			$localStorage.$default({
-				session: {
-					user_id: null,
-					token: null,
-					token_expires_at: null,
-					refresh_expires_at: null
-				}
-			});
+            $localStorage.$default({
+                session: {
+                    user_id: null,
+                    token: null,
+                    token_expires_at: null,
+                    refresh_expires_at: null
+                }
+            });
 
-			function requireLogin(reason) {
-				return Modals.show(Modals.Login(reason, false));
-			}
+            function requireLogin(reason) {
+                return Modals.show(Modals.Login(reason, false));
+            }
+            
+            function provideToken() {
+                // TODO: refresh with endpoint if first time on page
+                // if ($location.$$path !== '/login') {
+                //     // Isn't even logged in
+                //     if (!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
+                // }
 
-			function provideToken() {
+                // Check if session is valid
+                if (!$localStorage.session.token || !$localStorage.session.user_id) return $q.go('login');
 
-				// TODO: refresh with endpoint if first time on page
+                // Has valid token
+                if (!isTokenExpired()) return $q.resolve($localStorage.session.token);
 
-				// Isn't even logged in
-				// if(!Identity.isLoggedIn()) return requireLogin('Você precisa fazer login para realizar essa ação!');
 
-				// Check if session is valid
-				if(!$localStorage.session.token || !$localStorage.session.user_id) return $q.go('login');
+                console.log("[auth::token.provide] Token expired! Refreshing...");
 
-				// Has valid token
-				if(!isTokenExpired()) return $q.resolve($localStorage.session.token);
+                // Is logged in, but both access and refresh token are expired
+                if (isRefreshExpired()) {
+                    console.log("[auth::token.provide] Refresh token also expired! Logging out...");
+                    return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
+                }
 
-				console.log("[auth::token.provide] Token expired! Refreshing...");
+                // Is logged in, access token expired but refresh token still valid
+                return self.refresh().then(function (session) {
+                    console.log("[auth::token.provide] Refreshed, new tokens: ", session);
+                    return session.token;
+                });
 
-				// Is logged in, but both access and refresh token are expired
-				if(isRefreshExpired()) {
-					console.log("[auth::token.provide] Refresh token also expired! Logging out...");
-					return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
-				}
+            }
 
-				// Is logged in, access token expired but refresh token still valid
-				return self.refresh().then(function (session) {
-					console.log("[auth::token.provide] Refreshed, new tokens: ", session);
-					return session.token;
-				});
+            function isTokenExpired() {
+                var now = (new Date()).getTime();
+                return !Identity.isLoggedIn() || (now >= $localStorage.session.token_expires_at);
+            }
 
-			}
+            function isRefreshExpired() {
+                var now = (new Date()).getTime();
+                return !Identity.isLoggedIn() || (now >= $localStorage.session.refresh_expires_at);
+            }
 
-			function isTokenExpired() {
-				var now = (new Date()).getTime();
-				return !Identity.isLoggedIn() || (now >= $localStorage.session.token_expires_at);
-			}
+            function handleAuthResponse(response) {
 
-			function isRefreshExpired() {
-				var now = (new Date()).getTime();
-				return !Identity.isLoggedIn() || (now >= $localStorage.session.refresh_expires_at);
-			}
+                if (response.status !== 200) {
+                    console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
+                    return $q.reject(response.data);
+                }
 
-			function handleAuthResponse(response) {
+                if (!response.data || !response.data.token) {
+                    throw new Error("invalid_token_response");
+                }
 
-				if(response.status !== 200) {
-					console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
-					return $q.reject(response.data);
-				}
+                $localStorage.session.token = response.data.token;
+                $localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
+                $localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
 
-				if(!response.data || !response.data.token) {
-					throw new Error("invalid_token_response");
-				}
+                // Auth.refresh doesn't return user/user_id, so we can't always set it
+                if (response.data.user) {
+                    Identity.setCurrentUser(response.data.user);
+                    $localStorage.session.user_id = response.data.user.id;
+                }
 
-				$localStorage.session.token = response.data.token;
-				$localStorage.session.token_expires_at = (new Date()).getTime() + (Config.TOKEN_EXPIRES_IN * 1000);
-				$localStorage.session.refresh_expires_at = (new Date()).getTime() + (Config.REFRESH_EXPIRES_IN * 1000);
+                validateSessionIntegrity();
 
-				// Auth.refresh doesn't return user/user_id, so we can't always set it
-				if(response.data.user) {
-					Identity.setCurrentUser(response.data.user);
-					$localStorage.session.user_id = response.data.user.id;
-				}
+                $rootScope.$broadcast('auth.logged_in');
 
-				validateSessionIntegrity();
+                return $localStorage.session;
+            }
 
-				$rootScope.$broadcast('auth.logged_in');
+            function validateSessionIntegrity() {
+                if (!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
+                    throw new Error("invalid_session_integrity");
+                }
+            }
 
-				return $localStorage.session;
-			}
+            function handleAuthError(response) {
 
-			function validateSessionIntegrity() {
-				if(!$localStorage.session || !$localStorage.session.user_id || !$localStorage.session.token) {
-					throw new Error("invalid_session_integrity");
-				}
-			}
+                console.error("[auth::login] API error: ", response);
 
-			function handleAuthError(response) {
+                if (!response || !response.status || !API.isUseableError(response.status)) {
+                    console.warn("[auth::login] Error code ", response.status, " not in list of useable errors: ", useableErrors);
+                    $rootScope.$broadcast('auth.error', response);
+                }
 
-				console.error("[auth::login] API error: ", response);
+                throw (response.data) ? response.data : response;
+            }
 
-				if(!response || !response.status || !API.isUseableError(response.status)) {
-					console.warn("[auth::login] Error code ", response.status, " not in list of useable errors: ", useableErrors);
-					$rootScope.$broadcast('auth.error', response);
-				}
+            this.provideToken = provideToken;
+            this.requireLogin = requireLogin;
+            this.isTokenExpired = isTokenExpired;
+            this.isRefreshExpired = isRefreshExpired;
 
-				throw (response.data) ? response.data : response;
-			}
+            this.isLoggedIn = function () {
+                return Identity.isLoggedIn();
+            };
 
-			this.provideToken = provideToken;
-			this.requireLogin = requireLogin;
-			this.isTokenExpired = isTokenExpired;
-			this.isRefreshExpired = isRefreshExpired;
+            $rootScope.$on('identity.disconnect', this.logout);
 
-			this.isLoggedIn = function() {
-				return Identity.isLoggedIn();
-			};
+            this.logout = function () {
+                console.log('[auth] Logging out...');
 
-			$rootScope.$on('identity.disconnect', this.logout);
+                Object.assign($localStorage, {
+                    session: {
+                        user_id: null,
+                        token: null,
+                        token_expires_at: null,
+                        refresh_expires_at: null
+                    }
+                });
 
-			this.logout = function() {
-				console.log('[auth] Logging out...');
+                Identity.disconnect();
 
-				Object.assign($localStorage, {
-					session: {
-						user_id: null,
-						token: null,
-						token_expires_at: null,
-						refresh_expires_at: null
-					}
-				});
+                $rootScope.$broadcast('auth.logged_out');
+            };
 
-				Identity.disconnect();
+            this.login = function (email, password) {
 
-				$rootScope.$broadcast('auth.logged_out');
-			};
+                var tokenRequest = {
+                    grant_type: 'login',
+                    email: email,
+                    password: password
+                };
 
-			this.login = function(email, password) {
+                var options = {
+                    accept: 'application/json',
+                };
 
-				var tokenRequest = {
-					grant_type: 'login',
-					email: email,
-					password: password
-				};
+                return $http
+                    .post(API.getTokenURI(), tokenRequest, options)
+                    .then(handleAuthResponse, handleAuthError);
+            };
 
-				var options = {
-					accept: 'application/json',
-				};
+            this.refresh = function () {
 
-				return $http
-					.post(API.getTokenURI(), tokenRequest, options)
-					.then(handleAuthResponse, handleAuthError);
-			};
+                var tokenRequest = {
+                    grant_type: 'refresh',
+                    token: $localStorage.session.token
+                };
 
-			this.refresh = function() {
+                var options = {
+                    accept: 'application/json',
+                };
 
-				var tokenRequest = {
-					grant_type: 'refresh',
-					token: $localStorage.session.token
-				};
+                return $http
+                    .post(API.getTokenURI(), tokenRequest, options)
+                    .then(handleAuthResponse, handleAuthError);
+            };
 
-				var options = {
-					accept: 'application/json',
-				};
+        })
+        .run(function (Identity, Users, Auth) {
+            Identity.setTokenProvider(Auth.provideToken);
+            Identity.setUserProvider(function (user_id, callback) {
+                if (!user_id) return;
 
-				return $http
-					.post(API.getTokenURI(), tokenRequest, options)
-					.then(handleAuthResponse, handleAuthError);
-			};
+                var user = Users.myself({with: 'tenant'});
+                user.$promise.then(callback);
 
-		})
-		.run(function (Identity, Users, Auth) {
-			Identity.setTokenProvider(Auth.provideToken);
-			Identity.setUserProvider(function(user_id, callback) {
-				if(!user_id) return;
+                return user;
+            });
 
-				var user = Users.myself({with: 'tenant'});
-				user.$promise.then(callback);
-
-				return user;
-			});
-
-			Identity.setup();
-		})
+            Identity.setup();
+        })
 
 })();

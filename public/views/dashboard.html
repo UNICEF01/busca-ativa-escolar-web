@@ -10,7 +10,16 @@
 <div ng-if="identity.getType() === 'comite_estadual'" ng-include="'/views/dashboards/gestor_estadual.html'"></div>
 <div ng-if="identity.getType() === 'supervisor_estadual'" ng-include="'/views/dashboards/supervisor_estadual.html'"></div>
 <div ng-if="identity.getType() === 'coordenador_estadual'" ng-include="'/views/dashboards/coordenador_estadual.html'"></div>
-<div ng-if="identity.getType() === 'parceiro_implementador'" ng-include="'/views/dashboards/parceiro_implementador.html'"></div>
+
+<div ng-if="identity.getType() === 'visitante_nacional_1'" ng-include="'/views/dashboards/visitante_nacional.html'"></div>
+<div ng-if="identity.getType() === 'visitante_nacional_2'" ng-include="'/views/dashboards/visitante_nacional.html'"></div>
+<div ng-if="identity.getType() === 'visitante_nacional_3'" ng-include="'/views/dashboards/visitante_nacional.html'"></div>
+<div ng-if="identity.getType() === 'visitante_nacional_4'" ng-include="'/views/dashboards/visitante_nacional.html'"></div>
+
+<div ng-if="identity.getType() === 'visitante_estadual_1'" ng-include="'/views/dashboards/visitante_estadual.html'"></div>
+<div ng-if="identity.getType() === 'visitante_estadual_2'" ng-include="'/views/dashboards/visitante_estadual.html'"></div>
+<div ng-if="identity.getType() === 'visitante_estadual_3'" ng-include="'/views/dashboards/visitante_estadual.html'"></div>
+<div ng-if="identity.getType() === 'visitante_estadual_4'" ng-include="'/views/dashboards/visitante_estadual.html'"></div>
 
 <!--div>
 	<h3><i class="fa fa-code"></i> Últimas atualizações da plataforma</h3>
