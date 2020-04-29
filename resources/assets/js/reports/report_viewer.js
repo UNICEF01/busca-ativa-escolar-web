@@ -202,6 +202,10 @@
 
             $scope.refresh = function () {
 
+                if($scope.current.dimension !== 'alert_cause_id'){
+                    $scope.filters.alert_status =  ['accepted'];
+                }
+
                 // Check if selected view is available in entity
                 if ($scope.entities[$scope.current.entity].views.indexOf($scope.current.view) === -1) {
                     $scope.current.view = $scope.current.entity.views[0];
