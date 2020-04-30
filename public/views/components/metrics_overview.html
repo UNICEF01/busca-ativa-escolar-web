@@ -40,14 +40,14 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._transferred || 0"></h1>
-                <div class="panel-footer"> Transferências</div>
+                <div class="panel-footer"> <i uib-tooltip="Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar" class="fa fa-info-circle"></i> Transferências</div>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="panel panel-default">
                 <h1 class="panel-body" ng-bind="getMetrics().cases._interrupted || 0"></h1>
-                <div class="panel-footer"> Interrupções</div>
+                <div class="panel-footer"> <i uib-tooltip="Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa" class="fa fa-info-circle"></i> Interrupções</div>
             </div>
         </div>
     </div>
