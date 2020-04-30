@@ -422,5 +422,18 @@ a.column-sorter {
 }
 
 .disabled-color {
-    color: #D5C3BD;
+  color: #a8a8a8;
 }
+
+.disabled-check {
+  color: #a8a8a8;
+
+  .check {
+    border-color: #a8a8a8 !important;
+  }
+
+  .check:before {
+    color: #a8a8a8 !important;
+  }
+}
+
