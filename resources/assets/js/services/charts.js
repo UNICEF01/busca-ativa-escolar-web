@@ -225,7 +225,7 @@
 				case 'Em andamento/ Fora da escola':
 					return 'De pesquisa até (re)matrícula';
 				case 'Em andamento/ Dentro da escola':
-					return 'Estudantes (re)matriculados e em observação: De (re)matricula à 4ª Observacao';
+					return 'Estudantes (re)matriculados e em observação: de (re)matricula à 4ª Observacao';
 				case 'Casos concluídos':
 					return 'Casos finalizados com sucesso após a 4ª observação';
 				case 'Casos cancelados':

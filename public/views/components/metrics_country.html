@@ -2,7 +2,7 @@
 
 	<div class="col-md-6">
 		<div class="panel panel-default">
-			<div class="panel-heading">Adesões municipais</div>
+			<div class="panel-heading"><strong>Adesões municipais</strong></div>
 			<h1 class="panel-body">
 				<div class="row">
 					<div class="col-md-4">
@@ -34,7 +34,7 @@
 
 	<div class="col-md-2">
 		<div class="panel panel-default">
-			<div class="panel-heading">Adesões estaduais</div>
+			<div class="panel-heading"><strong>Adesões estaduais</strong></div>
 			<h1 class="panel-body"><span ng-bind="stats.num_ufs || 0"></span></h1>
 			<div class="panel-footer">realizadas</div>
 		</div>
@@ -42,7 +42,7 @@
 
 	<div class="col-md-4">
 		<div class="panel panel-default" ui-sref="pending_tenant_signups" style="cursor: pointer">
-			<div class="panel-heading">Adesões pendentes</div>
+			<div class="panel-heading"><strong>Adesões pendentes</strong></div>
 			<h1 class="panel-body">
 				<div class="row">
 					<div class="col-md-6">
@@ -70,41 +70,32 @@
 
 		<div class="panel panel-default">
 
-			<div class="panel-heading">Alertas</div>
+			<div class="panel-heading"><strong>Alertas | Total: {{stats.num_total_alerts || 0}}</strong></div>
 
-			<h1 class="panel-body">
+			<h1 class="panel-body" style="min-height: 174px; padding-top: 10%;">
 				<div class="row">
 
-					<div class="col-md-6">
-						<span ng-bind="stats.num_total_alerts || 0"></span>
-					</div>
-
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<span ng-bind="stats.num_alerts || 0"></span>
 					</div>
 
-					<div class="col-md-6">
-						<small style="font-size: 12px">totais</small>
-					</div>
-
-					<div class="col-md-6">
-						<small style="font-size: 12px">aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i></small>
-					</div>
-
-
-
-					<div class="col-md-6" style="margin-top: 20px;">
+					<div class="col-md-4">
 						<span ng-bind="stats.num_pending_alerts || 0"></span>
 					</div>
-					<div class="col-md-6" style="margin-top: 20px;">
+
+					<div class="col-md-4">
 						<span ng-bind="stats.num_rejected_alerts || 0"></span>
 					</div>
 
-					<div class="col-md-6">
+					<div class="col-md-4">
+						<small style="font-size: 12px">aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i></small>
+					</div>
+
+					<div class="col-md-4">
 						<small style="font-size: 12px">pendentes <i uib-tooltip="Alertas recebidos pelo(a) Supervisor(a) Institucional, mas ainda não analisados." class="fa fa-info-circle"></i></small>
 					</div>
 
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<small style="font-size: 12px">rejeitados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e rejeitados." class="fa fa-info-circle"></i></small>
 					</div>
 				</div>
@@ -118,7 +109,7 @@
 
 		<div class="panel panel-default">
 
-			<div class="panel-heading">Casos</div>
+			<div class="panel-heading"><strong>Casos | Total: {{ stats.num_children_in_school + stats.num_children_out_of_school + stats.num_children_in_observation + stats.num_children_cancelled + stats.num_children_transferred + stats.num_children_interrupted}}</strong></div>
 
 			<h1 class="panel-body">
 				<div class="row">
