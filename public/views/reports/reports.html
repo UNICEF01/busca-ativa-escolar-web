@@ -191,15 +191,16 @@
 
                 <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
                     <label class="control-label" for="filter-alert_status-accepted">Por status do alerta</label>
-                    <div class="checkbox"><label for="filter-alert_status-accepted"><input type="checkbox"
-                                                                                           ng-disabled="current.dimension != 'alert_cause_id'"
+                    <div class="checkbox"><label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
+                                                 for="filter-alert_status-accepted"><input type="checkbox"
                                                                                            id="filter-alert_status-accepted"
                                                                                            checklist-model="filters.alert_status"
                                                                                            checklist-value="'accepted'"
                                                                                            name="filter-alert_status_accepted">
                         <span ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}">
                         Aceito</span></label></div>
-                    <div class="checkbox"><label for="filter-alert_status-rejected"><input type="checkbox"
+                    <div class="checkbox"><label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
+                                                 for="filter-alert_status-rejected"><input type="checkbox"
                                                                                            ng-disabled="current.dimension != 'alert_cause_id'"
                                                                                            id="filter-alert_status-rejected"
                                                                                            checklist-model="filters.alert_status"
@@ -207,7 +208,8 @@
                                                                                            name="filter-alert_status_rejected">
                         <span ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}">
                             Rejeitado</span></label></div>
-                    <div class="checkbox"><label for="filter-alert_status-pending"><input type="checkbox"
+                    <div class="checkbox"><label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
+                                                 for="filter-alert_status-pending"><input type="checkbox"
                                                                                           ng-disabled="current.dimension != 'alert_cause_id'"
                                                                                           id="filter-alert_status-pending"
                                                                                           checklist-model="filters.alert_status"

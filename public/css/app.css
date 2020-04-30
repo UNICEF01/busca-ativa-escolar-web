@@ -4938,7 +4938,17 @@ a.column-sorter {
 }
 
 .disabled-color {
+  color: #cfcfcf;
+}
+
+.disabled-check {
   color: #D5C3BD;
+}
+.disabled-check .check {
+  border-color: #EEEEEE !important;
+}
+.disabled-check .check:before {
+  color: #EEEEEE !important;
 }
 
 /*# sourceMappingURL=app.css.map */
