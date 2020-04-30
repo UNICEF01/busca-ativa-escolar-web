@@ -4938,17 +4938,17 @@ a.column-sorter {
 }
 
 .disabled-color {
-  color: #cfcfcf;
+  color: #a8a8a8;
 }
 
 .disabled-check {
-  color: #D5C3BD;
+  color: #a8a8a8;
 }
 .disabled-check .check {
-  border-color: #EEEEEE !important;
+  border-color: #a8a8a8 !important;
 }
 .disabled-check .check:before {
-  color: #EEEEEE !important;
+  color: #a8a8a8 !important;
 }
 
 /*# sourceMappingURL=app.css.map */
