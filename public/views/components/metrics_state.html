@@ -1,23 +1,28 @@
 <div class="row metrics-country">
 
 	<div class="row">
+
 		<div class="col-md-2">
+
 			<div class="panel panel-default">
-				<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-				<div class="panel-footer">municípios participantes <i uib-tooltip="Total de municípios, do seu estado, que aderiram à Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
+
+				<div class="panel-heading"><strong>Municípios participantes</strong></div>
+
+				<h1 class="panel-body" style="min-height: 173px; padding-top: 30%;">
+					<span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small>
+				</h1>
+
 			</div>
+
 		</div>
-	</div>
 
-	<div class="row">
-
-		<div class="col-md-6">
+		<div class="col-md-5">
 
 			<div class="panel panel-default">
 
-				<div class="panel-heading"><strong>Alertas | Total: {{stats.num_total_alerts || 0}}</strong></div>
+				<div class="panel-heading"><strong>Alertas gerados pelos municípios participantes | Total: {{stats.num_total_alerts || 0}}</strong></div>
 
-				<h1 class="panel-body" style="min-height: 174px; padding-top: 10%;">
+				<h1 class="panel-body" style="min-height: 193px; padding-top: 15%;">
 					<div class="row">
 
 						<div class="col-md-4">
@@ -50,11 +55,11 @@
 
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-md-5">
 
 			<div class="panel panel-default">
 
-				<div class="panel-heading"><strong>Casos | Total: {{ stats.num_children_in_school + stats.num_children_out_of_school + stats.num_children_in_observation + stats.num_children_cancelled + stats.num_children_transferred + stats.num_children_interrupted}}</strong></div>
+				<div class="panel-heading"><strong>Casos dos municípios participantes que estão em andamento / fora da escola | Total: {{ stats.num_children_in_school + stats.num_children_out_of_school + stats.num_children_in_observation + stats.num_children_cancelled + stats.num_children_transferred + stats.num_children_interrupted}}</strong></div>
 
 				<h1 class="panel-body">
 					<div class="row">
@@ -80,7 +85,7 @@
 						</div>
 
 						<div class="col-md-4">
-							<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>dentro da escola <i uib-tooltip="Estudante (re)matriculado e em observação: de (re)matrícula à 4ª observação" class="fa fa-info-circle"></i></span></div>
+							<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>dentro da escola <i uib-tooltip="Estudantes (re)matriculados: de 1ª à 4ª observação" class="fa fa-info-circle"></i></span></div>
 						</div>
 
 						<div class="col-md-4">
@@ -109,8 +114,13 @@
 			</div>
 
 		</div>
-
 	</div>
+
+
+
+
+
+
 
 
 </div>
