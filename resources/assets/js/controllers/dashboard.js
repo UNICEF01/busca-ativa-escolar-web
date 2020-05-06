@@ -26,7 +26,7 @@
             var schemaFetch = fetch(
                 "mock/schema.json"
             ).then(jsonify);
-
+            
             $scope.dataSource = {
                 chart: {},
                 caption: {
