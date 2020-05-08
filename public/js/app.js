@@ -3203,130 +3203,97 @@
 })();
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
-
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
+        $scope.schema = [
+            {
+                "name": "Date",
+                "type": "date",
+                "format": "%Y-%m-%d"
+            },
+            {
+                "name": "City",
+                "type": "string"
+            },
+            {
+                "name": "Unemployment",
+                "type": "number"
+            }
+        ];
 
-// Todo Criar um serviço para reaproveitar isso
+        $scope.dataSource = {
+            chart: {},
+            caption: {
+                text: "Evolução (Re)Matrículas"
+            },
+            subcaption: {
+                text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
+            },
+            series: "City",
+            yaxis: [
+                {
+                    plot: [
+                        {
+                            value: "Unemployment",
+                            type: "column"
+                        }
+                    ],
+                    title: "(Re)Matrículas",
+                    referenceline: [
+                        {
+                            label: "Meta Selo UNICEF",
+                        }
+                    ]
+                }
+            ],
+            xAxis: {
+                initialInterval: {
+                    from: moment().subtract(100, "days").format('YYYY-MM-DD'),
+                    to: moment().format('YYYY-MM-DD')
+                }
+            }
+        };
+
+        // Todo Criar um serviço para reaproveitar isso
         $scope.getUFs = function () {
             return StaticData.getUFs();
         };
 
         $scope.getData = function () {
-            var jsonify = res => res.json();
 
-            var dataFetch = fetch(
-                "mock/data.json"
-            ).then(jsonify);
-            var schemaFetch = fetch(
-                "mock/schema.json"
-            ).then(jsonify);
+            Identity.provideToken().then(function (token) {
 
-            $scope.dataSource = {
-                chart: {},
-                caption: {
-                    text: "Evolução (Re)Matrículas"
-                },
-                subcaption: {
-                    text: "desde 2015"
-                },
-                series: "City",
-                yaxis: [
-                    {
-                        plot: [
-                            {
-                                value: "Unemployment",
-                                type: "column"
-                            },
+                var jsonify = function (res) { return res.json(); }
 
-                        ],
-                        title: "(Re)Matrículas",
-                        format: {
-                            suffix: "K"
-                        },
-                        referenceline: [
-                            {
-                                label: "Meta Selo UNICEF",
-                                value: "10",
-                                // style: {
-                                //     marker: {
-                                //         "stroke-dasharray": [4, 3]
-                                //     }
-                                // }
-                            }
-                        ]
-                    }
-                    // {
-                    //     plot: "Unemployment",
-                    //     title: "Temperature",
-                    //     format: {
-                    //         suffix: "°C"
-                    //     },
-                    //     referenceline: [
-                    //         {
-                    //             label: "Controlled Temperature",
-                    //             value: "10",
-                    //             style: {
-                    //                 marker: {
-                    //                     "stroke-dasharray": [4, 3]
-                    //                 }
-                    //             }
-                    //         }
-                    //     ]
-                    // }
-                ]
-                // yaxis: [
-                //     {
-                //         plot: "Temperature",
-                //         title: "Temperature",
-                //         format: {
-                //             suffix: "°C"
-                //         },
-                //         referenceline: [
-                //             {
-                //                 label: "Controlled Temperature",
-                //                 value: "10",
-                //                 style: {
-                //                     marker: {
-                //                         "stroke-dasharray": [4, 3]
-                //                     }
-                //                 }
-                //             }
-                //         ]
-                //     },
-                //     // {
-                //     //     plot: [
-                //     //         {
-                //     //             value: "Quantidade",
-                //     //             type: "column"
-                //     //         },
-                //     //         {
-                //     //             value: "Meta",
-                //     //             type: "line"
-                //     //         }
-                //     //     ]
-                //     // }
-                // ]
-            };
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?token=' + token).then(jsonify);
 
-            Promise.all([dataFetch, schemaFetch]).then(res => {
-                const data = res[0];
-                const schema = res[1];
-                const fusionTable = new FusionCharts.DataStore().createDataTable(
-                    data,
-                    schema
-                );
-                $scope.$apply(function () {
-                    $scope.dataSource.data = fusionTable;
+                Promise.all([dataDaily]).then( function( res) {
+                    const data = res[0];
+                    const fusionTable = new FusionCharts.DataStore().createDataTable(
+                        data.data.map(function(x) {
+                            return [
+                                x.date,
+                                x.tipo,
+                                parseFloat(x.value)
+                            ]
+                        }),
+                        $scope.schema
+                    );
+                    $scope.$apply(function () {
+                        $scope.dataSource.yaxis[0].Max = data.goal;
+                        $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                        $scope.dataSource.data = fusionTable;
+                    });
                 });
+
             });
         }
         $scope.getData();
@@ -3344,31 +3311,10 @@
 
         };
 
-
         $scope.getTenants = function () {
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
-
-        // function dataGenerate() {
-        // $http({
-        //     method: 'GET',
-        //     url: 'mock/data.json'
-        // }).then(function (response) {
-        //     var novo = [];
-        //
-        //     for (var i = 0; i < response.data.length; i++) {
-        //         var value = response.data[i];
-        //         value[2] = "20000";
-        //         novo.push(value);
-        //     }
-        //     $scope.jsonexit = novo;
-        // }, function (error) {
-        //     console.log('error');
-        // });
-
-        // }
-
         $scope.ready = false;
         $scope.showInfo = '';
         $scope.steps = [
@@ -6619,6 +6565,45 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.resetPassword = function() {
+				$scope.true = false;
+
+				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
+					$scope.isLoading = false;
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+				})
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -6662,45 +6647,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.resetPassword = function() {
-				$scope.true = false;
-
-				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
-					$scope.isLoading = false;
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-				})
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -7388,7 +7334,8 @@ if (!Array.prototype.find) {
 				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
 				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
 				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
-				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers}
+				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
+				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers}
 			});
 		});
 })();
@@ -8377,7 +8324,7 @@ if (!Array.prototype.find) {
 				case 'Em andamento/ Fora da escola':
 					return 'De pesquisa até (re)matrícula';
 				case 'Em andamento/ Dentro da escola':
-					return 'Estudantes (re)matriculados e em observação: de (re)matricula à 4ª Observação';
+					return 'Estudantes (re)matriculados e em observação: de (re)matricula à 4ª Observacao';
 				case 'Casos concluídos':
 					return 'Casos finalizados com sucesso após a 4ª observação';
 				case 'Casos cancelados':
