@@ -10,6 +10,11 @@
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
+        $scope.query_evolution_graph = {
+            uf: '',
+            tenant_id: ''
+        };
+
         $scope.schema = [
             {
                 "name": "Date",
@@ -17,7 +22,7 @@
                 "format": "%Y-%m-%d"
             },
             {
-                "name": "City",
+                "name": "Rematricula",
                 "type": "string"
             },
             {
@@ -27,16 +32,19 @@
         ];
 
         $scope.dataSource = {
-            chart: {},
             caption: {
                 text: "Evolução (Re)Matrículas"
             },
             subcaption: {
                 text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
             },
-            series: "City",
+            series: "Rematricula",
             yaxis: [
                 {
+                    format: {
+                        prefix: "",
+                        suffix: ""
+                    },
                     plot: [
                         {
                             value: "Unemployment",
@@ -46,20 +54,40 @@
                     title: "(Re)Matrículas",
                     referenceline: [
                         {
-                            label: "Meta Selo UNICEF",
+                            label: "Meta Selo UNICEF"
                         }
-                    ]
+                    ],
+                    defaultFormat: false
                 }
             ],
             xAxis: {
                 initialInterval: {
                     from: moment().subtract(100, "days").format('YYYY-MM-DD'),
                     to: moment().format('YYYY-MM-DD')
+                },
+                outputTimeFormat: {
+                    year: "%Y",
+                    month: "%m/%Y",
+                    day: "%d/%m/%Y"
+                }
+            },
+            tooltip: {
+                enabled: "false", // Disables the Tooltip
+                outputTimeFormat: {
+                    day: "%d/%m/%Y"
+                },
+                style: {
+                    container: {
+                        "border-color": "#000000",
+                        "background-color": "#75748D"
+                    },
+                    text: {
+                        "color": "#FFFFFF"
+                    }
                 }
             }
         };
 
-        // Todo Criar um serviço para reaproveitar isso
         $scope.getUFs = function () {
             return StaticData.getUFs();
         };
@@ -70,7 +98,7 @@
 
                 var jsonify = function (res) { return res.json(); }
 
-                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?token=' + token).then(jsonify);
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&token=' + token).then(jsonify);
 
                 Promise.all([dataDaily]).then( function( res) {
                     const data = res[0];
@@ -89,14 +117,25 @@
                         $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
                         $scope.dataSource.data = fusionTable;
                     });
+
+                    $scope.initTenants();
                 });
 
             });
         }
-        $scope.getData();
+
+        $scope.initTenants = function(){
+            if (Identity.getType() === 'coordenador_estadual') {
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
+            }
+        };
 
         $scope.atualizaDash = function () {
-            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
+            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
+            $scope.getData();
+        };
+
+        $scope.onSelectCity = function () {
             $scope.getData();
         };
 
@@ -112,8 +151,11 @@
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
+
         $scope.ready = false;
+
         $scope.showInfo = '';
+
         $scope.steps = [
             {name: 'Adesão', info: ''},
             {name: 'Configuração', info: ''},
@@ -215,7 +257,9 @@
                     isVisible: true
                 });
             }
+            $scope.getData();
         };
+
         $scope.stateCountChange = function () {
             $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
             init();
