@@ -12,7 +12,8 @@
 
         $scope.query_evolution_graph = {
             uf: '',
-            tenant_id: ''
+            tenant_id: '',
+            selo: false
         };
 
         $scope.schema = [
@@ -98,7 +99,7 @@
 
                 var jsonify = function (res) { return res.json(); }
 
-                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&token=' + token).then(jsonify);
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&selo='+$scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
 
                 Promise.all([dataDaily]).then( function( res) {
                     const data = res[0];
@@ -114,7 +115,8 @@
                     );
                     $scope.$apply(function () {
                         $scope.dataSource.yaxis[0].Max = data.goal;
-                        $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                        if(data.goal>0)
+                            $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
                         $scope.dataSource.data = fusionTable;
                     });
 
@@ -140,11 +142,9 @@
         };
 
         $scope.refresh = function () {
-            // $scope.getData();
             if (($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)) {
                 $scope.tenants = Graph.getReinsertEvolution({'uf': $scope.query.uf});
             }
-
         };
 
         $scope.getTenants = function () {
