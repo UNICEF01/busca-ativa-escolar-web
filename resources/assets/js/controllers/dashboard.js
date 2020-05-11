@@ -125,7 +125,7 @@
 
             });
         }
-
+        
         $scope.initTenants = function(){
             if (Identity.getType() === 'coordenador_estadual') {
                 $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
