@@ -106,19 +106,29 @@
 
                 Promise.all([dataDaily]).then( function( res) {
                     const data = res[0];
+
+                    var data_final = [
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "(Re)matrícula"},
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento"}
+                    ];
+
+                    if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
+
                     const fusionTable = new FusionCharts.DataStore().createDataTable(
-                        data.data.map(function(x) {
+
+                        data_final.map(function(x) {
                             return [
                                 x.date,
                                 x.tipo,
                                 parseFloat(x.value)
                             ]
                         }),
+
                         $scope.schema
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "true") {
+                        if( data.selo == "true" && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
