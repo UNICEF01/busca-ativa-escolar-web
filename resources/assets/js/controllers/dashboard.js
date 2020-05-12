@@ -43,8 +43,19 @@
             yaxis: [
                 {
                     format: {
-                        prefix: "",
-                        suffix: ""
+                        formatter: function(obj){
+                            var val=null;
+                            if( obj.type === "axis")
+                            {
+                                val= obj.value
+                            }
+                            else
+                            {
+                                val= obj.value.toString().replace(".",",");
+                            }
+                            return val;
+                        }
+
                     },
                     plot: [
                         {
