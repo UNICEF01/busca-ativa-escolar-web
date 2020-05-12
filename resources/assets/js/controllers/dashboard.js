@@ -13,7 +13,7 @@
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
-            selo: true
+            selo: false
         };
 
         $scope.schema = [

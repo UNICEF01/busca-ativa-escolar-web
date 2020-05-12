@@ -3,10 +3,59 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 
-		<div class="col-md-5">
+		<div class="col-md-2">
+			<style>
+				.switch_box {
+					padding-top: 13px;
+				}
+				input[type="checkbox"].switch_1{
+					font-size: 30px;
+					-webkit-appearance: none;
+					-moz-appearance: none;
+					appearance: none;
+					width: 80px;
+					height: 1.0em;
+					background: #ddd;
+					border-radius: 3em;
+					position: relative;
+					cursor: pointer;
+					outline: none;
+					-webkit-transition: all .2s ease-in-out;
+					transition: all .2s ease-in-out;
+				}
+				input[type="checkbox"].switch_1:checked{
+					background: #0ebeff;
+				}
+				input[type="checkbox"].switch_1:after{
+					position: absolute;
+					content: "";
+					width: 1.0em;
+					height: 1.0em;
+					border-radius: 50%;
+					background: #fff;
+					-webkit-box-shadow: 0 0 .25em rgba(0,0,0,.3);
+					box-shadow: 0 0 .25em rgba(0,0,0,.3);
+					-webkit-transform: scale(.7);
+					transform: scale(.7);
+					left: 0;
+					-webkit-transition: all .2s ease-in-out;
+					transition: all .2s ease-in-out;
+				}
+				input[type="checkbox"].switch_1:checked:after{
+					left: calc(100% - 1.0em);
+				}
+			</style>
+			<label>SELO UNICEF</label>
+			<div class="switch_box box_1">
+				<input type="checkbox" class="switch_1" ng-model="query_evolution_graph.selo" ng-change="atualizaDash()">
+			</div>
+		</div>
+
+		<div class="col-md-4">
 			<label>Município</label>
-			<ui-select ng-model="query_evolution_graph.tenant_id" on-select="onSelectCity()">
-				<ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}</ui-select-match>
+			<ui-select ng-model="query.tenant_id" on-select="onSelectCity()">
+				<ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}
+				</ui-select-match>
 				<ui-select-choices
 						repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
 					<div ng-bind-html="tenant.name | highlight: $select.search"></div>
