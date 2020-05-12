@@ -13,7 +13,7 @@
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
-            selo: false
+            selo: true
         };
 
         $scope.schema = [
@@ -70,7 +70,10 @@
                     year: "%Y",
                     month: "%m/%Y",
                     day: "%d/%m/%Y"
-                }
+                },
+                timemarker: [{
+                    timeFormat: '%m/%Y'
+                }]
             },
             tooltip: {
                 enabled: "false", // Disables the Tooltip
@@ -114,9 +117,17 @@
                         $scope.schema
                     );
                     $scope.$apply(function () {
-                        $scope.dataSource.yaxis[0].Max = data.goal;
-                        if(data.goal>0)
+
+                        if( data.selo == "true") {
+                            $scope.dataSource.yaxis[0].Max = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                        }
+
+                        if( data.selo == "false") {
+                            $scope.dataSource.yaxis[0].referenceline[0] = {};
+                        }
+
                         $scope.dataSource.data = fusionTable;
                     });
 
@@ -125,7 +136,7 @@
 
             });
         }
-        
+
         $scope.initTenants = function(){
             if (Identity.getType() === 'coordenador_estadual') {
                 $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
