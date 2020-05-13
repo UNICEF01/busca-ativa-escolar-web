@@ -10,8 +10,8 @@
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
-        $scope.options_selo =['TODOS', 'SOMENTE SELO', 'SEM O SELO'];
-
+        $scope.options_selo =['TODOS', 'SOMENTE O SELO', 'SEM O SELO'];
+        
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
