@@ -10,7 +10,7 @@
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
-        $scope.options_selo =['TODOS', 'SOMENTE O SELO', 'SEM O SELO'];
+        $scope.options_selo =['TODOS', 'COM SELO', 'SEM SELO'];
 
         $scope.query_evolution_graph = {
             uf: '',
@@ -141,17 +141,17 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "SOMENTE O SELO" && data.goal > 0) {
+                        if( data.selo == "COM SELO" && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
                         }
 
-                        if( data.selo == "SEM O SELO" || data.selo == "TODOS") {
+                        if( data.selo == "SEM SELO" || data.selo == "TODOS") {
                             $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
-                        
+
                         $scope.dataSource.data = fusionTable;
                     });
 

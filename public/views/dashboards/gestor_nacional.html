@@ -1,9 +1,8 @@
 <div class="dashboard dashboard-super-administrador">
 
     <div class="row">
-        <div class="col-md-2"></div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label>Selo UNICEF</label>
             <ui-select ng-model="query_evolution_graph.selo" on-select="atualizaDash()">
                 <ui-select-match placeholder="Todos">{{$select.selected}}</ui-select-match>
@@ -13,7 +12,7 @@
             </ui-select>
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <label>UF</label>
             <ui-select ng-model="query_evolution_graph.uf" on-select="atualizaDash()">
                 <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.code}}</ui-select-match>
