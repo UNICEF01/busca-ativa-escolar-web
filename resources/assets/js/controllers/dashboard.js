@@ -11,7 +11,7 @@
         $scope.search = {};
 
         $scope.options_selo =['TODOS', 'SOMENTE O SELO', 'SEM O SELO'];
-        
+
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
@@ -141,7 +141,7 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "SOMENTE SELO" && data.goal > 0) {
+                        if( data.selo == "SOMENTE O SELO" && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
