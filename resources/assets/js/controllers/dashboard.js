@@ -148,9 +148,10 @@
                         }
 
                         if( data.selo == "SEM O SELO" || data.selo == "TODOS") {
+                            $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
-
+                        
                         $scope.dataSource.data = fusionTable;
                     });
 
