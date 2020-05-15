@@ -58,6 +58,16 @@
 					},
 					subtitle: {
 						text: ''
+					},
+					tooltip: {
+						formatter: function () {
+							return '<strong>' + getTranslationFor(this.x) + ': ' + this.y + ' </strong>';
+							//return 'The value for <b>' + this.x +
+							// '</b> is <b>' + this.y + '</b>';
+						},
+						style: {
+							width: '300',
+						}
 					}
 				},
 				xAxis: {
@@ -78,9 +88,7 @@
 						overflow: 'justify'
 					}
 				},
-				tooltip: {
-					valueSuffix: ' ' + valueSuffix
-				},
+
 				plotOptions: {
 					bar: {
 						dataLabels: {
@@ -211,6 +219,30 @@
 
 		}
 
+		function getTranslationFor(expr) {
+
+			switch (expr) {
+				case 'Em andamento/ Fora da escola':
+					return 'De pesquisa até (re)matrícula';
+				case 'Em andamento/ Dentro da escola':
+					return 'Estudantes (re)matriculados: de 1ª à 4ª observação';
+				case 'Casos concluídos':
+					return 'Casos finalizados com sucesso após a 4ª observação';
+				case 'Casos cancelados':
+					return 'Casos cancelados em qualquer etapa do processo';
+				case 'Completos':
+					return 'Completos';
+				case 'Em andamento':
+					return 'Em andamento';
+				case 'Casos interrompidos':
+					return 'Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa';
+				case 'Transferidos':
+					return 'Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar';
+				default:
+					return expr;
+			}
+
+		}
 
 		return {
 			generateDimensionChart: generateDimensionChart,

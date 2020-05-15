@@ -1,26 +1,126 @@
 <div class="row metrics-country">
-	<div class="col-md-2">
-		<div class="panel panel-default">
-			<h1 class="panel-body"><span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small></h1>
-			<div class="panel-footer">municípios participantes <i uib-tooltip="Total de municípios, do seu estado, que aderiram à Busca Ativa Escolar" class="fa fa-info-circle"></i>&nbsp;</div>
+
+	<div class="row">
+
+		<div class="col-md-2">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading"><strong>Municípios participantes</strong></div>
+
+				<h1 class="panel-body" style="min-height: 173px; padding-top: 30%;">
+					<span ng-bind="stats.num_tenants || 0"></span> <small><a ui-sref="tenant_browser" uib-tooltip="Ver municípios"><i class="fa fa-arrow-circle-right"></i></a></small>
+				</h1>
+
+			</div>
+
+		</div>
+
+		<div class="col-md-5">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading"><strong>Alertas gerados pelos municípios participantes | Total: {{stats.num_total_alerts || 0}}</strong></div>
+
+				<h1 class="panel-body" style="min-height: 193px; padding-top: 15%;">
+					<div class="row">
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_alerts || 0"></span>
+						</div>
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_pending_alerts || 0"></span>
+						</div>
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_rejected_alerts || 0"></span>
+						</div>
+
+						<div class="col-md-4">
+							<small style="font-size: 12px">aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i></small>
+						</div>
+
+						<div class="col-md-4">
+							<small style="font-size: 12px">pendentes <i uib-tooltip="Alertas recebidos pelo(a) Supervisor(a) Institucional, mas ainda não analisados." class="fa fa-info-circle"></i></small>
+						</div>
+
+						<div class="col-md-4">
+							<small style="font-size: 12px">rejeitados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e rejeitados." class="fa fa-info-circle"></i></small>
+						</div>
+					</div>
+				</h1>
+
+			</div>
+
+		</div>
+
+		<div class="col-md-5">
+
+			<div class="panel panel-default">
+
+				<div class="panel-heading"><strong>Casos dos municípios participantes que estão em andamento / fora da escola | Total: {{ stats.num_children_in_school + stats.num_children_out_of_school + stats.num_children_in_observation + stats.num_children_cancelled + stats.num_children_transferred + stats.num_children_interrupted}}</strong></div>
+
+				<h1 class="panel-body">
+					<div class="row">
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_children_in_school || 0"></span>
+						</div>
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_children_out_of_school || 0"></span>
+						</div>
+
+						<div class="col-md-4">
+							<span ng-bind="stats.num_children_in_observation || 0"></span>
+						</div>
+
+						<div class="col-md-4" >
+							<span style="font-size: 12px">concluídos <i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i></span>
+						</div>
+
+						<div class="col-md-4">
+							<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>fora da escola <i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i></span></div>
+						</div>
+
+						<div class="col-md-4">
+							<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>dentro da escola <i uib-tooltip="Estudantes (re)matriculados: de 1ª à 4ª observação" class="fa fa-info-circle"></i></span></div>
+						</div>
+
+						<div class="col-md-4">
+							<div style="margin-top: 20px;"><span ng-bind="stats.num_children_cancelled || 0"></span></div>
+						</div>
+						<div class="col-md-4">
+							<div style="margin-top: 20px;"><span ng-bind="stats.num_children_transferred || 0"></span></div>
+						</div>
+						<div class="col-md-4">
+							<div style="margin-top: 20px;"><span ng-bind="stats.num_children_interrupted || 0"></span></div>
+						</div>
+
+						<div class="col-md-4">
+							<span style="font-size: 12px">cancelados <i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i></span>
+						</div>
+						<div class="col-md-4">
+							<span style="font-size: 12px"> transferidos <i uib-tooltip="Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar" class="fa fa-info-circle"></i></span>
+						</div>
+						<div class="col-md-4">
+							<span style="font-size: 12px"> interrompidos <i uib-tooltip="Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa" class="fa fa-info-circle"></i></span>
+						</div>
+
+					</div>
+				</h1>
+
+			</div>
+
 		</div>
 	</div>
-	<div class="col-md-2">
-		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_alerts || 0"></h1>
-			<div class="panel-footer">alertas <i uib-tooltip="Total de casos atribuídos à rede estadual pelos municípios" class="fa fa-info-circle"></i>&nbsp; <br /> &nbsp;</div>
-		</div>
-	</div>
-	<div class="col-md-2">
-		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_cases_in_progress || 0"></h1>
-			<div class="panel-footer">casos <br />em andamento <i uib-tooltip="Total de casos em andamento" class="fa fa-info-circle"></i>&nbsp;</div>
-		</div>
-	</div>
-	<div class="col-md-2">
-		<div class="panel panel-default">
-			<h1 class="panel-body" ng-bind="stats.num_children_reinserted || 0"></h1>
-			<div class="panel-footer">crianças ou adolescentes<br /> (re)matriculados <i uib-tooltip="Total de crianças/adolescentes que já foram (re)matriculados)" class="fa fa-info-circle"></i>&nbsp;</div>
-		</div>
-	</div>
+
+
+
+
+
+
+
+
 </div>

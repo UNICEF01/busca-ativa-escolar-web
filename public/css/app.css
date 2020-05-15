@@ -4937,4 +4937,18 @@ a.column-sorter {
   border-color: #d6e9c6;
 }
 
+.disabled-color {
+  color: #a8a8a8;
+}
+
+.disabled-check {
+  color: #a8a8a8;
+}
+.disabled-check .check {
+  border-color: #a8a8a8 !important;
+}
+.disabled-check .check:before {
+  color: #a8a8a8 !important;
+}
+
 /*# sourceMappingURL=app.css.map */

@@ -8,49 +8,53 @@
             var causesChart = {};
             var causesReady = false;
 
-            var isReady = false;
-            var hasEnoughData = false;
+            var isReadyForCausesChart = false;
+            var hasEnoughDataForCausesChart = false;
 
             scope.showFilter = false;
 
-            scope.sort == 'maxToMin';
+            scope.sort = 'maxToMin';
 
             scope.getCausesConfig = getCausesConfig;
 
-            scope.isReady = function () {
-                return isReady;
+            scope.isReadyForCausesChart = function () {
+                return isReadyForCausesChart;
             };
 
-            scope.hasEnoughData = function () {
-                return hasEnoughData;
+            scope.hasEnoughDataForCausesChart = function () {
+                return hasEnoughDataForCausesChart;
             };
 
             scope.filterShow = function () {
                 scope.showFilter = !scope.showFilter;
             }
   
-          scope.menuFilter = [
-            {name: 'Tudo', title: 'Todos os registros', qtd_days: null},
-            {name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7},
-            {name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30},
-            {name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90},
-            {name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180}
-          ]
+            scope.menuFilter = [
+                {name: 'Tudo', title: 'Todos os registros', qtd_days: null},
+                {name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7},
+                {name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30},
+                {name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90},
+                {name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180}
+              ]
 
             scope.fetchCausesData = function (value) {
+
                 if(value === null || typeof value === 'number'){
                     scope.showFilter = false;
                 }
+
                 scope.selectedMenu = value;
+
                 var searchData = {
                     view: 'linear',
                     entity: 'children',
                     dimension: 'case_cause_ids',
                     filters: {
-                        case_status: ['in_progress','cancelled', 'completed', 'interrupted'],
+                        case_status: ['in_progress','cancelled', 'completed', 'interrupted', 'transferred'],
                         alert_status: ['accepted']
                     }
                 }
+
                 if(typeof value === 'number'){
                     searchData.filters.created_at = {
                         gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
@@ -58,6 +62,7 @@
                         format: "YYYY-MM-dd"
                     }
                 }
+
                 if (value == 'filter') {
                     if(scope.dt_inicial && scope.dt_final) {
                         searchData.filters.created_at = {
@@ -73,8 +78,8 @@
                     causesChart = getCausesChart();
                     causesReady = true;
 
-                    isReady = true;
-                    hasEnoughData = (
+                    isReadyForCausesChart = true;
+                    hasEnoughDataForCausesChart = (
                         causesData &&
                         causesData.response &&
                         !angular.equals({}, causesData.response.report) &&
@@ -83,8 +88,9 @@
 
                     $timeout(function () {
                         scope.$broadcast('highchartsng.reflow');
-                    }, 500);
+                    }, 1000);
                 });
+
             }
 
             function getCausesChart() {
@@ -133,10 +139,10 @@
             });
             //Date Picker and Masks
 
-
             scope.today = function() {
                 scope.dt = new Date();
             };
+
             scope.today();
 
             scope.clear = function() {
@@ -169,6 +175,7 @@
             };
 
             scope.format = 'ddMMyyyy';
+
             scope.altInputFormats = ['M!/d!/yyyy'];
 
             scope.popup1 = {

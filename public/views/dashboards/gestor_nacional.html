@@ -1,8 +1,44 @@
 <div class="dashboard dashboard-super-administrador">
 
+<!--    <div class="row">-->
+<!--        <div class="col-md-3"></div>-->
+
+<!--        <div class="col-md-3">-->
+<!--            <label>UF</label>-->
+<!--            <ui-select ng-model="query.uf" on-select="atualizaDash()">-->
+<!--                <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.code}}-->
+<!--                </ui-select-match>-->
+<!--                <ui-select-choices-->
+<!--                        repeat="uf.code as uf in getUFs() | orderObjectBy:'code' | filter: $select.search track by uf.id">-->
+<!--                    <div ng-bind-html="uf.code | highlight: $select.search"></div>-->
+<!--                </ui-select-choices>-->
+<!--            </ui-select>-->
+<!--        </div>-->
+
+<!--        <div class="col-md-4">-->
+<!--            <label>Município</label>-->
+<!--            <ui-select ng-model="query.tenant_id" on-select="refresh()">-->
+<!--                <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}-->
+<!--                </ui-select-match>-->
+<!--                <ui-select-choices-->
+<!--                        repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">-->
+<!--                    <div ng-bind-html="tenant.name | highlight: $select.search"></div>-->
+<!--                </ui-select-choices>-->
+<!--            </ui-select>-->
+<!--        </div>-->
+
+<!--    </div>-->
+
+<!--    <div-->
+<!--            fusioncharts-->
+<!--            width="100%"-->
+<!--            height="600"-->
+<!--            type="timeseries"-->
+<!--            datasource-dt="dataSource"-->
+<!--    ></div>-->
     <div class="row">
         <div class="col-md-12">
-            <h3><i class="material-icons">timeline</i> Números gerais do programa no Brasil</h3>
+            <h3><i class="material-icons">timeline</i> Números gerais da estratégia no Brasil</h3>
             <metrics-country></metrics-country>
         </div>
     </div>
@@ -10,11 +46,19 @@
     <div class="row">
         <div class="col-md-12">
             <h3><i class="material-icons">info_outline</i> Motivos dos casos</h3>
-            <!--<h3><i class="material-icons">info_outline</i> Motivos dos alertas <small>últimos 30 dias</small></h3>-->
             <causes-chart></causes-chart>
         </div>
     </div>
 
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3><i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar (30 dias)</h3>
+            <last-month-timeline></last-month-timeline>
+        </div>
+
+    </div>
+    
     <div class="row">
         <div class="col-md-12">
             <h3><i class="material-icons">map</i> Mapa brasileiro de casos em andamento

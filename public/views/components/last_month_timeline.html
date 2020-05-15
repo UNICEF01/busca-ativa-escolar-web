@@ -1,51 +1,54 @@
-<div class="container chart-container">
+<div class="chart-container">
 
-	<div  style="border-radius: 5px 5px 5px 5px; border-color: #cccccc; border-style: solid; border-width: thin;">
+	<div class="panel panel-default">
+		<div class="panel-heading">Selecione um intervalo</div>
 
-		<div class="row">
-			<div class="col-md-12">
-				<div style="padding-left: 10px; padding-top: 10px;">
-					<strong>Selecione um intervalo</strong>
-				</div>
-			</div>
-		</div>
+		<div class="panel-body">
 
-		<div class="row">
+			<div class="row text-center">
 
-			<div class="col-md-5">
-				<div class="input-group">
-					<span class="input-group-addon">Data inicial</span>
-					<input type="text" class="form-control" ng-model="firstDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close" show-button-bar="false"/>
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default" ng-click="openStartDate()"><i class="glyphicon glyphicon-calendar"></i></button>
-					</span>
-				</div>
-			</div>
-
-			<div class="col-md-7">
-				<div class="input-group">
-					<span class="input-group-addon">Data final</span>
-					<input type="text" class="form-control" ng-model="finalDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupFinish.opened" datepicker-options="dateOptionsFinish" close-text="Close" show-button-bar="false"/>
-					<span class="input-group-btn">
-						<button type="button" class="btn btn-default" ng-click="openFinishDate()"><i class="glyphicon glyphicon-calendar"></i></button>
-					</span>
-					<div class="input-group-btn">
-						<button class="btn btn-default" type="botton" ng-disabled="!firstDate || !finalDate" ng-click="fetchTimelineData()">
-							<i class="glyphicon glyphicon-search"></i>
-						</button>
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-addon">Data inicial</div>
+							<input style="text-align: center;" class="form-control" ng-model="firstDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close" show-button-bar="false">
+							<div class="input-group-addon">
+								<i class="glyphicon glyphicon-calendar" ng-click="openStartDate()" style="cursor: pointer;"></i>
+							</div>
+						</div>
 					</div>
-				</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-addon">Data final</div>
+							<input style="text-align: center;" class="form-control" ng-model="finalDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupFinish.opened" datepicker-options="dateOptionsFinish" close-text="Close" show-button-bar="false">
+							<div class="input-group-addon">
+								<i class="glyphicon glyphicon-calendar" ng-click="openFinishDate()" style="cursor: pointer;"></i>
+							</div>
+						</div>
+					</div>
+
+					<button type="submit" class="btn btn-primary" ng-disabled="!firstDate || !finalDate" ng-click="fetchTimelineData()">
+						<i class="glyphicon glyphicon-search"></i>
+					</button>
+				</form>
+
 			</div>
+
+			<br/><br/>
+
+			<highchart
+					ng-show="isReady()"
+					id="timeline-chart"
+					config="getTimelineConfig()"
+					style="display: block; width: 95%; height: 400px;"
+			></highchart>
+
+			<!--<div class="alert alert-warning" ng-show="!hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>-->
 
 		</div>
 
 	</div>
 
-	<highchart
-			ng-show="isReady()"
-			id="timeline-chart"
-			config="getTimelineConfig()"
-			style="display: block; width: 100%; height: 500px;"
-	></highchart>
-	<!--<div class="alert alert-warning" ng-show="!hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>-->
+
 </div>

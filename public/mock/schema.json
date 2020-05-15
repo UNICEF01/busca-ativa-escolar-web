@@ -1,0 +1,14 @@
+[{
+  "name": "Date",
+  "type": "date",
+  "format": "%y-%b"
+},
+  {
+    "name": "City",
+    "type": "string"
+  },
+  {
+    "name": "Unemployment",
+    "type": "number"
+  }
+]

@@ -2,7 +2,7 @@
 
 	<div class="col-md-6">
 		<div class="panel panel-default">
-			<div class="panel-heading">Adesões municipais</div>
+			<div class="panel-heading"><strong>Adesões municipais</strong></div>
 			<h1 class="panel-body">
 				<div class="row">
 					<div class="col-md-4">
@@ -34,16 +34,15 @@
 
 	<div class="col-md-2">
 		<div class="panel panel-default">
-			<div class="panel-heading">Adesões estaduais</div>
+			<div class="panel-heading"><strong>Adesões estaduais</strong></div>
 			<h1 class="panel-body"><span ng-bind="stats.num_ufs || 0"></span></h1>
 			<div class="panel-footer">realizadas</div>
 		</div>
 	</div>
 
-
 	<div class="col-md-4">
 		<div class="panel panel-default" ui-sref="pending_tenant_signups" style="cursor: pointer">
-			<div class="panel-heading">Adesões pendentes</div>
+			<div class="panel-heading"><strong>Adesões pendentes</strong></div>
 			<h1 class="panel-body">
 				<div class="row">
 					<div class="col-md-6">
@@ -68,58 +67,102 @@
 	</div>
 
 	<div class="col-md-6">
+
 		<div class="panel panel-default">
-			<div class="panel-heading">Alertas</div>
-			<h1 class="panel-body">
+
+			<div class="panel-heading"><strong>Alertas | Total: {{stats.num_total_alerts || 0}}</strong></div>
+
+			<h1 class="panel-body" style="min-height: 174px; padding-top: 10%;">
 				<div class="row">
-					<div class="col-md-3">
-						<span ng-bind="stats.num_total_alerts || 0"></span>
-					</div>
-					<div class="col-md-3">
+
+					<div class="col-md-4">
 						<span ng-bind="stats.num_alerts || 0"></span>
 					</div>
-					<div class="col-md-3">
-						<span ng-bind="stats.num_pending_alerts || 0"></span> <small><a ui-sref="pending_alerts" uib-tooltip="Ver alertas pendentes"><i class="fa fa-arrow-circle-right"></i></a></small>
+
+					<div class="col-md-4">
+						<span ng-bind="stats.num_pending_alerts || 0"></span>
 					</div>
-					<div class="col-md-3">
+
+					<div class="col-md-4">
 						<span ng-bind="stats.num_rejected_alerts || 0"></span>
+					</div>
+
+					<div class="col-md-4">
+						<small style="font-size: 12px">aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i></small>
+					</div>
+
+					<div class="col-md-4">
+						<small style="font-size: 12px">pendentes <i uib-tooltip="Alertas recebidos pelo(a) Supervisor(a) Institucional, mas ainda não analisados." class="fa fa-info-circle"></i></small>
+					</div>
+
+					<div class="col-md-4">
+						<small style="font-size: 12px">rejeitados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e rejeitados." class="fa fa-info-circle"></i></small>
 					</div>
 				</div>
 			</h1>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-3">
-						totais
-					</div>
-					<div class="col-md-3">
-						aprovados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e encaminhados para a etapa de pesquisa." class="fa fa-info-circle"></i>&nbsp;
-					</div>
-					<div class="col-md-3">
-						pendentes <i uib-tooltip="Alertas recebidos pelo(a) Supervisor(a) Institucional, mas ainda não analisados." class="fa fa-info-circle"></i>&nbsp;
-					</div>
-					<div class="col-md-3">
-						rejeitados <i uib-tooltip="Alertas analisados pelo(a) Supervisor(a) Institucional e rejeitados." class="fa fa-info-circle"></i>&nbsp;
-					</div>
-				</div>
-			</div>
+
 		</div>
+
 	</div>
 
 	<div class="col-md-6">
+
 		<div class="panel panel-default">
-			<div class="panel-heading">Casos</div>
+
+			<div class="panel-heading"><strong>Casos | Total: {{ stats.num_children_in_school + stats.num_children_out_of_school + stats.num_children_in_observation + stats.num_children_cancelled + stats.num_children_transferred + stats.num_children_interrupted}}</strong></div>
+
 			<h1 class="panel-body">
 				<div class="row">
-					<div class="col-md-6" ng-bind="stats.num_cases_in_progress || 0"></div>
-					<div class="col-md-6" ng-bind="stats.num_children_reinserted || 0"></div>
+
+					<div class="col-md-4">
+						<span ng-bind="stats.num_children_in_school || 0"></span>
+					</div>
+
+					<div class="col-md-4">
+						<span ng-bind="stats.num_children_out_of_school || 0"></span>
+					</div>
+
+					<div class="col-md-4">
+						<span ng-bind="stats.num_children_in_observation || 0"></span>
+					</div>
+
+					<div class="col-md-4" >
+						<span style="font-size: 12px">concluídos <i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i></span>
+					</div>
+
+					<div class="col-md-4">
+						<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>fora da escola <i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i></span></div>
+					</div>
+
+					<div class="col-md-4">
+						<div style="line-height: 12px;"><span style="font-size: 12px">em andamento/ <br/>dentro da escola <i uib-tooltip="Estudantes (re)matriculados: de 1ª à 4ª observação" class="fa fa-info-circle"></i></span></div>
+					</div>
+
+					<div class="col-md-4">
+						<div style="margin-top: 20px;"><span ng-bind="stats.num_children_cancelled || 0"></span></div>
+					</div>
+					<div class="col-md-4">
+						<div style="margin-top: 20px;"><span ng-bind="stats.num_children_transferred || 0"></span></div>
+					</div>
+					<div class="col-md-4">
+						<div style="margin-top: 20px;"><span ng-bind="stats.num_children_interrupted || 0"></span></div>
+					</div>
+
+					<div class="col-md-4">
+						<span style="font-size: 12px">cancelados <i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i></span>
+					</div>
+					<div class="col-md-4">
+						<span style="font-size: 12px"> transferidos <i uib-tooltip="Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar" class="fa fa-info-circle"></i></span>
+					</div>
+					<div class="col-md-4">
+						<span style="font-size: 12px"> interrompidos <i uib-tooltip="Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa" class="fa fa-info-circle"></i></span>
+					</div>
+
 				</div>
 			</h1>
-			<div class="panel-footer">
-				<div class="row">
-					<div class="col-md-6">em andamento <i uib-tooltip="Quantos casos estão em andamento na plataforma agora (casos que já passaram da etapa de alerta)" class="fa fa-info-circle"></i>&nbsp;</div>
-					<div class="col-md-6">rematrículas <i uib-tooltip="Total de crianças rematriculadas." class="fa fa-info-circle"></i>&nbsp;</div>
-				</div>
-			</div>
+
 		</div>
+
 	</div>
+
 </div>
