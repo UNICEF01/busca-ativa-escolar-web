@@ -413,10 +413,10 @@
                     visitante_nacional_3: ['school_last_id', 'place_city_id', 'city_id'],
                     visitante_nacional_4: ['school_last_id', 'place_city_id', 'city_id'],
 
-                    gestor_estadual_1: ['place_uf'],
-                    gestor_estadual_2: ['place_uf'],
-                    gestor_estadual_3: ['place_uf'],
-                    gestor_estadual_4: ['place_uf']
+                    visitante_estadual_1: ['place_uf'],
+                    visitante_estadual_2: ['place_uf'],
+                    visitante_estadual_3: ['place_uf'],
+                    visitante_estadual_4: ['place_uf']
                 };
 
                 return function (item) {
