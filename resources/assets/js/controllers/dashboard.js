@@ -10,7 +10,7 @@
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
-        $scope.options_selo =['TODOS', 'COM SELO', 'SEM SELO'];
+        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO', 'NÃO PARTICIPA DO SELO'];
 
         $scope.query_evolution_graph = {
             uf: '',
@@ -141,13 +141,13 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "COM SELO" && data.goal > 0) {
+                        if( data.selo == "PARTICIPA DO SELO" && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
                         }
 
-                        if( data.selo == "SEM SELO" || data.selo == "TODOS") {
+                        if( data.selo == "NÃO PARTICIPA DO SELO" || data.selo == "TODOS") {
                             $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
