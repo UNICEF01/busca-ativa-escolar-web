@@ -171,11 +171,11 @@
 
         $scope.atualizaDash = function () {
             $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
-            $scope.getData();
+            $scope.initFusionChart();
         };
 
         $scope.onSelectCity = function () {
-            $scope.getData();
+            $scope.initFusionChart();
         };
 
         $scope.refresh = function () {
@@ -188,7 +188,7 @@
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
-
+        
         $scope.ready = false;
 
         $scope.showInfo = '';
