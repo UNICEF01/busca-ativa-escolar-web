@@ -258,21 +258,21 @@
         }
 
         $scope.initStatusBar = function () {
-            if ($scope.identity.type !== 'gestor_nacional') {
+            if ( canSeeBar() ) {
                 Reports.getStatusBar(function (data) {
 
                     var meta = data.goal_box && data.goal_box.goal || 0;
 
+                    $scope.show_option_selo = false;
+
                     if(meta == 0){
-                        $scope.show_option_selo = false;
                         $scope.query_evolution_graph.selo = "TODOS";
                     }
 
                     if(meta > 0){
-                        $scope.show_option_selo = false;
                         $scope.query_evolution_graph.selo = "PARTICIPA DO SELO";
                     }
-                    
+
                     var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
                     $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
                     // $scope.percentualAtingido = 100;
@@ -294,8 +294,24 @@
                             }
                         }
                     }
+
+                    $scope.initFusionChart();
+
                 });
             }
+            $scope.initFusionChart();
+        }
+
+        function canSeeBar() {
+            var canSee = [
+                'coordenador_operacional',
+                'supervisor_institucional',
+                'gestor_politico'
+            ]
+            if ( canSee.includes($scope.identity.getType())){
+                return true;
+            }
+            return false;
         }
 
         function init() {
@@ -308,7 +324,6 @@
                 });
             }
             $scope.initStatusBar();
-            $scope.initFusionChart();
         };
 
         $scope.stateCountChange = function () {
