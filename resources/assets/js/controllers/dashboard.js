@@ -188,7 +188,7 @@
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
-        
+
         $scope.ready = false;
 
         $scope.showInfo = '';
@@ -268,6 +268,11 @@
                         $scope.query_evolution_graph.selo = "TODOS";
                     }
 
+                    if(meta > 0){
+                        $scope.show_option_selo = false;
+                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO";
+                    }
+                    
                     var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
                     $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
                     // $scope.percentualAtingido = 100;
