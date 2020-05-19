@@ -18,6 +18,8 @@
             selo: 'TODOS'
         };
 
+        $scope.show_option_selo = true;
+
         $scope.schema = [
             {
                 "name": "Date",
@@ -109,7 +111,7 @@
             return StaticData.getUFs();
         };
 
-        $scope.getData = function () {
+        $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
 
@@ -255,32 +257,40 @@
             }
         }
 
-        if (identify.type !== 'gestor_nacional') {
-            Reports.getStatusBar(function (data) {
+        $scope.initStatusBar = function () {
+            if ($scope.identity.type !== 'gestor_nacional') {
+                Reports.getStatusBar(function (data) {
 
-                var meta = data.goal_box && data.goal_box.goal || 0;
-                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
-                $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-                // $scope.percentualAtingido = 100;
+                    var meta = data.goal_box && data.goal_box.goal || 0;
 
-                if (data.status !== 'ok') {
-                    $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                    $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
-                    $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                    $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
-                    $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
-                    $scope.otherData = data;
+                    if(meta == 0){
+                        $scope.show_option_selo = false;
+                        $scope.query_evolution_graph.selo = "TODOS";
+                    }
 
-                    for (var i = 0; $scope.steps.length >= i; i++) {
-                        if ($scope.steps[i]) {
-                            var actualDate = moment($scope.steps[i].info || 0);
-                            if (actualDate._i !== 0) {
-                                $scope.showInfo = i;
+                    var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                    $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+                    // $scope.percentualAtingido = 100;
+
+                    if (data.status !== 'ok') {
+                        $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                        $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                        $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                        $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
+                        $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                        $scope.otherData = data;
+
+                        for (var i = 0; $scope.steps.length >= i; i++) {
+                            if ($scope.steps[i]) {
+                                var actualDate = moment($scope.steps[i].info || 0);
+                                if (actualDate._i !== 0) {
+                                    $scope.showInfo = i;
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         function init() {
@@ -292,7 +302,8 @@
                     isVisible: true
                 });
             }
-            $scope.getData();
+            $scope.initStatusBar();
+            $scope.initFusionChart();
         };
 
         $scope.stateCountChange = function () {
