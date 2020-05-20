@@ -21,7 +21,7 @@
             </ui-select>
         </div>
 
-        <div class="col-md-4" ng-if="otherData.goal_box.goal > 0">
+        <div class="col-md-4" ng-if="(otherData.goal_box.goal > 0) || show_option_selo">
             <label>Município</label>
             <ui-select ng-model="query_evolution_graph.tenant_id" on-select="onSelectCity()">
                 <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}</ui-select-match>
