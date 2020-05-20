@@ -3419,6 +3419,8 @@
             selo: 'TODOS'
         };
 
+        $scope.show_option_selo = true;
+
         $scope.schema = [
             {
                 "name": "Date",
@@ -3510,7 +3512,7 @@
             return StaticData.getUFs();
         };
 
-        $scope.getData = function () {
+        $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
 
@@ -3570,11 +3572,11 @@
 
         $scope.atualizaDash = function () {
             $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
-            $scope.getData();
+            $scope.initFusionChart();
         };
 
         $scope.onSelectCity = function () {
-            $scope.getData();
+            $scope.initFusionChart();
         };
 
         $scope.refresh = function () {
@@ -3656,32 +3658,61 @@
             }
         }
 
-        if (identify.type !== 'gestor_nacional') {
-            Reports.getStatusBar(function (data) {
+        $scope.initStatusBar = function () {
+            if ( canSeeBar() ) {
+                Reports.getStatusBar(function (data) {
 
-                var meta = data.goal_box && data.goal_box.goal || 0;
-                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
-                $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-                // $scope.percentualAtingido = 100;
+                    var meta = data.goal_box && data.goal_box.goal || 0;
 
-                if (data.status !== 'ok') {
-                    $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                    $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
-                    $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                    $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
-                    $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
-                    $scope.otherData = data;
+                    $scope.show_option_selo = false;
 
-                    for (var i = 0; $scope.steps.length >= i; i++) {
-                        if ($scope.steps[i]) {
-                            var actualDate = moment($scope.steps[i].info || 0);
-                            if (actualDate._i !== 0) {
-                                $scope.showInfo = i;
+                    if(meta == 0){
+                        $scope.query_evolution_graph.selo = "TODOS";
+                    }
+
+                    if(meta > 0){
+                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO";
+                    }
+
+                    var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                    $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+                    // $scope.percentualAtingido = 100;
+
+                    if (data.status !== 'ok') {
+                        $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                        $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                        $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                        $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
+                        $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                        $scope.otherData = data;
+
+                        for (var i = 0; $scope.steps.length >= i; i++) {
+                            if ($scope.steps[i]) {
+                                var actualDate = moment($scope.steps[i].info || 0);
+                                if (actualDate._i !== 0) {
+                                    $scope.showInfo = i;
+                                }
                             }
                         }
                     }
-                }
-            });
+
+                    $scope.initFusionChart();
+
+                });
+            }
+            $scope.initFusionChart();
+        }
+
+        function canSeeBar() {
+            var canSee = [
+                'coordenador_operacional',
+                'supervisor_institucional',
+                'gestor_politico'
+            ]
+            if ( canSee.includes($scope.identity.getType())){
+                return true;
+            }
+            return false;
         }
 
         function init() {
@@ -3693,7 +3724,7 @@
                     isVisible: true
                 });
             }
-            $scope.getData();
+            $scope.initStatusBar();
         };
 
         $scope.stateCountChange = function () {
@@ -5734,6 +5765,49 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 /*!
  * canvg.js - Javascript SVG parser and renderer on Canvas
  * MIT Licensed
@@ -6842,49 +6916,6 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
-}
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
