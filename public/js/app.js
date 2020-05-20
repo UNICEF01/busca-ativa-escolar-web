@@ -3411,7 +3411,9 @@
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
-        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO', 'NÃO PARTICIPA DO SELO'];
+        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO UNICEF', 'NÃO PARTICIPA DO SELO UNICEF'];
+
+        $scope.uf_profiles_type = ['coordenador_estadual', 'gestor_estadual'];
 
         $scope.query_evolution_graph = {
             uf: '',
@@ -3420,6 +3422,10 @@
         };
 
         $scope.show_option_selo = true;
+
+        $scope.show_option_uf = true;
+
+        $scope.show_option_municipio = true;
 
         $scope.schema = [
             {
@@ -3544,13 +3550,13 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "PARTICIPA DO SELO" && data.goal > 0) {
+                        if( data.selo == "PARTICIPA DO SELO UNICEF" && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
                         }
 
-                        if( data.selo == "NÃO PARTICIPA DO SELO" || data.selo == "TODOS") {
+                        if( data.selo == "NÃO PARTICIPA DO SELO UNICEF" || data.selo == "TODOS") {
                             $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
@@ -3659,19 +3665,22 @@
         }
 
         $scope.initStatusBar = function () {
+
             if ( canSeeBar() ) {
                 Reports.getStatusBar(function (data) {
 
                     var meta = data.goal_box && data.goal_box.goal || 0;
 
                     $scope.show_option_selo = false;
+                    $scope.show_option_municipio = false;
+                    $scope.show_option_uf = false;
 
                     if(meta == 0){
                         $scope.query_evolution_graph.selo = "TODOS";
                     }
 
                     if(meta > 0){
-                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO";
+                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO UNICEF";
                     }
 
                     var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
@@ -3700,7 +3709,13 @@
 
                 });
             }
+
+            if( $scope.uf_profiles_type.includes($scope.identity.getType()) ){
+                $scope.show_option_uf = false;
+            }
+
             $scope.initFusionChart();
+
         }
 
         function canSeeBar() {
@@ -3746,6 +3761,7 @@
         Platform.whenReady(function () {
             $scope.ready = true;
         });
+
     });
 
 })();
