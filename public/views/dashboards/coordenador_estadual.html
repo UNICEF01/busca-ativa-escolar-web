@@ -1,46 +1,13 @@
 <div class="dashboard dashboard-coordenador_estadual">
 
 	<div class="row">
-		<div class="col-md-3"></div>
-
-		<div class="col-md-3">
-			<label>Selo UNICEF</label>
-			<ui-select ng-model="query_evolution_graph.selo" on-select="atualizaDash()">
-				<ui-select-match placeholder="Todos">{{$select.selected}}</ui-select-match>
-				<ui-select-choices repeat="option in options_selo">
-					<div ng-bind-html="option"></div>
-				</ui-select-choices>
-			</ui-select>
-		</div>
-
-		<div class="col-md-4">
-			<label>Município</label>
-			<ui-select ng-model="query_evolution_graph.tenant_id" on-select="onSelectCity()">
-				<ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}
-				</ui-select-match>
-				<ui-select-choices
-						repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
-					<div ng-bind-html="tenant.name | highlight: $select.search"></div>
-				</ui-select-choices>
-			</ui-select>
-		</div>
-
-	</div>
-
-	<div
-			fusioncharts
-			width="100%"
-			height="600"
-			type="timeseries"
-			datasource-dt="dataSource"
-	></div>
-
-	<div class="row">
 		<div class="col-md-12">
 			<h3><i class="material-icons">timeline</i> Números gerais da estratégia no estado</h3>
 			<metrics-state></metrics-state>
 		</div>
 	</div>
+
+	<div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
 
 	<div class="row">
 
