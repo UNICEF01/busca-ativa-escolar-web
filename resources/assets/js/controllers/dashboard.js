@@ -175,7 +175,14 @@
             }
         };
 
-        $scope.atualizaDash = function () {
+        $scope.onSelectSelo = function () {
+            $scope.query_evolution_graph.uf = '';
+            $scope.query_evolution_graph.tenant_id = '';
+            $scope.initFusionChart();
+        };
+
+        $scope.onSelectUf = function () {
+            $scope.query_evolution_graph.tenant_id = '';
             $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
             $scope.initFusionChart();
         };
