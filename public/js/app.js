@@ -3477,7 +3477,7 @@
                     title: "(Re)Matrículas",
                     referenceline: [
                         {
-                            label: "Meta Selo UNICEF"
+                            label: "Meta Selo UNICEF",
                         }
                     ],
                     defaultFormat: false
@@ -3554,6 +3554,18 @@
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].style = {
+                                marker: {
+                                    fill: '#CF1717', //cor do circulo e do backgroud do numero da meta
+                                    stroke: '#CF1717', //borda do circulo e da linha
+                                    'stroke-opacity' : 1.0, //opacidade da linha
+                                    'stroke-width': 5.0
+                                },
+                                text: {
+                                    fill: '#FFD023',
+                                    "font-size": 15
+                                }
+                            }
                         }
 
                         if( data.selo == "NÃO PARTICIPA DO SELO UNICEF" || data.selo == "TODOS") {
