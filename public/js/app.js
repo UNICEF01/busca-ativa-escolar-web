@@ -2082,6 +2082,204 @@
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar').directive('evolutionGraph', function (moment, Platform, Reports, Report, Charts, Identity, Tenants, StaticData, Config) {
+		
+		function init(scope, element, attrs) {
+
+			var metrics = {};
+
+			scope.static = StaticData;
+
+			scope.options_selo =['TODOS', 'PARTICIPA DO SELO', 'NÃO PARTICIPA DO SELO'];
+
+			scope.query_evolution_graph = {
+				uf: '',
+				tenant_id: '',
+				selo: 'TODOS'
+			};
+
+			scope.schema = [
+				{
+					"name": "Date",
+					"type": "date",
+					"format": "%Y-%m-%d"
+				},
+				{
+					"name": "Rematricula",
+					"type": "string"
+				},
+				{
+					"name": "Unemployment",
+					"type": "number"
+				}
+			];
+
+			scope.dataSource = {
+				caption: {
+					text: "Evolução (Re)Matrículas"
+				},
+				subcaption: {
+					text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
+				},
+				series: "Rematricula",
+				yaxis: [
+					{
+						format: {
+							formatter: function(obj){
+								var val=null;
+								if( obj.type === "axis")
+								{
+									val= obj.value
+								}
+								else
+								{
+									val= obj.value.toString().replace(".",",");
+								}
+								return val;
+							}
+
+						},
+						plot: [
+							{
+								value: "Unemployment",
+								type: "column"
+							}
+						],
+						title: "(Re)Matrículas",
+						referenceline: [
+							{
+								label: "Meta Selo UNICEF"
+							}
+						],
+						defaultFormat: false
+					}
+				],
+				xAxis: {
+					initialInterval: {
+						from: moment().subtract(100, "days").format('YYYY-MM-DD'),
+						to: moment().format('YYYY-MM-DD')
+					},
+					outputTimeFormat: {
+						year: "%Y",
+						month: "%m/%Y",
+						day: "%d/%m/%Y"
+					},
+					timemarker: [{
+						timeFormat: '%m/%Y'
+					}]
+				},
+				tooltip: {
+					enabled: "false", // Disables the Tooltip
+					outputTimeFormat: {
+						day: "%d/%m/%Y"
+					},
+					style: {
+						container: {
+							"border-color": "#000000",
+							"background-color": "#75748D"
+						},
+						text: {
+							"color": "#FFFFFF"
+						}
+					}
+				}
+			};
+
+			scope.getUFs = function () {
+				return StaticData.getUFs();
+			};
+
+			scope.getData = function () {
+
+				Identity.provideToken().then(function (token) {
+
+					var jsonify = function (res) { return res.json(); }
+
+					var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+scope.query_evolution_graph.uf+'&tenant_id='+scope.query_evolution_graph.tenant_id+'&selo='+scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
+
+					Promise.all([dataDaily]).then( function( res) {
+						const data = res[0];
+
+						var data_final = [
+							{date: moment().format('YYYY-MM-DD'), value: "0", tipo: "(Re)matrícula"},
+							{date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento"}
+						];
+
+						if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
+
+						const fusionTable = new FusionCharts.DataStore().createDataTable(
+
+							data_final.map(function(x) {
+								return [
+									x.date,
+									x.tipo,
+									parseFloat(x.value)
+								]
+							}),
+
+							scope.schema
+						);
+						scope.$apply(function () {
+
+							if( data.selo == "PARTICIPA DO SELO" && data.goal > 0) {
+								scope.dataSource.yaxis[0].Max = data.goal;
+								scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
+								scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+							}
+
+							if( data.selo == "NÃO PARTICIPA DO SELO" || data.selo == "TODOS") {
+								scope.dataSource.yaxis[0].Max = 0;
+								scope.dataSource.yaxis[0].referenceline[0] = {};
+							}
+
+							scope.dataSource.data = fusionTable;
+						});
+
+						scope.initTenants();
+					});
+
+				});
+			}
+
+			scope.initTenants = function(){
+				if (Identity.getType() === 'coordenador_estadual') {
+					scope.tenants = Tenants.findByUfPublic({'uf': scope.identity.getCurrentUser().uf});
+				}
+			};
+
+			scope.atualizaDash = function () {
+				scope.tenants = Tenants.findByUfPublic({'uf': scope.query_evolution_graph.uf});
+				scope.getData();
+			};
+
+			scope.onSelectCity = function () {
+				scope.getData();
+			};
+
+			scope.refresh = function () {
+				if ((scope.query.uf !== undefined) && (scope.query.tenant_id !== undefined)) {
+					scope.tenants = Graph.getReinsertEvolution({'uf': scope.query.uf});
+				}
+			};
+
+			scope.getTenants = function () {
+				if (!scope.tenants || !scope.tenants.data) return [];
+				return scope.tenants.data;
+			};
+
+
+		}
+
+		return {
+			link: init,
+			replace: true,
+			templateUrl: '/views/dashboards/grafico_evolucao_rematriculas.html'
+		};
+	});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar').directive('appHeaderWarnings', function (Identity, Platform, Auth) {
 
 		function init(scope, element, attrs) {
@@ -3203,174 +3401,224 @@
 })();
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
-
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
+        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO UNICEF', 'NÃO PARTICIPA DO SELO UNICEF'];
 
-// Todo Criar um serviço para reaproveitar isso
+        $scope.uf_profiles_type = ['coordenador_estadual', 'gestor_estadual'];
+
+        $scope.query_evolution_graph = {
+            uf: '',
+            tenant_id: '',
+            selo: 'TODOS'
+        };
+
+        $scope.show_option_selo = true;
+
+        $scope.show_option_uf = true;
+
+        $scope.show_option_municipio = true;
+
+        $scope.schema = [
+            {
+                "name": "Date",
+                "type": "date",
+                "format": "%Y-%m-%d"
+            },
+            {
+                "name": "Rematricula",
+                "type": "string"
+            },
+            {
+                "name": "Unemployment",
+                "type": "number"
+            }
+        ];
+
+        $scope.dataSource = {
+            caption: {
+                text: "Evolução (Re)Matrículas"
+            },
+            subcaption: {
+                text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
+            },
+            series: "Rematricula",
+            yaxis: [
+                {
+                    format: {
+                        formatter: function(obj){
+                            var val=null;
+                            if( obj.type === "axis")
+                            {
+                                val= obj.value
+                            }
+                            else
+                            {
+                                val= obj.value.toString().replace(".",",");
+                            }
+                            return val;
+                        }
+
+                    },
+                    plot: [
+                        {
+                            value: "Unemployment",
+                            type: "column"
+                        }
+                    ],
+                    title: "(Re)Matrículas",
+                    referenceline: [
+                        {
+                            label: "Meta Selo UNICEF",
+                        }
+                    ],
+                    defaultFormat: false
+                }
+            ],
+            xAxis: {
+                initialInterval: {
+                    from: moment().subtract(100, "days").format('YYYY-MM-DD'),
+                    to: moment().format('YYYY-MM-DD')
+                },
+                outputTimeFormat: {
+                    year: "%Y",
+                    month: "%m/%Y",
+                    day: "%d/%m/%Y"
+                },
+                timemarker: [{
+                    timeFormat: '%m/%Y'
+                }]
+            },
+            tooltip: {
+                enabled: "false", // Disables the Tooltip
+                outputTimeFormat: {
+                    day: "%d/%m/%Y"
+                },
+                style: {
+                    container: {
+                        "border-color": "#000000",
+                        "background-color": "#75748D"
+                    },
+                    text: {
+                        "color": "#FFFFFF"
+                    }
+                }
+            }
+        };
+
         $scope.getUFs = function () {
             return StaticData.getUFs();
         };
 
-        $scope.getData = function () {
-            var jsonify = res => res.json();
+        $scope.initFusionChart = function () {
 
-            var dataFetch = fetch(
-                "mock/data.json"
-            ).then(jsonify);
-            var schemaFetch = fetch(
-                "mock/schema.json"
-            ).then(jsonify);
-            
-            $scope.dataSource = {
-                chart: {},
-                caption: {
-                    text: "Evolução (Re)Matrículas"
-                },
-                subcaption: {
-                    text: "desde 2015"
-                },
-                series: "City",
-                yaxis: [
-                    {
-                        plot: [
-                            {
-                                value: "Unemployment",
-                                type: "column"
-                            },
+            Identity.provideToken().then(function (token) {
 
-                        ],
-                        title: "(Re)Matrículas",
-                        format: {
-                            suffix: "K"
-                        },
-                        referenceline: [
-                            {
-                                label: "Meta Selo UNICEF",
-                                value: "10",
-                                // style: {
-                                //     marker: {
-                                //         "stroke-dasharray": [4, 3]
-                                //     }
-                                // }
+                var jsonify = function (res) { return res.json(); }
+
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&selo='+$scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
+
+                Promise.all([dataDaily]).then( function( res) {
+                    const data = res[0];
+
+                    var data_final = [
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "(Re)matrícula"},
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento"}
+                    ];
+
+                    if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
+
+                    const fusionTable = new FusionCharts.DataStore().createDataTable(
+
+                        data_final.map(function(x) {
+                            return [
+                                x.date,
+                                x.tipo,
+                                parseFloat(x.value)
+                            ]
+                        }),
+
+                        $scope.schema
+                    );
+                    $scope.$apply(function () {
+
+                        if( data.selo == "PARTICIPA DO SELO UNICEF" && data.goal > 0) {
+                            $scope.dataSource.yaxis[0].Max = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
+                            $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].style = {
+                                marker: {
+                                    fill: '#CF1717', //cor do circulo e do backgroud do numero da meta
+                                    stroke: '#CF1717', //borda do circulo e da linha
+                                    'stroke-opacity' : 1.0, //opacidade da linha
+                                    'stroke-width': 5.0
+                                },
+                                text: {
+                                    fill: '#FFD023',
+                                    "font-size": 15
+                                }
                             }
-                        ]
-                    }
-                    // {
-                    //     plot: "Unemployment",
-                    //     title: "Temperature",
-                    //     format: {
-                    //         suffix: "°C"
-                    //     },
-                    //     referenceline: [
-                    //         {
-                    //             label: "Controlled Temperature",
-                    //             value: "10",
-                    //             style: {
-                    //                 marker: {
-                    //                     "stroke-dasharray": [4, 3]
-                    //                 }
-                    //             }
-                    //         }
-                    //     ]
-                    // }
-                ]
-                // yaxis: [
-                //     {
-                //         plot: "Temperature",
-                //         title: "Temperature",
-                //         format: {
-                //             suffix: "°C"
-                //         },
-                //         referenceline: [
-                //             {
-                //                 label: "Controlled Temperature",
-                //                 value: "10",
-                //                 style: {
-                //                     marker: {
-                //                         "stroke-dasharray": [4, 3]
-                //                     }
-                //                 }
-                //             }
-                //         ]
-                //     },
-                //     // {
-                //     //     plot: [
-                //     //         {
-                //     //             value: "Quantidade",
-                //     //             type: "column"
-                //     //         },
-                //     //         {
-                //     //             value: "Meta",
-                //     //             type: "line"
-                //     //         }
-                //     //     ]
-                //     // }
-                // ]
-            };
+                        }
 
-            Promise.all([dataFetch, schemaFetch]).then(res => {
-                const data = res[0];
-                const schema = res[1];
-                const fusionTable = new FusionCharts.DataStore().createDataTable(
-                    data,
-                    schema
-                );
-                $scope.$apply(function () {
-                    $scope.dataSource.data = fusionTable;
+                        if( data.selo == "NÃO PARTICIPA DO SELO UNICEF" || data.selo == "TODOS") {
+                            $scope.dataSource.yaxis[0].Max = 0;
+                            $scope.dataSource.yaxis[0].referenceline[0] = {};
+                        }
+
+                        $scope.dataSource.data = fusionTable;
+                    });
+
+                    $scope.initTenants();
                 });
+
             });
         }
-        $scope.getData();
 
-        $scope.atualizaDash = function () {
-            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
-            $scope.getData();
+        $scope.initTenants = function(){
+            if (Identity.getType() === 'coordenador_estadual') {
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
+            }
+        };
+
+        $scope.onSelectSelo = function () {
+            $scope.query_evolution_graph.uf = '';
+            $scope.query_evolution_graph.tenant_id = '';
+            $scope.initFusionChart();
+        };
+
+        $scope.onSelectUf = function () {
+            $scope.query_evolution_graph.tenant_id = '';
+            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
+            $scope.initFusionChart();
+        };
+
+        $scope.onSelectCity = function () {
+            $scope.initFusionChart();
         };
 
         $scope.refresh = function () {
-            // $scope.getData();
             if (($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)) {
                 $scope.tenants = Graph.getReinsertEvolution({'uf': $scope.query.uf});
             }
-
         };
-
 
         $scope.getTenants = function () {
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
 
-        // function dataGenerate() {
-        // $http({
-        //     method: 'GET',
-        //     url: 'mock/data.json'
-        // }).then(function (response) {
-        //     var novo = [];
-        //
-        //     for (var i = 0; i < response.data.length; i++) {
-        //         var value = response.data[i];
-        //         value[2] = "20000";
-        //         novo.push(value);
-        //     }
-        //     $scope.jsonexit = novo;
-        // }, function (error) {
-        //     console.log('error');
-        // });
-
-        // }
-
         $scope.ready = false;
+
         $scope.showInfo = '';
+
         $scope.steps = [
             {name: 'Adesão', info: ''},
             {name: 'Configuração', info: ''},
@@ -3435,32 +3683,70 @@
             }
         }
 
-        if (identify.type !== 'gestor_nacional') {
-            Reports.getStatusBar(function (data) {
+        $scope.initStatusBar = function () {
 
-                var meta = data.goal_box && data.goal_box.goal || 0;
-                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
-                $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-                // $scope.percentualAtingido = 100;
+            if ( canSeeBar() ) {
+                Reports.getStatusBar(function (data) {
 
-                if (data.status !== 'ok') {
-                    $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                    $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
-                    $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                    $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
-                    $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
-                    $scope.otherData = data;
+                    var meta = data.goal_box && data.goal_box.goal || 0;
 
-                    for (var i = 0; $scope.steps.length >= i; i++) {
-                        if ($scope.steps[i]) {
-                            var actualDate = moment($scope.steps[i].info || 0);
-                            if (actualDate._i !== 0) {
-                                $scope.showInfo = i;
+                    $scope.show_option_selo = false;
+                    $scope.show_option_municipio = false;
+                    $scope.show_option_uf = false;
+
+                    if(meta == 0){
+                        $scope.query_evolution_graph.selo = "TODOS";
+                    }
+
+                    if(meta > 0){
+                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO UNICEF";
+                    }
+
+                    var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                    $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+                    // $scope.percentualAtingido = 100;
+
+                    if (data.status !== 'ok') {
+                        $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                        $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                        $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                        $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
+                        $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                        $scope.otherData = data;
+
+                        for (var i = 0; $scope.steps.length >= i; i++) {
+                            if ($scope.steps[i]) {
+                                var actualDate = moment($scope.steps[i].info || 0);
+                                if (actualDate._i !== 0) {
+                                    $scope.showInfo = i;
+                                }
                             }
                         }
                     }
-                }
-            });
+
+                    $scope.initFusionChart();
+
+                });
+            }
+
+            if( $scope.uf_profiles_type.includes($scope.identity.getType()) ){
+                $scope.show_option_uf = false;
+            }
+
+            $scope.initFusionChart();
+
+        }
+
+        function canSeeBar() {
+            var canSee = [
+                'coordenador_operacional',
+                'supervisor_institucional',
+                'gestor_politico'
+            ]
+            if ( canSee.includes($scope.identity.getType())){
+                return true;
+            }
+            return false;
         }
 
         function init() {
@@ -3472,7 +3758,9 @@
                     isVisible: true
                 });
             }
+            $scope.initStatusBar();
         };
+
         $scope.stateCountChange = function () {
             $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
             init();
@@ -3492,6 +3780,7 @@
         Platform.whenReady(function () {
             $scope.ready = true;
         });
+
     });
 
 })();
@@ -5008,6 +5297,432 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
+
+			$scope.message = message;
+			$scope.details = details;
+
+			$scope.dismiss = function() {
+				$uibModalInstance.dismiss();
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
+
+			// TODO: receive case ID, fetch details and show
+
+			console.log("[modal] case_activity_log_entry");
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
+
+			console.log("[modal] case_cancel");
+
+			$scope.static = StaticData;
+			$scope.lang = Language;
+			$scope.reason = null;
+
+			$scope.cancelCase = function() {
+				if(!$scope.reason) return;
+				$uibModalInstance.close({response: $scope.reason});
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+		});
+
+})();
+(function () {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
+
+            $scope.reject_reason = "";
+            $scope.ok = function () {
+                if (!$scope.reason) return;
+                $uibModalInstance.close(
+                    {
+                        response:
+                            {
+                                reason: $scope.reason,
+                            }
+                    });
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser) {
+
+			console.log("[modal] case_restart");
+
+			$scope.step = 1;
+			$scope.reason = "";
+			$scope.typeUser = $typeUser;
+
+			$scope.ok = function() {
+				if(!$scope.reason) return;
+				$uibModalInstance.close({response: $scope.reason});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function () {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
+
+            $scope.step = 1;
+            $scope.reason = "";
+            $scope.typeUser = $typeUser;
+            $scope.tenants = [];
+
+            $scope.defaultQuery = {
+                name: '',
+                step_name: '',
+                cause_name: '',
+                assigned_user_name: '',
+                location_full: '',
+                alert_status: ['accepted'],
+                case_status: ['in_progress'],
+                risk_level: ['low', 'medium', 'high'],
+                age_null: true,
+                age: {from: 0, to: 10000},
+                gender: ['male', 'female', 'undefined'],
+                gender_null: true,
+                place_kind: ['rural', 'urban'],
+                place_kind_null: true,
+            };
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+// Todo Criar um serviço para reaproveitar isso
+            $scope.getUFs = function () {
+                return StaticData.getUFs();
+            };
+
+            $scope.refresh = function () {
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
+            };
+
+            $scope.getTenants = function () {
+                if (!$scope.tenants || !$scope.tenants.data) return [];
+                return $scope.tenants.data;
+            };
+
+            $scope.ok = function () {
+                if (!$scope.reason) return;
+                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
+                $uibModalInstance.close(
+                    {
+                        response:
+                            {
+                                tenant_id: $scope.query.tenant_id,
+                                reason: $scope.reason,
+                                city: city
+                            }
+                    });
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+
+			console.log("[modal] confirm_modal", message, details, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $q, $uibModalInstance, message, details, schools, canDismiss) {
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.schools = schools;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, title, message, href) {
+
+			console.log("[modal] download_link ", title, message, href);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.href = href;
+
+			$scope.back = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+			console.log("[modal] file_uploader", uploadUrl, uploadParameters, title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+			$scope.file = null;
+			$scope.progress = 0;
+			$scope.isUploading = false;
+
+
+			$scope.upload = function(file) {
+				if(!uploadParameters) uploadParameters = {};
+				uploadParameters.file = file;
+
+				$scope.isUploading = true;
+
+				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH}).then(onSuccess, onError, onProgress);
+
+			};
+
+			function onSuccess(res) {
+				if(!res.data) return onError(res);
+
+				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
+				$uibModalInstance.close({response: res.data});
+				$scope.isUploading = false;
+			}
+
+			function onError(res) {
+				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+				$scope.isUploading = false;
+			}
+
+			function onProgress(ev) {
+				$scope.progress = (ev.loaded / ev.total);
+			}
+
+			$scope.calculateProgressWidth = function() {
+				return parseInt(100.0 * $scope.progress) + "%";
+			};
+
+			$scope.close = function() {
+				$scope.isUploading = false;
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
+
+			console.log("[modal] login", reason, canDismiss);
+
+			$scope.email = '';
+			$scope.password = '';
+
+			$scope.reason = reason;
+			$scope.canDismiss = canDismiss;
+
+            $scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
+            }
+
+			function onLoggedIn(session) {
+				$uibModalInstance.close({response: Identity.getCurrentUser()});
+			}
+
+			function onError() {
+				Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
+			}
+
+			$scope.login = function() {
+				Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
+
+			console.log("[modal] new_support_ticket_modal");
+
+			$scope.isLoading = false;
+
+			$scope.ticket = {
+				name: '',
+				city_name: '',
+				phone: '',
+				email: '',
+				message: ''
+			};
+
+			$scope.submitTicket = function() {
+				$scope.isLoading = true;
+
+				SupportTicket.submit($scope.ticket, function(res) {
+					$scope.isLoading = false;
+
+					ngToast.success('Solicitação de suporte enviada com sucesso!');
+					$uibModalInstance.close({response: $scope.answer});
+				});
+				
+				return false;
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss, answerPlaceholder) {
+
+			console.log("[modal] prompt_modal", question, canDismiss);
+
+			$scope.question = question;
+			$scope.answer = defaultAnswer;
+			$scope.placeholder = answerPlaceholder;
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.answer});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, canDismiss, noUsersMessage) {
+
+			console.log("[modal] user_picker", title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.canDismiss = canDismiss;
+			$scope.noUsersMessage = noUsersMessage;
+
+			$scope.selectedUser = null;
+			$scope.users = users;
+
+			$scope.hasUsers = function() {
+				if(!$scope.users) return false;
+				return ($scope.users.length > 0);
+			};
+
+			$scope.onSelect = function() {
+				if(!$scope.selectedUser) {
+					ngToast.danger('Você não selecionou nenhum usuário!');
+					return;
+				}
+
+				$uibModalInstance.close({response: $scope.selectedUser});
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
 			$stateProvider
@@ -6193,432 +6908,6 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
-
-			$scope.message = message;
-			$scope.details = details;
-
-			$scope.dismiss = function() {
-				$uibModalInstance.dismiss();
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
-
-			// TODO: receive case ID, fetch details and show
-
-			console.log("[modal] case_activity_log_entry");
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
-
-			console.log("[modal] case_cancel");
-
-			$scope.static = StaticData;
-			$scope.lang = Language;
-			$scope.reason = null;
-
-			$scope.cancelCase = function() {
-				if(!$scope.reason) return;
-				$uibModalInstance.close({response: $scope.reason});
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-		});
-
-})();
-(function () {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
-
-            $scope.reject_reason = "";
-            $scope.ok = function () {
-                if (!$scope.reason) return;
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                reason: $scope.reason,
-                            }
-                    });
-            };
-
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser) {
-
-			console.log("[modal] case_restart");
-
-			$scope.step = 1;
-			$scope.reason = "";
-			$scope.typeUser = $typeUser;
-
-			$scope.ok = function() {
-				if(!$scope.reason) return;
-				$uibModalInstance.close({response: $scope.reason});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function () {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
-
-            $scope.step = 1;
-            $scope.reason = "";
-            $scope.typeUser = $typeUser;
-            $scope.tenants = [];
-
-            $scope.defaultQuery = {
-                name: '',
-                step_name: '',
-                cause_name: '',
-                assigned_user_name: '',
-                location_full: '',
-                alert_status: ['accepted'],
-                case_status: ['in_progress'],
-                risk_level: ['low', 'medium', 'high'],
-                age_null: true,
-                age: {from: 0, to: 10000},
-                gender: ['male', 'female', 'undefined'],
-                gender_null: true,
-                place_kind: ['rural', 'urban'],
-                place_kind_null: true,
-            };
-
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
-// Todo Criar um serviço para reaproveitar isso
-            $scope.getUFs = function () {
-                return StaticData.getUFs();
-            };
-
-            $scope.refresh = function () {
-                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
-            };
-
-            $scope.getTenants = function () {
-                if (!$scope.tenants || !$scope.tenants.data) return [];
-                return $scope.tenants.data;
-            };
-
-            $scope.ok = function () {
-                if (!$scope.reason) return;
-                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                tenant_id: $scope.query.tenant_id,
-                                reason: $scope.reason,
-                                city: city
-                            }
-                    });
-            };
-
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
-
-			console.log("[modal] confirm_modal", message, details, canDismiss);
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $q, $uibModalInstance, message, details, schools, canDismiss) {
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.schools = schools;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, title, message, href) {
-
-			console.log("[modal] download_link ", title, message, href);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.href = href;
-
-			$scope.back = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
-
-			console.log("[modal] file_uploader", uploadUrl, uploadParameters, title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
-
-			$scope.file = null;
-			$scope.progress = 0;
-			$scope.isUploading = false;
-
-
-			$scope.upload = function(file) {
-				if(!uploadParameters) uploadParameters = {};
-				uploadParameters.file = file;
-
-				$scope.isUploading = true;
-
-				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH}).then(onSuccess, onError, onProgress);
-
-			};
-
-			function onSuccess(res) {
-				if(!res.data) return onError(res);
-
-				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
-				$uibModalInstance.close({response: res.data});
-				$scope.isUploading = false;
-			}
-
-			function onError(res) {
-				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
-				$scope.isUploading = false;
-			}
-
-			function onProgress(ev) {
-				$scope.progress = (ev.loaded / ev.total);
-			}
-
-			$scope.calculateProgressWidth = function() {
-				return parseInt(100.0 * $scope.progress) + "%";
-			};
-
-			$scope.close = function() {
-				$scope.isUploading = false;
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
-
-			console.log("[modal] login", reason, canDismiss);
-
-			$scope.email = '';
-			$scope.password = '';
-
-			$scope.reason = reason;
-			$scope.canDismiss = canDismiss;
-
-            $scope.showPassowrd = function () {
-                var field_password = document.getElementById("fld-password");
-                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
-            }
-
-			function onLoggedIn(session) {
-				$uibModalInstance.close({response: Identity.getCurrentUser()});
-			}
-
-			function onError() {
-				Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
-			}
-
-			$scope.login = function() {
-				Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
-
-			console.log("[modal] new_support_ticket_modal");
-
-			$scope.isLoading = false;
-
-			$scope.ticket = {
-				name: '',
-				city_name: '',
-				phone: '',
-				email: '',
-				message: ''
-			};
-
-			$scope.submitTicket = function() {
-				$scope.isLoading = true;
-
-				SupportTicket.submit($scope.ticket, function(res) {
-					$scope.isLoading = false;
-
-					ngToast.success('Solicitação de suporte enviada com sucesso!');
-					$uibModalInstance.close({response: $scope.answer});
-				});
-				
-				return false;
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss, answerPlaceholder) {
-
-			console.log("[modal] prompt_modal", question, canDismiss);
-
-			$scope.question = question;
-			$scope.answer = defaultAnswer;
-			$scope.placeholder = answerPlaceholder;
-
-			$scope.ok = function() {
-				$uibModalInstance.close({response: $scope.answer});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, canDismiss, noUsersMessage) {
-
-			console.log("[modal] user_picker", title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.canDismiss = canDismiss;
-			$scope.noUsersMessage = noUsersMessage;
-
-			$scope.selectedUser = null;
-			$scope.users = users;
-
-			$scope.hasUsers = function() {
-				if(!$scope.users) return false;
-				return ($scope.users.length > 0);
-			};
-
-			$scope.onSelect = function() {
-				if(!$scope.selectedUser) {
-					ngToast.danger('Você não selecionou nenhum usuário!');
-					return;
-				}
-
-				$uibModalInstance.close({response: $scope.selectedUser});
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -7398,7 +7687,8 @@ if (!Array.prototype.find) {
 				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
 				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
 				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
-				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers}
+				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
+				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers}
 			});
 		});
 })();

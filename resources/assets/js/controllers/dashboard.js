@@ -1,173 +1,223 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Charts) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
-
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
+        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO UNICEF', 'NÃO PARTICIPA DO SELO UNICEF'];
 
-// Todo Criar um serviço para reaproveitar isso
+        $scope.uf_profiles_type = ['coordenador_estadual', 'gestor_estadual'];
+
+        $scope.query_evolution_graph = {
+            uf: '',
+            tenant_id: '',
+            selo: 'TODOS'
+        };
+
+        $scope.show_option_selo = true;
+
+        $scope.show_option_uf = true;
+
+        $scope.show_option_municipio = true;
+
+        $scope.schema = [
+            {
+                "name": "Date",
+                "type": "date",
+                "format": "%Y-%m-%d"
+            },
+            {
+                "name": "Rematricula",
+                "type": "string"
+            },
+            {
+                "name": "Unemployment",
+                "type": "number"
+            }
+        ];
+
+        $scope.dataSource = {
+            caption: {
+                text: "Evolução (Re)Matrículas"
+            },
+            subcaption: {
+                text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
+            },
+            series: "Rematricula",
+            yaxis: [
+                {
+                    format: {
+                        formatter: function(obj){
+                            var val=null;
+                            if( obj.type === "axis")
+                            {
+                                val= obj.value
+                            }
+                            else
+                            {
+                                val= obj.value.toString().replace(".",",");
+                            }
+                            return val;
+                        }
+
+                    },
+                    plot: [
+                        {
+                            value: "Unemployment",
+                            type: "column"
+                        }
+                    ],
+                    title: "(Re)Matrículas",
+                    referenceline: [
+                        {
+                            label: "Meta Selo UNICEF",
+                        }
+                    ],
+                    defaultFormat: false
+                }
+            ],
+            xAxis: {
+                initialInterval: {
+                    from: moment().subtract(100, "days").format('YYYY-MM-DD'),
+                    to: moment().format('YYYY-MM-DD')
+                },
+                outputTimeFormat: {
+                    year: "%Y",
+                    month: "%m/%Y",
+                    day: "%d/%m/%Y"
+                },
+                timemarker: [{
+                    timeFormat: '%m/%Y'
+                }]
+            },
+            tooltip: {
+                enabled: "false", // Disables the Tooltip
+                outputTimeFormat: {
+                    day: "%d/%m/%Y"
+                },
+                style: {
+                    container: {
+                        "border-color": "#000000",
+                        "background-color": "#75748D"
+                    },
+                    text: {
+                        "color": "#FFFFFF"
+                    }
+                }
+            }
+        };
+
         $scope.getUFs = function () {
             return StaticData.getUFs();
         };
 
-        $scope.getData = function () {
-            var jsonify = res => res.json();
+        $scope.initFusionChart = function () {
 
-            var dataFetch = fetch(
-                "mock/data.json"
-            ).then(jsonify);
-            var schemaFetch = fetch(
-                "mock/schema.json"
-            ).then(jsonify);
-            
-            $scope.dataSource = {
-                chart: {},
-                caption: {
-                    text: "Evolução (Re)Matrículas"
-                },
-                subcaption: {
-                    text: "desde 2015"
-                },
-                series: "City",
-                yaxis: [
-                    {
-                        plot: [
-                            {
-                                value: "Unemployment",
-                                type: "column"
-                            },
+            Identity.provideToken().then(function (token) {
 
-                        ],
-                        title: "(Re)Matrículas",
-                        format: {
-                            suffix: "K"
-                        },
-                        referenceline: [
-                            {
-                                label: "Meta Selo UNICEF",
-                                value: "10",
-                                // style: {
-                                //     marker: {
-                                //         "stroke-dasharray": [4, 3]
-                                //     }
-                                // }
+                var jsonify = function (res) { return res.json(); }
+
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&selo='+$scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
+
+                Promise.all([dataDaily]).then( function( res) {
+                    const data = res[0];
+
+                    var data_final = [
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "(Re)matrícula"},
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento"}
+                    ];
+
+                    if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
+
+                    const fusionTable = new FusionCharts.DataStore().createDataTable(
+
+                        data_final.map(function(x) {
+                            return [
+                                x.date,
+                                x.tipo,
+                                parseFloat(x.value)
+                            ]
+                        }),
+
+                        $scope.schema
+                    );
+                    $scope.$apply(function () {
+
+                        if( data.selo == "PARTICIPA DO SELO UNICEF" && data.goal > 0) {
+                            $scope.dataSource.yaxis[0].Max = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
+                            $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
+                            $scope.dataSource.yaxis[0].referenceline[0].style = {
+                                marker: {
+                                    fill: '#CF1717', //cor do circulo e do backgroud do numero da meta
+                                    stroke: '#CF1717', //borda do circulo e da linha
+                                    'stroke-opacity' : 1.0, //opacidade da linha
+                                    'stroke-width': 5.0
+                                },
+                                text: {
+                                    fill: '#FFD023',
+                                    "font-size": 15
+                                }
                             }
-                        ]
-                    }
-                    // {
-                    //     plot: "Unemployment",
-                    //     title: "Temperature",
-                    //     format: {
-                    //         suffix: "°C"
-                    //     },
-                    //     referenceline: [
-                    //         {
-                    //             label: "Controlled Temperature",
-                    //             value: "10",
-                    //             style: {
-                    //                 marker: {
-                    //                     "stroke-dasharray": [4, 3]
-                    //                 }
-                    //             }
-                    //         }
-                    //     ]
-                    // }
-                ]
-                // yaxis: [
-                //     {
-                //         plot: "Temperature",
-                //         title: "Temperature",
-                //         format: {
-                //             suffix: "°C"
-                //         },
-                //         referenceline: [
-                //             {
-                //                 label: "Controlled Temperature",
-                //                 value: "10",
-                //                 style: {
-                //                     marker: {
-                //                         "stroke-dasharray": [4, 3]
-                //                     }
-                //                 }
-                //             }
-                //         ]
-                //     },
-                //     // {
-                //     //     plot: [
-                //     //         {
-                //     //             value: "Quantidade",
-                //     //             type: "column"
-                //     //         },
-                //     //         {
-                //     //             value: "Meta",
-                //     //             type: "line"
-                //     //         }
-                //     //     ]
-                //     // }
-                // ]
-            };
+                        }
 
-            Promise.all([dataFetch, schemaFetch]).then(res => {
-                const data = res[0];
-                const schema = res[1];
-                const fusionTable = new FusionCharts.DataStore().createDataTable(
-                    data,
-                    schema
-                );
-                $scope.$apply(function () {
-                    $scope.dataSource.data = fusionTable;
+                        if( data.selo == "NÃO PARTICIPA DO SELO UNICEF" || data.selo == "TODOS") {
+                            $scope.dataSource.yaxis[0].Max = 0;
+                            $scope.dataSource.yaxis[0].referenceline[0] = {};
+                        }
+
+                        $scope.dataSource.data = fusionTable;
+                    });
+
+                    $scope.initTenants();
                 });
+
             });
         }
-        $scope.getData();
 
-        $scope.atualizaDash = function () {
-            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
-            $scope.getData();
+        $scope.initTenants = function(){
+            if (Identity.getType() === 'coordenador_estadual') {
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
+            }
+        };
+
+        $scope.onSelectSelo = function () {
+            $scope.query_evolution_graph.uf = '';
+            $scope.query_evolution_graph.tenant_id = '';
+            $scope.initFusionChart();
+        };
+
+        $scope.onSelectUf = function () {
+            $scope.query_evolution_graph.tenant_id = '';
+            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
+            $scope.initFusionChart();
+        };
+
+        $scope.onSelectCity = function () {
+            $scope.initFusionChart();
         };
 
         $scope.refresh = function () {
-            // $scope.getData();
             if (($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)) {
                 $scope.tenants = Graph.getReinsertEvolution({'uf': $scope.query.uf});
             }
-
         };
-
 
         $scope.getTenants = function () {
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
 
-        // function dataGenerate() {
-        // $http({
-        //     method: 'GET',
-        //     url: 'mock/data.json'
-        // }).then(function (response) {
-        //     var novo = [];
-        //
-        //     for (var i = 0; i < response.data.length; i++) {
-        //         var value = response.data[i];
-        //         value[2] = "20000";
-        //         novo.push(value);
-        //     }
-        //     $scope.jsonexit = novo;
-        // }, function (error) {
-        //     console.log('error');
-        // });
-
-        // }
-
         $scope.ready = false;
+
         $scope.showInfo = '';
+
         $scope.steps = [
             {name: 'Adesão', info: ''},
             {name: 'Configuração', info: ''},
@@ -232,32 +282,70 @@
             }
         }
 
-        if (identify.type !== 'gestor_nacional') {
-            Reports.getStatusBar(function (data) {
+        $scope.initStatusBar = function () {
 
-                var meta = data.goal_box && data.goal_box.goal || 0;
-                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
-                $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-                // $scope.percentualAtingido = 100;
+            if ( canSeeBar() ) {
+                Reports.getStatusBar(function (data) {
 
-                if (data.status !== 'ok') {
-                    $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                    $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
-                    $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                    $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
-                    $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
-                    $scope.otherData = data;
+                    var meta = data.goal_box && data.goal_box.goal || 0;
 
-                    for (var i = 0; $scope.steps.length >= i; i++) {
-                        if ($scope.steps[i]) {
-                            var actualDate = moment($scope.steps[i].info || 0);
-                            if (actualDate._i !== 0) {
-                                $scope.showInfo = i;
+                    $scope.show_option_selo = false;
+                    $scope.show_option_municipio = false;
+                    $scope.show_option_uf = false;
+
+                    if(meta == 0){
+                        $scope.query_evolution_graph.selo = "TODOS";
+                    }
+
+                    if(meta > 0){
+                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO UNICEF";
+                    }
+
+                    var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                    $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+                    // $scope.percentualAtingido = 100;
+
+                    if (data.status !== 'ok') {
+                        $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                        $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                        $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                        $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
+                        $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                        $scope.otherData = data;
+
+                        for (var i = 0; $scope.steps.length >= i; i++) {
+                            if ($scope.steps[i]) {
+                                var actualDate = moment($scope.steps[i].info || 0);
+                                if (actualDate._i !== 0) {
+                                    $scope.showInfo = i;
+                                }
                             }
                         }
                     }
-                }
-            });
+
+                    $scope.initFusionChart();
+
+                });
+            }
+
+            if( $scope.uf_profiles_type.includes($scope.identity.getType()) ){
+                $scope.show_option_uf = false;
+            }
+
+            $scope.initFusionChart();
+
+        }
+
+        function canSeeBar() {
+            var canSee = [
+                'coordenador_operacional',
+                'supervisor_institucional',
+                'gestor_politico'
+            ]
+            if ( canSee.includes($scope.identity.getType())){
+                return true;
+            }
+            return false;
         }
 
         function init() {
@@ -269,7 +357,9 @@
                     isVisible: true
                 });
             }
+            $scope.initStatusBar();
         };
+
         $scope.stateCountChange = function () {
             $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
             init();
@@ -289,6 +379,7 @@
         Platform.whenReady(function () {
             $scope.ready = true;
         });
+
     });
 
 })();
