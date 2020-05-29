@@ -7,17 +7,30 @@
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
+        $scope.ufs_selo = { data: [] };
+        $scope.tenants_selo = {  data: [] };
+
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
 
-        $scope.options_selo =['TODOS', 'PARTICIPA DO SELO UNICEF', 'NÃO PARTICIPA DO SELO UNICEF'];
+        //--
+        $scope.selo_unicef_todos = "TODOS";
+        $scope.selo_unicef_participa = "PARTICIPA DO SELO UNICEF";
+        $scope.selo_unicef_nao_participa = "NÃO PARTICIPA DO SELO UNICEF";
+        //--
+
+        $scope.options_selo = [
+            $scope.selo_unicef_todos,
+            $scope.selo_unicef_participa,
+            $scope.selo_unicef_nao_participa
+        ];
 
         $scope.uf_profiles_type = ['coordenador_estadual', 'gestor_estadual'];
 
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
-            selo: 'TODOS'
+            selo: $scope.selo_unicef_todos
         };
 
         $scope.show_option_selo = true;
@@ -130,7 +143,7 @@
 
                     var data_final = [
                         {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "(Re)matrícula"},
-                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento"}
+                        {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento após (re)matrícula"}
                     ];
 
                     if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
@@ -149,7 +162,7 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == "PARTICIPA DO SELO UNICEF" && data.goal > 0) {
+                        if( data.selo == $scope.selo_unicef_participa && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
@@ -167,7 +180,7 @@
                             }
                         }
 
-                        if( data.selo == "NÃO PARTICIPA DO SELO UNICEF" || data.selo == "TODOS") {
+                        if( data.selo == $scope.selo_unicef_nao_participa || data.selo == $scope.selo_unicef_todos ) {
                             $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
@@ -175,27 +188,48 @@
                         $scope.dataSource.data = fusionTable;
                     });
 
-                    $scope.initTenants();
+                    if($scope.show_option_uf){
+                        $scope.initUfs();
+                    };
+
                 });
 
             });
         }
 
         $scope.initTenants = function(){
-            if (Identity.getType() === 'coordenador_estadual') {
+            if ( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ) {
                 $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
             }
         };
 
+        $scope.initUfs = function(){
+            $scope.ufs_selo = Reports.getUfsBySelo({selo: $scope.query_evolution_graph.selo});
+        };
+
+        $scope.getUfsSelo = function(){
+            return $scope.ufs_selo.data;
+        };
+
+        $scope.getTenantsSelo = function(){
+            return $scope.tenants_selo.data;
+        };
+
         $scope.onSelectSelo = function () {
-            $scope.query_evolution_graph.uf = '';
             $scope.query_evolution_graph.tenant_id = '';
+            if( !$scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
+                $scope.query_evolution_graph.uf = '';
+                $scope.tenants_selo = {  data: [] };
+            }
+            if( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
+                $scope.initTenantsSelo();
+            }
             $scope.initFusionChart();
         };
 
         $scope.onSelectUf = function () {
             $scope.query_evolution_graph.tenant_id = '';
-            $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query_evolution_graph.uf});
+            $scope.tenants_selo = Reports.getTenantsBySelo({selo: $scope.query_evolution_graph.selo, uf: $scope.query_evolution_graph.uf});
             $scope.initFusionChart();
         };
 
@@ -294,11 +328,11 @@
                     $scope.show_option_uf = false;
 
                     if(meta == 0){
-                        $scope.query_evolution_graph.selo = "TODOS";
+                        $scope.query_evolution_graph.selo = $scope.selo_unicef_todos;
                     }
 
                     if(meta > 0){
-                        $scope.query_evolution_graph.selo = "PARTICIPA DO SELO UNICEF";
+                        $scope.query_evolution_graph.selo = $scope.selo_unicef_participa;
                     }
 
                     var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
@@ -328,13 +362,18 @@
                 });
             }
 
-            if( $scope.uf_profiles_type.includes($scope.identity.getType()) ){
+            if( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
                 $scope.show_option_uf = false;
+                $scope.initTenantsSelo();
             }
 
             $scope.initFusionChart();
 
         }
+
+        $scope.initTenantsSelo = function () {
+            $scope.tenants_selo = Reports.getTenantsBySelo({selo: $scope.query_evolution_graph.selo, uf: $scope.identity.getCurrentUser().uf});
+        };
 
         function canSeeBar() {
             var canSee = [

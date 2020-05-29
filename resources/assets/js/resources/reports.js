@@ -12,7 +12,9 @@
 				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
 				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
 				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
-				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers}
+				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers},
+				getUfsBySelo: {url: API.getURI('reports/ufs_by_selo'), method: 'GET', headers: headers},
+				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers}
 			});
 		});
 })();
