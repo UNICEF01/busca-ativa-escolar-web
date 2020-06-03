@@ -40,7 +40,7 @@
 		</div>
 	</div>
 
-	<div class="col-md-4">
+	<div class="col-md-2">
 		<div class="panel panel-default" ui-sref="pending_tenant_signups" style="cursor: pointer">
 			<div class="panel-heading"><strong>Adesões pendentes</strong></div>
 			<h1 class="panel-body">
@@ -56,13 +56,29 @@
 			<div class="panel-footer">
 				<div class="row">
 					<div class="col-md-6">
-						adesões municipais
+						municipais
 					</div>
 					<div class="col-md-6">
-						adesões estaduais
+						estaduais
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div class="col-md-2">
+		<div class="panel panel-default" style="height: 175px;">
+			<div class="panel-heading" style="background-color: #5cb85c; color: #ffffff"><strong>Re(matrículas)</strong></div>
+			<h1 class="panel-body">
+				<div class="row">
+					<div class="col-md-12 text-center">
+						<span style="color: #5cb85c; font-size: 40px;" ng-bind="stats.num_children_in_observation + stats.num_children_in_school "></span>
+						<small>
+							<i class="fa fa-info-circle" uib-tooltip="em andamento/ dentro da escola + concluídos" style="color: #5cb85c"></i>
+						</small>
+					</div>
+				</div>
+			</h1>
 		</div>
 	</div>
 
