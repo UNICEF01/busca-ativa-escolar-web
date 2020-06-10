@@ -7,6 +7,35 @@
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
+        $scope.markers = [
+            { pos: { lat: -15.7797200, lng: -47.9297200 }, draggable: true },
+            { pos: { lat: 2.82384, lng: -60.6753 }},
+            { pos: { lat: -27.5969, lng:  -48.5495}, draggable: true }
+        ]
+
+        $scope.mapOptions = {
+            height: 640,
+            width: 960,
+            draggable: true,
+            coords: {
+                longitude: 13.338931,
+                latitude: 52.508249
+            }
+        };
+
+        $scope.listeners = {
+            click: function(){},
+            mousemove: function() {},
+            mouseleave: function() {},
+            mouseenter: function() {},
+            drag: function() {},
+            dragstart: function() {},
+            dragend: function() {},
+            mapviewchange: function() {},
+            mapviewchangestart: function() {},
+            mapviewchangeend: function() {}
+        }
+
         $scope.ufs_selo = { data: [] };
         $scope.tenants_selo = {  data: [] };
 

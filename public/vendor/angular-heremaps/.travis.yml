@@ -1,0 +1,15 @@
+before_install:
+- npm install -g codeclimate-test-reporter
+install: 
+  - npm i
+language: node_js
+node_js:
+  - "4.2.4"
+script:
+  - ./node_modules/.bin/gulp build
+  - npm test
+after_script:
+  - codeclimate-test-reporter < ./coverage/**/lcov.info
+addons:
+  code_climate:
+    repo_token: c7535f88a3e1a0d9d2c8450a4e35e3c87fdf21251a7123957fbd34071a3cb545
