@@ -9,7 +9,7 @@
             apiVersion: '3.0',
             useCIT: true,
             mapTileConfig: {
-                scheme: 'normal.day',
+                scheme: 'reduced.day',
                 size: 256,
                 format: 'png8',
                 metadataQueryParams: {}
