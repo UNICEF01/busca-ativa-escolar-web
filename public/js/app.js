@@ -30,7 +30,7 @@
             'angular.viacep',
 			'ngclipboard',
 			'ng-fusioncharts',
-			'heremaps',
+			// 'heremaps',
 		])
 })();
 
@@ -1552,26 +1552,26 @@
 	});
 
 })();
-(function () {
-    identify('config', 'here_api.js');
-
-    angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
-        HereMapsConfigProvider.setOptions({
-            app_id: 'IaV356sfi2gAreQwtVsB',
-            app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
-            useHTTPS: true,
-            apiVersion: '3.0',
-            useCIT: true,
-            mapTileConfig: {
-                scheme: 'reduced.day',
-                size: 256,
-                format: 'png8',
-                metadataQueryParams: {}
-            }
-        });
-    }]);
-})();
-
+// (function () {
+//     identify('config', 'here_api.js');
+//
+//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
+//         HereMapsConfigProvider.setOptions({
+//             app_id: 'IaV356sfi2gAreQwtVsB',
+//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
+//             useHTTPS: true,
+//             apiVersion: '3.0',
+//             useCIT: true,
+//             mapTileConfig: {
+//                 scheme: 'reduced.day',
+//                 size: 256,
+//                 format: 'png8',
+//                 metadataQueryParams: {}
+//             }
+//         });
+//     }]);
+// })();
+//
 
 (function() {
 	identify('config', 'http.js');
@@ -1702,34 +1702,67 @@
 
         function init(scope, element, attrs) {
 
-            scope.markers = [
-                { pos: { lat: -15.7797200, lng: -47.9297200 }, draggable: true },
-                { pos: { lat: 2.82384, lng: -60.6753 }},
-                { pos: { lat: -27.5969, lng:  -48.5495}, draggable: true }
-            ];
+            function startClustering(map, data) {
+                // First we need to create an array of DataPoint objects,
+                // for the ClusterProvider
+                var dataPoints = data.map(function (item) {
+                    return new H.clustering.DataPoint(item.latitude, item.longitude);
+                });
 
-            scope.mapOptions = {
-                height: 640,
-                width: 960,
-                draggable: true,
-                coords: {
-                    longitude: 13.338931,
-                    latitude: 52.508249
-                }
-            };
+                // Create a clustering provider with custom options for clusterizing the input
+                var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
+                    clusteringOptions: {
+                        // Maximum radius of the neighbourhood
+                        eps: 32,
+                        // minimum weight of points required to form a cluster
+                        minWeight: 2
+                    }
+                });
 
-            scope.listeners = {
-                click: function(){},
-                mousemove: function() {},
-                mouseleave: function() {},
-                mouseenter: function() {},
-                drag: function() {},
-                dragstart: function() {},
-                dragend: function() {},
-                mapviewchange: function() {},
-                mapviewchangestart: function() {},
-                mapviewchangeend: function() {}
-            };
+                // Create a layer tha will consume objects from our clustering provider
+                var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+
+                // To make objects from clustering provder visible,
+                // we need to add our layer to the map
+                map.addLayer(clusteringLayer);
+            }
+
+            function loadMap(data) {
+
+                /**
+                 * Boilerplate map initialization code starts below:
+                 */
+
+// Step 1: initialize communication with the platform
+// In your own code, replace variable window.apikey with your own apikey
+                var platform = new H.service.Platform({
+                    apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
+                });
+
+
+                var defaultLayers = platform.createDefaultLayers();
+
+// Step 2: initialize a map
+                var map = new H.Map(document.getElementById('map'), defaultLayers.vector.normal.map, {
+                    center: new H.geo.Point(data.center.latitude, data.center.longitude),
+                    zoom: data.center.zoom,
+                    pixelRatio: window.devicePixelRatio || 1
+                });
+// add a resize listener to make sure that the map occupies the whole container
+                window.addEventListener('resize', () => map.getViewPort().resize());
+
+// Step 3: make the map interactive
+// MapEvents enables the event system
+// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+
+// Step 4: create the default UI component, for displaying bubbles
+                var ui = H.ui.UI.createDefault(map, defaultLayers);
+
+                startClustering(map, data.coordinates);
+
+            }
 
             scope.refresh = function () {
                 // console.log('[widget.cases_map] Loading data...');
@@ -1740,12 +1773,15 @@
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
 
+                    loadMap(data);
+
+
                     // console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
                 });
             };
 
             scope.onMarkerClick = function (marker, event, coords) {
-                console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
+                // console.log('[widget.cases_map] Marker clicked: ', marker, event, coords);
             };
 
             scope.reloadMap = function () {
@@ -1763,6 +1799,8 @@
             uiGmapGoogleMapApi.then(function (maps) {
                 scope.refresh();
             });
+
+
 
         }
 
@@ -5416,6 +5454,85 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
+			}
+
+		});
+
+})();
+(function() {
+
 	angular
 		.module('BuscaAtivaEscolar')
 		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
@@ -5835,85 +5952,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
 			}
 
 		});

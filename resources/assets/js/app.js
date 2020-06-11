@@ -30,6 +30,6 @@
             'angular.viacep',
 			'ngclipboard',
 			'ng-fusioncharts',
-			'heremaps',
+			// 'heremaps',
 		])
 })();

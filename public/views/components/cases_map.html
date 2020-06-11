@@ -11,15 +11,17 @@
 <!--	<ui-gmap-google-map center="mapCenter" zoom="mapZoom" draggable="true" style="height: 400px" ng-if="isMapReady()">-->
 <!--		<ui-gmap-markers idKey="'id'" models='coordinates' coords="'self'" type="'cluster'" click="onMarkerClick"></ui-gmap-markers>-->
 <!--	</ui-gmap-google-map>-->
+    <div style="height: 600px" id="map"></div>
 
-	<div ng-if="isMapReady()"
-		 heremaps
-		 zoom="mapZoom"
-		 events="listeners"
-		 options="mapOptions"
-		 map-ready="onMapReady"
-		 places="coordinates">
-	</div>
+
+    <!--	<div ng-if="isMapReady()"-->
+<!--		 heremaps-->
+<!--		 zoom="mapZoom"-->
+<!--		 events="listeners"-->
+<!--		 options="mapOptions"-->
+<!--		 map-ready="onMapReady"-->
+<!--		 places="coordinates">-->
+<!--	</div>-->
 
 <!--	<div class="legend" ng-if="isMapReady()">-->
 <!--		<table class="table">-->
