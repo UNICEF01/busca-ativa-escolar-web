@@ -27,6 +27,7 @@
                 // To make objects from clustering provder visible,
                 // we need to add our layer to the map
                 map.addLayer(clusteringLayer);
+
             }
 
             function loadMap(data) {
@@ -74,9 +75,7 @@
                     scope.mapCenter = data.center;
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
-
                     loadMap(data);
-
 
                     // console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
                 });
