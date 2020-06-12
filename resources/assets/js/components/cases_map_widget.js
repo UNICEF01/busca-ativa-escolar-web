@@ -4,9 +4,12 @@
 
         function init(scope, element, attrs) {
 
-            function startClustering(map, data) {
-                // First we need to create an array of DataPoint objects,
-                // for the ClusterProvider
+            function interleave(map, data){
+                var provider = map.getBaseLayer().getProvider();
+
+                // get the style object for the base layer
+                var style = provider.getStyle();
+
                 var dataPoints = data.map(function (item) {
                     return new H.clustering.DataPoint(item.latitude, item.longitude);
                 });
@@ -17,67 +20,86 @@
                         // Maximum radius of the neighbourhood
                         eps: 32,
                         // minimum weight of points required to form a cluster
-                        minWeight: 2
+                        minWeight: 1
                     }
                 });
 
-                // Create a layer tha will consume objects from our clustering provider
-                var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+                var changeListener = () => {
+                    if (style.getState() === H.map.Style.State.READY) {
+                        style.removeEventListener('change', changeListener);
 
-                // To make objects from clustering provder visible,
-                // we need to add our layer to the map
-                map.addLayer(clusteringLayer);
+                        // create a provider and a layer that are placed under the buildings layer
+                        // objectProvider = new H.map.provider.LocalObjectProvider();
+                        objectLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+                        // add a circle to this provider the circle will appear under the buildings
+                        // objectProvider.getRootGroup().addObject(new H.map.Circle(map.getCenter(), 500));
+                        // add the layer to the map
+                        map.addLayer(objectLayer);
 
+                        // extract buildings from the base layer config
+                        // in order to inspect the config calling style.getConfig()
+                        buildings = new H.map.Style(style.extractConfig('buildings'));
+                        // create the new layer for the buildings
+                        buildingsLayer = platform.getOMVService().createLayer(buildings);
+                        // add the layer to the map
+                        map.addLayer(buildingsLayer);
+
+                        // the default object layer and its objects will remain on top of the buildings layer
+                        // map.addObject(new H.map.Marker(dataPoints));
+                        // var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
+                        //
+                        // // To make objects from clustering provder visible,
+                        // // we need to add our layer to the map
+                        // map.addLayer(clusteringLayer);
+                    }
+                }
+
+                style.addEventListener('change', changeListener);
             }
 
-            function loadMap(data) {
+            /**
+             * Boilerplate map initialization code starts below:
+             */
 
-                /**
-                 * Boilerplate map initialization code starts below:
-                 */
-
-// Step 1: initialize communication with the platform
+//Step 1: initialize communication with the platform
 // In your own code, replace variable window.apikey with your own apikey
-                var platform = new H.service.Platform({
-                    apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
-                });
+            var platform = new H.service.Platform({
+                apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
+            });
+            var defaultLayers = platform.createDefaultLayers();
 
 
-                var defaultLayers = platform.createDefaultLayers();
 
-// Step 2: initialize a map
-                var map = new H.Map(document.getElementById('map'), defaultLayers.vector.normal.map, {
-                    center: new H.geo.Point(data.center.latitude, data.center.longitude),
-                    zoom: data.center.zoom,
-                    pixelRatio: window.devicePixelRatio || 1
-                });
-// add a resize listener to make sure that the map occupies the whole container
-                window.addEventListener('resize', () => map.getViewPort().resize());
+// Now use the map as required...
 
-// Step 3: make the map interactive
-// MapEvents enables the event system
-// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-                var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+// Now use the map as required...
 
-
-// Step 4: create the default UI component, for displaying bubbles
-                var ui = H.ui.UI.createDefault(map, defaultLayers);
-
-                startClustering(map, data.coordinates);
-
-            }
-
-            scope.refresh = function () {
+            var refresh = function () {
                 // console.log('[widget.cases_map] Loading data...');
-
                 Children.getMap({}, function (data) {
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
-                    loadMap(data);
+                    // loadMap(data);
 
                     // console.log("[widget.cases_map] Data loaded: ", data.coordinates, data.center);
+                    //Step 2: initialize a map
+                    var map = new H.Map(document.getElementById('map'),
+                        defaultLayers.vector.normal.map, {
+                            center: {lat: data.center.latitude, lng: data.center.longitude},
+                            zoom: data.center.zoom + 5,
+                            pixelRatio: window.devicePixelRatio || 1
+                        });
+                    map.getViewModel().setLookAtData({tilt: 45});
+
+// add a resize listener to make sure that the map occupies the whole container
+                    window.addEventListener('resize', () => map.getViewPort().resize());
+
+                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+
+                    interleave(map, data.coordinates);
+
                 });
             };
 
@@ -96,13 +118,7 @@
                 return scope.mapReady;
             };
 
-
-            uiGmapGoogleMapApi.then(function (maps) {
-                scope.refresh();
-            });
-
-
-
+            refresh();
         }
 
         return {
