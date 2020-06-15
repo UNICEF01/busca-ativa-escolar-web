@@ -409,7 +409,8 @@
         };
 
        async function  canSeeBar() {
-            var userProfileType = await $localStorage.identity.current_user.$promise.then(function (data) {
+            var userProfileTypePromise = $localStorage.identity.current_user.$promise;
+            var userProfileType = await userProfileTypePromise.then(function (data) {
                 return data.type;
             });
             var canSee = [
