@@ -29,6 +29,7 @@
             'ui.mask',
             'angular.viacep',
 			'ngclipboard',
-			'ng-fusioncharts'
+			'ng-fusioncharts',
+			// 'heremaps',
 		])
 })();
