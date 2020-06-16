@@ -259,24 +259,15 @@
         $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
-
-<<<<<<< HEAD
+                
                 var jsonify = function (res) {
                     return res.json();
                 }
-=======
-                //GRAFICO DE EVOLUCAO
-                var jsonify = function (res) { return res.json(); }
->>>>>>> fusionchart_maps#566
 
                 var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf=' + $scope.query_evolution_graph.uf + '&tenant_id=' + $scope.query_evolution_graph.tenant_id + '&selo=' + $scope.query_evolution_graph.selo + '&token=' + token).then(jsonify);
 
-<<<<<<< HEAD
                 Promise.all([dataDaily]).then(function (res) {
-=======
-                Promise.all([dataDaily]).then( function( res) {
 
->>>>>>> fusionchart_maps#566
                     const data = res[0];
 
                     var data_final = [
@@ -335,7 +326,7 @@
                 });
 
             });
-        }
+        };
 
         $scope.initTenants = function () {
             if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
