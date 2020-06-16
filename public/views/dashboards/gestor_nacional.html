@@ -24,13 +24,107 @@
     </div>
     
     <div class="row">
+
         <div class="col-md-12">
+
             <h3><i class="material-icons">map</i> Mapa brasileiro de casos em andamento
                 <small>(os casos aparecem no mapa a partir do endereço preenchido na etapa de Pesquisa)</small>
             </h3>
-            <div id="dashboard-map-gestor-nacional">
-                <searchable-cases-map></searchable-cases-map>
+
+            <!-- Fusion map -->
+            <div class="panel panel-default">
+
+                <style>
+                    #fusion_city_selector{
+                        border-radius: 10px;
+                        padding: 5px;
+                        border: 1px solid #cccccc;
+                    }
+
+                    .table_ufs {
+                        border-collapse: collapse;
+                        background-color: white;
+                        overflow: hidden;
+                        border-radius: 10px;
+                        width: 100%;
+                        margin-top: 50px;
+                        margin-right: 20px;
+                    }
+
+                    .table_ufs th, .table_ufs td {
+                        text-align: center;
+                        font-size: 12px;
+                        padding: 3px;
+                        border: 1px solid #ddd;
+                    }
+
+                    .table_ufs th {
+                        background-color: #90af07;
+                        color: white;
+                    }
+
+                    .table_ufs tr:hover {background-color: #ddd;}
+
+                </style>
+
+                <div class="panel-heading">Selecione um estado</div>
+
+                <div class="panel-body">
+
+                        <div class="row">
+
+                            <div class="col-md-12" ng-class="{'col-md-9': fusionmap_scope_table == 'maps/brazil'}">
+
+                                <div id="selector_country_state" style="margin-left: 50px">
+                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">Brasil</h4>
+                                    <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
+                                        <a href="#" ng-click="initFusionChartMap()">Brasil</a>
+                                        / {{fusionmap_scope_uf}}
+                                        / <select id="fusion_city_selector">
+                                            <option>Selecione o município</option>
+                                            <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()">{{local.name_city}}</option>
+                                          </select>
+                                    </h4>
+                                </div>
+
+                                <div align="center" id="chart-container"></div>
+
+                            </div>
+
+                            <div align="center" class="col-md-3" ng-if="fusionmap_scope_table == 'maps/brazil'">
+
+                                <div id="table_fusion_chart_states">
+
+                                    <table class="table_ufs">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">UF</th>
+                                            <th scope="col">Casos</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="(i, local) in getTablevaluesFormFusionMap()" id="state_{{local.id}}" style="cursor: pointer;" ng-click="initFusionChartMapState(local.displayValue, 'maps/'+local.simple_name)">
+                                            <td>{{local.displayValue}}</td>
+                                            <td>{{local.value}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                </div>
+
             </div>
+            <!-- FINAL Fusion map -->
+
+<!--            <div id="dashboard-map-gestor-nacional">-->
+<!--                <searchable-cases-map></searchable-cases-map>-->
+<!--            </div>-->
+
         </div>
     </div>
 
