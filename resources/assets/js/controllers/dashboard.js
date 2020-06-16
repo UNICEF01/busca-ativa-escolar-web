@@ -19,6 +19,58 @@
         $scope.selo_unicef_nao_participa = "NÃO PARTICIPA DO SELO UNICEF";
         //--
 
+        //-- to use with fusionmap
+        $scope.childrenMap = null;
+        $scope.fusionmap_scope_table = "maps/brazil";
+        $scope.fusionmap_scope_uf = null;
+        $scope.fusion_map_config = {
+            type: $scope.fusionmap_scope_table,
+            renderAt: 'chart-container',
+            width: '700',
+            height: '730',
+            dataFormat: 'json',
+            dataSource: {
+
+                "chart": {
+                    "caption": "",
+                    "subcaption": "",
+                    "entityFillHoverColor": "#cccccc",
+                    "numberScaleValue": "1.1000.1000",
+                    "numberPrefix": "",
+                    "showLabels": "0",
+                    "theme": "fusion"
+                },
+
+                "colorrange": {
+                    "minvalue": "0",
+                    "startlabel": "",
+                    "endlabel": "",
+                    "code": "#6baa01",
+                    "gradient": "1",
+                    "color": []
+                },
+
+                "data": []
+
+            },
+            "events": {
+
+                "entityClick": function (e) {
+                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                        $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
+                        $scope.initFusionChartMapState(e.data.shortLabel, $scope.fusionmap_scope_table);
+                    }
+                },
+                "entityRollover": function(evt, data) {
+                    document.getElementById('state_'+evt.data.id).style.backgroundColor = "#ddd";
+                },
+                "entityRollout": function(evt, data) {
+                    document.getElementById('state_'+evt.data.id).style.backgroundColor = "#ffffff";
+                }
+            }
+        }
+        //--
+
         $scope.options_selo = [
             $scope.selo_unicef_todos,
             $scope.selo_unicef_participa,
@@ -130,15 +182,71 @@
             return StaticData.getUFs();
         };
 
+        $scope.getTablevaluesFormFusionMap = function () {
+            return $scope.fusion_map_config.dataSource.data
+        }
+
+        $scope.initFusionChartMap = function(){
+            //Fusion chart OK
+            FusionCharts.ready(function() {
+                Reports.getDataMapFusionChart( function (data) {
+
+                    $scope.fusionmap_scope_table = "maps/brazil";
+                    $scope.fusion_map_config.type = "maps/brazil";
+                    $scope.fusion_map_config.width = "700";
+                    $scope.fusionmap_scope_uf = null;
+                    $scope.fusion_map_config.dataSource.data = data.data;
+                    $scope.fusion_map_config.dataSource.colorrange.color = data.colors;
+
+                    //remove o antigo
+                    document.getElementById("chart-container").innerHTML = '';
+
+                    //instancia
+                    $scope.childrenMap = new FusionCharts(
+                        $scope.fusion_map_config
+                    );
+
+                    //renderiza
+                    $scope.childrenMap.render();
+                });
+            });
+        };
+
+        $scope.initFusionChartMapState = function (uf, scope_table) {
+            Reports.getDataMapFusionChart( { uf: uf }, function (data) {
+
+                $scope.fusion_map_config.type = scope_table;
+                $scope.fusionmap_scope_uf = uf;
+                $scope.fusionmap_scope_table = scope_table;
+                $scope.fusion_map_config.width = "1000";
+
+                $scope.fusion_map_config.dataSource.data = data.data;
+                $scope.fusion_map_config.dataSource.colorrange.color = data.colors;
+
+                //remove o antigo
+                document.getElementById("chart-container").innerHTML = '';
+
+                //instancia
+                $scope.childrenMap = new FusionCharts(
+                    $scope.fusion_map_config
+                );
+                //renderiza
+                $scope.childrenMap.render();
+
+            });
+        };
+
         $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
 
+                //GRAFICO DE EVOLUCAO
                 var jsonify = function (res) { return res.json(); }
 
                 var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&selo='+$scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
 
                 Promise.all([dataDaily]).then( function( res) {
+
                     const data = res[0];
 
                     var data_final = [
@@ -417,6 +525,7 @@
 
         Platform.whenReady(function () {
             $scope.ready = true;
+            $scope.initFusionChartMap();
         });
 
     });
