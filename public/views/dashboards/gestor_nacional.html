@@ -119,7 +119,7 @@
 
 
                         <!-- CIDADES -->
-                        <div class="row" ng-show="fusionmap_scope_city.id != null">
+                        <div class="row" ng-if="fusionmap_scope_city.id != null">
 
                             <div class="col-md-12">
                                 <div id="selector_country_state" style="margin-left: 50px">
@@ -135,7 +135,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                MAPA
+                                <cases-map city_id="{{fusionmap_scope_city.id}}"></cases-map>
                             </div>
 
                             <div class="col-md-6">
