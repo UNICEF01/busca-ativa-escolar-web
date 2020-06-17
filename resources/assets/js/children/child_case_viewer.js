@@ -539,7 +539,7 @@
 
         $scope.assignUser = function () {
 
-            console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
+            // console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
 
             CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
                 .then(function (res) {
@@ -621,7 +621,7 @@
         };
 
         function clearAuxiliaryFields(fields) {
-            var auxiliaryFields = ['place_lat', 'place_lng', 'place_map_center', 'place_map_geocoded_address'];
+            var auxiliaryFields = ['place_map_center', 'place_map_geocoded_address'];
             var filtered = {};
 
             for (var i in fields) {

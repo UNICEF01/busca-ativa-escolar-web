@@ -277,8 +277,10 @@
 
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -382,8 +384,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -441,8 +445,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -523,7 +529,8 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                               ng-minlength="12"
                                ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -559,7 +566,8 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                               ng-minlength="12"
                                ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -593,7 +601,8 @@
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12"
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
+                               ng-minlength="12"
                                ng-model="fields.aux.contatos.others[$index][item.model.phone]">
                     </div>
                     <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
@@ -730,8 +739,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -841,11 +852,12 @@
                 {{fields.place_map_geocoded_address.subLocality}}
             </div>
 
-            <ui-gmap-google-map ng-if="renderMap" center="fields.place_map_center" zoom="defaultMapZoom"
-                                draggable="true" style="height: 400px">
-                <ui-gmap-marker idKey="'child_coords_' + child.id" coords='fields.place_coords'></ui-gmap-marker>
-            </ui-gmap-google-map>
+            <!--            <ui-gmap-google-map ng-if="renderMap" center="fields.place_map_center" zoom="defaultMapZoom"-->
+            <!--                                draggable="true" style="height: 400px">-->
 
+            <!--                <ui-gmap-marker idKey="'child_coords_' + child.id" coords='fields.place_coords'></ui-gmap-marker>-->
+            <!--            </ui-gmap-google-map>-->
+            <cases-marker-map></cases-marker-map>
         </div>
 
         <div class="form-group col-md-12" ng-if="!fields.place_coords && fields.place_address">
@@ -861,8 +873,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
     </div>
@@ -897,8 +911,10 @@
 
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 enviar para o supervisor institucional</a>
         </div>
 
@@ -919,8 +935,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 concluir etapa</a>
         </div>
 
@@ -1068,8 +1086,10 @@
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
+               ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()"
+               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 concluir etapa</a>
         </div>
 
@@ -1128,7 +1148,8 @@
             </div>
 
             <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
-               ng-show="canCompleteStep() && step.child_status!='cancelled' && fields.is_child_still_in_school !== undefined && fields.is_child_still_in_school==0">Interromper/ Reabrir</a>
+               ng-show="canCompleteStep() && step.child_status!='cancelled' && fields.is_child_still_in_school !== undefined && fields.is_child_still_in_school==0">Interromper/
+                Reabrir</a>
 
 
         </div>
@@ -1154,10 +1175,12 @@
 
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'"
+            <a class="btn btn-raised btn-info"
+               ng-show="canEditCurrentStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'"
                ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e concluir etapa</a>
+               ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e
+                concluir etapa</a>
         </div>
 
     </div>
