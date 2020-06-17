@@ -23,6 +23,7 @@
         $scope.childrenMap = null;
         $scope.fusionmap_scope_table = "maps/brazil";
         $scope.fusionmap_scope_uf = null;
+        $scope.fusionmap_scope_city = {id: null};
         $scope.fusion_map_config = {
             type: $scope.fusionmap_scope_table,
             renderAt: 'chart-container',
@@ -57,15 +58,27 @@
 
                 "entityClick": function (e) {
                     if( $scope.fusionmap_scope_table == "maps/brazil" ) {
-                        $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
-                        $scope.initFusionChartMapState(e.data.shortLabel, $scope.fusionmap_scope_table);
+                        if( e.data.value > 0 ) {
+                            $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
+                            $scope.initFusionChartMapState(e.data.shortLabel, $scope.fusionmap_scope_table);
+                        }
+                    }else{
+                        if( e.data.value > 0 ){
+                            $scope.fusionmap_scope_city.id = e.data.id;
+                            $scope.$apply();
+                            $scope.initFusionChartMapCity();
+                        }
                     }
                 },
                 "entityRollover": function(evt, data) {
-                    document.getElementById('state_'+evt.data.id).style.backgroundColor = "#ddd";
+                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                        document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ddd";
+                    }
                 },
                 "entityRollout": function(evt, data) {
-                    document.getElementById('state_'+evt.data.id).style.backgroundColor = "#ffffff";
+                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                        document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ffffff";
+                    }
                 }
             }
         }
@@ -183,7 +196,7 @@
         };
 
         $scope.getTablevaluesFormFusionMap = function () {
-            return $scope.fusion_map_config.dataSource.data
+            return $scope.fusion_map_config.dataSource.data;
         }
 
         $scope.initFusionChartMap = function(){
@@ -191,6 +204,7 @@
             FusionCharts.ready(function() {
                 Reports.getDataMapFusionChart( function (data) {
 
+                    $scope.fusionmap_scope_city.id = null;
                     $scope.fusionmap_scope_table = "maps/brazil";
                     $scope.fusion_map_config.type = "maps/brazil";
                     $scope.fusion_map_config.width = "700";
@@ -215,6 +229,7 @@
         $scope.initFusionChartMapState = function (uf, scope_table) {
             Reports.getDataMapFusionChart( { uf: uf }, function (data) {
 
+                $scope.fusionmap_scope_city.id = null;
                 $scope.fusion_map_config.type = scope_table;
                 $scope.fusionmap_scope_uf = uf;
                 $scope.fusionmap_scope_table = scope_table;
@@ -234,6 +249,10 @@
                 $scope.childrenMap.render();
 
             });
+        };
+
+        $scope.initFusionChartMapCity = function (city_id) {
+
         };
 
         $scope.initFusionChart = function () {

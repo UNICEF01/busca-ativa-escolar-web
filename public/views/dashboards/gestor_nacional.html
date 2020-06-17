@@ -71,18 +71,18 @@
 
                 <div class="panel-body">
 
-                        <div class="row">
+                    <!-- BRASIL E UFs -->
+                        <div class="row" ng-show="fusionmap_scope_city.id == null">
 
                             <div class="col-md-12" ng-class="{'col-md-9': fusionmap_scope_table == 'maps/brazil'}">
 
                                 <div id="selector_country_state" style="margin-left: 50px">
-                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">Brasil</h4>
+                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
                                     <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
-                                        <a href="#" ng-click="initFusionChartMap()">Brasil</a>
-                                        / {{fusionmap_scope_uf}}
-                                        / <select id="fusion_city_selector">
-                                            <option>Selecione o município</option>
-                                            <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()">{{local.name_city}}</option>
+                                        <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
+                                        / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
+                                        / <select name="scope_city" id="fusion_city_selector" ng-model="fusionmap_scope_city.id" ng-change="">
+                                            <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
                                           </select>
                                     </h4>
                                 </div>
@@ -115,6 +115,35 @@
                             </div>
 
                         </div>
+                        <!-- FINAL BRASIL E UFs -->
+
+
+                        <!-- CIDADES -->
+                        <div class="row" ng-show="fusionmap_scope_city.id != null">
+
+                            <div class="col-md-12">
+                                <div id="selector_country_state" style="margin-left: 50px">
+                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
+                                    <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
+                                        <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
+                                        / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
+                                        / <select name="scope_city" id="fusion_city_selector" ng-model="fusionmap_scope_city.id">
+                                        <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
+                                    </select>
+                                    </h4>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                MAPA
+                            </div>
+
+                            <div class="col-md-6">
+                                DADOS DO MUNICIPIO
+                            </div>
+
+                        </div>
+                        <!-- FINAL CIDADES -->
 
                 </div>
 
