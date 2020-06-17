@@ -1,14 +1,37 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, $localStorage, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
 
-        $scope.ufs_selo = { data: [] };
-        $scope.tenants_selo = {  data: [] };
+        $scope.listeners = {
+            click: function () {
+            },
+            mousemove: function () {
+            },
+            mouseleave: function () {
+            },
+            mouseenter: function () {
+            },
+            drag: function () {
+            },
+            dragstart: function () {
+            },
+            dragend: function () {
+            },
+            mapviewchange: function () {
+            },
+            mapviewchangestart: function () {
+            },
+            mapviewchangeend: function () {
+            }
+        }
+
+        $scope.ufs_selo = {data: []};
+        $scope.tenants_selo = {data: []};
 
         $scope.query = angular.merge({}, $scope.defaultQuery);
         $scope.search = {};
@@ -125,21 +148,18 @@
                 text: "Evolução (Re)Matrículas"
             },
             subcaption: {
-                text: "Período de "+moment().subtract(100, "days").format('DD/MM/YYYY')+" até "+moment().format('DD/MM/YYYY')
+                text: "Período de " + moment().subtract(100, "days").format('DD/MM/YYYY') + " até " + moment().format('DD/MM/YYYY')
             },
             series: "Rematricula",
             yaxis: [
                 {
                     format: {
-                        formatter: function(obj){
-                            var val=null;
-                            if( obj.type === "axis")
-                            {
-                                val= obj.value
-                            }
-                            else
-                            {
-                                val= obj.value.toString().replace(".",",");
+                        formatter: function (obj) {
+                            var val = null;
+                            if (obj.type === "axis") {
+                                val = obj.value
+                            } else {
+                                val = obj.value.toString().replace(".", ",");
                             }
                             return val;
                         }
@@ -258,13 +278,14 @@
         $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
+                
+                var jsonify = function (res) {
+                    return res.json();
+                }
 
-                //GRAFICO DE EVOLUCAO
-                var jsonify = function (res) { return res.json(); }
+                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf=' + $scope.query_evolution_graph.uf + '&tenant_id=' + $scope.query_evolution_graph.tenant_id + '&selo=' + $scope.query_evolution_graph.selo + '&token=' + token).then(jsonify);
 
-                var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf='+$scope.query_evolution_graph.uf+'&tenant_id='+$scope.query_evolution_graph.tenant_id+'&selo='+$scope.query_evolution_graph.selo+'&token=' + token).then(jsonify);
-
-                Promise.all([dataDaily]).then( function( res) {
+                Promise.all([dataDaily]).then(function (res) {
 
                     const data = res[0];
 
@@ -273,11 +294,12 @@
                         {date: moment().format('YYYY-MM-DD'), value: "0", tipo: "Cancelamento após (re)matrícula"}
                     ];
 
-                    if( parseInt(data.data.length) > 0 ) { data_final = data.data; }
+                    if (parseInt(data.data.length) > 0) {
+                        data_final = data.data;
+                    }
 
                     const fusionTable = new FusionCharts.DataStore().createDataTable(
-
-                        data_final.map(function(x) {
+                        data_final.map(function (x) {
                             return [
                                 x.date,
                                 x.tipo,
@@ -289,7 +311,7 @@
                     );
                     $scope.$apply(function () {
 
-                        if( data.selo == $scope.selo_unicef_participa && data.goal > 0) {
+                        if (data.selo == $scope.selo_unicef_participa && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
                             $scope.dataSource.yaxis[0].referenceline[0].label = "Meta Selo UNICEF";
                             $scope.dataSource.yaxis[0].referenceline[0].value = data.goal;
@@ -297,7 +319,7 @@
                                 marker: {
                                     fill: '#CF1717', //cor do circulo e do backgroud do numero da meta
                                     stroke: '#CF1717', //borda do circulo e da linha
-                                    'stroke-opacity' : 1.0, //opacidade da linha
+                                    'stroke-opacity': 1.0, //opacidade da linha
                                     'stroke-width': 5.0
                                 },
                                 text: {
@@ -307,7 +329,7 @@
                             }
                         }
 
-                        if( data.selo == $scope.selo_unicef_nao_participa || data.selo == $scope.selo_unicef_todos ) {
+                        if (data.selo == $scope.selo_unicef_nao_participa || data.selo == $scope.selo_unicef_todos) {
                             $scope.dataSource.yaxis[0].Max = 0;
                             $scope.dataSource.yaxis[0].referenceline[0] = {};
                         }
@@ -315,40 +337,44 @@
                         $scope.dataSource.data = fusionTable;
                     });
 
-                    if($scope.show_option_uf){
+                    if ($scope.show_option_uf) {
                         $scope.initUfs();
-                    };
+                    }
+                    ;
 
                 });
 
             });
-        }
+        };
 
-        $scope.initTenants = function(){
-            if ( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ) {
+        $scope.initTenants = function () {
+            if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
                 $scope.tenants = Tenants.findByUfPublic({'uf': $scope.identity.getCurrentUser().uf});
             }
         };
 
-        $scope.initUfs = function(){
+        $scope.initUfs = function () {
             $scope.ufs_selo = Reports.getUfsBySelo({selo: $scope.query_evolution_graph.selo});
         };
 
-        $scope.getUfsSelo = function(){
+        $scope.getUfsSelo = function () {
             return $scope.ufs_selo.data;
         };
 
-        $scope.getTenantsSelo = function(){
+        $scope.getTenantsSelo = function () {
             return $scope.tenants_selo.data;
         };
 
         $scope.onSelectSelo = function () {
+            alert();
+            console.log('aquidfd', $scope.identity.getType());
             $scope.query_evolution_graph.tenant_id = '';
-            if( !$scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
+            if (!$scope.uf_profiles_type.includes($scope.identity.getType())) {
+                alert('opa')
                 $scope.query_evolution_graph.uf = '';
-                $scope.tenants_selo = {  data: [] };
+                $scope.tenants_selo = {data: []};
             }
-            if( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
+            if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
                 $scope.initTenantsSelo();
             }
             $scope.initFusionChart();
@@ -356,7 +382,10 @@
 
         $scope.onSelectUf = function () {
             $scope.query_evolution_graph.tenant_id = '';
-            $scope.tenants_selo = Reports.getTenantsBySelo({selo: $scope.query_evolution_graph.selo, uf: $scope.query_evolution_graph.uf});
+            $scope.tenants_selo = Reports.getTenantsBySelo({
+                selo: $scope.query_evolution_graph.selo,
+                uf: $scope.query_evolution_graph.uf
+            });
             $scope.initFusionChart();
         };
 
@@ -445,7 +474,7 @@
 
         $scope.initStatusBar = function () {
 
-            if ( canSeeBar() ) {
+            if (canSeeBar()) {
                 Reports.getStatusBar(function (data) {
 
                     var meta = data.goal_box && data.goal_box.goal || 0;
@@ -454,11 +483,11 @@
                     $scope.show_option_municipio = false;
                     $scope.show_option_uf = false;
 
-                    if(meta == 0){
+                    if (meta == 0) {
                         $scope.query_evolution_graph.selo = $scope.selo_unicef_todos;
                     }
 
-                    if(meta > 0){
+                    if (meta > 0) {
                         $scope.query_evolution_graph.selo = $scope.selo_unicef_participa;
                     }
 
@@ -489,7 +518,7 @@
                 });
             }
 
-            if( $scope.uf_profiles_type.includes( $scope.identity.getType() ) ){
+            if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
                 $scope.show_option_uf = false;
                 $scope.initTenantsSelo();
             }
@@ -499,16 +528,23 @@
         }
 
         $scope.initTenantsSelo = function () {
-            $scope.tenants_selo = Reports.getTenantsBySelo({selo: $scope.query_evolution_graph.selo, uf: $scope.identity.getCurrentUser().uf});
+            $scope.tenants_selo = Reports.getTenantsBySelo({
+                selo: $scope.query_evolution_graph.selo,
+                uf: $scope.identity.getCurrentUser().uf
+            });
         };
 
-        function canSeeBar() {
+       async function  canSeeBar() {
+            var userProfileTypePromise = $localStorage.identity.current_user.$promise;
+            var userProfileType = await userProfileTypePromise.then(function (data) {
+                return data.type;
+            });
             var canSee = [
                 'coordenador_operacional',
                 'supervisor_institucional',
                 'gestor_politico'
             ]
-            if ( canSee.includes($scope.identity.getType())){
+            if (canSee.includes(userProfileType)) {
                 return true;
             }
             return false;
