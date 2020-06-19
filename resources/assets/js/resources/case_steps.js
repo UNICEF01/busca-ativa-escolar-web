@@ -5,7 +5,7 @@
 
 			var headers = API.REQUIRE_AUTH;
 
-			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
+			var repository = $resource(API.getURI('steps/:type/:id?XDEBUG_SESSION_START=PHPSTORM'), {id: '@id', type: '@type', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},

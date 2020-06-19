@@ -648,12 +648,12 @@
                             ngToast.danger(res.result);
                         }
                     });
-                }else {
+                } else {
                     ngToast.warning('Você não pode realizar essa ação.');
                 }
             }).then(function (res) {
-                    console.log(res);
-                });
+                console.log(res);
+            });
         };
 
         function refreshGoogleMap() {
@@ -856,7 +856,7 @@
 
                 var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id});
 
-                settingsOfTenantOfCase.$promise.then( function (res_settings) {
+                settingsOfTenantOfCase.$promise.then(function (res_settings) {
                     $scope.tenantSettingsOfCase = res_settings;
                 });
 
@@ -1090,7 +1090,7 @@
 
             var data = Object.assign({}, $scope.step.fields);
 
-            console.log(data);
+            // console.log(data);
 
 
             data = Utils.prepareDateFields(data, dateOnlyFields);
@@ -1106,7 +1106,7 @@
             data.type = $scope.step.step_type;
             data.id = $scope.step.id;
 
-            console.info("[child_viewer.step_editor] Saving step data: ", data);
+            // console.info("[child_viewer.step_editor] Saving step data: ", data);
 
             return CaseSteps.save(data).$promise.then(function (response) {
                 if (response.messages) {
@@ -1123,6 +1123,7 @@
                 }
 
                 ngToast.success("Os campos da etapa foram salvos com sucesso!");
+
             })
         }
 
@@ -1133,7 +1134,9 @@
         };
 
         $scope.canUpdateStepObservation = function (child) {
-            if(!$scope.tenantSettingsOfCase){ return false; }
+            if (!$scope.tenantSettingsOfCase) {
+                return false;
+            }
             var time_for_next_step = 0;
             if ($scope.step && $scope.tenantSettings) {
                 if ($scope.step.slug == "1a_observacao") {
@@ -1789,6 +1792,8 @@
     angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
         function init(scope, element, attrs) {
+
+
             /**
              * Adds a  draggable marker to the map..
              *
@@ -1799,20 +1804,20 @@
              */
             function addDraggableMarker(map, behavior) {
 
-                var marker = new H.map.Marker({
-                    lat: scope.$parent.fields.place_coords.latitude,
-                    lng: scope.$parent.fields.place_coords.longitude
+                scope.marker = new H.map.Marker({
+                    lat: scope.$parent.fields.place_lat,
+                    lng: scope.$parent.fields.place_lng,
                 }, {
                     // mark the object as volatile for the smooth dragging
                     volatility: true
                 });
                 // Ensure that the marker can receive drag events
-                marker.draggable = true;
-                map.addObject(marker);
-                map.addEventListener('dragstart', function (ev) {
-                    scope.$parent.fields.place_lat = ev.target.b.lat;
-                    scope.$parent.fields.place_lng = ev.target.b.lng;
-                    scope.$apply();
+                scope.marker.draggable = true;
+                scope.map.addObject(scope.marker);
+                scope.map.addEventListener('dragstart', function (ev) {
+                    // scope.$parent.fields.place_lat = ev.target.b.lat;
+                    // scope.$parent.fields.place_lng = ev.target.b.lng;
+                    // scope.$apply();
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -1824,7 +1829,7 @@
 
                 // re-enable the default draggability of the underlying map
                 // when dragging has completed
-                map.addEventListener('dragend', function (ev) {
+                scope.map.addEventListener('dragend', function (ev) {
                     scope.$parent.fields.place_lat = ev.target.b.lat;
                     scope.$parent.fields.place_lng = ev.target.b.lng;
                     scope.$apply();
@@ -1836,10 +1841,10 @@
 
                 // Listen to the drag event and move the position of the marker
                 // as necessary
-                map.addEventListener('drag', function (ev) {
-                    scope.$parent.fields.place_lat = ev.target.b.lat;
-                    scope.$parent.fields.place_lng = ev.target.b.lng;
-                    scope.$apply();
+                scope.map.addEventListener('drag', function (ev) {
+                    // scope.$parent.fields.place_lat = ev.target.b.lat;
+                    // scope.$parent.fields.place_lng = ev.target.b.lng;
+                    // scope.$apply();
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -1847,6 +1852,26 @@
                     }
                 }, false);
             }
+
+            scope.$watch('fields.place_lat', function (newVal, oldVal) {
+
+                if (newVal != oldVal) {
+                    scope.map.removeObject(scope.marker);
+                    scope.marker = new H.map.Marker({
+                        lat: scope.$parent.fields.place_lat,
+                        lng: scope.$parent.fields.place_lng,
+                    }, {
+                        // mark the object as volatile for the smooth dragging
+                        volatility: true
+                    });
+                    // Ensure that the marker can receive drag events
+                    scope.marker.draggable = true;
+                    scope.map.addObject(scope.marker);
+                    scope.map.setCenter({lat: scope.$parent.fields.place_lat, lng: scope.$parent.fields.place_lng});
+                    scope.map.setZoom(18);
+                }
+            });
+
 
             /**
              * Boilerplate map initialization code starts below:
@@ -1861,15 +1886,17 @@
             var defaultLayers = platform.createDefaultLayers();
 
 //Step 2: initialize a map - this map is centered over Boston
-            var map = new H.Map(document.getElementById('map-marker'),
+            scope.map = new H.Map(document.getElementById('map-marker'),
                 defaultLayers.vector.normal.map, {
                     center: {
-                        lat: scope.$parent.fields.place_coords.latitude,
-                        lng: scope.$parent.fields.place_coords.longitude
+                        lat: scope.$parent.fields.place_lat,
+                        lng: scope.$parent.fields.place_lng
                     },
                     zoom: 18,
                     pixelRatio: window.devicePixelRatio || 1
                 });
+
+
             //Configuração do mapa
             var mapTileService = platform.getMapTileService({
                 type: 'aerial'
@@ -1884,20 +1911,20 @@
                 'png8',
                 parameters
             );
-            map.setBaseLayer(tileLayer);
+            scope.map.setBaseLayer(tileLayer);
 // add a resize listener to make sure that the map occupies the whole container
-            window.addEventListener('resize', () => map.getViewPort().resize());
+            window.addEventListener('resize', () => scope.map.getViewPort().resize());
 
 //Step 3: make the map interactive
 // MapEvents enables the event system
 // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(scope.map));
 
 // Step 4: Create the default UI:
-            var ui = H.ui.UI.createDefault(map, defaultLayers, 'pt-BR');
+            var ui = H.ui.UI.createDefault(scope.map, defaultLayers, 'pt-BR');
 
 // Add the click event listener.
-            addDraggableMarker(map, behavior);
+            addDraggableMarker(scope.map, behavior);
 
 
         }
@@ -5559,6 +5586,85 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
+			}
+
+		});
+
+})();
+(function() {
+
 	angular
 		.module('BuscaAtivaEscolar')
 		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
@@ -5978,85 +6084,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
 			}
 
 		});
@@ -7750,126 +7777,6 @@ if (!Array.prototype.find) {
 
 })();
 (function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('school_browser', {
-				url: '/schools',
-				templateUrl: '/views/schools/school_browser.html',
-				controller: 'SchoolBrowserCtrl'
-			});
-		})
-		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-                   
-			$scope.check_all_schools = false;
-			$scope.identity = Identity;
-			$scope.schools = {};
-			$scope.msg_success = false;
-			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019];
-			$scope.query = {
-				year_educacenso: 2019,
-				sort: {},
-				show_suspended: false,
-				max: 5,
-				page: 1
-			};
-			$scope.selected = {
-				schools: []
-			};
-			
-			$scope.onCheckSelectAll = function(){
-				if( $scope.check_all_schools ){
-					$scope.selected.schools = angular.copy($scope.schools.data);
-				}else{
-					$scope.selected.schools = [];
-				}
-			};
-
-            $scope.onModifySchool = function(school){
-				Schools.update(school).$promise.then($scope.onSaved);
-			};
-			
-			$scope.onSaved = function(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
-					return;
-				}else{
-					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
-					$scope.refresh();
-				}
-			};
-
-			$scope.sendnotification = function(){
-
-				//remove objects without email
-				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					if(school.school_email != null && school.school_email != ""){
-						return true;
-					}else{
-						return false;
-					}
-				});
-
-				if(schools_to_send_notification.length > 0){
-					
-					Modals.show(
-						Modals.ConfirmEmail(
-							'Confirma o envio de sms e email para as seguintes escolas?',
-							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-							schools_to_send_notification
-						)).then(function () {
-							return Schools.send_notifications(schools_to_send_notification).$promise;
-						})
-						.then(function (res) {
-							if(res.status == "error"){
-								ngToast.danger(res.message);
-								$scope.msg_success = false;
-								$scope.msg_error = true;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}else{
-								ngToast.warning(res.message);
-								$scope.msg_success = true;
-								$scope.msg_error = false;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}
-						});
-				}else{
-					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-				}
-
-			};
-
-			$scope.onSelectYear = function() {
-				$scope.query.page = 1;
-				$scope.query.max = 5;
-				$scope.refresh();
-			};
-
-			$scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
-					$scope.check_all_schools = false;
-					$scope.selected.schools = [];
-					$scope.schools = angular.copy(res);
-				});
-			};
-
-			$scope.setMaxResults = function(max) {
-				$scope.query.max = max;
-				$scope.query.page = 1;
-				$scope.refresh();
-			};
-			
-			Platform.whenReady(function() {
-                $scope.refresh();
-			});
-
-		});
-
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.factory('Alerts', function Alerts(API, Identity, $resource) {
@@ -7892,7 +7799,7 @@ if (!Array.prototype.find) {
 
 			var headers = API.REQUIRE_AUTH;
 
-			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
+			var repository = $resource(API.getURI('steps/:type/:id?XDEBUG_SESSION_START=PHPSTORM'), {id: '@id', type: '@type', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
@@ -8452,6 +8359,126 @@ if (!Array.prototype.find) {
 			});
 
 		});
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('school_browser', {
+				url: '/schools',
+				templateUrl: '/views/schools/school_browser.html',
+				controller: 'SchoolBrowserCtrl'
+			});
+		})
+		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
+                   
+			$scope.check_all_schools = false;
+			$scope.identity = Identity;
+			$scope.schools = {};
+			$scope.msg_success = false;
+			$scope.msg_error = false;
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019];
+			$scope.query = {
+				year_educacenso: 2019,
+				sort: {},
+				show_suspended: false,
+				max: 5,
+				page: 1
+			};
+			$scope.selected = {
+				schools: []
+			};
+			
+			$scope.onCheckSelectAll = function(){
+				if( $scope.check_all_schools ){
+					$scope.selected.schools = angular.copy($scope.schools.data);
+				}else{
+					$scope.selected.schools = [];
+				}
+			};
+
+            $scope.onModifySchool = function(school){
+				Schools.update(school).$promise.then($scope.onSaved);
+			};
+			
+			$scope.onSaved = function(res) {
+				if(res.status === "ok") {
+					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+					return;
+				}else{
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+					$scope.refresh();
+				}
+			};
+
+			$scope.sendnotification = function(){
+
+				//remove objects without email
+				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
+					if(school.school_email != null && school.school_email != ""){
+						return true;
+					}else{
+						return false;
+					}
+				});
+
+				if(schools_to_send_notification.length > 0){
+					
+					Modals.show(
+						Modals.ConfirmEmail(
+							'Confirma o envio de sms e email para as seguintes escolas?',
+							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+							schools_to_send_notification
+						)).then(function () {
+							return Schools.send_notifications(schools_to_send_notification).$promise;
+						})
+						.then(function (res) {
+							if(res.status == "error"){
+								ngToast.danger(res.message);
+								$scope.msg_success = false;
+								$scope.msg_error = true;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}else{
+								ngToast.warning(res.message);
+								$scope.msg_success = true;
+								$scope.msg_error = false;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}
+						});
+				}else{
+					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+				}
+
+			};
+
+			$scope.onSelectYear = function() {
+				$scope.query.page = 1;
+				$scope.query.max = 5;
+				$scope.refresh();
+			};
+
+			$scope.refresh = function() {
+                Schools.all_educacenso($scope.query, function(res) {
+					$scope.check_all_schools = false;
+					$scope.selected.schools = [];
+					$scope.schools = angular.copy(res);
+				});
+			};
+
+			$scope.setMaxResults = function(max) {
+				$scope.query.max = max;
+				$scope.query.page = 1;
+				$scope.refresh();
+			};
+			
+			Platform.whenReady(function() {
+                $scope.refresh();
+			});
+
+		});
+
 })();
 (function() {
 	angular
