@@ -847,9 +847,8 @@
         <div class="form-group col-md-12" ng-if="fields.place_coords">
 
             <div class="alert alert-success">
-                <strong>Endereço Identificado: </strong> {{fields.place_map_geocoded_address.streetName}}
-                {{fields.place_map_geocoded_address.streetNumber}} - {{fields.place_map_geocoded_address.postalCode}} -
-                {{fields.place_map_geocoded_address.subLocality}}
+                <strong>Endereço Identificado:</strong> {{fields.place_map_geocoded_address.Address.Label}}<br>
+                <small>Arraste o marcador para melhorar a localização</small>
             </div>
 
             <!--            <ui-gmap-google-map ng-if="renderMap" center="fields.place_map_center" zoom="defaultMapZoom"-->
