@@ -1,10 +1,8 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function () {
 
-        function init(scope, element, attrs) {
-
-
+        function init(scope) {
             /**
              * Adds a  draggable marker to the map..
              *
