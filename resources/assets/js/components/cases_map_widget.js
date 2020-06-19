@@ -39,7 +39,8 @@
 
             var refresh = function () {
                 // console.log('[widget.cases_map] Loading data...');
-                Children.getMap({}, function (data) {
+                Children.getMap({city_id: attrs.cityId}, function (data) {
+
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
                     scope.mapZoom = data.center.zoom;
