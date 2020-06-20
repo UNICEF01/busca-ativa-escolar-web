@@ -62,13 +62,13 @@
                 }, false);
             }
 
-            scope.$watch('fields.place_lat', function (newVal, oldVal) {
+            scope.$watchGroup(['fields.place_lat','fields.place_lng'], function (newVal, oldVal) {
 
-                if (newVal != oldVal) {
+                if (newVal !== oldVal) {
                     scope.map.removeObject(scope.marker);
                     scope.marker = new H.map.Marker({
-                        lat: scope.$parent.fields.place_lat,
-                        lng: scope.$parent.fields.place_lng,
+                        lat: scope.$parent.fields.place_lat || oldVal[0],
+                        lng: scope.$parent.fields.place_lng || oldVal[1],
                     }, {
                         // mark the object as volatile for the smooth dragging
                         volatility: true
