@@ -89,7 +89,6 @@
                         if( e.data.value > 0 ){
                             $scope.fusionmap_scope_city.id = e.data.id;
                             $scope.$apply();
-                            $scope.initFusionChartMapCity();
                         }
                     }
                 },
@@ -104,7 +103,9 @@
                     }
                 }
             }
-        }
+        };
+        $scope.injectedObjectDirectiveCaseMaps = {};
+        $scope.objectToInjectInMetrics = {};
         //--
 
         $scope.options_selo = [
@@ -271,14 +272,15 @@
             });
         };
 
-        $scope.initFusionChartMapCity = function (city_id) {
-
+        $scope.initFusionChartMapCity = function(){
+            $scope.injectedObjectDirectiveCaseMaps.invoke($scope.fusionmap_scope_city.id);
+            $scope.objectToInjectInMetrics.invoke($scope.fusionmap_scope_city.id, $scope.fusionmap_scope_uf);
         };
 
         $scope.initFusionChart = function () {
 
             Identity.provideToken().then(function (token) {
-                
+
                 var jsonify = function (res) {
                     return res.json();
                 }

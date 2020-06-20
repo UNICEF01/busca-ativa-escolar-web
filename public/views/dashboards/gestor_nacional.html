@@ -35,7 +35,7 @@
             <div class="panel panel-default">
 
                 <style>
-                    #fusion_city_selector{
+                    .fusion_city_selector{
                         border-radius: 10px;
                         padding: 5px;
                         border: 1px solid #cccccc;
@@ -71,28 +71,30 @@
 
                 <div class="panel-body">
 
-                    <!-- BRASIL E UFs -->
-                        <div class="row" ng-show="fusionmap_scope_city.id == null">
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div id="selector_country_state" style="margin-left: 50px">
+                                <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
+                                <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
+                                    <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
+                                    / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
+                                    / <select class="fusion_city_selector" name="scope_city" ng-model="fusionmap_scope_city.id" ng-change="initFusionChartMapCity()">
+                                        <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
+                                      </select>
+                                </h4>
+                            </div>
+                        </div>
+
+                        <!-- BRASIL E UFs -->
+                        <div ng-show="fusionmap_scope_city.id == null">
 
                             <div class="col-md-12" ng-class="{'col-md-9': fusionmap_scope_table == 'maps/brazil'}">
-
-                                <div id="selector_country_state" style="margin-left: 50px">
-                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
-                                    <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
-                                        <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
-                                        / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
-                                        / <select name="scope_city" id="fusion_city_selector" ng-model="fusionmap_scope_city.id" ng-change="">
-                                            <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
-                                          </select>
-                                    </h4>
-                                </div>
-
                                 <div align="center" id="chart-container"></div>
-
                             </div>
 
                             <div align="center" class="col-md-3" ng-if="fusionmap_scope_table == 'maps/brazil'">
-
                                 <div id="table_fusion_chart_states">
 
                                     <table class="table_ufs">
@@ -111,89 +113,26 @@
                                     </table>
 
                                 </div>
-
                             </div>
 
                         </div>
                         <!-- FINAL BRASIL E UFs -->
 
-
                         <!-- CIDADES -->
-                        <div class="row" ng-if="fusionmap_scope_city.id != null">
+                        <div ng-if="fusionmap_scope_city.id != null">
 
-                            <div class="col-md-12">
-                                <div id="selector_country_state" style="margin-left: 50px">
-                                    <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
-                                    <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
-                                        <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
-                                        / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
-                                        / <select name="scope_city" id="fusion_city_selector" ng-model="fusionmap_scope_city.id">
-                                        <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
-                                    </select>
-                                    </h4>
-                                </div>
+                            <div class="col-md-6">
+                                <cases-map city_id="{{fusionmap_scope_city.id}}" object-to-inject="injectedObjectDirectiveCaseMaps"></cases-map>
                             </div>
 
                             <div class="col-md-6">
-                                <cases-map city_id="{{fusionmap_scope_city.id}}"></cases-map>
-                            </div>
-
-                            <div class="col-md-6">
-                                <h3>
-                                    <i class="material-icons">insert_chart</i> Casos: 0
-                                </h3>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"><i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i> Concluídos</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"><i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento/ Fora da escola</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"><i uib-tooltip="Estudantes (re)matriculados: de 1ª à 4ª observação" class="fa fa-info-circle"></i> Em andamento/ Dentro da escola</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"><i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i> Cancelados</div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <h3>
-                                    <i class="material-icons">insert_chart</i> Alterações | Total: 0
-                                </h3>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"> <i uib-tooltip="Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar" class="fa fa-info-circle"></i> Transferências</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="panel panel-default">
-                                            <h1 class="panel-body" ng-bind="0"></h1>
-                                            <div class="panel-footer"> <i uib-tooltip="Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa" class="fa fa-info-circle"></i> Interrupções</div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <metrics-overview ibge_id="{{fusionmap_scope_city.id}}" uf="{{fusionmap_scope_uf}}" object-to-inject-in-metrics="objectToInjectInMetrics"></metrics-overview>
                             </div>
 
                         </div>
                         <!-- FINAL CIDADES -->
+
+                    </div>
 
                 </div>
 

@@ -61,18 +61,17 @@
              * Boilerplate map initialization code starts below:
              */
 
-//Step 1: initialize communication with the platform
-// In your own code, replace variable window.apikey with your own apikey
+            //Step 1: initialize communication with the platform
+            // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
                 apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
             });
             var defaultLayers = platform.createDefaultLayers();
 
 
+            // Now use the map as required...
 
-// Now use the map as required...
-
-// Now use the map as required...
+            // Now use the map as required...
 
             var refresh = function () {
                 // console.log('[widget.cases_map] Loading data...');
@@ -94,7 +93,7 @@
                         });
                     map.getViewModel().setLookAtData({tilt: 45});
 
-// add a resize listener to make sure that the map occupies the whole container
+                    // add a resize listener to make sure that the map occupies the whole container
                     window.addEventListener('resize', () => map.getViewPort().resize());
 
                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
@@ -120,11 +119,24 @@
             };
 
             refresh();
+
+            scope.$watch('objectToInject', function (value) {
+                if(value){
+                    scope.Obj = value;
+                    scope.Obj.invoke = function(city_id){
+                        attrs.cityId = city_id;
+                        refresh();
+                    }
+                }
+            });
         }
 
         return {
             link: init,
-            scope: true,
+            scope: {
+                /*The object that passed from the cntroller*/
+                objectToInject: '='
+            },
             replace: true,
             templateUrl: '/views/components/cases_map.html'
         };

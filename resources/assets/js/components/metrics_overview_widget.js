@@ -7,20 +7,17 @@
 			var metrics = {};
 
 			function refreshMetrics() {
-				Report.getStatusCity({city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf}, function (data) {
-					metrics = data._data;
-				});
-				// return Reports.query({
-				// 	view: 'linear',
-				// 	entity: 'children',
-				// 	dimension: 'case_status',
-				// 	filters: {
-				// 		case_status: ['in_progress', 'cancelled', 'completed', 'interrupted'],
-				// 		alert_status: ['accepted'],
-				// 	}
-				// }, function (data) {
-				// 	metrics = data.response;
-				// });
+
+				if( attrs.ibgeId && attrs.uf){
+					Report.getStatusCityByCountry({ibge_id: attrs.ibgeId, uf: attrs.uf}, function (data) {
+						metrics = data._data;
+					});
+				}else{
+					Report.getStatusCity({city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf}, function (data) {
+						metrics = data._data;
+					});
+				}
+
 			}
 
 			scope.getMetrics = function() {
@@ -31,10 +28,23 @@
 				refreshMetrics();
 			});
 
+			scope.$watch('objectToInjectInMetrics', function (value) {
+				if(value){
+					scope.Obj = value;
+					scope.Obj.invoke = function(ibgeId){
+						attrs.ibgeId = ibgeId;
+						refreshMetrics();
+					}
+				}
+			});
+
 		}
 
 		return {
 			link: init,
+			scope: {
+				objectToInjectInMetrics: '='
+			},
 			replace: true,
 			templateUrl: '/views/components/metrics_overview.html'
 		};
