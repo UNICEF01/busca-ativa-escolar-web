@@ -221,7 +221,6 @@
         }
 
         $scope.initFusionChartMap = function(){
-            //Fusion chart OK
             FusionCharts.ready(function() {
                 Reports.getDataMapFusionChart( function (data) {
 

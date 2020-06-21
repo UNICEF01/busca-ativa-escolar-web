@@ -45,7 +45,8 @@
                     scope.mapCenter = data.center;
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
-                    var map = new H.Map(document.getElementById('map'),
+                    document.getElementById('map').innerHTML = '';
+                    scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
                             center: {lat: data.center.latitude, lng: data.center.longitude},
                             zoom: data.center.zoom + 5,
@@ -55,21 +56,21 @@
                         // type: 'aerial'
                     });
 
-                    var tileLayer = mapTileService.createTileLayer(
+                    scope.tileLayer = mapTileService.createTileLayer(
                         'maptile',
                         'reduced.day',
                         256,
                         'png8'
                     );
-                    map.setBaseLayer(tileLayer);
+                    scope.map.setBaseLayer(scope.tileLayer);
 
                     // map.getViewModel().setLookAtData({tilt: 45});
 
-                    window.addEventListener('resize', () => map.getViewPort().resize());
+                    window.addEventListener('resize', () => scope.map.getViewPort().resize());
 
-                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(scope.map));
 
-                    startClustering(map, data.coordinates);
+                    startClustering(scope.map, data.coordinates);
 
                 });
             };
