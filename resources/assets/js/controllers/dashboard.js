@@ -114,19 +114,15 @@
             $scope.selo_unicef_nao_participa
         ];
 
-        $scope.uf_profiles_type = ['coordenador_estadual', 'gestor_estadual'];
-
         $scope.query_evolution_graph = {
             uf: '',
             tenant_id: '',
             selo: $scope.selo_unicef_todos
         };
 
-        $scope.show_option_selo = true;
-
-        $scope.show_option_uf = true;
-
-        $scope.show_option_municipio = true;
+        $scope.show_option_selo = false;
+        $scope.show_option_uf = false;
+        $scope.show_option_municipio = false;
 
         $scope.schema = [
             {
@@ -338,14 +334,41 @@
                         $scope.dataSource.data = fusionTable;
                     });
 
+                    $scope.initSelectsOfFusionChart();
+
                     if ($scope.show_option_uf) {
                         $scope.initUfs();
-                    }
-                    ;
+                    };
 
                 });
 
             });
+        };
+
+        $scope.initSelectsOfFusionChart = function () {
+            if( Identity.isUserType("coordenador_operacional")
+                || Identity.isUserType("supervisor_institucional")
+                || Identity.isUserType("gestor_politico")){
+
+                $scope.show_option_selo = false;
+                $scope.show_option_municipio = false;
+                $scope.show_option_uf = false;
+            }
+
+            if ( Identity.isUserType("coordenador_estadual") || Identity.isUserType("gestor_estadual") ) {
+                $scope.show_option_uf = false;
+                $scope.initTenantsSelo();
+                $scope.show_option_selo = true;
+                $scope.show_option_municipio = true;
+                $scope.show_option_uf = false;
+            }
+
+            if ( Identity.isUserType("gestor_nacional") ) {
+
+                $scope.show_option_selo = true;
+                $scope.show_option_municipio = true;
+                $scope.show_option_uf = true;
+            }
         };
 
         $scope.initTenants = function () {
@@ -367,15 +390,12 @@
         };
 
         $scope.onSelectSelo = function () {
-            alert();
-            console.log('aquidfd', $scope.identity.getType());
             $scope.query_evolution_graph.tenant_id = '';
-            if (!$scope.uf_profiles_type.includes($scope.identity.getType())) {
-                alert('opa')
+            if ( !Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual") ) {
                 $scope.query_evolution_graph.uf = '';
                 $scope.tenants_selo = {data: []};
             }
-            if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
+            if ( Identity.isUserType("coordenador_estadual") && Identity.isUserType("gestor_estadual") ) {
                 $scope.initTenantsSelo();
             }
             $scope.initFusionChart();
@@ -475,54 +495,43 @@
 
         $scope.initStatusBar = function () {
 
-            if (canSeeBar()) {
-                Reports.getStatusBar(function (data) {
+            Reports.getStatusBar(function (data) {
 
-                    var meta = data.goal_box && data.goal_box.goal || 0;
+                var meta = data.goal_box && data.goal_box.goal || 0;
 
-                    $scope.show_option_selo = false;
-                    $scope.show_option_municipio = false;
-                    $scope.show_option_uf = false;
+                if (meta == 0) {
+                    $scope.query_evolution_graph.selo = $scope.selo_unicef_todos;
+                }
 
-                    if (meta == 0) {
-                        $scope.query_evolution_graph.selo = $scope.selo_unicef_todos;
-                    }
+                if (meta > 0) {
+                    $scope.query_evolution_graph.selo = $scope.selo_unicef_participa;
+                }
 
-                    if (meta > 0) {
-                        $scope.query_evolution_graph.selo = $scope.selo_unicef_participa;
-                    }
+                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
+                // $scope.percentualAtingido = 100;
 
-                    var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
-                    $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
-                    // $scope.percentualAtingido = 100;
+                if (data.status !== 'ok') {
+                    $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
+                    $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
+                    $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
+                    $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
+                    $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
+                    $scope.otherData = data;
 
-                    if (data.status !== 'ok') {
-                        $scope.steps[0].info = data.bar && data.bar.registered_at || 0;
-                        $scope.steps[1].info = data.bar && data.bar.config.updated_at || 0;
-                        $scope.steps[2].info = data.bar && data.bar.first_alert || 0;
-                        $scope.steps[3].info = data.bar && data.bar.first_case || (data.bar.first_alert || 0);
-                        $scope.steps[4].info = data.bar && data.bar.first_reinsertion_class || 0;
-                        $scope.otherData = data;
-
-                        for (var i = 0; $scope.steps.length >= i; i++) {
-                            if ($scope.steps[i]) {
-                                var actualDate = moment($scope.steps[i].info || 0);
-                                if (actualDate._i !== 0) {
-                                    $scope.showInfo = i;
-                                }
+                    for (var i = 0; $scope.steps.length >= i; i++) {
+                        if ($scope.steps[i]) {
+                            var actualDate = moment($scope.steps[i].info || 0);
+                            if (actualDate._i !== 0) {
+                                $scope.showInfo = i;
                             }
                         }
                     }
+                }
 
-                    $scope.initFusionChart();
+                $scope.initFusionChart();
 
-                });
-            }
-
-            if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
-                $scope.show_option_uf = false;
-                $scope.initTenantsSelo();
-            }
+            });
 
             $scope.initFusionChart();
 
@@ -534,22 +543,6 @@
                 uf: $scope.identity.getCurrentUser().uf
             });
         };
-
-       async function  canSeeBar() {
-            var userProfileTypePromise = $localStorage.identity.current_user.$promise;
-            var userProfileType = await userProfileTypePromise.then(function (data) {
-                return data.type;
-            });
-            var canSee = [
-                'coordenador_operacional',
-                'supervisor_institucional',
-                'gestor_politico'
-            ]
-            if (canSee.includes(userProfileType)) {
-                return true;
-            }
-            return false;
-        }
 
         function init() {
             $scope.states.length = 0;
@@ -579,9 +572,49 @@
         $scope.stateCount = 2;
         init();
 
+        function returnStateByIDFusionMap(sigla) {
+            var states =
+                [
+                {sigla: 'AC', id: '001', state: 'Acre'},
+                {sigla: 'AL', id: '002', state: 'Alagoas'},
+                {sigla: 'AP', id: '003', state: 'Amapa'},
+                {sigla: 'AM', id: '004', state: 'Amazonas'},
+                {sigla: 'BA', id: '005', state: 'Bahia'},
+                {sigla: 'CE', id: '006', state: 'Ceara'},
+                {sigla: 'DF', id: '007', state: 'Distrito Federal'},
+                {sigla: 'ES', id: '008', state: 'Espirito Santo'},
+                {sigla: 'GO', id: '009', state: 'Goias'},
+                {sigla: 'MA', id: '010', state: 'Maranhao'},
+                {sigla: 'MG', id: '011', state: 'Mato Grosso'},
+                {sigla: 'MS', id: '012', state: 'Mato Grosso do Sul'},
+                {sigla: 'MG', id: '013', state: 'Minas Gerais'},
+                {sigla: 'PA', id: '014', state: 'Para'},
+                {sigla: 'PB', id: '015', state: 'Paraiba'},
+                {sigla: 'PR', id: '016', state: 'Parana'},
+                {sigla: 'PE', id: '017', state: 'Pernambuco'},
+                {sigla: 'PI', id: '018', state: 'Piaui'},
+                {sigla: 'RJ', id: '019', state: 'Rio de Janeiro'},
+                {sigla: 'RN', id: '020', state: 'Rio Grande do Norte'},
+                {sigla: 'RS', id: '021', state: 'Rio Grande do Sul'},
+                {sigla: 'RO', id: '022', state: 'Rondonia'},
+                {sigla: 'RR', id: '023', state: 'Roraima'},
+                {sigla: 'SC', id: '024', state: 'Santa Catarina'},
+                {sigla: 'SP', id: '025', state: 'Sao Paulo'},
+                {sigla: 'SE', id: '026', state: 'Sergipe'},
+                {sigla: 'TO', id: '027', state: 'Tocantins'}
+            ];
+            return states.filter(function (e) {
+                return e.sigla == sigla;
+            })[0];
+        }
+
         Platform.whenReady(function () {
             $scope.ready = true;
-            $scope.initFusionChartMap();
+            if ( Identity.getCurrentUser().type == "gestor_nacional"){ $scope.initFusionChartMap(); }
+            if ( Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual"){
+                var scope_uf = "maps/"+returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
+                $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
+            }
         });
 
     });

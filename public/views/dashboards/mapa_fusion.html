@@ -42,8 +42,6 @@
 
             </style>
 
-            <div class="panel-heading">Selecione um estado</div>
-
             <div class="panel-body">
 
 
@@ -51,10 +49,10 @@
 
                     <div class="col-md-12">
                         <div id="selector_country_state" style="margin-left: 50px">
-                            <h4 ng-if="fusionmap_scope_table == 'maps/brazil'">BRASIL</h4>
+                            <h4 ng-if="fusionmap_scope_table == 'maps/brazil' && identity.isUserType('gestor_nacional')">BRASIL /</h4>
                             <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
-                                <a href="#" ng-click="initFusionChartMap()">BRASIL</a>
-                                / <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
+                                <a href="#" ng-click="initFusionChartMap()" ng-if="identity.isUserType('gestor_nacional')">BRASIL /</a>
+                                <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
                                 / <select class="fusion_city_selector" name="scope_city" ng-model="fusionmap_scope_city.id" ng-change="initFusionChartMapCity()">
                                 <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
                             </select>
