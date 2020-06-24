@@ -51,7 +51,7 @@
                     document.getElementById('map').innerHTML = '';
                     scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
-                            center: {lat:52, lng:5},
+                            center: {lat:-13.5013846, lng:-51.901559},
                             zoom: 5,
                             pixelRatio: window.devicePixelRatio || 1
                         });
