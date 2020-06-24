@@ -5,27 +5,30 @@
         function init(scope, element, attrs) {
 
             function startClustering(map, data) {
-                // First we need to create an array of DataPoint objects,
-                // for the ClusterProvider
+
                 var dataPoints = data.map(function (item) {
                     return new H.clustering.DataPoint(item.latitude, item.longitude);
                 });
 
-                // Create a clustering provider with custom options for clusterizing the input
                 var clusteredDataProvider = new H.clustering.Provider(dataPoints, {
                     clusteringOptions: {
-                        // Maximum radius of the neighbourhood
                         eps: 32,
-                        // minimum weight of points required to form a cluster
                         minWeight: 2
                     }
                 });
 
-                // Create a layer tha will consume objects from our clustering provider
                 var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
 
-                // To make objects from clustering provder visible,
-                // we need to add our layer to the map
+                var locations = data.map(function (item) {
+                    return new H.map.Marker({lat: item.latitude, lng: item.longitude});
+                });
+                var group = new H.map.Group();
+                group.addObjects(locations);
+
+                map.getViewModel().setLookAtData({
+                    bounds: group.getBoundingBox()
+                });
+
                 map.addLayer(clusteringLayer);
             }
             /**
@@ -33,7 +36,7 @@
              */
 
             var platform = new H.service.Platform({
-                apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
+                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
             });
             var defaultLayers = platform.createDefaultLayers();
 
@@ -48,8 +51,8 @@
                     document.getElementById('map').innerHTML = '';
                     scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
-                            center: {lat: data.center.latitude, lng: data.center.longitude},
-                            zoom: data.center.zoom + 5,
+                            center: {lat:52, lng:5},
+                            zoom: 5,
                             pixelRatio: window.devicePixelRatio || 1
                         });
                     var mapTileService = platform.getMapTileService({
