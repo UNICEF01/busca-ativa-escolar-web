@@ -8,10 +8,11 @@
                 controller: 'ChildSearchCtrl'
             });
         })
-        .controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
+            $scope.reports = {};
 
             $scope.defaultQuery = {
                 name: '',
@@ -31,10 +32,12 @@
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
+
             $scope.search = {};
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsSelo();
             };
 
             $scope.resetQuery = function () {
@@ -48,6 +51,7 @@
                     Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
                 });
             };
+
             $scope.refresh();
 
             var language = {
@@ -81,6 +85,6 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
-
+            
         });
 })();
