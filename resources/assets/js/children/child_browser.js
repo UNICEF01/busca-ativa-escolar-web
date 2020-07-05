@@ -16,6 +16,7 @@
             $scope.lastOrder = {
                 date: null
             };
+            $scope.identity = Identity;
 
             $scope.defaultQuery = {
                 name: '',
