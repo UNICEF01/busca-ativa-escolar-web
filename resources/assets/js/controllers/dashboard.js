@@ -1,11 +1,14 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, $localStorage, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($rootScope, $scope, $http, $localStorage, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
+        $scope.showDetailsMap = false;
+        $scope.showMessageMap = 'Ver detalhes';
+
 
         $scope.listeners = {
             click: function () {
@@ -80,25 +83,25 @@
             "events": {
 
                 "entityClick": function (e) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
-                        if( e.data.value > 0 ) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
+                        if (e.data.value > 0) {
                             $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
                             $scope.initFusionChartMapState(e.data.shortLabel, $scope.fusionmap_scope_table);
                         }
-                    }else{
-                        if( e.data.value > 0 ){
+                    } else {
+                        if (e.data.value > 0) {
                             $scope.fusionmap_scope_city.id = e.data.id;
                             $scope.$apply();
                         }
                     }
                 },
-                "entityRollover": function(evt, data) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                "entityRollover": function (evt, data) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ddd";
                     }
                 },
-                "entityRollout": function(evt, data) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                "entityRollout": function (evt, data) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ffffff";
                     }
                 }
@@ -216,9 +219,9 @@
             return $scope.fusion_map_config.dataSource.data;
         }
 
-        $scope.initFusionChartMap = function(){
-            FusionCharts.ready(function() {
-                Reports.getDataMapFusionChart( function (data) {
+        $scope.initFusionChartMap = function () {
+            FusionCharts.ready(function () {
+                Reports.getDataMapFusionChart(function (data) {
 
                     $scope.fusionmap_scope_city.id = null;
                     $scope.fusionmap_scope_table = "maps/brazil";
@@ -243,7 +246,7 @@
         };
 
         $scope.initFusionChartMapState = function (uf, scope_table) {
-            Reports.getDataMapFusionChart( { uf: uf }, function (data) {
+            Reports.getDataMapFusionChart({uf: uf}, function (data) {
 
                 $scope.fusionmap_scope_city.id = null;
                 $scope.fusion_map_config.type = scope_table;
@@ -267,7 +270,7 @@
             });
         };
 
-        $scope.initFusionChartMapCity = function(){
+        $scope.initFusionChartMapCity = function () {
             $scope.injectedObjectDirectiveCaseMaps.invoke($scope.fusionmap_scope_city.id);
             $scope.objectToInjectInMetrics.invoke($scope.fusionmap_scope_city.id, $scope.fusionmap_scope_uf);
         };
@@ -338,7 +341,8 @@
 
                     if ($scope.show_option_uf) {
                         $scope.initUfs();
-                    };
+                    }
+                    ;
 
                 });
 
@@ -346,16 +350,16 @@
         };
 
         $scope.initSelectsOfFusionChart = function () {
-            if( Identity.isUserType("coordenador_operacional")
+            if (Identity.isUserType("coordenador_operacional")
                 || Identity.isUserType("supervisor_institucional")
-                || Identity.isUserType("gestor_politico")){
+                || Identity.isUserType("gestor_politico")) {
 
                 $scope.show_option_selo = false;
                 $scope.show_option_municipio = false;
                 $scope.show_option_uf = false;
             }
 
-            if ( Identity.isUserType("coordenador_estadual") || Identity.isUserType("gestor_estadual") ) {
+            if (Identity.isUserType("coordenador_estadual") || Identity.isUserType("gestor_estadual")) {
                 $scope.show_option_uf = false;
                 $scope.initTenantsSelo();
                 $scope.show_option_selo = true;
@@ -363,7 +367,7 @@
                 $scope.show_option_uf = false;
             }
 
-            if ( Identity.isUserType("gestor_nacional") ) {
+            if (Identity.isUserType("gestor_nacional")) {
 
                 $scope.show_option_selo = true;
                 $scope.show_option_municipio = true;
@@ -391,11 +395,11 @@
 
         $scope.onSelectSelo = function () {
             $scope.query_evolution_graph.tenant_id = '';
-            if ( !Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual") ) {
+            if (!Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual")) {
                 $scope.query_evolution_graph.uf = '';
                 $scope.tenants_selo = {data: []};
             }
-            if ( Identity.isUserType("coordenador_estadual") && Identity.isUserType("gestor_estadual") ) {
+            if (Identity.isUserType("coordenador_estadual") && Identity.isUserType("gestor_estadual")) {
                 $scope.initTenantsSelo();
             }
             $scope.initFusionChart();
@@ -575,44 +579,60 @@
         function returnStateByIDFusionMap(sigla) {
             var states =
                 [
-                {sigla: 'AC', id: '001', state: 'Acre'},
-                {sigla: 'AL', id: '002', state: 'Alagoas'},
-                {sigla: 'AP', id: '003', state: 'Amapa'},
-                {sigla: 'AM', id: '004', state: 'Amazonas'},
-                {sigla: 'BA', id: '005', state: 'Bahia'},
-                {sigla: 'CE', id: '006', state: 'Ceara'},
-                {sigla: 'DF', id: '007', state: 'Distrito Federal'},
-                {sigla: 'ES', id: '008', state: 'Espirito Santo'},
-                {sigla: 'GO', id: '009', state: 'Goias'},
-                {sigla: 'MA', id: '010', state: 'Maranhao'},
-                {sigla: 'MG', id: '011', state: 'Mato Grosso'},
-                {sigla: 'MS', id: '012', state: 'Mato Grosso do Sul'},
-                {sigla: 'MG', id: '013', state: 'Minas Gerais'},
-                {sigla: 'PA', id: '014', state: 'Para'},
-                {sigla: 'PB', id: '015', state: 'Paraiba'},
-                {sigla: 'PR', id: '016', state: 'Parana'},
-                {sigla: 'PE', id: '017', state: 'Pernambuco'},
-                {sigla: 'PI', id: '018', state: 'Piaui'},
-                {sigla: 'RJ', id: '019', state: 'Rio de Janeiro'},
-                {sigla: 'RN', id: '020', state: 'Rio Grande do Norte'},
-                {sigla: 'RS', id: '021', state: 'Rio Grande do Sul'},
-                {sigla: 'RO', id: '022', state: 'Rondonia'},
-                {sigla: 'RR', id: '023', state: 'Roraima'},
-                {sigla: 'SC', id: '024', state: 'Santa Catarina'},
-                {sigla: 'SP', id: '025', state: 'Sao Paulo'},
-                {sigla: 'SE', id: '026', state: 'Sergipe'},
-                {sigla: 'TO', id: '027', state: 'Tocantins'}
-            ];
+                    {sigla: 'AC', id: '001', state: 'Acre'},
+                    {sigla: 'AL', id: '002', state: 'Alagoas'},
+                    {sigla: 'AP', id: '003', state: 'Amapa'},
+                    {sigla: 'AM', id: '004', state: 'Amazonas'},
+                    {sigla: 'BA', id: '005', state: 'Bahia'},
+                    {sigla: 'CE', id: '006', state: 'Ceara'},
+                    {sigla: 'DF', id: '007', state: 'Distrito Federal'},
+                    {sigla: 'ES', id: '008', state: 'Espirito Santo'},
+                    {sigla: 'GO', id: '009', state: 'Goias'},
+                    {sigla: 'MA', id: '010', state: 'Maranhao'},
+                    {sigla: 'MG', id: '011', state: 'Mato Grosso'},
+                    {sigla: 'MS', id: '012', state: 'Mato Grosso do Sul'},
+                    {sigla: 'MG', id: '013', state: 'Minas Gerais'},
+                    {sigla: 'PA', id: '014', state: 'Para'},
+                    {sigla: 'PB', id: '015', state: 'Paraiba'},
+                    {sigla: 'PR', id: '016', state: 'Parana'},
+                    {sigla: 'PE', id: '017', state: 'Pernambuco'},
+                    {sigla: 'PI', id: '018', state: 'Piaui'},
+                    {sigla: 'RJ', id: '019', state: 'Rio de Janeiro'},
+                    {sigla: 'RN', id: '020', state: 'Rio Grande do Norte'},
+                    {sigla: 'RS', id: '021', state: 'Rio Grande do Sul'},
+                    {sigla: 'RO', id: '022', state: 'Rondonia'},
+                    {sigla: 'RR', id: '023', state: 'Roraima'},
+                    {sigla: 'SC', id: '024', state: 'Santa Catarina'},
+                    {sigla: 'SP', id: '025', state: 'Sao Paulo'},
+                    {sigla: 'SE', id: '026', state: 'Sergipe'},
+                    {sigla: 'TO', id: '027', state: 'Tocantins'}
+                ];
             return states.filter(function (e) {
                 return e.sigla == sigla;
             })[0];
         }
 
+        $scope.handleMaps = function (value) {
+            var cloudering = document.getElementById("map");
+            var markers = document.getElementById("map-markes");
+            if (cloudering.style.display === "none") {
+                cloudering.style.display = "block";
+                markers.style.display = "none";
+                $scope.showMessageMap = $scope.showMessageMap;
+            } else {
+                cloudering.style.display = "none";
+                markers.style.display = "block";
+                $scope.showMessageMap = 'Ver agrupado';
+            }
+        };
+
         Platform.whenReady(function () {
             $scope.ready = true;
-            if ( Identity.getCurrentUser().type == "gestor_nacional"){ $scope.initFusionChartMap(); }
-            if ( Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual"){
-                var scope_uf = "maps/"+returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
+            if (Identity.getCurrentUser().type == "gestor_nacional") {
+                $scope.initFusionChartMap();
+            }
+            if (Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual") {
+                var scope_uf = "maps/" + returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
                 $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
             }
         });
