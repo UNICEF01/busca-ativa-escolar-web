@@ -1,8 +1,10 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function ($rootScope, $window, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
-        function init(scope, element, attrs) {
+        function init(scope, element, attrs, tabsCtrl) {
+
+            console.log('Controlador', tabsCtrl);
 
             /**
              * Creates a new marker and adds it to a group
@@ -15,6 +17,11 @@
                 // add custom data to the marker
                 marker.setData(html);
                 group.addObject(marker);
+
+                marker.addEventListener('pointerleave', function (evt) {
+                    scope.bubble.close();
+                }, false);
+
             }
 
             /**
@@ -22,31 +29,38 @@
              * Clicking on a marker opens an infobubble which holds HTML content related to the marker.
              * @param  {H.Map} map      A HERE Map instance within the application
              */
-            function addInfoBubble(map) {
+            function addInfoBubble(map, coordinates) {
                 var group = new H.map.Group();
 
                 map.addObject(group);
 
                 // add 'tap' event listener, that opens info bubble, to the group
+                scope.bubble;
                 group.addEventListener('tap', function (evt) {
+                    // if (scope.bubble !== undefined) {
+                    //     scope.bubble.close();
+                    // }
+
                     // event target is the marker itself, group is a parent event target
                     // for all objects that it contains
-                    var bubble =  new H.ui.InfoBubble(evt.target.getGeometry(), {
+                    scope.bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
                         // read custom data
                         content: evt.target.getData()
                     });
                     // show info bubble
-                    ui.addBubble(bubble);
+                    scope.ui.addBubble(scope.bubble);
                 }, false);
 
-                addMarkerToGroup(group, {lat:53.439, lng:-2.221},
-                    '<div><a href="http://www.mcfc.co.uk" target="_blank">Manchester City</a>' +
-                    '</div><div >City of Manchester Stadium<br>Capacity: 48,000</div>');
 
-                addMarkerToGroup(group, {lat:53.430, lng:-2.961},
-                    '<div><a href="http://www.liverpoolfc.tv" target="_blank">Liverpool</a>' +
-                    '</div><div >Anfield<br>Capacity: 45,362</div>');
+                angular.forEach(coordinates, function (value, key) {
+                    addMarkerToGroup(group, {lat: value.latitude, lng: value.longitude},
+                        '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
+                });
 
+
+                // map.getViewModel().setLookAtData({
+                //     bounds: group.getBoundingBox()
+                // });
             }
 
             /**
@@ -60,32 +74,71 @@
             });
             var defaultLayers = platform.createDefaultLayers();
 
+            // if(scope.status)
+
+            var refresh = function () {
+
+                Children.getMap({city_id: attrs.cityId}, function (data) {
+
+                    scope.coordinates = data.coordinates;
+                    scope.mapCenter = data.center;
+                    scope.mapZoom = data.center.zoom;
+                    scope.mapReady = true;
+
+                    console.log(H);
+
 // initialize a map - this map is centered over Europe
-            var map = new H.Map(document.getElementById('map-markes'),
-                defaultLayers.vector.normal.map,{
-                    center: {lat: 53.430, lng: -2.961},
-                    zoom: 7,
-                    pixelRatio: window.devicePixelRatio || 1
-                });
+                    var map = new H.Map(document.getElementById('map-markes'),
+                        defaultLayers.vector.normal.map, {
+                            center: {lat: scope.mapCenter.latitude, lng: scope.mapCenter.longitude},
+                            zoom: 7,
+                            pixelRatio: window.devicePixelRatio || 1
+                        });
+
+
+
+                    var mapTileService = platform.getMapTileService({
+                        // type: 'aerial'
+                    });
+
+                    scope.tileLayer = mapTileService.createTileLayer(
+                        'maptile',
+                        'reduced.day',
+                        256,
+                        'png8'
+                    );
+                    map.setBaseLayer(scope.tileLayer);
+
+
 // add a resize listener to make sure that the map occupies the whole container
-            window.addEventListener('resize', () => map.getViewPort().resize());
+                    window.addEventListener('resize', () => map.getViewPort().resize());
 
 // MapEvents enables the event system
 // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
 // create default UI with layers provided by the platform
-            var ui = H.ui.UI.createDefault(map, defaultLayers);
+                    scope.ui = H.ui.UI.createDefault(map, defaultLayers);
+
 
 // Now use the map as required...
-            addInfoBubble(map);
+                    addInfoBubble(map, scope.coordinates);
+
+                });
+            };
+
+            scope.$watch('status', function (value) {
+                refresh();
+            });
+
         }
 
         return {
             link: init,
             scope: {
                 /*The object that passed from the cntroller*/
-                objectToInject: '='
+                objectToInject: '=',
+                status: '='
             },
             replace: true,
             templateUrl: '/views/components/cases_map_markes.html'

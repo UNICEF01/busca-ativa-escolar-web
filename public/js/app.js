@@ -1516,11 +1516,258 @@
 		});
 
 })();
+(function() {
+	identify('config', 'charts.js');
+
+	angular.module('BuscaAtivaEscolar').run(function (Config) {
+		Highcharts.setOptions({
+			lang: {
+				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+				loading: ['Atualizando o gráfico...'],
+				contextButtonTitle: 'Exportar gráfico',
+				decimalPoint: ',',
+				thousandsSep: '.',
+				downloadJPEG: 'Baixar imagem JPEG',
+				downloadPDF: 'Baixar arquivo PDF',
+				downloadPNG: 'Baixar imagem PNG',
+				downloadSVG: 'Baixar vetor SVG',
+				printChart: 'Imprimir gráfico',
+				rangeSelectorFrom: 'De',
+				rangeSelectorTo: 'Para',
+				rangeSelectorZoom: 'Zoom',
+				resetZoom: 'Voltar zoom',
+				resetZoomTitle: 'Voltar zoom para nível 1:1'
+			}
+		});
+	})
+
+})();
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+// (function () {
+//     identify('config', 'here_api.js');
+//
+//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
+//         HereMapsConfigProvider.setOptions({
+//             app_id: 'IaV356sfi2gAreQwtVsB',
+//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
+//             useHTTPS: true,
+//             apiVersion: '3.0',
+//             useCIT: true,
+//             mapTileConfig: {
+//                 scheme: 'reduced.day',
+//                 size: 256,
+//                 format: 'png8',
+//                 metadataQueryParams: {}
+//             }
+//         });
+//     }]);
+// })();
+//
+
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function() {
+	identify('config', 'on_init.js');
+
+	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
+		console.info("------------------------------");
+		console.info(" BUSCA ATIVA ESCOLAR");
+		console.info(" Copyright (c) LQDI Digital");
+		console.info("------------------------------");
+		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
+		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
+		console.info("------------------------------");
+
+		$.material.init();
+
+		$rootScope.$on('unauthorized', function() {
+			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
+			Auth.logout();
+			$state.go('login');
+		})
+	})
+
+})();
+(function() {
+	identify('config', 'states.js');
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+			$locationProvider.html5Mode({
+				enabled: true,
+				requireBase: true}
+				);
+			$urlRouterProvider.otherwise('/dashboard');
+
+			$stateProvider
+				.state('login', {
+					url: '/login',
+					templateUrl: '/views/login.html',
+					controller: 'LoginCtrl',
+					unauthenticated: true
+				})
+				.state('dashboard', {
+					url: '/dashboard',
+					templateUrl: '/views/dashboard.html',
+					controller: 'DashboardCtrl'
+				})
+				.state('developer_mode', {
+					url: '/developer_mode',
+					templateUrl: '/views/developer/developer_dashboard.html',
+					controller: 'DeveloperCtrl',
+					unauthenticated: true
+
+				})
+				.state('settings', {
+					url: '/settings?step',
+					templateUrl: '/views/settings/manage_settings.html',
+					controller: 'SettingsCtrl'
+				})
+				.state('settings.parameterize_group', {
+					url: '/parameterize_group/{group_id}',
+					templateUrl: '/views/settings/parameterize_group.html',
+					controller: 'ParameterizeGroupCtrl'
+				})
+				.state('credits', {
+					url: '/credits',
+					templateUrl: '/views/static/credits.html',
+					controller: 'CreditsCtrl',
+					unauthenticated: true
+				})
+				.state('tenant_signup', {
+					url: '/tenant_signup',
+					templateUrl: '/views/tenant_signup/main.html',
+					controller: 'TenantSignupCtrl',
+					unauthenticated: true
+				})
+				.state('state_signup', {
+					url: '/state_signup',
+					templateUrl: '/views/state_signup/main.html',
+					controller: 'StateSignupCtrl',
+					unauthenticated: true
+				})
+
+		});
+
+})();
+
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMap', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMap', function ($rootScope, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
         function init(scope, element, attrs) {
+
+
+            function synchronizeMaps(firstMap, secondMap) {
+                // get view model objects for both maps, view model contains all data and
+                // utility functions that're related to map's geo state
+                var viewModel1 = firstMap.getViewModel(),
+                    viewModel2 = secondMap.getViewModel();
+
+                // set up view change listener on interactive map
+                firstMap.addEventListener('mapviewchange', function () {
+                    // on every view change take a "snapshot" of a current geo data for
+                    // interactive map and set this values to the second, non-interactive, map
+                    viewModel2.setLookAtData(viewModel1.getLookAtData());
+                });
+            }
+
+            function addMarkerToGroup(group, coordinate, html) {
+                var marker = new H.map.Marker(coordinate);
+                // add custom data to the marker
+                marker.setData(html);
+                group.addObject(marker);
+
+                group.addEventListener('pointerleave', function (evt) {
+                    console.log(evt);
+                    if (scope.bubble !== undefined) {
+                        scope.bubble.close();
+                    }
+                }, false);
+
+            }
+
+            function addInfoBubble(map, coordinates) {
+                var group = new H.map.Group();
+
+                map.addObject(group);
+
+                // add 'tap' event listener, that opens info bubble, to the group
+                scope.bubble = '';
+
+                group.addEventListener('tap', function (evt) {
+
+                    if (scope.bubble) {
+                        scope.bubble.close();
+                    }
+
+                    // event target is the marker itself, group is a parent event target
+                    // for all objects that it contains
+                    scope.bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+                        // read custom data
+                        content: evt.target.getData()
+                    });
+                    // show info bubble
+                    scope.ui.addBubble(scope.bubble);
+                }, false);
+
+                angular.forEach(coordinates, function (value, key) {
+                    addMarkerToGroup(group, {lat: value.latitude, lng: value.longitude},
+                        '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
+                });
+
+                var markers = document.getElementById("map-markes");
+                markers.style.display = "none";
+            }
+
 
             function startClustering(map, data) {
 
@@ -1541,14 +1788,30 @@
                     return new H.map.Marker({lat: item.latitude, lng: item.longitude});
                 });
                 var group = new H.map.Group();
+
+                // group.addEventListener('tap', function (evt) {
+                //     alert()
+                //     var target = evt.target;
+                //     // retrieve maximum zoom level
+                //     var maxZoom = target.getData().maxZoom;
+                //     // get the shape's bounding box and adjust the camera position
+                //     map.getViewModel().setLookAtData({
+                //         zoom: maxZoom,
+                //         bounds: target.getBoundingBox()
+                //     });
+                // });
+
                 group.addObjects(locations);
 
                 map.getViewModel().setLookAtData({
                     bounds: group.getBoundingBox()
                 });
 
+                scope.dataMap = map.getViewModel().getLookAtData();
+
                 map.addLayer(clusteringLayer);
             }
+
             /**
              * Boilerplate map initialization code starts below:
              */
@@ -1557,6 +1820,8 @@
                 apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
             });
             var defaultLayers = platform.createDefaultLayers();
+            var defaultLayersSync = platform.createDefaultLayers();
+
 
             var refresh = function () {
                 // console.log('[widget.cases_map] Loading data...');
@@ -1567,12 +1832,14 @@
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
                     document.getElementById('map').innerHTML = '';
+
                     scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
-                            center: {lat:-13.5013846, lng:-51.901559},
+                            center: {lat: -13.5013846, lng: -51.901559},
                             zoom: 5,
                             pixelRatio: window.devicePixelRatio || 1
                         });
+
                     var mapTileService = platform.getMapTileService({
                         // type: 'aerial'
                     });
@@ -1589,9 +1856,39 @@
 
                     window.addEventListener('resize', () => scope.map.getViewPort().resize());
 
+
                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(scope.map));
 
+                    scope.ui = H.ui.UI.createDefault(scope.map, defaultLayersSync);
+
+
+                    var mapMarkSync = new H.Map(document.getElementById('map-markes'),
+                        defaultLayersSync.vector.normal.map, {
+                            center: {lat: -13.5013846, lng: -51.901559},
+                            zoom: 5,
+                            pixelRatio: window.devicePixelRatio || 1
+                        });
+                    var mapTileServiceSync = platform.getMapTileService({
+                        // type: 'aerial'
+                    });
+
+                    scope.tileLayer = mapTileService.createTileLayer(
+                        'maptile',
+                        'reduced.day',
+                        256,
+                        'png8'
+                    );
+                    mapMarkSync.setBaseLayer(scope.tileLayer);
+
+                    window.addEventListener('resize', () => mapMarkSync.getViewPort().resize());
+
+                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(mapMarkSync));
+
+                    scope.ui = H.ui.UI.createDefault(mapMarkSync, defaultLayersSync);
+
                     startClustering(scope.map, data.coordinates);
+                    addInfoBubble(mapMarkSync, scope.coordinates);
+                    synchronizeMaps(scope.map, mapMarkSync);
 
                 });
             };
@@ -1599,9 +1896,9 @@
             refresh();
 
             scope.$watch('objectToInject', function (value) {
-                if(value){
+                if (value) {
                     scope.Obj = value;
-                    scope.Obj.invoke = function(city_id){
+                    scope.Obj.invoke = function (city_id) {
                         attrs.cityId = city_id;
                         refresh();
                     }
@@ -1624,9 +1921,11 @@
 
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function (moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function ($rootScope, $window, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
-        function init(scope, element, attrs) {
+        function init(scope, element, attrs, tabsCtrl) {
+
+            console.log('Controlador', tabsCtrl);
 
             /**
              * Creates a new marker and adds it to a group
@@ -1639,6 +1938,11 @@
                 // add custom data to the marker
                 marker.setData(html);
                 group.addObject(marker);
+
+                marker.addEventListener('pointerleave', function (evt) {
+                    scope.bubble.close();
+                }, false);
+
             }
 
             /**
@@ -1646,31 +1950,38 @@
              * Clicking on a marker opens an infobubble which holds HTML content related to the marker.
              * @param  {H.Map} map      A HERE Map instance within the application
              */
-            function addInfoBubble(map) {
+            function addInfoBubble(map, coordinates) {
                 var group = new H.map.Group();
 
                 map.addObject(group);
 
                 // add 'tap' event listener, that opens info bubble, to the group
+                scope.bubble;
                 group.addEventListener('tap', function (evt) {
+                    // if (scope.bubble !== undefined) {
+                    //     scope.bubble.close();
+                    // }
+
                     // event target is the marker itself, group is a parent event target
                     // for all objects that it contains
-                    var bubble =  new H.ui.InfoBubble(evt.target.getGeometry(), {
+                    scope.bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
                         // read custom data
                         content: evt.target.getData()
                     });
                     // show info bubble
-                    ui.addBubble(bubble);
+                    scope.ui.addBubble(scope.bubble);
                 }, false);
 
-                addMarkerToGroup(group, {lat:53.439, lng:-2.221},
-                    '<div><a href="http://www.mcfc.co.uk" target="_blank">Manchester City</a>' +
-                    '</div><div >City of Manchester Stadium<br>Capacity: 48,000</div>');
 
-                addMarkerToGroup(group, {lat:53.430, lng:-2.961},
-                    '<div><a href="http://www.liverpoolfc.tv" target="_blank">Liverpool</a>' +
-                    '</div><div >Anfield<br>Capacity: 45,362</div>');
+                angular.forEach(coordinates, function (value, key) {
+                    addMarkerToGroup(group, {lat: value.latitude, lng: value.longitude},
+                        '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
+                });
 
+
+                // map.getViewModel().setLookAtData({
+                //     bounds: group.getBoundingBox()
+                // });
             }
 
             /**
@@ -1684,32 +1995,71 @@
             });
             var defaultLayers = platform.createDefaultLayers();
 
+            // if(scope.status)
+
+            var refresh = function () {
+
+                Children.getMap({city_id: attrs.cityId}, function (data) {
+
+                    scope.coordinates = data.coordinates;
+                    scope.mapCenter = data.center;
+                    scope.mapZoom = data.center.zoom;
+                    scope.mapReady = true;
+
+                    console.log(H);
+
 // initialize a map - this map is centered over Europe
-            var map = new H.Map(document.getElementById('map-markes'),
-                defaultLayers.vector.normal.map,{
-                    center: {lat: 53.430, lng: -2.961},
-                    zoom: 7,
-                    pixelRatio: window.devicePixelRatio || 1
-                });
+                    var map = new H.Map(document.getElementById('map-markes'),
+                        defaultLayers.vector.normal.map, {
+                            center: {lat: scope.mapCenter.latitude, lng: scope.mapCenter.longitude},
+                            zoom: 7,
+                            pixelRatio: window.devicePixelRatio || 1
+                        });
+
+
+
+                    var mapTileService = platform.getMapTileService({
+                        // type: 'aerial'
+                    });
+
+                    scope.tileLayer = mapTileService.createTileLayer(
+                        'maptile',
+                        'reduced.day',
+                        256,
+                        'png8'
+                    );
+                    map.setBaseLayer(scope.tileLayer);
+
+
 // add a resize listener to make sure that the map occupies the whole container
-            window.addEventListener('resize', () => map.getViewPort().resize());
+                    window.addEventListener('resize', () => map.getViewPort().resize());
 
 // MapEvents enables the event system
 // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-            var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+                    var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
 
 // create default UI with layers provided by the platform
-            var ui = H.ui.UI.createDefault(map, defaultLayers);
+                    scope.ui = H.ui.UI.createDefault(map, defaultLayers);
+
 
 // Now use the map as required...
-            addInfoBubble(map);
+                    addInfoBubble(map, scope.coordinates);
+
+                });
+            };
+
+            scope.$watch('status', function (value) {
+                refresh();
+            });
+
         }
 
         return {
             link: init,
             scope: {
                 /*The object that passed from the cntroller*/
-                objectToInject: '='
+                objectToInject: '=',
+                status: '='
             },
             replace: true,
             templateUrl: '/views/components/cases_map_markes.html'
@@ -3540,189 +3890,6 @@
 })();
 
 (function() {
-	identify('config', 'charts.js');
-
-	angular.module('BuscaAtivaEscolar').run(function (Config) {
-		Highcharts.setOptions({
-			lang: {
-				months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-				shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-				weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-				loading: ['Atualizando o gráfico...'],
-				contextButtonTitle: 'Exportar gráfico',
-				decimalPoint: ',',
-				thousandsSep: '.',
-				downloadJPEG: 'Baixar imagem JPEG',
-				downloadPDF: 'Baixar arquivo PDF',
-				downloadPNG: 'Baixar imagem PNG',
-				downloadSVG: 'Baixar vetor SVG',
-				printChart: 'Imprimir gráfico',
-				rangeSelectorFrom: 'De',
-				rangeSelectorTo: 'Para',
-				rangeSelectorZoom: 'Zoom',
-				resetZoom: 'Voltar zoom',
-				resetZoomTitle: 'Voltar zoom para nível 1:1'
-			}
-		});
-	})
-
-})();
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-// (function () {
-//     identify('config', 'here_api.js');
-//
-//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
-//         HereMapsConfigProvider.setOptions({
-//             app_id: 'IaV356sfi2gAreQwtVsB',
-//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
-//             useHTTPS: true,
-//             apiVersion: '3.0',
-//             useCIT: true,
-//             mapTileConfig: {
-//                 scheme: 'reduced.day',
-//                 size: 256,
-//                 format: 'png8',
-//                 metadataQueryParams: {}
-//             }
-//         });
-//     }]);
-// })();
-//
-
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function() {
-	identify('config', 'on_init.js');
-
-	angular.module('BuscaAtivaEscolar').run(function ($cookies, $rootScope, $state, Identity, Auth, Config, StaticData) {
-		console.info("------------------------------");
-		console.info(" BUSCA ATIVA ESCOLAR");
-		console.info(" Copyright (c) LQDI Digital");
-		console.info("------------------------------");
-		console.info(" WS ENDPOINT: ", Config.getAPIEndpoint());
-		console.info(" STORAGE BUILD PREFIX: ", Config.BUILD_PREFIX);
-		console.info("------------------------------");
-
-		$.material.init();
-
-		$rootScope.$on('unauthorized', function() {
-			console.log('[event.unauthorized] User unauthorized, redirecting to login...');
-			Auth.logout();
-			$state.go('login');
-		})
-	})
-
-})();
-(function() {
-	identify('config', 'states.js');
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-			$locationProvider.html5Mode({
-				enabled: true,
-				requireBase: true}
-				);
-			$urlRouterProvider.otherwise('/dashboard');
-
-			$stateProvider
-				.state('login', {
-					url: '/login',
-					templateUrl: '/views/login.html',
-					controller: 'LoginCtrl',
-					unauthenticated: true
-				})
-				.state('dashboard', {
-					url: '/dashboard',
-					templateUrl: '/views/dashboard.html',
-					controller: 'DashboardCtrl'
-				})
-				.state('developer_mode', {
-					url: '/developer_mode',
-					templateUrl: '/views/developer/developer_dashboard.html',
-					controller: 'DeveloperCtrl',
-					unauthenticated: true
-
-				})
-				.state('settings', {
-					url: '/settings?step',
-					templateUrl: '/views/settings/manage_settings.html',
-					controller: 'SettingsCtrl'
-				})
-				.state('settings.parameterize_group', {
-					url: '/parameterize_group/{group_id}',
-					templateUrl: '/views/settings/parameterize_group.html',
-					controller: 'ParameterizeGroupCtrl'
-				})
-				.state('credits', {
-					url: '/credits',
-					templateUrl: '/views/static/credits.html',
-					controller: 'CreditsCtrl',
-					unauthenticated: true
-				})
-				.state('tenant_signup', {
-					url: '/tenant_signup',
-					templateUrl: '/views/tenant_signup/main.html',
-					controller: 'TenantSignupCtrl',
-					unauthenticated: true
-				})
-				.state('state_signup', {
-					url: '/state_signup',
-					templateUrl: '/views/state_signup/main.html',
-					controller: 'StateSignupCtrl',
-					unauthenticated: true
-				})
-
-		});
-
-})();
-
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
-
-})();
-(function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
 
@@ -3736,12 +3903,15 @@
 })();
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, $http, $localStorage, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($rootScope, $scope, $http, $localStorage, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
+        $scope.showDetailsMap = false;
+        $scope.showMessageMap = 'Ver detalhes';
+
 
         $scope.listeners = {
             click: function () {
@@ -3816,25 +3986,25 @@
             "events": {
 
                 "entityClick": function (e) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
-                        if( e.data.value > 0 ) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
+                        if (e.data.value > 0) {
                             $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
                             $scope.initFusionChartMapState(e.data.shortLabel, $scope.fusionmap_scope_table);
                         }
-                    }else{
-                        if( e.data.value > 0 ){
+                    } else {
+                        if (e.data.value > 0) {
                             $scope.fusionmap_scope_city.id = e.data.id;
                             $scope.$apply();
                         }
                     }
                 },
-                "entityRollover": function(evt, data) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                "entityRollover": function (evt, data) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ddd";
                     }
                 },
-                "entityRollout": function(evt, data) {
-                    if( $scope.fusionmap_scope_table == "maps/brazil" ) {
+                "entityRollout": function (evt, data) {
+                    if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ffffff";
                     }
                 }
@@ -3952,9 +4122,9 @@
             return $scope.fusion_map_config.dataSource.data;
         }
 
-        $scope.initFusionChartMap = function(){
-            FusionCharts.ready(function() {
-                Reports.getDataMapFusionChart( function (data) {
+        $scope.initFusionChartMap = function () {
+            FusionCharts.ready(function () {
+                Reports.getDataMapFusionChart(function (data) {
 
                     $scope.fusionmap_scope_city.id = null;
                     $scope.fusionmap_scope_table = "maps/brazil";
@@ -3979,7 +4149,7 @@
         };
 
         $scope.initFusionChartMapState = function (uf, scope_table) {
-            Reports.getDataMapFusionChart( { uf: uf }, function (data) {
+            Reports.getDataMapFusionChart({uf: uf}, function (data) {
 
                 $scope.fusionmap_scope_city.id = null;
                 $scope.fusion_map_config.type = scope_table;
@@ -4003,7 +4173,7 @@
             });
         };
 
-        $scope.initFusionChartMapCity = function(){
+        $scope.initFusionChartMapCity = function () {
             $scope.injectedObjectDirectiveCaseMaps.invoke($scope.fusionmap_scope_city.id);
             $scope.objectToInjectInMetrics.invoke($scope.fusionmap_scope_city.id, $scope.fusionmap_scope_uf);
         };
@@ -4074,7 +4244,8 @@
 
                     if ($scope.show_option_uf) {
                         $scope.initUfs();
-                    };
+                    }
+                    ;
 
                 });
 
@@ -4082,16 +4253,16 @@
         };
 
         $scope.initSelectsOfFusionChart = function () {
-            if( Identity.isUserType("coordenador_operacional")
+            if (Identity.isUserType("coordenador_operacional")
                 || Identity.isUserType("supervisor_institucional")
-                || Identity.isUserType("gestor_politico")){
+                || Identity.isUserType("gestor_politico")) {
 
                 $scope.show_option_selo = false;
                 $scope.show_option_municipio = false;
                 $scope.show_option_uf = false;
             }
 
-            if ( Identity.isUserType("coordenador_estadual") || Identity.isUserType("gestor_estadual") ) {
+            if (Identity.isUserType("coordenador_estadual") || Identity.isUserType("gestor_estadual")) {
                 $scope.show_option_uf = false;
                 $scope.initTenantsSelo();
                 $scope.show_option_selo = true;
@@ -4099,7 +4270,7 @@
                 $scope.show_option_uf = false;
             }
 
-            if ( Identity.isUserType("gestor_nacional") ) {
+            if (Identity.isUserType("gestor_nacional")) {
 
                 $scope.show_option_selo = true;
                 $scope.show_option_municipio = true;
@@ -4127,11 +4298,11 @@
 
         $scope.onSelectSelo = function () {
             $scope.query_evolution_graph.tenant_id = '';
-            if ( !Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual") ) {
+            if (!Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual")) {
                 $scope.query_evolution_graph.uf = '';
                 $scope.tenants_selo = {data: []};
             }
-            if ( Identity.isUserType("coordenador_estadual") && Identity.isUserType("gestor_estadual") ) {
+            if (Identity.isUserType("coordenador_estadual") && Identity.isUserType("gestor_estadual")) {
                 $scope.initTenantsSelo();
             }
             $scope.initFusionChart();
@@ -4311,44 +4482,60 @@
         function returnStateByIDFusionMap(sigla) {
             var states =
                 [
-                {sigla: 'AC', id: '001', state: 'Acre'},
-                {sigla: 'AL', id: '002', state: 'Alagoas'},
-                {sigla: 'AP', id: '003', state: 'Amapa'},
-                {sigla: 'AM', id: '004', state: 'Amazonas'},
-                {sigla: 'BA', id: '005', state: 'Bahia'},
-                {sigla: 'CE', id: '006', state: 'Ceara'},
-                {sigla: 'DF', id: '007', state: 'Distrito Federal'},
-                {sigla: 'ES', id: '008', state: 'Espirito Santo'},
-                {sigla: 'GO', id: '009', state: 'Goias'},
-                {sigla: 'MA', id: '010', state: 'Maranhao'},
-                {sigla: 'MG', id: '011', state: 'Mato Grosso'},
-                {sigla: 'MS', id: '012', state: 'Mato Grosso do Sul'},
-                {sigla: 'MG', id: '013', state: 'Minas Gerais'},
-                {sigla: 'PA', id: '014', state: 'Para'},
-                {sigla: 'PB', id: '015', state: 'Paraiba'},
-                {sigla: 'PR', id: '016', state: 'Parana'},
-                {sigla: 'PE', id: '017', state: 'Pernambuco'},
-                {sigla: 'PI', id: '018', state: 'Piaui'},
-                {sigla: 'RJ', id: '019', state: 'Rio de Janeiro'},
-                {sigla: 'RN', id: '020', state: 'Rio Grande do Norte'},
-                {sigla: 'RS', id: '021', state: 'Rio Grande do Sul'},
-                {sigla: 'RO', id: '022', state: 'Rondonia'},
-                {sigla: 'RR', id: '023', state: 'Roraima'},
-                {sigla: 'SC', id: '024', state: 'Santa Catarina'},
-                {sigla: 'SP', id: '025', state: 'Sao Paulo'},
-                {sigla: 'SE', id: '026', state: 'Sergipe'},
-                {sigla: 'TO', id: '027', state: 'Tocantins'}
-            ];
+                    {sigla: 'AC', id: '001', state: 'Acre'},
+                    {sigla: 'AL', id: '002', state: 'Alagoas'},
+                    {sigla: 'AP', id: '003', state: 'Amapa'},
+                    {sigla: 'AM', id: '004', state: 'Amazonas'},
+                    {sigla: 'BA', id: '005', state: 'Bahia'},
+                    {sigla: 'CE', id: '006', state: 'Ceara'},
+                    {sigla: 'DF', id: '007', state: 'Distrito Federal'},
+                    {sigla: 'ES', id: '008', state: 'Espirito Santo'},
+                    {sigla: 'GO', id: '009', state: 'Goias'},
+                    {sigla: 'MA', id: '010', state: 'Maranhao'},
+                    {sigla: 'MG', id: '011', state: 'Mato Grosso'},
+                    {sigla: 'MS', id: '012', state: 'Mato Grosso do Sul'},
+                    {sigla: 'MG', id: '013', state: 'Minas Gerais'},
+                    {sigla: 'PA', id: '014', state: 'Para'},
+                    {sigla: 'PB', id: '015', state: 'Paraiba'},
+                    {sigla: 'PR', id: '016', state: 'Parana'},
+                    {sigla: 'PE', id: '017', state: 'Pernambuco'},
+                    {sigla: 'PI', id: '018', state: 'Piaui'},
+                    {sigla: 'RJ', id: '019', state: 'Rio de Janeiro'},
+                    {sigla: 'RN', id: '020', state: 'Rio Grande do Norte'},
+                    {sigla: 'RS', id: '021', state: 'Rio Grande do Sul'},
+                    {sigla: 'RO', id: '022', state: 'Rondonia'},
+                    {sigla: 'RR', id: '023', state: 'Roraima'},
+                    {sigla: 'SC', id: '024', state: 'Santa Catarina'},
+                    {sigla: 'SP', id: '025', state: 'Sao Paulo'},
+                    {sigla: 'SE', id: '026', state: 'Sergipe'},
+                    {sigla: 'TO', id: '027', state: 'Tocantins'}
+                ];
             return states.filter(function (e) {
                 return e.sigla == sigla;
             })[0];
         }
 
+        $scope.handleMaps = function (value) {
+            var cloudering = document.getElementById("map");
+            var markers = document.getElementById("map-markes");
+            if (cloudering.style.display === "none") {
+                cloudering.style.display = "block";
+                markers.style.display = "none";
+                $scope.showMessageMap = $scope.showMessageMap;
+            } else {
+                cloudering.style.display = "none";
+                markers.style.display = "block";
+                $scope.showMessageMap = 'Ver agrupado';
+            }
+        };
+
         Platform.whenReady(function () {
             $scope.ready = true;
-            if ( Identity.getCurrentUser().type == "gestor_nacional"){ $scope.initFusionChartMap(); }
-            if ( Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual"){
-                var scope_uf = "maps/"+returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
+            if (Identity.getCurrentUser().type == "gestor_nacional") {
+                $scope.initFusionChartMap();
+            }
+            if (Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual") {
+                var scope_uf = "maps/" + returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
                 $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
             }
         });
