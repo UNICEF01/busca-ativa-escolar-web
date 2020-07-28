@@ -75,6 +75,9 @@
                         <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')"
                             ui-sref-active="active"><a ui-sref="checks"><i class="fa fa-exclamation-circle"></i>
                             Solicitações <span ng-if="pending_requests > 0" style="background-color: #953b39;" class="badge" ng-bind="pending_requests"></span></a> </li>
+
+                        <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')"
+                            ui-sref-active="active"><a ui-sref="school_list_frequency"><i class="fa fa-bar-chart"></i> Frequência </a> </li>
                     </ul>
                 </li>
 
