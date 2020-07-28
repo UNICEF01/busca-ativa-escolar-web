@@ -9,9 +9,11 @@
                 unauthenticated: true
             });
         })
-        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Classes, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, ngToast, Utils, Classes, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
 
             $scope.Decorators = Decorators;
+
+            $scope.classe = {};
 
             $scope.defaultQuery = {
                 name: '',
@@ -37,9 +39,25 @@
             $scope.refresh();
 
 
-            $scope.addClasse = function () {
-                alert('Adiconar Turma');
+            function onSaved(res) {
+
+                if (res.success) {
+                    ngToast.success(res.message);
+                    return;
+                }
+
+                if (res.status === 'error') return Utils.displayValidationErrors(res);
+
+                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
             }
+
+            $scope.addClasse = function () {
+
+                $scope.classe.schools_id = '11000023';
+
+                Classes.create($scope.classe).$promise.then(onSaved);
+
+            };
 
             var language = {
                 "sEmptyTable": "Nenhum registro encontrado",

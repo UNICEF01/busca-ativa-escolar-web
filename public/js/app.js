@@ -5018,9 +5018,11 @@ Highcharts.maps["countries/br/br-all"] = {
                 unauthenticated: true
             });
         })
-        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Classes, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, ngToast, Utils, Classes, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
 
             $scope.Decorators = Decorators;
+
+            $scope.classe = {};
 
             $scope.defaultQuery = {
                 name: '',
@@ -5046,9 +5048,25 @@ Highcharts.maps["countries/br/br-all"] = {
             $scope.refresh();
 
 
-            $scope.addClasse = function () {
-                alert('Adiconar Turma');
+            function onSaved(res) {
+
+                if (res.success) {
+                    ngToast.success(res.message);
+                    return;
+                }
+
+                if (res.status === 'error') return Utils.displayValidationErrors(res);
+
+                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
             }
+
+            $scope.addClasse = function () {
+
+                $scope.classe.schools_id = '11000023';
+
+                Classes.create($scope.classe).$promise.then(onSaved);
+
+            };
 
             var language = {
                 "sEmptyTable": "Nenhum registro encontrado",
@@ -7713,9 +7731,10 @@ if (!Array.prototype.find) {
         .module('BuscaAtivaEscolar')
         .factory('Classes', function Schools(API, $resource) {
             var debug = '?XDEBUG_SESSION_START=PHPSTORM';
-            var Classes = $resource(API.getURI('classes/:id'), {id: '@id'}, {
+            var Classes = $resource(API.getURI('classes/:id' + debug), {id: '@id'}, {
                 find: {method: 'GET', params: {}},
-                update: {method: 'POST'},
+                update: {method: 'PUT'},
+                create: {method: 'POST'},
             });
             return Classes;
         });

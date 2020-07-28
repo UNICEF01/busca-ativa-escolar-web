@@ -21,15 +21,31 @@
 
 <div class="col-md-12">
     <div class="panel panel-default">
+
         <div class="panel-heading">
             <h3><i class="material-icons">school </i> {{classes.school}}</h3>
         </div>
-        <div class="panel-body">
 
-            <div class="text-right">
-                <a ng-click="addClasse()" class="btn btn-raised btn-primary"><i
-                        class="fa fa-plus"></i> Adicionar Turma</a>
-            </div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td><input type="text" class="form-control" ng-model="classe.name" placeholder="Nome da turma"></td>
+                    <td>
+                        <select class="form-control" name="singleSelect" ng-model="classe.shift">
+                            <option value="">Selecione o período</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="option-2">Noturno</option>
+                        </select>
+                    </td>
+                    <td><input type="number" class="form-control" ng-model="classe.qty_enrollment"
+                               placeholder="Quantidade de alunos"></td>
+                    <td><button ng-click="addClasse()" class="btn btn-default btn-sm btn-raised pull-right"><i
+                            class="fa fa-plus"> Adicionar</i></button></td>
+                </tr>
+                </tbody>
+            </table>
 
             <br/>
 
@@ -38,24 +54,24 @@
                 <tr>
                     <th>Turmas</th>
                     <th>Período</th>
-                    <th>Quantidade</th>
-                    <th>Frequência</th>
+                    <th>Alunos</th>
                     <th>Opções</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, classe) in classes.turmas">
                     <td>{{classe.name}}</td>
-                    <td>{{classe.shift}} </td>
-                    <td>{{classe.qty_enrollment}} </td>
-                    <td>Dados</td>
+                    <td>{{classe.shift}}</td>
+                    <td>{{classe.qty_enrollment}}</td>
+                    <!--                    <td>Dados</td>-->
                     <td width="6%" class="text-center" style="vertical-align: middle;">
                         <div class="btn-group">
                             <a ui-sref="child_viewer({child_id: child.id})" class="btn btn-default btn-sm btn-raised"
                                style="padding: 8px 10px" uib-tooltip="Incluir informações"><i
                                     class="fa fa-edit"></i></a>
                         </div>
-                    </td>                </tr>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
