@@ -3,7 +3,22 @@
 
         <div class="panel-heading">
             <h3>Cadastro de turmas</h3>
-            <h4><i class="material-icons">school </i> {{school}}</h4>
+            <h4><i class="material-icons">school </i> {{classes.school.name}}</h4>
+            <div name="myForm" class="">
+                <label>Periodicidade:</label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Semanal" ng-change="addClasse()">
+                    Semanal
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Quinzenal" ng-change="addClasse()">
+                    Quinzenal
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Mensal" ng-change="addClasse()">
+                    Mensal
+                </label>
+            </div>
         </div>
 
         <div class="panel-body">
@@ -17,7 +32,7 @@
                             <option value="">Selecione o período</option>
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
-                            <option value="option-2">Noturno</option>
+                            <option value="Noturno">Noturno</option>
                         </select>
                     </td>
                     <td><input type="text" class="form-control" numbers-only ng-model="classe.qty_enrollment"
@@ -39,18 +54,16 @@
                     <th>Turmas</th>
                     <th>Período</th>
                     <th>Alunos</th>
-                    <th class="text-center">Opções</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, classe) in classes.turmas">
 
-                    <td><input ng-show="show === i" type="text" class="form-control" ng-model="classe.name"
-                               placeholder="Nome da turma"><span ng-show="show !== i">{{classe.name}}</span></td>
-
-
+                    <td><input ng-show="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control" ng-model="classe.name"
+                               placeholder="Nome da turma"><span ng-show="show !== i"
+                                                                 ng-click="edit(i)">{{classe.name}}</span></td>
                     <td>
-                        <select ng-show="show === i" class="form-control" name="singleSelect" ng-model="classe.shift">
+                        <select ng-show="show === i" ng-blur="updateClasse(classe)" class="form-control" name="singleSelect" ng-model="classe.shift">
                             <option value="">Selecione o período</option>
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
@@ -58,25 +71,25 @@
                         </select><span ng-show="show !== i">{{classe.shift}}</span>
                     </td>
 
-                    <td><input ng-show="show === i" type="text" class="form-control" ng-model="classe.qty_enrollment"
+                    <td><input ng-show="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control" ng-model="classe.qty_enrollment"
                                numbers-only
                                placeholder="Quantidade de alunos"><span
                             ng-show="show !== i">{{classe.qty_enrollment}}</span></td>
 
-                    <td width="20%" class="text-center">
-                        <div class="btn-group">
+                    <!--                    <td width="20%" class="text-center">-->
+                    <!--                        <div class="btn-group">-->
 
-                            <button class="btn btn-default btn-sm btn-raised" ng-click="edit(i)" ng-show="show !== i"
-                                    uib-tooltip="Editar turma"><i
-                                    class="fa fa-edit"></i></button>
+                    <!--                            <button class="btn btn-default btn-sm btn-raised" ng-click="edit(i)" ng-show="show !== i"-->
+                    <!--                                    uib-tooltip="Editar turma"><i-->
+                    <!--                                    class="fa fa-edit"></i></button>-->
 
-                            <button class="btn btn-default btn-sm btn-raised pull-right" ng-click="updateClasse(classe)"
-                                    ng-show="show === i" ng-disabled="!classe.name || !classe.shift || !classe.qty_enrollment"
-                                    uib-tooltip="Atualizar turma"><i
-                                    class="fa fa-save"></i></button>
+                    <!--                            <button class="btn btn-default btn-sm btn-raised pull-right" ng-click="updateClasse(classe)"-->
+                    <!--                                    ng-show="show === i" ng-disabled="!classe.name || !classe.shift || !classe.qty_enrollment"-->
+                    <!--                                    uib-tooltip="Atualizar turma"><i-->
+                    <!--                                    class="fa fa-save"></i></button>-->
 
-                        </div>
-                    </td>
+                    <!--                        </div>-->
+                    <!--                    </td>-->
                 </tr>
                 </tbody>
             </table>

@@ -37,8 +37,7 @@
             };
 
             $scope.refresh = function () {
-                $scope.classes = Classes.find('11000023');
-                // $scope.school = Schools.findSchoolById($scope.school_id);
+                $scope.classes = Classes.find({id: $scope.school_id});
             };
 
             $scope.refresh();
@@ -59,7 +58,7 @@
                     ngToast.success(res.message);
                     setInterval(function () {
                         location.reload();
-                    }, 3000);
+                    }, 2000);
 
                     return;
                 }
@@ -73,18 +72,20 @@
 
             $scope.addClasse = function () {
 
-                if ($scope.classe.name === undefined || $scope.classe.name === undefined || $scope.classe.name === undefined) {
-                    return;
-                }
-
 
                 $scope.classe.schools_id = $scope.school_id;
+                $scope.classe.periodicidade = $scope.classes.school.periodicidade;
 
                 Classes.create($scope.classe).$promise.then(onSaved);
 
             };
 
+
             $scope.updateClasse = function (data) {
+
+                if (data === undefined) {
+                    data = {periodicidade: $scope.classes.school.periodicidade};
+                }
 
                 $scope.show = false;
 
