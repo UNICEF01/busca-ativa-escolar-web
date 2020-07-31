@@ -68,13 +68,13 @@
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
                             <option value="Noturno">Noturno</option>
-                        </select><span ng-show="show !== i">{{classe.shift}}</span>
+                        </select><span ng-show="show !== i" ng-click="edit(i)">{{classe.shift}}</span>
                     </td>
 
                     <td><input ng-show="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control" ng-model="classe.qty_enrollment"
                                numbers-only
                                placeholder="Quantidade de alunos"><span
-                            ng-show="show !== i">{{classe.qty_enrollment}}</span></td>
+                            ng-show="show !== i" ng-click="edit(i)">{{classe.qty_enrollment}}</span></td>
 
                     <!--                    <td width="20%" class="text-center">-->
                     <!--                        <div class="btn-group">-->
