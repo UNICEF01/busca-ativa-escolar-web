@@ -7,6 +7,7 @@
                 find: {method: 'GET', params: {}},
                 update: {method: 'PUT'},
                 create: {method: 'POST'},
+                updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
             });
             return Classes;
         });

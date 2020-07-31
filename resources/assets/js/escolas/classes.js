@@ -3,17 +3,21 @@
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
             $stateProvider.state('classes', {
-                url: '/turmas',
+                url: '/turmas/{school_id}',
                 templateUrl: '/views/escolas/turmas.html',
                 controller: 'TurmasCtrl',
                 unauthenticated: true
             });
         })
-        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, ngToast, Utils, Classes, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, $stateParams, API, ngToast, Utils, Classes, Schools, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
 
             $scope.Decorators = Decorators;
 
             $scope.classe = {};
+
+            $scope.showEdit = false;
+
+            $scope.school_id = $stateParams.school_id;
 
             $scope.defaultQuery = {
                 name: '',
@@ -33,31 +37,62 @@
             };
 
             $scope.refresh = function () {
-                $scope.classes = Classes.find();
+                $scope.classes = Classes.find({id: $scope.school_id});
             };
 
             $scope.refresh();
+
+            $scope.edit = function (i) {
+                if ($scope.show === i) {
+                    $scope.show = false;
+                    return;
+                }
+                $scope.showUpdate = true;
+                $scope.show = i;
+            }
 
 
             function onSaved(res) {
 
                 if (res.success) {
                     ngToast.success(res.message);
+                    setInterval(function () {
+                        location.reload();
+                    }, 2000);
+
                     return;
                 }
 
                 if (res.status === 'error') return Utils.displayValidationErrors(res);
 
                 ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
+
+
             }
 
             $scope.addClasse = function () {
 
-                $scope.classe.schools_id = '11000023';
+
+                $scope.classe.schools_id = $scope.school_id;
+                $scope.classe.periodicidade = $scope.classes.school.periodicidade;
 
                 Classes.create($scope.classe).$promise.then(onSaved);
 
             };
+
+
+            $scope.updateClasse = function (data) {
+
+                if (data === undefined) {
+                    data = {periodicidade: $scope.classes.school.periodicidade};
+                }
+
+                $scope.show = false;
+
+                Classes.updateSettings(data).$promise.then(onSaved);
+
+            };
+
 
             var language = {
                 "sEmptyTable": "Nenhum registro encontrado",

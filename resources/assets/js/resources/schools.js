@@ -9,6 +9,7 @@
 
 				find: {method: 'GET', headers: headers},
 				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers}, 
+				getById: {url: API.getURI('schools/public'), method: 'GET'},
 				all_educacenso: {url: API.getURI('schools/all_educacenso'), method: 'GET', headers: headers},
 				update: {method: 'PUT', headers: headers},
 				send_educacenso_notifications: {url: API.getURI('schools/educacenso/notification'), method: 'POST', headers: headers},

@@ -3,7 +3,7 @@
 	a {
 		padding: 20px 10px;
 	}
-	
+
 	.navbar-brand {
 
 		padding: 0;
@@ -82,6 +82,20 @@
 
 	}
 }
+
+#app-navbar-public .navbar-brand small {
+	display: block;
+	height: 18px;
+	line-height: 18px;
+	-webkit-font-smoothing: antialiased;
+	font-weight: bold;
+	font-size: 10px;
+	color: white;
+	margin-top: 47px;
+	text-align: center;
+}
+
+
 .navbar-chart-filter {
 	background-color: #F7F7F9 !important;
 	color: #404040 !important;
