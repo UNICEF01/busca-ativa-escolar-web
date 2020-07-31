@@ -1,32 +1,20 @@
-<div id="app-navbar" class="navbar navbar-primary">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-            </button>
-            <a class="navbar-brand" ui-sref="dashboard">
-                <strong>Busca Ativa Escolar</strong>
-            </a>
-        </div>
-    </div>
-</div>
-
 <div class="col-md-12">
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3>Registro de frequências - ESCOLA JARDIM ENCANTADO 2</h3>
+            <h3>FREQUÊNCIAS - {{classes.school.name}}</h3>
+            <small><strong>REGISTRO {{classes.school.periodicidade.toUpperCase()}}</strong></small>
         </div>
 
         <div class="panel-body">
 
             <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
                 <div class="col-lg-9">
-                    <p>Utilize o formulário abaixo para registrar a frequência das turmas de sua escola. O prazo de registro depende da periodicidade salva na configuração da escola.</p>
+                    <p>Utilize o formulário abaixo para registrar a frequência das turmas. O prazo de registro depende da periodicidade salva na configuração da escola.</p>
                 </div>
 
                 <div class="col-lg-3 text-right">
-                    <a href="/turmas" class="btn btn-info btn-raised">Gerenciar turmas</a>
+                    <a class="btn btn-info btn-raised" href="/turmas/{{school_id}}"> <i class="fa fa-cog" aria-hidden="true"></i> Configurar turmas</a>
                 </div>
             </div>
 
@@ -37,7 +25,7 @@
                 }
             </style>
 
-            <table class="table table-bordered" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th>Turmas</th>
@@ -49,65 +37,30 @@
                 </thead>
                 <tbody>
 
-                    <tr>
+                    <tr ng-repeat="(i, turma) in classes.turmas" ng-if="turma.frequencies.length > 0">
                         <td>
-                            <span class="data_class">Nome da turma 1</span>
+                            <span class="data_class">{{turma.name}}</span>
                         </td>
                         <td>
-                            <span class="data_class">Matutino</span>
+                            <span class="data_class">{{turma.shift}}</span>
                         </td>
                         <td>
-                            <span class="data_class">50</span>
-                        </td>
-                        </td>
-                        <td>
-                            <input type="number" name="frequency" class="form-control" placeholder="informe a frequência">
-                        </td>
-                        <td>
-                            <span class="data_class">
-                                100%
-                            </span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="data_class">Nome da turma 1</span>
-                        </td>
-                        <td>
-                            <span class="data_class">Matutino</span>
-                        </td>
-                        <td>
-                            <span class="data_class">50</span>
+                            <span class="data_class">{{turma.qty_enrollment}}</span>
                         </td>
                         </td>
                         <td>
-                            <input type="number" name="frequency" class="form-control" placeholder="informe a frequência">
+                            <input
+                                    id="frequency_{{turma.frequencies[turma.frequencies.length-1].id}}"
+                                    type="number"
+                                    name="frequency"
+                                    class="form-control"
+                                    placeholder="informe a frequência"
+                                    ng-blur="onModifyFrequency(turma.frequencies[turma.frequencies.length-1])"
+                                    value="{{turma.frequencies[turma.frequencies.length-1].qty_presence}}">
                         </td>
                         <td>
                             <span class="data_class">
-                                100%
-                            </span>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <span class="data_class">Nome da turma 1</span>
-                        </td>
-                        <td>
-                            <span class="data_class">Matutino</span>
-                        </td>
-                        <td>
-                            <span class="data_class">50</span>
-                        </td>
-                        </td>
-                        <td>
-                            <input type="number" name="frequency" class="form-control" placeholder="informe a frequência">
-                        </td>
-                        <td>
-                            <span class="data_class">
-                                100%
+                                ?%
                             </span>
                         </td>
                     </tr>

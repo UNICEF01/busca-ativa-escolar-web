@@ -67,6 +67,18 @@
 
                 ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
 
+            }
+
+            function onUpdated(res) {
+
+                if (res.success) {
+                    ngToast.success(res.message);
+                    return;
+                }
+
+                if (res.status === 'error') return Utils.displayValidationErrors(res);
+
+                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
 
             }
 
@@ -89,7 +101,7 @@
 
                 $scope.show = false;
 
-                Classes.updateSettings(data).$promise.then(onSaved);
+                Classes.updateSettings(data).$promise.then(onUpdated);
 
             };
 
