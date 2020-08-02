@@ -19,22 +19,6 @@
 
             $scope.school_id = $stateParams.school_id;
 
-            $scope.defaultQuery = {
-                name: '',
-                step_name: '',
-                cause_name: '',
-                assigned_user_name: '',
-                location_full: '',
-                alert_status: ['accepted'],
-                case_status: ['in_progress'],
-                risk_level: ['low', 'medium', 'high'],
-                age_null: true,
-                age: {from: 0, to: 10000},
-                gender: ['male', 'female', 'undefined'],
-                gender_null: true,
-                place_kind: ['rural', 'urban'],
-                place_kind_null: true,
-            };
 
             $scope.refresh = function () {
                 $scope.classes = Classes.find({id: $scope.school_id});
@@ -135,7 +119,7 @@
 
             //Configura a linguagem na diretiva dt-column-defs=""
             $scope.dtColumnDefs = [
-                DTColumnDefBuilder.newColumnDef(8).notSortable()
+                // DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
 
         });
