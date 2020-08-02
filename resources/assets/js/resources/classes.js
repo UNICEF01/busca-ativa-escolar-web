@@ -8,7 +8,7 @@
                 update: {method: 'PUT'},
                 create: {method: 'POST'},
                 updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
-
+                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')}
             });
             return Classes;
         });
