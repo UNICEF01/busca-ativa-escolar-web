@@ -46,28 +46,35 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="row">
+                <div class="col-md-4">
+                    <input class="form-control" ng-model="searchText" placeholder="Pesquisar"></label>
+                </div>
+                <div class="col-md-8">
+                    <small class="pull-right" ng-if="classes.turmas.length > 0">Clique sobre os dados para atualizar</small>
+                </div>
+            </div>
 
-            <br/>
-            <small ng-if="classes.turmas.length > 0">Clique sobre os dados para atualizar</small>
-            <table  class="table table-hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+
+            <table class="table table-hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
                 <tr>
-                    <th>Turmas</th>
-                    <th>Período</th>
-                    <th>Alunos Matrículados</th>
+                    <th class="text-center">Turmas</th>
+                    <th class="text-center">Período</th>
+                    <th class="text-center">Alunos Matrículados</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="(i, classe) in classes.turmas">
+                <tr ng-repeat="(i, classe) in classes.turmas | filter:searchText">
 
-                    <td>
+                    <td class="text-center">
                         <input ng-if="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control"
                                ng-model="classe.name"
                                placeholder="Nome da turma">
                         <span ng-show="show !== i"
                               ng-click="edit(i)">{{classe.name}}</span>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <select ng-if="show === i" ng-blur="updateClasse(classe)" class="form-control"
                                 name="singleSelect" ng-model="classe.shift">
                             <option value="">Selecione o período</option>
@@ -78,7 +85,7 @@
                         <span ng-show="show !== i" ng-click="edit(i)">{{classe.shift}}</span>
                     </td>
 
-                    <td>
+                    <td class="text-center">
                         <input ng-if="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control"
                                ng-model="classe.qty_enrollment"
                                numbers-only
@@ -88,7 +95,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button class="btn btn-primary btn-raised pull-right" >Concluído</button>
+            <button class="btn btn-primary btn-raised pull-right">Concluído</button>
 
         </div>
     </div>
