@@ -111,16 +111,16 @@
                             <div class="span_status">
                                 <div ng-show="school.emailJob.length > 0">
                                     <div ng-repeat="(j, email) in school.emailJob">
-                                        <small ng-show="email.status==='pending'"><strong>{{j+1}}º </strong>Pendente</small>
-                                        <small ng-show="email.status==='accepted'"><strong>{{j+1}}º </strong>Encaminhado</small>
-                                        <small ng-show="email.status==='rejected'"><strong>{{j+1}}º </strong>Rejeitado</small>
-                                        <small ng-show="email.status==='delivered'"><strong>{{j+1}}º </strong>Entregue</small>
-                                        <small ng-show="email.status==='failed'"><strong>{{j+1}}º </strong>Erro</small>
-                                        <small ng-show="email.status==='opened'"><strong>{{j+1}}º </strong>Lido</small>
-                                        <small ng-show="email.status==='clicked'"><strong>{{j+1}}º </strong>Lido</small>
-                                        <small ng-show="email.status==='unsubscribed'"><strong>{{j+1}}º </strong>Cancelado</small>
-                                        <small ng-show="email.status==='complained'"><strong>{{j+1}}º </strong>Denunciado</small>
-                                        <small ng-show="email.status==='stored'"><strong>{{j+1}}º </strong>Salvo</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='pending'"><strong>{{j+1}}º </strong>Pendente</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='accepted'"><strong>{{j+1}}º </strong>Encaminhado</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='rejected'"><strong>{{j+1}}º </strong>Rejeitado</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='delivered'"><strong>{{j+1}}º </strong>Entregue</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='failed'"><strong>{{j+1}}º </strong>Erro</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='opened'"><strong>{{j+1}}º </strong>Lido</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='clicked'"><strong>{{j+1}}º </strong>Lido</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='unsubscribed'"><strong>{{j+1}}º </strong>Cancelado</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='complained'"><strong>{{j+1}}º </strong>Denunciado</small>
+                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='stored'"><strong>{{j+1}}º </strong>Salvo</small>
                                     </div>
                                 </div>
                             </div>

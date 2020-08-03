@@ -68,7 +68,7 @@
 							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
 							schools_to_send_notification
 						)).then(function () {
-							return Schools.send_notifications(schools_to_send_notification).$promise;
+							return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
 						})
 						.then(function (res) {
 							if(res.status == "error"){

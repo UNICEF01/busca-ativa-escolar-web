@@ -1,0 +1,77 @@
+<div class="col-md-12">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3>FREQUÊNCIAS - {{classes.school.name}}</h3>
+            <small><strong>REGISTRO {{classes.school.periodicidade.toUpperCase()}}</strong></small>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
+                <div class="col-lg-9">
+                    <p>Utilize o formulário abaixo para registrar a frequência das turmas. O prazo de registro depende da periodicidade salva na configuração da escola.</p>
+                </div>
+
+                <div class="col-lg-3 text-right">
+                    <a class="btn btn-info btn-raised" href="/turmas/{{school_id}}"> <i class="fa fa-cog" aria-hidden="true"></i> Configurar turmas</a>
+                </div>
+            </div>
+
+            <style>
+                .table .data_class {
+                    display: block;
+                    margin-top: 20px;
+                }
+            </style>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Turmas</th>
+                        <th>Período</th>
+                        <th>Alunos na turma</th>
+                        <th>Alunos presentes</th>
+                        <th>Percentual de presença</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="(i, turma) in classes.turmas" ng-if="turma.frequencies.length > 0">
+                        <td>
+                            <span class="data_class">{{turma.name}}</span>
+                        </td>
+                        <td>
+                            <span class="data_class">{{turma.shift}}</span>
+                        </td>
+                        <td>
+                            <span class="data_class">{{turma.qty_enrollment}}</span>
+                        </td>
+                        </td>
+                        <td>
+                            <input
+                                    id="frequency_{{turma.frequencies[turma.frequencies.length-1].id}}"
+                                    type="number"
+                                    name="frequency"
+                                    class="form-control"
+                                    placeholder="informe a frequência"
+                                    ng-blur="onModifyFrequency(turma.frequencies[turma.frequencies.length-1])"
+                                    value="{{turma.frequencies[turma.frequencies.length-1].qty_presence}}">
+                        </td>
+                        <td>
+                            <span class="data_class">
+                                {{calculatePercentualFrequencies(turma.frequencies, turma.qty_enrollment)}}
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="graph_classes">
+                <div id="chart_classes"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
