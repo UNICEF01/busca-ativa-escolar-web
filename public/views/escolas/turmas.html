@@ -61,7 +61,7 @@
                 <tr>
                     <th class="text-center">Turmas</th>
                     <th class="text-center">Período</th>
-                    <th class="text-center">Alunos Matrículados</th>
+                    <th class="text-center">Alunos(as) Matrículados</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,17 +72,16 @@
                                ng-model="classe.name"
                                placeholder="Nome da turma">
                         <span ng-show="show !== i"
-                              ng-click="edit(i)">{{classe.name}}</span>
+                              ng-click="edit(i)">{{classe.name && classe.name || 'Não informado' }}</span>
                     </td>
                     <td class="text-center">
                         <select ng-if="show === i" ng-blur="updateClasse(classe)" class="form-control"
                                 name="singleSelect" ng-model="classe.shift">
-                            <option value="">Selecione o período</option>
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
                             <option value="Noturno">Noturno</option>
                         </select>
-                        <span ng-show="show !== i" ng-click="edit(i)">{{classe.shift}}</span>
+                        <span ng-show="show !== i" ng-click="edit(i)">{{classe.shift && classe.shift || 'Não informado' }}</span>
                     </td>
 
                     <td class="text-center">
