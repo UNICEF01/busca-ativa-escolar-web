@@ -17,7 +17,7 @@
 				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers},
 				getDataMapFusionChart: {method: 'GET', url: API.getURI('reports/data_map_fusion_chart'), headers: headers},
 				reportsChild: {url: API.getURI('reports/child'), method: 'GET', headers: headers},
-				createReportChild: {url: API.getURI('reports/child/create?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers}
+				createReportChild: {url: API.getURI('reports/child/create'), method: 'POST', headers: headers}
 			});
 		});
 })();
