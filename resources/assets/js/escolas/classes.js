@@ -13,7 +13,11 @@
 
             $scope.Decorators = Decorators;
 
-            $scope.classe = {};
+            $scope.classe = {
+                name: '',
+                shift: '',
+                qty_enrollment: ''
+            };
 
             $scope.showEdit = false;
 
@@ -33,6 +37,16 @@
                 }
                 $scope.showUpdate = true;
                 $scope.show = i;
+            }
+
+
+            function validate(obj) {
+                for (var prop in obj) {
+                    if ((obj[prop] === undefined) || (obj[prop] === null) || (obj[prop] === '')) {
+                        return false;
+                    }
+                }
+                return true;
             }
 
 
@@ -67,17 +81,20 @@
             }
 
             $scope.addClasse = function () {
-
-
                 $scope.classe.schools_id = $scope.school_id;
                 $scope.classe.periodicidade = $scope.classes.school.periodicidade;
-
                 Classes.create($scope.classe).$promise.then(onSaved);
-
             };
 
 
             $scope.updateClasse = function (data) {
+
+                var check = validate(data);
+
+                if (!check) {
+                    ngToast.success('Favor preencher todos os campos');
+                    return;
+                }
 
                 if (data === undefined) {
                     data = {periodicidade: $scope.classes.school.periodicidade};
