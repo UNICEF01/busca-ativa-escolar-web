@@ -14,26 +14,34 @@
             $scope.school_id = $stateParams.school_id;
 
             $scope.options_graph = {
-                chart: { type: 'line' },
+                chart: {
+                    type: 'line'
+                },
                 title: { text: 'Registros de frequências das turmas' },
                 subtitle: {
                     text: 'Fonte: Busca Ativa Escolar'
                 },
-                xAxis: {
-                    title: { text: 'Data do fim do período da configuração' }
-                },
+                xAxis:
+                    {
+                        tickInterval: 1000 * 60 * 60 * 24,
+                        gridLineWidth: 1,
+                        type: "date",
+                        title: {
+                            text: null
+                        },
+                        labels: {
+                            format: '{value: %d-%m-%Y}'
+                        }
+                    },
+
                 yAxis: {
                     title: {
                         text: 'Frequência'
                     }
                 },
-                plotOptions: {
-                    line: {
-                        dataLabels: {
-                            enabled: true
-                        },
-                        enableMouseTracking: true
-                    }
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e. %b}: {point.y} presentes'
                 },
                 series: []
             };
@@ -67,8 +75,9 @@
                     $scope.options_graph.xAxis.categories = [];
 
                     element.frequencies.forEach( function (frequency) {
+                        var dataSplit = frequency.created_at.substr(0, 10).split('-');
                         data.push([
-                            frequency.created_at, parseInt(frequency.qty_presence)
+                            Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])), parseInt(frequency.qty_presence)
                         ]);
                     });
 
@@ -79,7 +88,7 @@
 
                 });
 
-                Highcharts.chart( 'chart_classes', $scope.options_graph);
+                var chart = new Highcharts.chart( 'chart_classes', $scope.options_graph);
             };
 
             $scope.refresh = function () {
@@ -90,6 +99,15 @@
                         $scope.initChart();
                     });
 
+            };
+
+            $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){
+                var totalFrequencies = arrayFrequencies.length;
+                var averageFrequencies = 0;
+                arrayFrequencies.forEach( function(element) {
+                    averageFrequencies += parseInt(element.qty_presence);
+                });
+                return ( ( 100* (averageFrequencies/totalFrequencies) ) / totalStudents ).toFixed(2);
             };
 
             $scope.refresh();
