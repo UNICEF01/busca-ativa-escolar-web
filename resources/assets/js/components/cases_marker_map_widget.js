@@ -41,6 +41,10 @@
                 scope.map.addEventListener('dragend', function (ev) {
                     scope.$parent.fields.place_lat = ev.target.b.lat;
                     scope.$parent.fields.place_lng = ev.target.b.lng;
+
+                    //IDENTIFICAR AQUI QUE HOUVE UMA MUDANCA DE POSICAO MANUAL
+                    scope.$parent.fields.moviment = true;
+
                     scope.$apply();
                     var target = ev.target;
                     if (target instanceof H.map.Marker) {
@@ -89,7 +93,7 @@
 //Step 1: initialize communication with the platform
 // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
-                apikey: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U'
+                apikey: 'vInEtj1IrNd8VNRBh_Vee1Hljpal-oIh2uq75BB1KWo'
             });
 
             var defaultLayers = platform.createDefaultLayers();
