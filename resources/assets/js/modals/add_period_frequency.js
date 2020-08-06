@@ -11,9 +11,15 @@
             $scope.period = period; //periodicidade
 
             $scope.addFrequency = function(){
+                $scope.clazz.frequencies.unshift({
+                    created_at: $scope.getPreviousDate(),
+                    qty_enrollment: 0,
+                    qty_presence: 0
+                });
+            };
 
+            $scope.getPreviousDate = function(){
                 var newDate = null;
-
                 switch ( $scope.period ) {
                     case 'Diaria':
                         newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
@@ -22,12 +28,7 @@
                         newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 7);
                         break;
                 }
-
-                $scope.clazz.frequencies.unshift({
-                    created_at: newDate,
-                    qty_enrollment: 0,
-                    qty_presence: 0
-                });
+                return newDate;
             };
 
             $scope.subtractDaysOfDayInstance = function(date, days) {
