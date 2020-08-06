@@ -9,7 +9,7 @@
                 unauthenticated: true
             });
         })
-        .controller('FrequencyCtrl', function ($scope, $stateParams, ngToast, Classes) {
+        .controller('FrequencyCtrl', function ($scope, $stateParams, ngToast, Classes, Modals) {
 
             $scope.school_id = $stateParams.school_id;
 
@@ -19,7 +19,7 @@
                 },
                 title: { text: 'Registros de frequências das turmas' },
                 subtitle: {
-                    text: 'Fonte: Busca Ativa Escolar'
+                    text: '' //sem sutítulo no gráfico
                 },
                 xAxis:
                     {
@@ -43,6 +43,9 @@
                     headerFormat: '<b>{series.name}</b><br>',
                     pointFormat: '{point.x:%e. %b}: {point.y} presentes'
                 },
+                credits:{
+                    enabled:false,
+                },
                 series: []
             };
 
@@ -50,13 +53,18 @@
 
             $scope.toBeUpdated = null;
 
-            $scope.onModifyFrequency = function(turma){
-                var newValuePresenca = angular.element('#frequency_'+turma.id).val();
-                turma.qty_presence = newValuePresenca;
-                Classes.updateFrequency(turma).$promise
-                    .then(function (res) {
-                        $scope.refresh();
-                    });
+            $scope.onModifyFrequency = function(frequency, turma){
+                var newValuePresenca = angular.element('#frequency_'+frequency.id).val();
+                if( turma.qty_enrollment < newValuePresenca ){
+                    Modals.show(Modals.Alert("A frequência não pode ser menor que a quantidade de alunos presentes"));
+                    $scope.refresh();
+                }else{
+                    frequency.qty_presence = newValuePresenca;
+                    Classes.updateFrequency(frequency).$promise
+                        .then(function (res) {
+                            $scope.refresh();
+                        });
+                }
             };
 
             $scope.clearGraph = function(){
@@ -102,12 +110,34 @@
             };
 
             $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){
-                var totalFrequencies = arrayFrequencies.length;
-                var averageFrequencies = 0;
-                arrayFrequencies.forEach( function(element) {
-                    averageFrequencies += parseInt(element.qty_presence);
-                });
-                return ( ( 100* (averageFrequencies/totalFrequencies) ) / totalStudents ).toFixed(2);
+
+                //  1- SOMA TODAS AS FREQUENCIAS. CALCULA A MEDIA. PERCENTUAL RELACIONADO A QUANTIDADE DE ALUNOS DA TURMA
+                // var totalFrequencies = arrayFrequencies.length;
+                // var averageFrequencies = 0;
+                // arrayFrequencies.forEach( function(element) {
+                //     averageFrequencies += parseInt(element.qty_presence);
+                // });
+                // return ( ( 100* (averageFrequencies/totalFrequencies) ) / totalStudents ).toFixed(2);
+
+                // 2- MEDIA BASEADA NA ÚLTIMA FREQUENCIA REGISTRADA
+                return ( ( 100* ( arrayFrequencies[(arrayFrequencies.length)-1].qty_presence ) ) / totalStudents ).toFixed(2);
+            };
+
+            $scope.finish = function(){
+                Modals.show(Modals.Confirm("Lorem ipsum dolor sit amet, consectetur adipiscing elit"))
+                    .then(function () {
+                        alert('Caminho a seguir ...');
+                    });
+            };
+
+            $scope.getPeriodicidade = function(){
+              var periodicidades = {
+                  Diaria: 'Diária',
+                  Semanal: 'Semanal',
+                  Quinzenal: 'Quinzenal',
+                  Mensal: 'Mensal'
+              };
+              return periodicidades[$scope.classes.school.periodicidade];
             };
 
             $scope.refresh();

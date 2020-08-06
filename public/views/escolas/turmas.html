@@ -6,6 +6,12 @@
             <h4><i class="material-icons">school </i> {{classes.school.name}}</h4>
             <div name="myForm" class="">
                 <label>Periodicidade:</label>
+
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Diaria" ng-change="addClasse()">
+                    Diária
+                </label>
+
                 <label class="radio-inline">
                     <input type="radio" ng-model="classes.school.periodicidade" value="Semanal" ng-change="addClasse()">
                     Semanal
@@ -66,13 +72,12 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, classe) in classes.turmas | filter:searchText">
-
                     <td class="text-center">
                         <input ng-if="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control"
                                ng-model="classe.name"
                                placeholder="Nome da turma">
                         <span ng-show="show !== i"
-                              ng-click="edit(i)">{{classe.name && classe.name || 'Não informado' }}</span>
+                              ng-click="edit(i)"><i class="fa fa-edit" aria-hidden="true"></i> {{classe.name && classe.name || 'Não informado' }}</span>
                     </td>
                     <td class="text-center">
                         <select ng-if="show === i" ng-blur="updateClasse(classe)" class="form-control"
