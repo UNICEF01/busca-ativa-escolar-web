@@ -3,7 +3,7 @@
 
         <div class="panel-heading">
             <h3>FREQUÊNCIAS - {{classes.school.name}}</h3>
-            <span>Registro da periodicidade {{getPeriodicidade().toLowerCase()}} </span>
+            <span>Registro da periodicidade {{getNamePeriodicidade().toLowerCase()}} </span>
         </div>
 
         <div class="panel-body">
@@ -23,6 +23,23 @@
                     display: block;
                     margin-top: 20px;
                 }
+                .input_frequency{
+                    -webkit-border-radius: 20px;
+                    -moz-border-radius: 20px;
+                    border-radius: 20px;
+                    border: 1px solid #666666;
+                    width: 50px;
+                    height: 30px;
+                    padding-left: 10px;
+                    text-align: center;
+                }
+
+                .input_frequency:focus {
+                    outline: none;
+                    border: 1px solid #2d9fd9;
+                    color: #2d9fd9;
+                    font-weight: bold;
+                }
             </style>
 
             <table class="table table-bordered">
@@ -33,6 +50,7 @@
                         <th>Alunos na turma</th>
                         <th>Alunos presentes</th>
                         <th>Percentual médio de frequência</th>
+                        <th>Período anterior</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +80,9 @@
                             <span class="data_class">
                                 {{calculatePercentualFrequencies(turma.frequencies, turma.qty_enrollment)}}
                             </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-default btn-raised" ng-click="addPeriodFrequency(turma)"><i class="fa fa-plus" aria-hidden="true"></i></button>
                         </td>
                     </tr>
 

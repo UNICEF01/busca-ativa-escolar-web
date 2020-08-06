@@ -23,7 +23,6 @@
 					return def.promise;
 				},
 
-
 				Alert: function(message, details) {
 					return {
 						templateUrl: '/views/modals/alert.html',
@@ -198,6 +197,7 @@
 
 					return params;
 				},
+
 				CaseTransfer: function($typeUser) {
 					var params = {
 						templateUrl: '/views/modals/case_transfer.html',
@@ -210,6 +210,7 @@
 
 					return params;
 				},
+
 				CaseReject: function($typeUser) {
 					var params = {
 						templateUrl: '/views/modals/case_reject.html',
@@ -239,8 +240,30 @@
 					//}
 
 					return params;
+				},
+
+				AddPeriodFrequency: function(message, subtitle, clazz, period, canDismiss) {
+					var params = {
+						templateUrl: '/views/modals/add_period_frequency.html',
+						controller: 'AddPeriodFrequencyModalCtrl',
+						size: 'md',
+						resolve: {
+							message: function() { return message; },
+							subtitle: function() { return subtitle; },
+							clazz: function () { return clazz; },
+							period: function() { return period; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
 				}
 
-			}
+			};
 		});
 })();

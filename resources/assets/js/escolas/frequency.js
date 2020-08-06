@@ -49,14 +49,18 @@
                 series: []
             };
 
-            $scope.classes = {};
+            $scope.classes = {
+                school: {
+                    periodicidade: null
+                },
+            };
 
             $scope.toBeUpdated = null;
 
             $scope.onModifyFrequency = function(frequency, turma){
                 var newValuePresenca = angular.element('#frequency_'+frequency.id).val();
                 if( turma.qty_enrollment < newValuePresenca ){
-                    Modals.show(Modals.Alert("A frequência não pode ser menor que a quantidade de alunos presentes"));
+                    Modals.show(Modals.Alert("A frequência não pode ser maior que a quantidade de alunos presentes"));
                     $scope.refresh();
                 }else{
                     frequency.qty_presence = newValuePresenca;
@@ -130,7 +134,7 @@
                     });
             };
 
-            $scope.getPeriodicidade = function(){
+            $scope.getNamePeriodicidade = function(){
               var periodicidades = {
                   Diaria: 'Diária',
                   Semanal: 'Semanal',
@@ -138,6 +142,16 @@
                   Mensal: 'Mensal'
               };
               return periodicidades[$scope.classes.school.periodicidade];
+            };
+
+            $scope.addPeriodFrequency = function(turma){
+                Modals.show(
+                    Modals.AddPeriodFrequency(
+                        turma.name,
+                        'Atualização de períodos anteriores | Frequência ' + $scope.getNamePeriodicidade().toLowerCase(),
+                        turma,
+                        $scope.classes.school.periodicidade
+                    ));
             };
 
             $scope.refresh();
