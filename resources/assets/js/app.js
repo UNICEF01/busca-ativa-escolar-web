@@ -31,5 +31,6 @@
 			'ngclipboard',
 			'ng-fusioncharts',
 			// 'heremaps',
-		])
+			// 'scheduler'
+		]);
 })();

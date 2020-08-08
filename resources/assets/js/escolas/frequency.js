@@ -104,13 +104,11 @@
             };
 
             $scope.refresh = function () {
-
                 Classes.find({id: $scope.school_id}).$promise
                     .then(function (res) {
                         $scope.classes = res;
                         $scope.initChart();
                     });
-
             };
 
             $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){

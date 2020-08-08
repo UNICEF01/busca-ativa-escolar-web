@@ -246,7 +246,7 @@
 					var params = {
 						templateUrl: '/views/modals/add_period_frequency.html',
 						controller: 'AddPeriodFrequencyModalCtrl',
-						size: 'md',
+						size: 'lg',
 						resolve: {
 							message: function() { return message; },
 							subtitle: function() { return subtitle; },

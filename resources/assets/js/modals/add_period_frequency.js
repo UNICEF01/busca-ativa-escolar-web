@@ -10,6 +10,8 @@
             $scope.canDismiss = canDismiss;
             $scope.period = period; //periodicidade
 
+            $scope.events = [];
+
             $scope.addFrequency = function(){
                 $scope.clazz.frequencies.unshift({
                     created_at: $scope.getPreviousDate(),
@@ -45,6 +47,22 @@
             $scope.disagree = function() {
                 $uibModalInstance.dismiss(false);
             };
+
+            $scope.initScheduler = function () {
+                scheduler.attachEvent("onEventAdded", function(id, event){
+                    //console.log("onEventAdded", event);
+                    $scope.events.push(event);
+                    console.log($scope.events);
+                });
+                scheduler.attachEvent("onEventChanged", function(id, event){
+                    console.log("onEventChanged", event);
+                });
+                scheduler.attachEvent("onEventDeleted", function(id){
+                    console.log("onEventDeleted", id);
+                });
+            };
+
+            $scope.initScheduler();
 
         });
 
