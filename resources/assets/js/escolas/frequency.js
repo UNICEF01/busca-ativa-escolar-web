@@ -23,17 +23,36 @@
                 },
                 xAxis:
                     {
-                        tickInterval: 1000 * 60 * 60 * 24,
+                        tickInterval:24 * 3600 * 1000 * 7,
+                        tickPositioner: function(min, max){
+                            var interval = this.options.tickInterval,
+                                ticks = [],
+                                count = 0;
+
+                            while(min < max) {
+                                ticks.push(min);
+                                min += interval;
+                                count ++;
+                            }
+
+                            ticks.info = {
+                                unitName: 'day',
+                                count: 5,
+                                higherRanks: {},
+                                totalRange: interval * count
+                            }
+
+
+                            return ticks;
+                        },
                         gridLineWidth: 1,
                         type: "date",
                         title: {
-                            text: "Períodos"
+                            text: null
                         },
                         labels: {
-                           formatter: function () {
-
-                           }
-                        }
+                            format: '{value: %d-%m-%Y}'
+                        },
                     },
 
                 yAxis: {
@@ -80,13 +99,13 @@
 
                 $scope.clearGraph();
 
-                $scope.classes.turmas.forEach( function(element) {
+                $scope.classes.turmas.forEach( function(element, indexTurmas) {
 
                     var data = [];
 
                     $scope.options_graph.xAxis.categories = [];
 
-                    element.frequencies.forEach( function (frequency) {
+                    element.frequencies.forEach( function (frequency, indexFrequencias) {
                         var dataSplit = frequency.created_at.substr(0, 10).split('-');
                         data.push([
                             Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])), parseInt(frequency.qty_presence)
