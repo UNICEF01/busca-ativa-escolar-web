@@ -31,6 +31,25 @@
                 return newDate;
             };
 
+            $scope.getlabelNewPeriod = function(){
+                var label = '';
+                switch ( $scope.period ) {
+                    case 'Diaria':
+                        label = 'dia';
+                        break;
+                    case 'Semanal':
+                        label = 'semana';
+                        break;
+                    case 'Quinzenal':
+                        label = 'quinzena';
+                        break;
+                    case 'Mensal':
+                        label = 'mês';
+                        break;
+                }
+                return label;
+            };
+
             $scope.subtractDaysOfDayInstance = function(date, days) {
                 var copy = new Date(Number(date));
                 copy.setDate(date.getDate() - days);

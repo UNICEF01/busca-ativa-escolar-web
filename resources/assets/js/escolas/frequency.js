@@ -27,10 +27,12 @@
                         gridLineWidth: 1,
                         type: "date",
                         title: {
-                            text: null
+                            text: "Períodos"
                         },
                         labels: {
-                            format: '{value: %d-%m-%Y}'
+                           formatter: function () {
+
+                           }
                         }
                     },
 
@@ -54,8 +56,6 @@
                     periodicidade: null
                 },
             };
-
-            $scope.toBeUpdated = null;
 
             $scope.onModifyFrequency = function(frequency, turma){
                 var newValuePresenca = angular.element('#frequency_'+frequency.id).val();
