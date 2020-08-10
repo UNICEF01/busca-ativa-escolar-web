@@ -71,6 +71,13 @@
                     return "<span style='font-size: 24px; font-weight: bold;'>"+event.text+"</span>";
                 };
 
+                //seta limite de inicio janero de 2020 e final no dia atual
+                scheduler.config.limit_start = new Date(2020,0,1);
+                scheduler.config.limit_end = new Date ();
+
+                //impossibilita a criacao de eventos duplos
+                scheduler.config.collision_limit = 1;
+
             }
         };
 
