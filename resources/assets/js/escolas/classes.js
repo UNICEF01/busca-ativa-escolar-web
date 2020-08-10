@@ -139,5 +139,22 @@
                 // DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
 
+            //deletar classe
+            $scope.removeClasse = function (classe) {
+                Modals.show(
+                    Modals.Confirm(
+                        "Confirma a remoção da turma "+classe.name+"? " +
+                        "A turma selecionada tem "+classe.frequencies.length+" frequências registradas.")
+                    )
+                    .then(function () {
+                        Classes.deleteClasse({id: classe.id}).$promise.then( function (res) {
+                            if (res.success) {
+                                ngToast.success(res.message);
+                                $scope.refresh();
+                            }
+                        });
+                    });
+            };
+
         });
 })();
