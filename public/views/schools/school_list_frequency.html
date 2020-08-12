@@ -81,7 +81,8 @@
                     <div class="form-group col-md-4">
                         <strong>{{school.name}}</strong><br/>
                         <small>COD INEP: {{school.id}}</small><br/>
-                        <small>{{school.city_name}}/ {{school.uf}}</small>
+                        <small>{{school.city_name}}/ {{school.uf}}</small> <br/>
+                        <span ng-show="school.periodicidade"><small class="label label-success">Periodicidade: {{school.periodicidade}}</small></span>
                     </div>
 
                     <div class="form-group  col-md-3">
@@ -92,7 +93,7 @@
                         <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onModifySchool(school)" ng-model="school.school_email">
                     </div>
 
-                    <div class="form-group  col-md-12"><hr></div>
+                    <div class="col-md-12"><hr></div>
 
                 </div>
 
