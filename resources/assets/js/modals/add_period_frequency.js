@@ -25,13 +25,13 @@
                         newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
                         break;
                     case 'Semanal':
-                        newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 7);
+                        newDate = $scope.subtractAWeekOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
                         break;
                     case 'Quinzenal':
                         newDate = $scope.subtractFortnightOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
                         break;
                     case 'Mensal':
-                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
+                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
                         break;
                 }
                 return newDate;
@@ -74,7 +74,7 @@
                     lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
                 }
                 while (lastFriday.getDay() != 5){
-                    lastFriday = $scope.subtractDaysOfDayInstance(date, 1);
+                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
                 }
                 return lastFriday;
             };
@@ -91,15 +91,8 @@
             };
 
             //menos um mês completo
-            $scope.subtractMonthOfDayInstance = function(date, months) {
-                var thisMonth = date.getMonth();
-                date.setMonth(thisMonth - months);
-                if ((thisMonth - months < 0) && (date.getMonth() != (thisMonth + months))) {
-                    date.setDate(0);
-                } else if ((thisMonth - months >= 0) && (date.getMonth() != thisMonth - months)) {
-                    date.setDate(0);
-                }
-                return date;
+            $scope.subtractMonthOfDayInstance = function(date) {
+               return new Date(date.getFullYear(), date.getMonth(), 0);
             };
 
             $scope.agree = function() {
