@@ -14,6 +14,10 @@
             </div>
         </div>
 
+        <pre>
+            {{ clazz | json }}
+        </pre>
+
         <table class="table table-bordered table-responsive table-condensed">
             <thead>
                 <tr>
@@ -25,12 +29,15 @@
                 <tr ng-repeat="(i, frequency) in clazz.frequencies" ng-if="clazz.frequencies.length > 0">
                     <td class="text-center">
                         <span>
-                            {{frequency.created_at | amDateFormat:'DD/MM/YYYY'}}
+                            <span ng-if="period != 'Diaria' && i != clazz.frequencies.length-1">{{getPeriodLabelForNewFrequency(frequency.created_at)}} até </span> {{frequency.created_at | amDateFormat:'DD/MM/YYYY'}}
                         </span>
                     </td>
                     <td width="50%" class="text-center">
                         <input
                                 type="number"
+                                min="0"
+                                max="{{clazz.qty_enrollment}}"
+                                ng-model="clazz.frequencies[i].qty_presence"
                                 class="input_frequency"
                                 placeholder="Informe a frequência"
                                 ng-blur=""

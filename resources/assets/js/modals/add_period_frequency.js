@@ -11,8 +11,9 @@
             $scope.period = period; //periodicidade
 
             $scope.addFrequency = function(){
+                var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
                 $scope.clazz.frequencies.unshift({
-                    created_at: $scope.getPreviousDate(),
+                    created_at: splitDate,
                     qty_enrollment: 0,
                     qty_presence: 0
                 });
@@ -56,6 +57,23 @@
                 return label;
             };
 
+            $scope.getPeriodLabelForNewFrequency = function(date){
+                var label = '';
+                switch ( $scope.period ) {
+                    case 'Semanal':
+                        label = $scope.subtractDaysOfDayInstance(new Date(date), 4);
+                        break;
+                    case 'Quinzenal':
+                        label = $scope.subtractFortnightOfDayInstance(new Date(date));
+                        break;
+                    case 'Mensal':
+                        label = $scope.subtractMonthOfDayInstance(new Date(date));
+                        break;
+                }
+                var splitDate = label.toISOString().substr(0, 10).split('-');
+                return splitDate[2]+"/"+splitDate[1]+"/"+splitDate[0];
+            };
+
             //subtrair um dia considerando finais de semana
             $scope.subtractDaysOfDayInstance = function(date, days) {
                 var copy = new Date(Number(date));
@@ -90,7 +108,7 @@
                 return date2;
             };
 
-            //menos um mês completo
+            //menos um mês completo- ultimo dia do mês anterior
             $scope.subtractMonthOfDayInstance = function(date) {
                return new Date(date.getFullYear(), date.getMonth(), 0);
             };
