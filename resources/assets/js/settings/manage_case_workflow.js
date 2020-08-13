@@ -18,7 +18,7 @@
                 	if( index_g == 0){
                     	var alerts = $scope.groups[index_g].settings.alerts;
                         for(var index_a in alerts){
-                        	if(index_a != 500 && alerts[index_a] == false){
+                        	if(index_a != 500 && index_a != 600 && alerts[index_a] == false){
                                 ngToast.danger('O grupo Secretaria Municipal de Educação, obrigatoriamente, deve estar selecionado para todos os motivos de evasão escolar!');
                         		return;
 							}
