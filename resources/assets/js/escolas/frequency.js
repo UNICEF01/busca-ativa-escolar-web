@@ -170,7 +170,7 @@
 
             $scope.refresh = function () {
 
-                Classes.find({id: $scope.school_id}).$promise
+                Classes.frequencies({id: $scope.school_id}).$promise
                     .then(function (res) {
                         $scope.classes = res;
                         $scope.refreshOptionsGraph(); //atualiza as opcoes do grafico

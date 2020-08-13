@@ -2,7 +2,7 @@
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss) {
+        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
 
             $scope.message = message;
             $scope.subtitle = subtitle;
@@ -15,7 +15,8 @@
                 $scope.clazz.frequencies.unshift({
                     created_at: splitDate,
                     qty_enrollment: 0,
-                    qty_presence: 0
+                    qty_presence: 0,
+                    classes_id: $scope.clazz.id
                 });
             };
 
@@ -114,7 +115,10 @@
             };
 
             $scope.agree = function() {
-                alert();
+                Classes.updateFrequencies($scope.clazz.frequencies).$promise
+                    .then(function (res) {
+                        $scope.refresh();
+                    });
                 //$uibModalInstance.close(true);
             };
 

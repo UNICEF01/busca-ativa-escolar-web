@@ -8,7 +8,9 @@
                 create: {method: 'POST'},
                 deleteClasse: {method: 'DELETE', url: API.getURI('classes/:id')},
                 updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
-                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')}
+                frequencies: {method: 'GET', params: {}, url: API.getURI('frequencies/:id')},
+                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')},
+                updateFrequencies: {method: 'PUT', url: API.getURI('frequencies')}
             });
             return Classes;
         });
