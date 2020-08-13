@@ -165,7 +165,9 @@
                         'Atualização de períodos anteriores | Frequência ' + $scope.getNamePeriodicidade().toLowerCase(),
                         turma,
                         $scope.classes.school.periodicidade
-                    ));
+                    )).then(function () {
+                        $scope.refresh();
+                    });
             };
 
             $scope.refresh = function () {

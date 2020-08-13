@@ -9,6 +9,7 @@
             $scope.clazz = clazz;
             $scope.canDismiss = canDismiss;
             $scope.period = period; //periodicidade
+            $scope.can_forward = true;
 
             $scope.addFrequency = function(){
                 var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
@@ -115,11 +116,12 @@
             };
 
             $scope.agree = function() {
+                $scope.can_forward = false;
                 Classes.updateFrequencies($scope.clazz.frequencies).$promise
                     .then(function (res) {
-                        $scope.refresh();
+                        $scope.can_forward = true;
+                        $uibModalInstance.close(true);
                     });
-                //$uibModalInstance.close(true);
             };
 
             $scope.disagree = function() {
