@@ -240,6 +240,12 @@
                         $scope.classes = res;
                         $scope.refreshOptionsGraph(); //atualiza as opcoes do grafico
                         $scope.initChart(); //inicia o grafico
+
+                        document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("active"); //ativa a aba correta dos graficos
+                        document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("in");
+                        document.getElementById("li_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("active");
+                        document.getElementById("link_"+$scope.classes.school.periodicidade.toLowerCase()).setAttribute("aria-expanded", "true");
+
                     });
 
             };
