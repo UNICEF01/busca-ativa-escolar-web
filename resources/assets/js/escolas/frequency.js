@@ -34,8 +34,8 @@
             $scope.options_graph = {
                 chart: {
                     type: 'line',
-                    renderTo: ''
-
+                    renderTo: '',
+                    width: 1100
                 },
 
                 title: { text: 'Frequências das turmas - percentual médio' },
