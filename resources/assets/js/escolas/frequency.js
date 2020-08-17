@@ -13,26 +13,36 @@
 
             $scope.school_id = $stateParams.school_id;
 
+            $scope.periodicidades = ['Diaria', 'Semanal', 'Quinzenal', 'Mensal'];
+
+            $scope.query = {
+                sort: {},
+                max: 5,
+                page: 1,
+                search: ''
+            };
+
             $scope.classes = {
                 school: {
                     periodicidade: null
                 },
             };
 
+            $scope.categories = [];
+
             //Configuracoes iniciais para o Hightchart
             $scope.options_graph = {
                 chart: {
-                    type: 'line'
+                    type: 'line',
+                    renderTo: ''
+
                 },
 
-                title: { text: 'Registros de frequências das turmas' },
+                title: { text: 'Frequências das turmas - percentual médio' },
 
-                subtitle: {
-                    text: '' //sem sutítulo no gráfico
-                },
+                subtitle: { text: '' },
 
                 xAxis: {
-
                     //tickInterval: 24 * 3600 * 1000 * 1,
 
                     gridLineWidth: 1,
@@ -46,14 +56,15 @@
                     },
 
                     labels: {
-                        x: 0,
-                        y: 25,
-                        format: '{value: %d/%m}',
-                        // formatter: function () {
-                        //     return new Date(this.value);
-                        // }
+                        rotation: -90,
+                        //x: 0,
+                        //y: 50,
+                        //format: '{value: %d/%m}',
+                        formatter: function () {
+                            var periodicidade = $scope.getPeriodicidadeFromCategory(this.value);
+                            return $scope.getLabelForAxisChart(new Date(this.value), periodicidade);
+                        }
                     },
-
                 },
 
                 yAxis: {
@@ -72,6 +83,15 @@
                 },
 
                 series: []
+            };
+
+            $scope.getPeriodicidadeFromCategory = function(value){
+                for (var i = 0; i < $scope.categories.length; i++) {
+                    if ($scope.categories[i].date === value) {
+                        return $scope.categories[i].periodicidade;
+                    }
+                }
+                return null;
             };
 
             //Chamado sempre após o refresh da API para atualizar as pré-definicoes do options_graph
@@ -93,38 +113,81 @@
 
             //Limpa  o grafico - Chamado sempre antes de sua reinicializacao
             $scope.clearGraph = function(){
-                $scope.options_graph.xAxis.categories = [];
                 $scope.options_graph.series = [];
+            };
+
+            $scope.getLabelForAxisChart = function(date, periodicidade){
+
+                if(periodicidade == 'Diaria'){
+                    var splitDate = date.toISOString().substr(0, 10).split('-');
+                    return splitDate[2]+"/"+splitDate[1];
+                }
+
+                if(periodicidade == 'Semanal'){
+                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Quinzenal'){
+                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Mensal'){
+                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
             };
 
             $scope.initChart = function(){
 
-                $scope.clearGraph();
+                $scope.periodicidades.forEach( function (period) {
 
-                $scope.classes.turmas.forEach( function(element) {
+                    $scope.clearGraph();
+                    $scope.categories = [];
 
-                    var data = [];
+                    $scope.classes.turmas.forEach( function(element) {
 
-                    $scope.options_graph.xAxis.categories = [];
+                        var data = [];
 
-                    element.frequencies.forEach( function (frequency) {
-                        var dataSplit = frequency.created_at.substr(0, 10).split('-');
-                        data.push([
-                            Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])), parseInt(frequency.qty_presence)
-                        ]);
-                        $scope.options_graph.xAxis.tickPositions.push(
-                            Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
-                        );
+                        element.frequencies.forEach( function (frequency) {
+
+                            if(frequency.periodicidade == period){
+
+                                $scope.options_graph.chart.renderTo = "graph_"+period;
+
+                                var dataSplit = frequency.created_at.substr(0, 10).split('-');
+                                data.push([
+                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])),
+                                    parseInt(frequency.qty_presence),
+                                ]);
+                                $scope.options_graph.xAxis.tickPositions.push(
+                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
+                                );
+                                $scope.categories.push({
+                                    date: Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])),
+                                    periodicidade: frequency.periodicidade
+                                });
+
+                            }
+
+                        });
+
+                        $scope.options_graph.series.push({
+                            name: element.name,
+                            data: data,
+                        });
+
                     });
 
-                    $scope.options_graph.series.push({
-                        name: element.name,
-                        data: data
-                    });
+                    var chart = new Highcharts.chart( 'chart_classes_'+period, $scope.options_graph);
 
                 });
 
-                var chart = new Highcharts.chart( 'chart_classes', $scope.options_graph);
             };
 
             $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){
@@ -182,6 +245,45 @@
             };
 
             $scope.refresh();
+
+            //subtrair um dia considerando finais de semana
+            $scope.subtractDaysOfDayInstance = function(date, days) {
+                var copy = new Date(Number(date));
+                copy.setDate(date.getDate() - days);
+                if( copy.getUTCDay() == 0 ) //domingo
+                { copy.setDate(copy.getDate() - 2); }
+                if( copy.getUTCDay() == 6 ) //sabado
+                { copy.setDate(copy.getDate() - 1); }
+                return copy;
+            };
+
+            //pega a ultima sexta-feira para periodicidade semanal
+            $scope.subtractAWeekOfDayInstance = function(date){
+                var lastFriday = new Date(Number(date));
+                if(date.getDay() == 5){
+                    lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
+                }
+                while (lastFriday.getDay() != 5){
+                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
+                }
+                return lastFriday;
+            };
+
+            //pega o ultimo dia 15 ou dia 1o
+            $scope.subtractFortnightOfDayInstance = function(date){
+                var date2 = new Date(Number(date));
+                if(date.getUTCDate() > 15){
+                    date2.setUTCDate(15);
+                }else{ //se é de 1 a 15 pega ultima data do mes anterior
+                    date2 = new Date(date.getFullYear(), date.getMonth(), 0);
+                }
+                return date2;
+            };
+
+            //menos um mês completo- ultimo dia do mês anterior
+            $scope.subtractMonthOfDayInstance = function(date) {
+                return new Date(date.getFullYear(), date.getMonth(), 0);
+            };
 
         });
 })();

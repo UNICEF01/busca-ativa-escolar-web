@@ -2,7 +2,7 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3>FREQUÊNCIAS - {{classes.school.name}}</h3>
+            <h3>Acompanhamento da frequência - {{classes.school.name}}</h3>
             <span>Registro de frequência {{getNamePeriodicidade().toLowerCase()}} </span>
         </div>
 
@@ -10,7 +10,7 @@
 
             <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
                 <div class="col-lg-9">
-                    <p>Utilize o formulário abaixo para registrar a frequência das turmas. O prazo de registro depende da periodicidade salva na configuração da escola.</p>
+                    <p>Utilize o formulário abaixo para registrar o acompanhamento de frequência das turmas cadastradas pela sua escola. A periodicidade de registro foi definida e salva no cadastro feito por sua escola.</p>
                 </div>
 
                 <div class="col-lg-3 text-right">
@@ -46,8 +46,8 @@
                     <tr>
                         <th>Turmas</th>
                         <th>Período</th>
-                        <th>Alunos na turma</th>
-                        <th>Alunos presentes</th>
+                        <th>Estudantes matriculados</th>
+                        <th>Estudantes com frequência </th>
                         <th>Percentual médio de frequência</th>
                         <th>Período anterior</th>
                     </tr>
@@ -89,8 +89,28 @@
                 </tbody>
             </table>
 
-            <div class="graph_classes">
-                <div id="chart_classes"></div>
+            <div class="row">
+                <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+                    <li class="active"><a href="#diaria" data-toggle="tab" aria-expanded="true">Frequências diárias<div class="ripple-container"></div></a></li>
+                    <li class=""><a href="#semanal" data-toggle="tab" aria-expanded="false">Frequências semanais<div class="ripple-container"></div></a></li>
+                    <li class=""><a href="#quinzenal" data-toggle="tab" aria-expanded="false">Frequências quinzenais<div class="ripple-container"></div></a></li>
+                    <li class=""><a href="#mensal" data-toggle="tab" aria-expanded="false">Frequências mensais<div class="ripple-container"></div></a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="diaria">
+                        <div id="chart_classes_Diaria" id="graph_Diaria"></div>
+                    </div>
+                    <div class="tab-pane fade" id="semanal">
+                        <div id="chart_classes_Semanal" id="graph_Semanal"></div>
+                    </div>
+
+                    <div class="tab-pane fade" id="quinzenal">
+                        <div id="chart_classes_Quinzenal" id="graph_Quinzenal"></div>
+                    </div>
+                    <div class="tab-pane fade" id="mensal">
+                        <div id="chart_classes_Mensal" id="graph_Mensal"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="row">

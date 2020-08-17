@@ -144,7 +144,7 @@
                 Modals.show(
                     Modals.Confirm(
                         "Confirma a remoção da turma "+classe.name+"? " +
-                        "A turma selecionada tem "+classe.frequencies.length+" frequências registradas.")
+                        "As frequências registradas serão removidas.")
                     )
                     .then(function () {
                         Classes.deleteClasse({id: classe.id}).$promise.then( function (res) {
@@ -153,6 +153,13 @@
                                 $scope.refresh();
                             }
                         });
+                    });
+            };
+
+            $scope.finish = function(){
+                Modals.show(Modals.Confirm("Lorem ipsum dolor sit amet, consectetur adipiscing elit"))
+                    .then(function () {
+                        alert('Caminho a seguir ...');
                     });
             };
 

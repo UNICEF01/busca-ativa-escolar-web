@@ -63,7 +63,7 @@
                     Modals.show(
                         Modals.ConfirmEmail(
                             'Confirma o envio de sms e email para as seguintes escolas?',
-                            'Ao confirmar o envio, as escolas selecionadas serão notificadas e poderão cadastrar as turmas para ',
+                            'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
                             schools_to_send_notification
                         )).then(function () {
                         return Schools.send_frequency_notifications(schools_to_send_notification).$promise;

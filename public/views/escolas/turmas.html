@@ -104,7 +104,11 @@
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-primary btn-raised pull-right" ng-href="frequencia/{{school_id}}">Concluído</a>
+            <div class="row">
+                <div class="col-lg-12 text-right" style="margin-top: 30px;">
+                    <button class="btn btn-raised btn-success" ng-click="finish()" ng-disabled="classes.turmas.length < 1">Concluído</button>
+                </div>
+            </div>
 
         </div>
     </div>

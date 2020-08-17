@@ -17,7 +17,8 @@
                     created_at: splitDate,
                     qty_enrollment: 0,
                     qty_presence: 0,
-                    classes_id: $scope.clazz.id
+                    classes_id: $scope.clazz.id,
+                    periodicidade: $scope.period
                 });
             };
 
@@ -59,21 +60,30 @@
                 return label;
             };
 
-            $scope.getPeriodLabelForNewFrequency = function(date){
-                var label = '';
-                switch ( $scope.period ) {
-                    case 'Semanal':
-                        label = $scope.subtractDaysOfDayInstance(new Date(date), 4);
-                        break;
-                    case 'Quinzenal':
-                        label = $scope.subtractFortnightOfDayInstance(new Date(date));
-                        break;
-                    case 'Mensal':
-                        label = $scope.subtractMonthOfDayInstance(new Date(date));
-                        break;
+            $scope.getPeriodLabelForNewFrequency = function(date, periodicidade){
+                date = new Date(date);
+                if(periodicidade == 'Diaria'){
+                    var splitDate = date.toISOString().substr(0, 10).split('-');
+                    return splitDate[2]+"/"+splitDate[1];
                 }
-                var splitDate = label.toISOString().substr(0, 10).split('-');
-                return splitDate[2]+"/"+splitDate[1]+"/"+splitDate[0];
+
+                if(periodicidade == 'Semanal'){
+                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Quinzenal'){
+                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Mensal'){
+                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
             };
 
             //subtrair um dia considerando finais de semana

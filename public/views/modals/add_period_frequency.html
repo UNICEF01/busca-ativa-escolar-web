@@ -25,8 +25,7 @@
                 <tr ng-repeat="(i, frequency) in clazz.frequencies" ng-if="clazz.frequencies.length > 0">
                     <td class="text-center">
                         <span>
-                            <span ng-if="period != 'Diaria' && i != clazz.frequencies.length-1">{{getPeriodLabelForNewFrequency(frequency.created_at)}} até </span> {{frequency.created_at | amDateFormat:'DD/MM/YYYY'}}
-                        </span>
+                            {{getPeriodLabelForNewFrequency(frequency.created_at, frequency.periodicidade)}}
                     </td>
                     <td width="50%" class="text-center">
                         <input
