@@ -32,6 +32,7 @@
 
             //Configuracoes iniciais para o Hightchart
             $scope.options_graph = {
+
                 chart: {
                     type: 'line',
                     renderTo: '',
@@ -45,7 +46,7 @@
                 xAxis: {
                     //tickInterval: 24 * 3600 * 1000 * 1,
 
-                    gridLineWidth: 1,
+                    //gridLineWidth: 1,
 
                     tickPositions: [],
 
@@ -149,6 +150,7 @@
 
                     $scope.clearGraph();
                     $scope.categories = [];
+                    $scope.options_graph.chart.renderTo = 'chart_classes_'+period;
 
                     $scope.classes.turmas.forEach( function(element) {
 
@@ -184,7 +186,7 @@
 
                     });
 
-                    var chart = new Highcharts.chart( 'chart_classes_'+period, $scope.options_graph);
+                    var chart = new Highcharts.stockChart( 'chart_classes_'+period, $scope.options_graph);
 
                 });
 
