@@ -157,7 +157,7 @@
             };
 
             $scope.finish = function(){
-                Modals.show(Modals.Confirm("Lorem ipsum dolor sit amet, consectetur adipiscing elit"))
+                Modals.show(Modals.Confirm("Tem certeza que deseja concluir essa operação? Você poderá cadastrar, editar ou remover turmas sempre que for necessário"))
                     .then(function () {
                         alert('Caminho a seguir ...');
                     });
