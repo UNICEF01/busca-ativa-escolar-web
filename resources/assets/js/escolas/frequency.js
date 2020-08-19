@@ -28,12 +28,7 @@
                 },
             };
 
-            $scope.tickPositions = {
-                Diaria: [],
-                Semanal: [],
-                Quinzenal: [],
-                Mensal: [],
-            };
+            $scope.categories = [];
 
             //Configuracoes iniciais para o Hightchart
             $scope.options_graph = {
@@ -59,9 +54,13 @@
 
                 xAxis: {
 
-                    tickPositions: [],
+                    tickPositioner: function() {
+                        return $scope.categories;
+                    },
 
-                    gridLineWidth: 1,
+                    step: 1,
+
+                    startOnTick: true,
 
                     type: "datetime",
 
@@ -72,29 +71,14 @@
                     labels: {
                         rotation: -90,
                         //x: 0,
-                        y: 50,
-                        format: '{value: %d/%m}',
-                        // formatter: function () {
-                        //     return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
-                        // }
+                        //y: 50,
+                        // format: '{value: %d/%m}',
+                        formatter: function () {
+                            return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
+                        }
                     },
                     crosshair: true
                 },
-
-                // tooltip: {
-                //     formatter: function () {
-                //         return this.points.reduce(function (s, point) {
-                //             if( point.series.chart.title.textStr.substr(25) != 'Diária'){
-                //                 return $scope.getLabelForAxisChart(new Date(parseInt(s.replace('<b>', '').replace('</b>', ''))), point.series.chart.title.textStr.substr(25))
-                //                     + '<br/>' + point.series.name + ': ' +
-                //                     point.y + 'm';
-                //             }else{
-                //                 return s + '<br/>' + point.series.name + ': ' + point.y;
-                //             }
-                //         }, '<b>' + this.x + '</b>');
-                //     },
-                //     shared: true
-                // },
 
                 yAxis: {
                     title: {
@@ -214,7 +198,6 @@
                 $scope.periodicidades.forEach( function (period) {
 
                     $scope.options_graph.series = [];
-                    $scope.options_graph.xAxis.tickPositions = [];
                     $scope.options_graph.chart.renderTo = 'chart_classes_'+period;
                     $scope.options_graph.title.text = 'Frequências das turmas - '+$scope.getNamePeriodicidades(period);
 
@@ -235,11 +218,7 @@
                                     parseInt(frequency.qty_presence),
                                 ]);
 
-                                $scope.options_graph.xAxis.tickPositions.push(
-                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
-                                );
-
-                                $scope.tickPositions[period].push(
+                                $scope.categories.push(
                                     Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
                                 );
                             }
@@ -252,6 +231,8 @@
                         });
 
                     });
+
+                    //console.log($scope.options_graph.xAxis.tickPositions);
 
                     var chart = new Highcharts.stockChart( 'chart_classes_'+period, $scope.options_graph);
 

@@ -5987,12 +5987,7 @@ Highcharts.maps["countries/br/br-all"] = {
                 },
             };
 
-            $scope.tickPositions = {
-                Diaria: [],
-                Semanal: [],
-                Quinzenal: [],
-                Mensal: [],
-            };
+            $scope.categories = [];
 
             //Configuracoes iniciais para o Hightchart
             $scope.options_graph = {
@@ -6018,9 +6013,13 @@ Highcharts.maps["countries/br/br-all"] = {
 
                 xAxis: {
 
-                    tickPositions: [],
+                    tickPositioner: function() {
+                        return $scope.categories;
+                    },
 
-                    gridLineWidth: 1,
+                    step: 1,
+
+                    startOnTick: true,
 
                     type: "datetime",
 
@@ -6031,29 +6030,14 @@ Highcharts.maps["countries/br/br-all"] = {
                     labels: {
                         rotation: -90,
                         //x: 0,
-                        y: 50,
-                        format: '{value: %d/%m}',
-                        // formatter: function () {
-                        //     return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
-                        // }
+                        //y: 50,
+                        // format: '{value: %d/%m}',
+                        formatter: function () {
+                            return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
+                        }
                     },
                     crosshair: true
                 },
-
-                // tooltip: {
-                //     formatter: function () {
-                //         return this.points.reduce(function (s, point) {
-                //             if( point.series.chart.title.textStr.substr(25) != 'Diária'){
-                //                 return $scope.getLabelForAxisChart(new Date(parseInt(s.replace('<b>', '').replace('</b>', ''))), point.series.chart.title.textStr.substr(25))
-                //                     + '<br/>' + point.series.name + ': ' +
-                //                     point.y + 'm';
-                //             }else{
-                //                 return s + '<br/>' + point.series.name + ': ' + point.y;
-                //             }
-                //         }, '<b>' + this.x + '</b>');
-                //     },
-                //     shared: true
-                // },
 
                 yAxis: {
                     title: {
@@ -6173,7 +6157,6 @@ Highcharts.maps["countries/br/br-all"] = {
                 $scope.periodicidades.forEach( function (period) {
 
                     $scope.options_graph.series = [];
-                    $scope.options_graph.xAxis.tickPositions = [];
                     $scope.options_graph.chart.renderTo = 'chart_classes_'+period;
                     $scope.options_graph.title.text = 'Frequências das turmas - '+$scope.getNamePeriodicidades(period);
 
@@ -6194,11 +6177,7 @@ Highcharts.maps["countries/br/br-all"] = {
                                     parseInt(frequency.qty_presence),
                                 ]);
 
-                                $scope.options_graph.xAxis.tickPositions.push(
-                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
-                                );
-
-                                $scope.tickPositions[period].push(
+                                $scope.categories.push(
                                     Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
                                 );
                             }
@@ -6211,6 +6190,8 @@ Highcharts.maps["countries/br/br-all"] = {
                         });
 
                     });
+
+                    //console.log($scope.options_graph.xAxis.tickPositions);
 
                     var chart = new Highcharts.stockChart( 'chart_classes_'+period, $scope.options_graph);
 
@@ -6648,6 +6629,85 @@ Highcharts.maps["countries/br/br-all"] = {
 				$scope.refresh();
 			}
 		);
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
+			}
+
+		});
+
 })();
 (function() {
 
@@ -7213,85 +7273,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
 			}
 
 		});
@@ -8405,6 +8386,45 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_preferences', {
+				url: '/user_preferences',
+				templateUrl: '/views/preferences/manage_user_preferences.html',
+				controller: 'ManageUserPreferencesCtrl'
+			})
+		})
+		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
+
+			$scope.static = StaticData;
+			$scope.settings = {};
+
+			$scope.refresh = function() {
+				UserPreferences.get({}, function (res) {
+					$scope.settings = res.settings;
+				});
+			};
+
+			$scope.save = function() {
+				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
+			};
+
+			$scope.resetPassword = function() {
+				$scope.true = false;
+
+				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
+					$scope.isLoading = false;
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+				})
+			};
+
+			$scope.refresh();
+
+		});
+
+})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -8448,45 +8468,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_preferences', {
-				url: '/user_preferences',
-				templateUrl: '/views/preferences/manage_user_preferences.html',
-				controller: 'ManageUserPreferencesCtrl'
-			})
-		})
-		.controller('ManageUserPreferencesCtrl', function ($scope, $rootScope, ngToast, Identity, UserPreferences, PasswordReset, StaticData) {
-
-			$scope.static = StaticData;
-			$scope.settings = {};
-
-			$scope.refresh = function() {
-				UserPreferences.get({}, function (res) {
-					$scope.settings = res.settings;
-				});
-			};
-
-			$scope.save = function() {
-				UserPreferences.update({settings: $scope.settings}, $scope.refresh);
-			};
-
-			$scope.resetPassword = function() {
-				$scope.true = false;
-
-				PasswordReset.begin({email: Identity.getCurrentUser().email}, function (res) {
-					$scope.isLoading = false;
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-				})
-			};
-
-			$scope.refresh();
-
-		});
-
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
