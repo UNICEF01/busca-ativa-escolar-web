@@ -28,6 +28,13 @@
                 },
             };
 
+            $scope.tickPositions = {
+                Diaria: [],
+                Semanal: [],
+                Quinzenal: [],
+                Mensal: [],
+            };
+
             //Configuracoes iniciais para o Hightchart
             $scope.options_graph = {
 
@@ -54,8 +61,6 @@
 
                     tickPositions: [],
 
-                    //tickInterval: 24 * 3600 * 1000 * 7,
-
                     gridLineWidth: 1,
 
                     type: "datetime",
@@ -73,7 +78,23 @@
                         //     return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
                         // }
                     },
+                    crosshair: true
                 },
+
+                // tooltip: {
+                //     formatter: function () {
+                //         return this.points.reduce(function (s, point) {
+                //             if( point.series.chart.title.textStr.substr(25) != 'Diária'){
+                //                 return $scope.getLabelForAxisChart(new Date(parseInt(s.replace('<b>', '').replace('</b>', ''))), point.series.chart.title.textStr.substr(25))
+                //                     + '<br/>' + point.series.name + ': ' +
+                //                     point.y + 'm';
+                //             }else{
+                //                 return s + '<br/>' + point.series.name + ': ' + point.y;
+                //             }
+                //         }, '<b>' + this.x + '</b>');
+                //     },
+                //     shared: true
+                // },
 
                 yAxis: {
                     title: {
@@ -81,10 +102,15 @@
                     }
                 },
 
-                // tooltip: {
-                //     headerFormat: '<b>{series.name}</b><br>',
-                //     pointFormat: '{point.x:%e. %b}: {point.y} presentes'
-                // },
+                plotOptions: {
+                    series: {
+                        allowPointSelect: true,
+                        marker: {
+                            enabled: true,
+                            radius: 3
+                        }
+                    },
+                },
 
                 credits:{
                     enabled:false,
@@ -92,9 +118,6 @@
 
                 series: []
             };
-
-            //Chamado sempre após o refresh da API para atualizar as pré-definicoes do options_graph
-            $scope.refreshOptionsGraph = function(){};
 
             $scope.onModifyFrequency = function(frequency, turma){
                 var newValuePresenca = angular.element('#frequency_'+frequency.id).val();
@@ -139,6 +162,13 @@
 
             $scope.initChart = function(){
 
+                /*
+                    No topo da página frequencia.html mudamos a referência para Highcharts para highstock
+                    O Highcharts usado aqui é diferente do usado na plataforma como diretiva
+                    A diretiva foi completamente personalizada e impede o uso personalizado aqui
+                 */
+
+                // Solução para problema de resize
                 (function(H) {
                     H.wrap(
                         H.Navigator.prototype,
@@ -152,9 +182,39 @@
                     );
                 })(Highcharts);
 
+                // Configurações de idioma
+                Highcharts.setOptions({
+                    lang: {
+                        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                        shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                        loading: ['Atualizando o gráfico...'],
+                        contextButtonTitle: 'Exportar gráfico',
+                        decimalPoint: ',',
+                        thousandsSep: '.',
+                        downloadJPEG: 'Baixar imagem JPEG',
+                        downloadPDF: 'Baixar arquivo PDF',
+                        downloadPNG: 'Baixar imagem PNG',
+                        downloadSVG: 'Baixar vetor SVG',
+                        printChart: 'Imprimir gráfico',
+                        rangeSelectorFrom: 'De',
+                        rangeSelectorTo: 'Para',
+                        rangeSelectorZoom: 'Zoom',
+                        resetZoom: 'Voltar zoom',
+                        resetZoomTitle: 'Voltar zoom para nível 1:1'
+                    }
+                });
+
+                /*
+                    Para cada periodicidade do array de periodicidades
+                    percerremos turmas e suas respectivas frequências
+                    para setar as configuraçoes do gráfico
+                    Cada gráfico recebe um objeto de configuracao
+                 */
                 $scope.periodicidades.forEach( function (period) {
 
                     $scope.options_graph.series = [];
+                    $scope.options_graph.xAxis.tickPositions = [];
                     $scope.options_graph.chart.renderTo = 'chart_classes_'+period;
                     $scope.options_graph.title.text = 'Frequências das turmas - '+$scope.getNamePeriodicidades(period);
 
@@ -178,6 +238,10 @@
                                 $scope.options_graph.xAxis.tickPositions.push(
                                     Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
                                 );
+
+                                $scope.tickPositions[period].push(
+                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
+                                );
                             }
 
                         });
@@ -191,23 +255,11 @@
 
                     var chart = new Highcharts.stockChart( 'chart_classes_'+period, $scope.options_graph);
 
-                    $scope.options_graph.xAxis.tickPositions = [];
-
                 });
 
             };
 
             $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){
-
-                //  1- SOMA TODAS AS FREQUENCIAS. CALCULA A MEDIA. PERCENTUAL RELACIONADO A QUANTIDADE DE ALUNOS DA TURMA
-                // var totalFrequencies = arrayFrequencies.length;
-                // var averageFrequencies = 0;
-                // arrayFrequencies.forEach( function(element) {
-                //     averageFrequencies += parseInt(element.qty_presence);
-                // });
-                // return ( ( 100* (averageFrequencies/totalFrequencies) ) / totalStudents ).toFixed(2);
-
-                // 2- MEDIA BASEADA NA ÚLTIMA FREQUENCIA REGISTRADA
                 return ( ( 100* ( arrayFrequencies[(arrayFrequencies.length)-1].qty_presence ) ) / totalStudents ).toFixed(2);
             };
 
@@ -254,9 +306,9 @@
 
                 Classes.frequencies({id: $scope.school_id}).$promise
                     .then(function (res) {
+
                         $scope.classes = res;
-                        $scope.refreshOptionsGraph(); //atualiza as opcoes do grafico
-                        $scope.initChart(); //inicia o grafico
+                        $scope.initChart();
 
                         document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("active"); //ativa a aba correta dos graficos
                         document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("in");
