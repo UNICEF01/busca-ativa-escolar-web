@@ -55,6 +55,26 @@
 					return params;
 				},
 
+				ConfirmLarge: function(message, details, canDismiss) {
+					var params = {
+						templateUrl: '/views/modals/confirm.html',
+						controller: 'ConfirmLargeModalCtrl',
+						size: 'lg',
+						resolve: {
+							message: function() { return message; },
+							details: function() { return details; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
 				ConfirmEmail: function(message, details, schools, canDismiss) {
 					var params = {
 						templateUrl: '/views/modals/confirm_email.html',

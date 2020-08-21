@@ -19,6 +19,12 @@
                 qty_enrollment: ''
             };
 
+            $scope.classes = {
+              school: {
+                  periodicidade: null
+              }
+            };
+
             $scope.showEdit = false;
 
             $scope.school_id = $stateParams.school_id;
@@ -157,9 +163,33 @@
             };
 
             $scope.finish = function(){
-                Modals.show(Modals.Confirm("Tem certeza que deseja concluir essa operação? Você poderá cadastrar, editar ou remover turmas sempre que for necessário"))
+
+                    var alertDiaria = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no próximo dia útil, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                    var alertSemanal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima semana, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                    var alertQuinzenal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima quinzena, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                    var alertMensal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início do próximo mês, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+
+                    var msgFinal = "";
+
+                    switch ($scope.classes.school.periodicidade) {
+                        case 'Diaria':
+                            msgFinal = alertDiaria;
+                            break;
+                        case 'Semanal':
+                            msgFinal = alertSemanal;
+                            break;
+                        case 'Quinzenal':
+                            msgFinal = alertQuinzenal;
+                            break;
+                        case 'Mensal':
+                            msgFinal = alertMensal;
+                            break;
+                    }
+
+                Modals.show(
+                    Modals.Confirm(msgFinal))
                     .then(function () {
-                        alert('Caminho a seguir ...');
+                        window.location.href = "https://buscaativaescolar.org.br";
                     });
             };
 

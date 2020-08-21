@@ -56,9 +56,7 @@
                 <div class="col-md-4">
                     <input class="form-control" ng-model="searchText" placeholder="Pesquisar"></label>
                 </div>
-                <div class="col-md-8">
-                    <small class="pull-right" ng-if="classes.turmas.length > 0">Clique sobre os dados para atualizar</small>
-                </div>
+                <div class="col-md-8"></div>
             </div>
 
 
@@ -104,6 +102,19 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <span ng-show="classes.school.periodicidade == 'Diaria'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no próximo dia útil, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Semanal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima semana, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Quinzenal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima quinzena, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Mensal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início do próximo mês, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col-lg-12 text-right" style="margin-top: 30px;">
                     <button class="btn btn-raised btn-success" ng-click="finish()" ng-disabled="classes.turmas.length < 1">Concluído</button>
