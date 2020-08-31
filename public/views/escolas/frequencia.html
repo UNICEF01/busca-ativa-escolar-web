@@ -1,0 +1,130 @@
+<div class="col-md-12">
+
+    <script>
+        Highcharts = null;
+    </script>
+    <script type="text/javascript" src="/vendor/highcharts/highstock.js"></script>
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3>Acompanhamento da frequência - {{classes.school.name}}</h3>
+            <span>Registro de frequência {{getNamePeriodicidade().toLowerCase()}} </span>
+        </div>
+
+        <div class="panel-body">
+
+            <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
+                <div class="col-lg-9">
+                    <p>Utilize o formulário abaixo para registrar o acompanhamento de frequência das turmas cadastradas pela sua escola. A periodicidade de registro foi definida e salva no cadastro feito por sua escola.</p>
+                </div>
+
+                <div class="col-lg-3 text-right">
+                    <a class="btn btn-info btn-raised" href="/turmas/{{school_id}}"> <i class="fa fa-cog" aria-hidden="true"></i> Configurar turmas</a>
+                </div>
+            </div>
+
+            <style>
+                .table .data_class {
+                    display: block;
+                    margin-top: 20px;
+                }
+                .input_frequency{
+                    -webkit-border-radius: 20px;
+                    -moz-border-radius: 20px;
+                    border-radius: 20px;
+                    border: 1px solid #666666;
+                    width: 50px;
+                    height: 30px;
+                    padding-left: 10px;
+                    text-align: center;
+                }
+                .input_frequency:focus {
+                    outline: none;
+                    border: 1px solid #2d9fd9;
+                    color: #2d9fd9;
+                    font-weight: bold;
+                }
+            </style>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Turmas</th>
+                        <th>Período</th>
+                        <th>Estudantes matriculados</th>
+                        <th>Estudantes com frequência </th>
+                        <th>Percentual de frequência do último registro</th>
+                        <th>Período anterior</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr ng-repeat="(i, turma) in classes.turmas" ng-if="turma.frequencies.length > 0">
+                        <td>
+                            <span class="data_class">{{turma.name}}</span>
+                        </td>
+                        <td>
+                            <span class="data_class">{{turma.shift}}</span>
+                        </td>
+                        <td>
+                            <span class="data_class">{{turma.qty_enrollment}}</span>
+                        </td>
+                        </td>
+                        <td>
+                            <input
+                                    id="frequency_{{turma.frequencies[turma.frequencies.length-1].id}}"
+                                    type="number"
+                                    max="{{turma.qty_enrollment}}"
+                                    name="frequency"
+                                    class="form-control"
+                                    placeholder="informe a frequência"
+                                    ng-blur="onModifyFrequency(turma.frequencies[turma.frequencies.length-1], turma)"
+                                    value="{{turma.frequencies[turma.frequencies.length-1].qty_presence}}">
+                        </td>
+                        <td>
+                            <span class="data_class">
+                                {{calculatePercentualFrequencies(turma.frequencies, turma.qty_enrollment)}}
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-default btn-raised" ng-click="addPeriodFrequency(turma)"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="row">
+                <ul class="nav nav-tabs" style="margin-bottom: 15px;">
+                    <li class="" id="li_diaria"><a href="#aba_diaria" data-toggle="tab" aria-expanded="false" id="link_diaria">Frequências diárias<div class="ripple-container"></div></a></li>
+                    <li class="" id="li_semanal"><a href="#aba_semanal" data-toggle="tab" aria-expanded="false" id="link_semanal">Frequências semanais<div class="ripple-container"></div></a></li>
+                    <li class="" id="li_quinzenal"><a href="#aba_quinzenal" data-toggle="tab" aria-expanded="false" id="link_quinzenal">Frequências quinzenais<div class="ripple-container"></div></a></li>
+                    <li class="" id="li_mensal"><a href="#aba_mensal" data-toggle="tab" aria-expanded="false" id="link_mensal">Frequências mensais<div class="ripple-container"></div></a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade" id="aba_diaria">
+                        <div id="chart_classes_Diaria" id="graph_Diaria"></div>
+                    </div>
+                    <div class="tab-pane fade" id="aba_semanal">
+                        <div id="chart_classes_Semanal" id="graph_Semanal"></div>
+                    </div>
+
+                    <div class="tab-pane fade" id="aba_quinzenal">
+                        <div id="chart_classes_Quinzenal" id="graph_Quinzenal"></div>
+                    </div>
+                    <div class="tab-pane fade" id="aba_mensal">
+                        <div id="chart_classes_Mensal" id="graph_Mensal"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 text-right" style="margin-top: 30px;">
+                    <button class="btn btn-raised btn-success" ng-click="finish()">Concluído</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

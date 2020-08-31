@@ -1,0 +1,126 @@
+<div class="col-md-12">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3>Cadastro de turmas</h3>
+            <h4><i class="material-icons">school </i> {{classes.school.name}}</h4>
+            <div name="myForm" class="">
+                <label>Periodicidade:</label>
+
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Diaria" ng-change="addClasse()">
+                    Diária
+                </label>
+
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Semanal" ng-change="addClasse()">
+                    Semanal
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Quinzenal"
+                           ng-change="addClasse()">
+                    Quinzenal
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" ng-model="classes.school.periodicidade" value="Mensal" ng-change="addClasse()">
+                    Mensal
+                </label>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td><input type="text" class="form-control" ng-model="classe.name" placeholder="Nome da turma"
+                               ng-required="true"></td>
+                    <td>
+                        <select class="form-control" name="singleSelect" ng-model="classe.shift">
+                            <option value="">Selecione o período</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="form-control" numbers-only ng-model="classe.qty_enrollment"
+                               placeholder="Quantidade de alunos"></td>
+                    <td>
+                        <button ng-click="addClasse()" class="btn btn-primary btn-sm btn-raised pull-right"
+                                ng-disabled="!classe.name || !classe.shift || !classe.qty_enrollment"><i
+                                class="fa fa-plus"> Adicionar</i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-4">
+                    <input class="form-control" ng-model="searchText" placeholder="Pesquisar"></label>
+                </div>
+                <div class="col-md-8"></div>
+            </div>
+
+
+            <table class="table table-bordered" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+                <thead>
+                <tr>
+                    <th class="text-center">Turmas</th>
+                    <th class="text-center">Turno</th>
+                    <th class="text-center">Alunos(as) Matrículados</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(i, classe) in classes.turmas | filter:searchText">
+                    <td class="text-center">
+                        <input ng-if="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control"
+                               ng-model="classe.name"
+                               placeholder="Nome da turma">
+                        <span ng-show="show !== i"
+                              ng-click="edit(i)"><i class="fa fa-edit" aria-hidden="true" style="color: green"></i> {{classe.name && classe.name || 'Não informado' }}</span>
+                    </td>
+                    <td class="text-center">
+                        <select ng-if="show === i" ng-blur="updateClasse(classe)" class="form-control"
+                                name="singleSelect" ng-model="classe.shift">
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                            <option value="Noturno">Noturno</option>
+                        </select>
+                        <span ng-show="show !== i" ng-click="edit(i)">{{classe.shift && classe.shift || 'Não informado' }}</span>
+                    </td>
+
+                    <td class="text-center">
+                        <input ng-if="show === i" ng-blur="updateClasse(classe)" type="text" class="form-control"
+                               ng-model="classe.qty_enrollment"
+                               numbers-only
+                               placeholder="Quantidade de alunos">
+                        <span ng-show="show !== i" ng-click="edit(i)">{{classe.qty_enrollment}}</span>
+                    </td>
+
+                    <td class="text-center">
+                        <span ng-click="removeClasse(classe)" style="cursor: pointer; color: red"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <span ng-show="classes.school.periodicidade == 'Diaria'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no próximo dia útil, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Semanal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima semana, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Quinzenal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima quinzena, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+
+                    <span ng-show="classes.school.periodicidade == 'Mensal'"><i><strong>Atenção!</strong> Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início do próximo mês, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.</i></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 text-right" style="margin-top: 30px;">
+                    <button class="btn btn-raised btn-success" ng-click="finish()" ng-disabled="classes.turmas.length < 1">Concluído</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

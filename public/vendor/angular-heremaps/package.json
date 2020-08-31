@@ -1,0 +1,83 @@
+{
+  "_from": "angular-heremaps",
+  "_id": "angular-heremaps@0.1.9",
+  "_inBundle": false,
+  "_integrity": "sha512-1d3eNzpa1H9HcYklwChnniRTjJPiL2RLc1Qp6BCKmQfONisA/IeLDrpzI6IN5wSNrkxwXr9b2xmh0wVrQfv8LA==",
+  "_location": "/angular-heremaps",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "angular-heremaps",
+    "name": "angular-heremaps",
+    "escapedName": "angular-heremaps",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-heremaps/-/angular-heremaps-0.1.9.tgz",
+  "_shasum": "c5b8b33301cd035d7c9ae2c66876ae35b414dd07",
+  "_spec": "angular-heremaps",
+  "_where": "/home/unicef/Documents/www/busca-ativa-escolar-web",
+  "author": {
+    "name": "Dmytro Verbovyi: https://github.com/dverbovyi, Andrii Vandakurov: https://github.com/toastman"
+  },
+  "bugs": {
+    "url": "https://github.com/dverbovyi/angular-heremaps/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "angular": "^1.5.6"
+  },
+  "deprecated": false,
+  "description": "Angular directive for working with Nokia Here Maps",
+  "devDependencies": {
+    "angular-mocks": "^1.5.6",
+    "browser-sync": "^2.16.0",
+    "browserify": "^13.0.1",
+    "browserify-istanbul": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-minify": "0.0.14",
+    "gulp-sourcemaps": "^1.6.0",
+    "istanbul": "^0.4.3",
+    "jasmine": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-browserify": "^5.0.5",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-mocha-reporter": "^2.0.3",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.7",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0",
+    "yargs": "^4.7.1"
+  },
+  "homepage": "https://dverbovyi.github.io/angular-heremaps/",
+  "keywords": [
+    "heremaps",
+    "here maps",
+    "javascript",
+    "angular",
+    "nokia"
+  ],
+  "license": "MIT",
+  "main": "angular-heremaps.js",
+  "name": "angular-heremaps",
+  "output": "angular-heremaps.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dverbovyi/angular-heremaps.git"
+  },
+  "scripts": {
+    "build": "gulp build",
+    "test": "karma start"
+  },
+  "source-folder": "/dist",
+  "version": "0.1.9"
+}

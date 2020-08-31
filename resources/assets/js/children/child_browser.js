@@ -8,10 +8,15 @@
                 controller: 'ChildSearchCtrl'
             });
         })
-        .controller('ChildSearchCtrl', function ($scope, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
+            $scope.reports = {};
+            $scope.lastOrder = {
+                date: null
+            };
+            $scope.identity = Identity;
 
             $scope.defaultQuery = {
                 name: '',
@@ -31,10 +36,12 @@
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
+
             $scope.search = {};
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsChild();
             };
 
             $scope.resetQuery = function () {
@@ -44,10 +51,32 @@
 
             $scope.exportXLS = function () {
                 Children.export($scope.query, function (res) {
-                    console.log("Exported: ", res);
                     Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
                 });
             };
+
+            $scope.exportXLSReport = function(file){
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'reports/child/download?token=' + token + "&file=" + file);
+                });
+            };
+
+            $scope.createXLSReport = function(){
+
+                Reports.createReportChild($scope.query).$promise
+                    .then(function (res) {
+                        $scope.lastOrder.date = res.date;
+                        $scope.reports = {};
+
+                        ngToast.success("Solicitação feita com sucesso. Arquivo estará disponível em breve!");
+
+                        setInterval(function() {
+                            $scope.reports = Reports.reportsChild();
+                            $scope.lastOrder.date = null;
+                        }, 600000);
+                    });
+            };
+
             $scope.refresh();
 
             var language = {
@@ -81,6 +110,6 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
             ];
-
+            
         });
 })();

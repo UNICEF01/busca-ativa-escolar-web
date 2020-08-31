@@ -204,12 +204,12 @@
                             ngToast.danger(res.result);
                         }
                     });
-                }else {
+                } else {
                     ngToast.warning('Você não pode realizar essa ação.');
                 }
             }).then(function (res) {
-                    console.log(res);
-                });
+                console.log(res);
+            });
         };
 
         function refreshGoogleMap() {
@@ -412,7 +412,7 @@
 
                 var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id});
 
-                settingsOfTenantOfCase.$promise.then( function (res_settings) {
+                settingsOfTenantOfCase.$promise.then(function (res_settings) {
                     $scope.tenantSettingsOfCase = res_settings;
                 });
 
@@ -539,7 +539,7 @@
 
         $scope.assignUser = function () {
 
-            console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
+            // console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
 
             CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
                 .then(function (res) {
@@ -621,7 +621,7 @@
         };
 
         function clearAuxiliaryFields(fields) {
-            var auxiliaryFields = ['place_lat', 'place_lng', 'place_map_center', 'place_map_geocoded_address'];
+            var auxiliaryFields = ['place_map_center', 'place_map_geocoded_address'];
             var filtered = {};
 
             for (var i in fields) {
@@ -646,7 +646,7 @@
 
             var data = Object.assign({}, $scope.step.fields);
 
-            console.log(data);
+            // console.log(data);
 
 
             data = Utils.prepareDateFields(data, dateOnlyFields);
@@ -662,7 +662,7 @@
             data.type = $scope.step.step_type;
             data.id = $scope.step.id;
 
-            console.info("[child_viewer.step_editor] Saving step data: ", data);
+            // console.info("[child_viewer.step_editor] Saving step data: ", data);
 
             return CaseSteps.save(data).$promise.then(function (response) {
                 if (response.messages) {
@@ -679,6 +679,7 @@
                 }
 
                 ngToast.success("Os campos da etapa foram salvos com sucesso!");
+
             })
         }
 
@@ -689,7 +690,9 @@
         };
 
         $scope.canUpdateStepObservation = function (child) {
-            if(!$scope.tenantSettingsOfCase){ return false; }
+            if (!$scope.tenantSettingsOfCase) {
+                return false;
+            }
             var time_for_next_step = 0;
             if ($scope.step && $scope.tenantSettings) {
                 if ($scope.step.slug == "1a_observacao") {

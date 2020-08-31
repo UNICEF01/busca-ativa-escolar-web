@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function (Identity, StaticData, Notifications, Platform, Auth, Children) {
+	angular.module('BuscaAtivaEscolar').directive('appNavbar', function ($location, $state, Identity, StaticData, Notifications, Platform, Auth, Children) {
 
 		function init(scope, element, attrs) {
 
@@ -10,6 +10,9 @@
 			scope.pending_requests = 0;
 
 			scope.showNotifications = true;
+
+			scope.location = $location.url();
+			scope.state = window.location.pathname;
 
 			scope.isHidden = function() {
 				return !!Platform.getFlag('HIDE_NAVBAR');

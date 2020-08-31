@@ -1,0 +1,110 @@
+<div>
+    <div class="panel panel-default">
+
+        <div class="panel-heading clearfix">
+            <h3 class="pull-left">Escolas do município</h3>
+        </div>
+
+        <div class="panel-body">
+
+            <p>
+                <strong>Coordenador(a) Operacional ou Supervisor(a) Institucional da Educação</strong><br/>
+                Na lista abaixo você pode notificar as escolas as quais podem acompanhar a frequência escolar dos estudantes
+            </p>
+
+            <br/>
+
+            <div class="alert alert-warning" ng-show="msg_success">Mensagens encaminhadas para fila de envio</div>
+            <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
+
+            <div class="row">
+
+                <div class="form-group col-md-3">
+                    <label class="container_check_school">
+                        <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
+                        <span class="checkmark"></span>
+                    </label>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label style="margin-top: 10px;">
+                        <input class="form-control" type="text" ng-model="query.search" placeholder="CÓDIGO INEP" ng-change="refresh()">
+                    </label>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <div class="clearfix" style="margin-top: 10px;">
+                        <ul class="nav nav-pills adm-max-results-filter">
+                            <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
+                            <li ng-class="{active: query.max==15}"><a ng-click="setMaxResults(15)">15</a></li>
+                            <li ng-class="{active: query.max==30}"><a ng-click="setMaxResults(30)">30</a></li>
+                            <li ng-class="{active: query.max==60}"><a ng-click="setMaxResults(60)">60</a></li>
+                            <li ng-class="{active: query.max==100}"><a ng-click="setMaxResults(100)">100</a></li>
+                            <li><a><strong>Quantidade por página</strong></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="container-scholls">
+
+                <div class="row">
+
+                    <div class="form-group col-md-1"></div>
+
+                    <div class="form-group col-md-4">
+                        <strong>Escola</strong><br/>
+                    </div>
+
+                    <div class="form-group  col-md-3">
+                        <strong>Celular</strong>
+                    </div>
+
+                    <div class="form-group  col-md-4">
+                        <strong for="exampleInputEmail">Email*</strong>
+                    </div>
+
+                </div>
+
+                <div class="row" ng-repeat="(i, school) in schools.data">
+
+                    <div class="form-group col-md-1 text-center">
+                        <label class="container_check_school">
+                            <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <strong>{{school.name}}</strong><br/>
+                        <small>COD INEP: {{school.id}}</small><br/>
+                        <small>{{school.city_name}}/ {{school.uf}}</small> <br/>
+                        <span ng-show="school.periodicidade"><small class="label label-success">Periodicidade: {{school.periodicidade}}</small></span>
+                    </div>
+
+                    <div class="form-group  col-md-3">
+                        <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onModifySchool(school)" ng-model="school.school_cell_phone">
+                    </div>
+
+                    <div class="form-group  col-md-4">
+                        <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onModifySchool(school)" ng-model="school.school_email">
+                    </div>
+
+                    <div class="col-md-12"><hr></div>
+
+                </div>
+
+            </div>
+
+            <app-paginator collection="schools" query="query" on-refresh="refresh"></app-paginator>
+
+        </div>
+
+        <div class="panel-footer">
+            <p class="text-right"><button class="btn btn-primary btn-raised" ng-click="sendnotification()"><i class="fa fa-envelope"></i> Enviar mensagens/ SMS</button></p>
+        </div>
+    </div>
+</div>

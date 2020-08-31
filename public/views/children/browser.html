@@ -69,6 +69,13 @@
 			</div>
 			<div class="panel-footer">
 				<div class="text-right">
+
+					<span class="btn btn-success" ng-show="lastOrder.date && identity.can('cases.export.all')">
+						Última solicitação feita em {{ lastOrder.date * 1000 | date:'dd/MM/yyyy | HH:mm:ss' }}
+					</span>
+					<a ng-show="reports.data.length > 0 && identity.can('cases.export.all')" ng-click="exportXLSReport(reports.data[0].file)" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar último relatório - {{reports.data[0].last_modification * 1000 | date:'dd/MM/yyyy HH:mm:ss'}}</a>
+					<button ng-show="identity.can('cases.export.all')" type="button" ng-click="createXLSReport()" class="btn btn-default"><i class="fa fa-undo"></i> Gerar novo relatório</button>
+
 					<button type="button" ng-click="resetQuery()" class="btn btn-default"><i class="fa fa-undo"></i> Limpar filtros</button>
 					<button type="submit" class="btn btn-raised btn-info"><i class="fa fa-search"></i> Filtrar</button>
 				</div>
@@ -85,7 +92,7 @@
 		</div>
 		<div class="panel-body" ng-if="search.results">
 
-			<div class="text-right">
+			<div ng-show="identity.can('cases.export.uf')" class="text-right">
 				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>
 			</div>
 

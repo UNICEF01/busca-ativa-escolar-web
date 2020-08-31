@@ -1,0 +1,121 @@
+<div class="row">
+
+    <div class="col-md-12">
+
+        <h3><i class="material-icons">map</i> Mapa brasileiro de casos em andamento
+            <small>(os casos aparecem no mapa a partir do endereço preenchido na etapa de Pesquisa)</small>
+        </h3>
+
+        <!-- Fusion map -->
+        <div class="panel panel-default">
+
+            <style>
+                .fusion_city_selector{
+                    border-radius: 10px;
+                    padding: 5px;
+                    border: 1px solid #cccccc;
+                }
+
+                .table_ufs {
+                    border-collapse: collapse;
+                    background-color: white;
+                    overflow: hidden;
+                    border-radius: 10px;
+                    width: 100%;
+                    margin-top: 50px;
+                    margin-right: 20px;
+                }
+
+                .table_ufs th, .table_ufs td {
+                    text-align: center;
+                    font-size: 12px;
+                    padding: 3px;
+                    border: 1px solid #ddd;
+                }
+
+                .table_ufs th {
+                    background-color: #90af07;
+                    color: white;
+                }
+
+                .table_ufs tr:hover {background-color: #ddd;}
+
+            </style>
+
+            <div class="panel-body">
+
+
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div id="selector_country_state" style="margin-left: 50px">
+                            <h4 ng-if="fusionmap_scope_table == 'maps/brazil' && identity.isUserType('gestor_nacional')">BRASIL /</h4>
+                            <h4 ng-if="fusionmap_scope_table != 'maps/brazil'">
+                                <a href="#" ng-click="initFusionChartMap()" ng-if="identity.isUserType('gestor_nacional')">BRASIL /</a>
+                                <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
+                                / <select class="fusion_city_selector" name="scope_city" ng-model="fusionmap_scope_city.id" ng-change="initFusionChartMapCity()">
+                                <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
+                            </select>
+                            </h4>
+                        </div>
+                    </div>
+
+                    <!-- BRASIL E UFs -->
+                    <div ng-show="fusionmap_scope_city.id == null">
+
+                        <div class="col-md-12" ng-class="{'col-md-9': fusionmap_scope_table == 'maps/brazil'}">
+                            <div align="center" id="chart-container"></div>
+                        </div>
+
+                        <div align="center" class="col-md-3" ng-if="fusionmap_scope_table == 'maps/brazil'">
+                            <div id="table_fusion_chart_states">
+
+                                <table class="table_ufs">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">UF</th>
+                                        <th scope="col">Casos</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="(i, local) in getTablevaluesFormFusionMap()" id="state_{{local.id}}" style="cursor: pointer;" ng-click="initFusionChartMapState(local.displayValue, 'maps/'+local.simple_name)">
+                                        <td>{{local.displayValue}}</td>
+                                        <td>{{local.value}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- FINAL BRASIL E UFs -->
+
+                    <!-- CIDADES -->
+                    <div ng-if="fusionmap_scope_city.id != null">
+
+                        <div class="col-md-6">
+                            <cases-map city_id="{{fusionmap_scope_city.id}}" object-to-inject="injectedObjectDirectiveCaseMaps"></cases-map>
+                        </div>
+
+                        <div class="col-md-6">
+                            <metrics-overview ibge_id="{{fusionmap_scope_city.id}}" uf="{{fusionmap_scope_uf}}" object-to-inject-in-metrics="objectToInjectInMetrics"></metrics-overview>
+                        </div>
+
+                    </div>
+                    <!-- FINAL CIDADES -->
+
+                </div>
+
+            </div>
+
+        </div>
+        <!-- FINAL Fusion map -->
+
+        <!--            <div id="dashboard-map-gestor-nacional">-->
+        <!--                <searchable-cases-map></searchable-cases-map>-->
+        <!--            </div>-->
+
+    </div>
+
+</div>
