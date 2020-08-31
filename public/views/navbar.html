@@ -82,6 +82,13 @@
                     <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
                         ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
+                    <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual'">
+                        <a ui-sref="school_list_frequency">
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                            Frequências
+                        </a>
+                    </li>
+
                     <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown
                         on-toggle="onMenuToggle(open)"
                         ui-sref-active="active">

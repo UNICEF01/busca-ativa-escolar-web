@@ -16,7 +16,6 @@
 
 				all_schools: {url: API.getURI('schools/all'), method: 'GET', headers: headers},
 				send_frequency_notifications: {url: API.getURI('schools/frequency/notification'), method: 'POST', headers: headers}
-
 			});
 
 		});
