@@ -2,13 +2,19 @@
     <div class="panel panel-default">
 
         <div class="panel-heading clearfix">
-            <h3 class="pull-left">Escolas do município</h3>
+            <h3 ng-show="identity.getCurrentUser().type != 'coordenador_estadual' && identity.getCurrentUser().type != 'supervisor_estadual'" class="pull-left">Escolas do município</h3>
+            <h3 ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'" class="pull-left">Escolas do estado</h3>
         </div>
 
         <div class="panel-body">
 
-            <p>
+            <p ng-show="identity.getCurrentUser().type != 'coordenador_estadual' && identity.getCurrentUser().type != 'supervisor_estadual'">
                 <strong>Coordenador(a) Operacional ou Supervisor(a) Institucional da Educação</strong><br/>
+                Na lista abaixo você pode notificar as escolas as quais podem acompanhar a frequência escolar dos estudantes
+            </p>
+
+            <p ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">
+                <strong>Coordenador(a) estadual ou Supervisores(as) Estaduais</strong><br/>
                 Na lista abaixo você pode notificar as escolas as quais podem acompanhar a frequência escolar dos estudantes
             </p>
 

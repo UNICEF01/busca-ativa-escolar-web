@@ -245,7 +245,7 @@
             };
 
             $scope.finish = function(){
-                Modals.show(Modals.ConfirmLarge("A Busca Ativa Escolar é uma estratégia que conta com uma metodologia social e uma plataforma tecnológica e visa apoiar municípios e estados no enfrentamento da exclusão escolar. Em períodos de crises e emergências, como a que ocorre nesse momento, com a covid-19, a estratégia pode colaborar de maneira efetiva para prevenir ou mitigar o abandono e a evasão escolares. Acesse o guia Busca Ativa Escolar em crises e emergências e veja como  seu município e estado podem proceder. Deseja acessar o site Busca Ativa Escolar em crises e emergências?"))
+                Modals.show(Modals.ConfirmLarge("Suas informações do registro de frequência foram salvas. A Busca Ativa Escolar é uma estratégia que conta com uma metodologia social e uma plataforma tecnológica e visa apoiar municípios e estados no enfrentamento da exclusão escolar. Em períodos de crises e emergências, como a que ocorre nesse momento, com a covid-19, a estratégia pode colaborar de maneira efetiva para prevenir ou mitigar o abandono e a evasão escolares. Deseja acessar o guia Busca Ativa Escolar em crises e emergências e verificar como seu município e estado podem proceder?"))
                     .then(function () {
                         window.location.href = "https://buscaativaescolar.org.br/criseseemergencias";
                     });
