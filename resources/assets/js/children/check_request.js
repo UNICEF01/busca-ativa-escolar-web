@@ -53,7 +53,7 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date')
             ];
-
+            
             $scope.aprove = function (child) {
 
                 if (child.type_request === 'reopen') {

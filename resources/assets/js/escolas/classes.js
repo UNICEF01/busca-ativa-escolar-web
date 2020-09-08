@@ -189,7 +189,7 @@
                 Modals.show(
                     Modals.Confirm(msgFinal))
                     .then(function () {
-                        window.location.href = "https://buscaativaescolar.org.br";
+                        window.location.href = "/frequencia/"+$scope.school_id;
                     });
             };
 

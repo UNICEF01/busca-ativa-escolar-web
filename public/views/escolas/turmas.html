@@ -36,7 +36,7 @@
                                ng-required="true"></td>
                     <td>
                         <select class="form-control" name="singleSelect" ng-model="classe.shift">
-                            <option value="">Selecione o período</option>
+                            <option value="">Selecione o turno</option>
                             <option value="Matutino">Matutino</option>
                             <option value="Vespertino">Vespertino</option>
                             <option value="Noturno">Noturno</option>
@@ -45,9 +45,11 @@
                     <td><input type="text" class="form-control" numbers-only ng-model="classe.qty_enrollment"
                                placeholder="Quantidade de alunos"></td>
                     <td>
-                        <button ng-click="addClasse()" class="btn btn-primary btn-sm btn-raised pull-right"
-                                ng-disabled="!classe.name || !classe.shift || !classe.qty_enrollment"><i
-                                class="fa fa-plus"> Adicionar</i></button>
+                        <p class="text-right">
+                            <button ng-click="addClasse()" class="btn btn-info btn-raised"
+                                    ng-disabled="!classe.name || !classe.shift || !classe.qty_enrollment"><i
+                                    class="fa fa-plus"> Adicionar</i></button>
+                        </p>
                     </td>
                 </tr>
                 </tbody>
