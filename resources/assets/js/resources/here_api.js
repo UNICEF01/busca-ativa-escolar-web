@@ -20,7 +20,7 @@
     angular.module('BuscaAtivaEscolar').factory('H', [
         '$window',
         function ($window) {
-    	console.log($window);
+    	//console.log($window);
             return $window.H;
         }
     ]);

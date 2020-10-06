@@ -8,7 +8,7 @@
 
 				show: function(params) {
 
-					console.log('[modals] Show modal: ', params);
+					//console.log('[modals] Show modal: ', params);
 
 					var def = $q.defer();
 

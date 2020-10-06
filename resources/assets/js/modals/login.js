@@ -4,7 +4,7 @@
 		.module('BuscaAtivaEscolar')
 		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
 
-			console.log("[modal] login", reason, canDismiss);
+			//console.log("[modal] login", reason, canDismiss);
 
 			$scope.email = '';
 			$scope.password = '';

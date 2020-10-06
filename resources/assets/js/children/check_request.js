@@ -116,7 +116,7 @@
                         ngToast.warning('Você não pode realizar essa ação.');
                     }
                 }).then(function (res) {
-                    console.log(res);
+                    //console.log(res);
                 });
             };
         });

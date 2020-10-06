@@ -32,17 +32,17 @@
                 if (!isTokenExpired()) return $q.resolve($localStorage.session.token);
 
 
-                console.log("[auth::token.provide] Token expired! Refreshing...");
+                //console.log("[auth::token.provide] Token expired! Refreshing...");
 
                 // Is logged in, but both access and refresh token are expired
                 if (isRefreshExpired()) {
-                    console.log("[auth::token.provide] Refresh token also expired! Logging out...");
+                    //console.log("[auth::token.provide] Refresh token also expired! Logging out...");
                     return requireLogin('Sua sessão expirou! Por favor, entre seus dados novamente para continuar.');
                 }
 
                 // Is logged in, access token expired but refresh token still valid
                 return self.refresh().then(function (session) {
-                    console.log("[auth::token.provide] Refreshed, new tokens: ", session);
+                    //console.log("[auth::token.provide] Refreshed, new tokens: ", session);
                     return session.token;
                 });
 
@@ -61,7 +61,7 @@
             function handleAuthResponse(response) {
 
                 if (response.status !== 200) {
-                    console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
+                    //console.log("[auth::login] Rejecting Auth response! Status= ", response.status);
                     return $q.reject(response.data);
                 }
 
@@ -116,7 +116,7 @@
             $rootScope.$on('identity.disconnect', this.logout);
 
             this.logout = function () {
-                console.log('[auth] Logging out...');
+                //console.log('[auth] Logging out...');
 
                 Object.assign($localStorage, {
                     session: {

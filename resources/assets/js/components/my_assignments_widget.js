@@ -42,7 +42,7 @@
             ];
 
             scope.refresh = function () {
-                console.log("[widget.my_assignments] Loading assignments...");
+                //console.log("[widget.my_assignments] Loading assignments...");
                 isReady = false;
 
                 Children.search(

@@ -40,10 +40,10 @@
         var requiredCoordinatorFields = ['email', 'name', 'cpf', 'dob', 'phone'];
 
         $scope.goToStep = function (step) {
-			console.log($scope.step, $scope.numSteps)
+			//console.log($scope.step, $scope.numSteps)
 			if ($scope.step < 1) return;
             if ($scope.step >= $scope.numSteps) return;
-			console.log($scope.step, $scope.numSteps)
+			//console.log($scope.step, $scope.numSteps)
             $scope.step = step;
             $window.scrollTo(0, 0);
         };
@@ -70,7 +70,7 @@
         };
 
         $scope.onUFSelect = function (uf) {
-            console.log("UF selected: ", uf);
+            //console.log("UF selected: ", uf);
             if (!uf) return;
             $scope.checkStateAvailability(uf);
         };

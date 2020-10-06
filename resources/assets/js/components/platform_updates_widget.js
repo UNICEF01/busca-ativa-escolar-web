@@ -34,7 +34,7 @@
 		}
 
 		function fetchRepository(repo) {
-			console.log("[widget.platform_updates] Getting latest commits for repository: ", repo);
+			//console.log("[widget.platform_updates] Getting latest commits for repository: ", repo);
 			return $http.get(getCommitsURI(repo)).then(function (res) {
 				if(!res.data) {
 					console.error("[widget.platform_updates] Failed! ", res, repo);
@@ -48,7 +48,7 @@
 		}
 
 		function parseRepositoryData() {
-			console.log("[widget.platform_updates] Parsing repository data...");
+			//console.log("[widget.platform_updates] Parsing repository data...");
 
 			for(var rl in repositoryData) {
 				if(!repositoryData.hasOwnProperty(rl)) continue;

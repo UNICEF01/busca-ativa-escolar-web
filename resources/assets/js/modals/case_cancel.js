@@ -4,7 +4,7 @@
 		.module('BuscaAtivaEscolar')
 		.controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
 
-			console.log("[modal] case_cancel");
+			//console.log("[modal] case_cancel");
 
 			$scope.static = StaticData;
 			$scope.lang = Language;

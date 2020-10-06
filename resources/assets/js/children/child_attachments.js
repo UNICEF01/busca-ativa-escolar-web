@@ -47,7 +47,7 @@
 					});
 			};
 
-			console.log("[core] @ChildAttachmentsCtrl", $stateParams);
+			//console.log("[core] @ChildAttachmentsCtrl", $stateParams);
 
 			$scope.refresh();
 

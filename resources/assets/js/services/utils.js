@@ -290,5 +290,5 @@
 })();
 
 function identify(namespace, file) {
-    console.log("[core.load] ", namespace, file);
+    //console.log("[core.load] ", namespace, file);
 }

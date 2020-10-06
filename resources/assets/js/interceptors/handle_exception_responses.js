@@ -27,7 +27,7 @@
 
 						for(var i in messages) {
 							if(!messages.hasOwnProperty(i)) continue;
-							console.log(messages[i]);
+							//console.log(messages[i]);
 						}
 
 						console.endGroup();
@@ -36,7 +36,7 @@
 					return response;
 				}
 
-				console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
 
 				return response;
 

@@ -26,7 +26,7 @@
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = $scope.refreshChildData();
 
-		console.log("[core] @ChildViewCtrl", $scope.child);
+		//console.log("[core] @ChildViewCtrl", $scope.child);
 
 	}
 

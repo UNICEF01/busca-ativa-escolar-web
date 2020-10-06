@@ -4,7 +4,7 @@
 		.module('BuscaAtivaEscolar')
 		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, canDismiss, noUsersMessage) {
 
-			console.log("[modal] user_picker", title, message);
+			//console.log("[modal] user_picker", title, message);
 
 			$scope.title = title;
 			$scope.message = message;

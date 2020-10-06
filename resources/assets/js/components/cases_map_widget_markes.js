@@ -4,7 +4,7 @@
 
         function init(scope, element, attrs, tabsCtrl) {
 
-            console.log('Controlador', tabsCtrl);
+            //console.log('Controlador', tabsCtrl);
 
             /**
              * Creates a new marker and adds it to a group
@@ -85,7 +85,7 @@
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
 
-                    console.log(H);
+                    //console.log(H);
 
 // initialize a map - this map is centered over Europe
                     var map = new H.Map(document.getElementById('map-markes'),

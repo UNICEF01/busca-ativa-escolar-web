@@ -2,7 +2,7 @@
 
 	angular.module('BuscaAtivaEscolar').controller('LoginCtrl', function ($scope, $rootScope, $cookies, $state, $location, Modals, Config, Auth, Identity) {
 
-		console.log("[core] @Login");
+		//console.log("[core] @Login");
 
 		$rootScope.section = '';
 

@@ -55,10 +55,10 @@
         };
 
         $scope.goToStep = function (step) {
-            console.log($scope.step, $scope.numSteps)
+            //console.log($scope.step, $scope.numSteps)
             if ($scope.step < 1) return;
             if ($scope.step >= $scope.numSteps) return;
-            console.log($scope.step, $scope.numSteps)
+            //console.log($scope.step, $scope.numSteps)
 
 
             $scope.step = step;

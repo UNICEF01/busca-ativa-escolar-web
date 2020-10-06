@@ -31,7 +31,7 @@
 				$scope.message = "";
 			};
 
-			console.log("[core] @ChildCommentsCtrl", $stateParams);
+			//console.log("[core] @ChildCommentsCtrl", $stateParams);
 
 			$scope.refresh();
 

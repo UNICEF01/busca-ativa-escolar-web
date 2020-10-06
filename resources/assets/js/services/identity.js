@@ -13,7 +13,7 @@
 		});
 
 		function setup() {
-			console.info("[core.identity] Setting up identity service...");
+			//console.info("[core.identity] Setting up identity service...");
 			refreshIdentity();
 		}
 
@@ -48,15 +48,15 @@
 
 		function refreshIdentity() {
 			if(!isLoggedIn() || !$localStorage.session.user_id) {
-				console.log("[core.identity] No identity found in session, user is logged out");
+				//console.log("[core.identity] No identity found in session, user is logged out");
 				$rootScope.$broadcast('Identity.ready');
 				return;
 			}
 
-			console.log("[core.identity] Refreshing current identity details...");
+			//console.log("[core.identity] Refreshing current identity details...");
 
 			$localStorage.identity.current_user = userProvider($localStorage.session.user_id, function(details) {
-				console.log("[core.identity] Identity details ready: ", details);
+				//console.log("[core.identity] Identity details ready: ", details);
 				$rootScope.$broadcast('Identity.ready');
 			})
 		}
@@ -84,7 +84,7 @@
 
 			$rootScope.$broadcast('identity.connected', {user: user});
 
-			console.log("[identity] Connected user: ", user);
+			//console.log("[identity] Connected user: ", user);
 
 			$localStorage.identity.is_logged_in = true;
 			$localStorage.identity.current_user = user;
@@ -116,7 +116,7 @@
 		}
 
 		function disconnect() {
-			console.log('[identity] Disconnecting identity...');
+			//console.log('[identity] Disconnecting identity...');
 
 			clearSession();
 
@@ -125,7 +125,7 @@
 		}
 
 		function clearSession() {
-			console.log("[identity] Clearing current session");
+			//console.log("[identity] Clearing current session");
 
 			Object.assign($localStorage, {
 				identity: {

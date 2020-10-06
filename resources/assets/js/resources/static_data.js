@@ -12,7 +12,7 @@
 			// TODO: cache this?
 
 			function fetchLatestVersion() {
-				console.log("[platform.static_data] Downloading latest static data definitions...");
+				//console.log("[platform.static_data] Downloading latest static data definitions...");
 				$promise = $http.get(dataFile).then(onFetch);
 			}
 
@@ -22,7 +22,7 @@
 			}
 
 			function onFetch(res) {
-				console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
 
 				$rootScope.$broadcast('StaticData.ready');
