@@ -28,8 +28,8 @@
 
 			$scope.isLoading = false;
 
-			console.info("[login_ctrl] Logged in!", session);
-			console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
+			//console.info("[login_ctrl] Logged in!", session);
+			//console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
 
 			// Check if user should see tenant first time setup
 			if(!Identity.isUserType('coordenador_operacional')) return $state.go('dashboard');
