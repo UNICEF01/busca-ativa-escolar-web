@@ -180,13 +180,34 @@
 							<p>{{signup.data.mayor.mobile}}</p>
 						</div>
 
+						<div class="form-group col-md-6">
+							<label class="control-label">Título de eleitor</label>
+							<p ng-if="validateTitulo(signup.data.mayor.titulo)">{{signup.data.mayor.titulo}} <span class="label label-success">Título validado</span></p>
+							<p ng-if="validateTitulo(signup.data.mayor.titulo) == false">{{signup.data.mayor.titulo}} <span class="label label-danger">Título não validado</span></p>
+						</div>
+
+						<div class="form-group col-md-6">
+							<label class="control-label">Validação do cadastro</label>
+							<p ng-if="signup.is_approved_by_mayor"><span class="label label-success">Adesão validada pelo prefeito</span></p>
+							<p ng-if="signup.is_approved_by_mayor == false"><span class="label label-danger">Adesão não validada pelo prefeito</span></p>
+						</div>
+
+						<div class="form-group col-md-12">
+							<label class="control-label">Documento com foto (Clique para visualizar em outra aba)</label>
+							<hr/>
+							<a href="{{signup.data.mayor.link_titulo}}" target="_blank">
+								<img src="{{signup.data.mayor.link_titulo}}" class="img-responsive" alt="{{signup.data.mayor.name}}"/>
+							</a>
+						</div>
+
 					</div>
 				</div>
+
 			</div>
 
 			<div class="panel-footer clearfix">
 
-				<a ng-show="!signup.is_approved && !signup.deleted_at" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
+				<a ng-show="!signup.is_approved && !signup.deleted_at && signup.is_approved_by_mayor" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
 				<a ng-show="!signup.is_approved  && !signup.deleted_at" class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-ban"></i> Rejeitar</a>
 
 				<div ng-show="signup.is_approved && !signup.is_provisioned">

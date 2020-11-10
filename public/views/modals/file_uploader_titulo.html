@@ -1,0 +1,39 @@
+<div class="modal-template" id="md-user-picker">
+	<div class="modal-header">
+		<h3 class="modal-title">{{title || 'Enviar arquivo:'}}</h3>
+	</div>
+	<div class="modal-body">
+		<div ng-show="message" style="margin-bottom: 15px;">{{message}}</div>
+		<div class="block">
+
+			<div class="file-drop-area"
+			     ngf-drop="upload($file)"
+			     ngf-select="upload($file)"
+			     ngf-model="file"
+
+			     ngf-multiple="false"
+			     ngf-accept="allowedMimeTypes"
+			     ngf-drag-over-class="'file-valid'"
+
+			     style="width: 100%; height: 300px; padding: 20px"
+			>
+				<p ng-show="!isUploading"><strong>Arraste o arquivo </strong>que deseja enviar aqui, ou <strong>clique</strong> para procurá-lo em seu computador</p>
+
+				<div class="progress" ng-show="isUploading" style="height: 30px;">
+					<div class="progress-bar progress-bar-info" role="progressbar" style="overflow: hidden; text-align: center; width: {{calculateProgressWidth()}}">
+						<span>{{calculateProgressWidth()}}</span>
+					</div>
+					<div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
+						<span>Erro: @{{file.error}}</span>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
+		<button class="btn btn-primary btn-raised" type="button" ng-click="onSelect()">Anexar</button>
+	</div>
+</div>

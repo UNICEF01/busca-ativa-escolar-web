@@ -25,8 +25,6 @@
 			$scope.copyText = function(){
 				$scope.msgCopy = "URL COPIADA";
 				setTimeout(function(){ $scope.msgCopy = '';}, 500);
-
-
 			}
 
             $scope.onSelectType = function() {
@@ -89,6 +87,10 @@
 			};
 
 			$scope.refresh();
+
+			$scope.validateTitulo = function (numberTitulo) {
+				return true;
+			};
 
 		});
 
