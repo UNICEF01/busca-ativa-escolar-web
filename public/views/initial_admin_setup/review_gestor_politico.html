@@ -91,16 +91,32 @@
 
 			<hr />
 
+			<div class="panel-body" ng-if="panelTerm">
+				<div style="margin: 10px 0;">
+					<p>Leia e aceite o termo de adesão.</p>
+					<div class="panel panel-default" style="max-height: 300px; overflow-y: scroll">
+						<div class="panel-body">
+							<h4 class="text-center">TERMOS DE USO E POLÍTICA DE PRIVACIDADE</h4>
+							<h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+							<h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+							<p>1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta tecnológica disponibilizada gratuitamente a todos as administrações municipais e estaduais brasileiras, que objetiva auxiliar a identificação, o mapeamento e a gestão de casos de crianças e adolescentes, em idade escolar obrigatória, que estão fora da escola.</p>
+							<p>1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a ser denominada apenas por Plataforma.</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
 			<h5>Dados de acesso</h5>
 
 			<p>A senha informada será enviada para o seu e-mail.</p>
 
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<label class="control-label" for="fld-gp-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
 				<input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="admins.political.email" >
 			</div>
 
-			<div class="form-group col-md-6">
+			<div class="form-group col-md-4">
 				<div class="input-group">
 					<label class="control-label" for="fld-gp-password"><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label>
 					<input type="password" class="form-control" id="fld-gp-password" name="gp_password" required ng-model="admins.political.password" >
@@ -110,6 +126,26 @@
 					</button>
 				</span>
 				</div>
+			</div>
+
+			<div class="form-group col-md-4">
+
+				<label class="control-label" for="fld-agree_tos-yes" style="margin-right: 10px;">Li e concordo com os termos de adesão:</label> <i ng-click="openTerm()" class="fa fa-search" style="font-size: 20px; cursor: pointer;"></i>
+
+				<br/><br/>
+
+				<div class="radio-inline">
+					<label><input id="fld-agree_tos-yes" ng-model="admins.political.lgpd" required ng-value="1" name="agree_tos" value="1" type="radio"> Sim</label>
+				</div>
+
+				<div class="radio-inline">
+					<label><input id="fld-agree_tos-no" ng-model="admins.political.lgpd" ng-value="0" name="agree_tos" value="0" type="radio"> Não</label>
+				</div>
+
+				<div ng-show="$parent.agreeTOS == '0'">
+					Para prosseguir, é preciso concordar com o termo de adesão. Em caso de dúvidas, entre em <a target="_blank" href="https://www.buscaativaescolar.org.br/#contact">contato</a>.
+				</div>
+
 			</div>
 
 

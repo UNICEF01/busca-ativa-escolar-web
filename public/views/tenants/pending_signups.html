@@ -221,7 +221,7 @@
 			<div class="panel-footer clearfix">
 
 				<a ng-show="!signup.is_approved  && !signup.deleted_at" class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-ban"></i> Rejeitar</a>
-				<a ng-show="!signup.is_approved && !signup.deleted_at && signup.is_approved_by_mayor" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
+				<a ng-show="!signup.is_approved && !signup.deleted_at" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
 
 
 				<div ng-show="signup.is_approved && !signup.is_provisioned">

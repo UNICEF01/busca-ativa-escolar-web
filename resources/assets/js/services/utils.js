@@ -201,10 +201,17 @@
                 var value = _.uniq(values)
                 if(value.length === 1){
                     ngToast.danger(name + ' não podem ser iguais');
-                    return false
+                    return false;
                 }else{
-                    return true
+                    return true;
                 }
+            }
+            
+            function isvalidTerm(value) {
+                if (value)
+                    return true;
+                ngToast.danger("Os TERMOS DE USO E POLÍTICA DE PRIVACIDADE precisam ser lidos e aceitos");
+                return false;
             }
 
             function basename(str) {
@@ -265,7 +272,8 @@
                 extract: extract,
                 pluck: pluck,
                 search: search,
-                haveEqualsValue: haveEqualsValue
+                haveEqualsValue: haveEqualsValue,
+                isvalidTerm: isvalidTerm
             };
         })
         .directive('stringToNumber', function () {

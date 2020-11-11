@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('FileUploaderTituloModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+		.controller('FileUploaderTituloModalCtrl', function FileUploaderTituloModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
 
 			console.log("[modal] file_uploader titulo", uploadUrl, uploadParameters, title, message);
 

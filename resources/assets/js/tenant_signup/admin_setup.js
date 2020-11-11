@@ -22,6 +22,8 @@
 			$scope.numSteps = 4;
 			$scope.ready = false;
 
+			$scope.panelTerm = false;
+
 			var fieldNames = {
 				cpf: 'CPF',
 				name: 'nome',
@@ -63,6 +65,8 @@
 				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
 				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
 
+				if($scope.step === 3 && !Utils.isvalidTerm($scope.admins.political.lgpd)) return;
+
 				$scope.step++;
 				$window.scrollTo(0, 0);
 			};
@@ -87,7 +91,7 @@
             $scope.showPassowrd = function (elementId) {
                 var field_password = document.getElementById(elementId);
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
+            };
 
 			$scope.provisionTenant = function() {
 
@@ -153,6 +157,10 @@
 			};
 
 			$scope.fetchSignupDetails();
+
+			$scope.openTerm = function () {
+				$scope.panelTerm = !$scope.panelTerm;
+			};
 
 		});
 

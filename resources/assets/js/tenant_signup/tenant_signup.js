@@ -29,7 +29,8 @@
             phone: 'telefone institucional',
             mobile: 'celular institucional',
             personal_phone: 'telefone pessoal',
-            personal_mobile: 'celular pessoal'
+            personal_mobile: 'celular pessoal',
+            link_titulo: 'Documento com foto'
         };
 
         var messages = {
@@ -38,7 +39,7 @@
         };
         //Campos obrigatórios do formulario
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
-        var requiredMayorFields = ['name', 'cpf', 'dob', 'phone'];
+        var requiredMayorFields = ['name', 'cpf', 'dob', 'phone', 'link_titulo'];
 
         $scope.fetchCities = function (query) {
             var data = {name: query, $hide_loading_feedback: true};
@@ -73,8 +74,6 @@
             if ($scope.step === 2 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
             if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.mayor.cpf])) return;
             if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.mayor.name])) return;
-
-            if ($scope.step === 2 && $scope.form.mayor.link_titulo == null) return; //VALIDACAO DO LINK DO TITULO
 
             $scope.step++;
             $window.scrollTo(0, 0);
