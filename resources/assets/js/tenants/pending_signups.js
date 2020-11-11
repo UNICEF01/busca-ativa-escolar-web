@@ -22,10 +22,12 @@
 				filter: {status: 'pending_approval'}
 			};
 
+			$scope.electedMayor = null;
+
 			$scope.copyText = function(){
 				$scope.msgCopy = "URL COPIADA";
 				setTimeout(function(){ $scope.msgCopy = '';}, 500);
-			}
+			};
 
             $scope.onSelectType = function() {
                 $scope.query.page = 1;
@@ -53,6 +55,7 @@
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;
+				$scope.getMayorByTitulo(signup.data.mayor.titulo);
 			};
 
 			$scope.approve = function(signup) {
@@ -88,8 +91,10 @@
 
 			$scope.refresh();
 
-			$scope.validateTitulo = function (numberTitulo) {
-				return true;
+			$scope.getMayorByTitulo = function (numberTitulo) {
+				TenantSignups.getMayorByTitulo({titulo: numberTitulo}, function(res) {
+					$scope.electedMayor = res;
+				});
 			};
 
 		});

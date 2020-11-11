@@ -39,7 +39,7 @@
 
 		<div class="form-group col-md-4">
 			<label class="control-label" for="fld-titulo-eleitor">Título de eleitor</label>
-			<input type="text" ng-minlength="12" ng-maxlength="12" class="form-control" id="fld-titulo-eleitor" ng-model="$parent.form.mayor.titulo" placeholder="000000000000">
+			<input type="text" ng-minlength="12" ng-maxlength="12" maxlength="12" class="form-control" id="fld-titulo-eleitor" ng-model="$parent.form.mayor.titulo" placeholder="000000000000">
 		</div>
 
 		<div class="form-group col-md-6">
@@ -51,7 +51,7 @@
 		</div>
 
 		<div class="form-group col-md-6" ng-if="$parent.form.mayor.link_titulo == null">
-			<br/><a class="btn btn-error btn-raised btn-lg"> <i class="fa fa-close"></i> <i class="fa fa-image"></i> Arquivo não selecionado</a>
+			<br/>Selecione um arquivo válido
 		</div>
 
 	</div>
