@@ -158,6 +158,11 @@
 							<p>{{signup.data.mayor.cpf}}</p>
 						</div>
 
+						<div class="col-md-12">
+							<label class="control-label">Email</label>
+							<p>{{signup.data.mayor.email}}</p>
+						</div>
+
 						<!--<div class="form-group col-md-12">-->
 							<!--<label for="fld-signup-mayor-email" class="control-label">E-mail institucional*</label>-->
 							<!--<div class="row">-->
@@ -193,7 +198,7 @@
 						</div>
 
 						<div class="form-group col-md-12">
-							<label class="control-label">Informações referente ao título informado</label>
+							<label class="control-label">Informações referente ao CPF informado</label>
 
 							<ul ng-if="electedMayor && electedMayor.mayor != null">
 								<li><smal><strong>Nome do candidato eleito:</strong> {{electedMayor.mayor.nome}}</smal></li>
@@ -201,7 +206,7 @@
 								<li><smal><strong>CPF:</strong> {{electedMayor.mayor.cpf}}</smal></li>
 								<li><smal><strong>Município:</strong> {{electedMayor.mayor.municipio}}/ {{electedMayor.mayor.uf}}</smal></li>
 							</ul>
-							<p ng-if="electedMayor == null || electedMayor.mayor == null"><span class="label label-danger">Título não localizado na base do TSE</span></p>
+							<p ng-if="electedMayor == null || electedMayor.mayor == null"><span class="label label-danger">CPF não localizado na base do TSE</span></p>
 
 						</div>
 

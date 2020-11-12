@@ -55,7 +55,7 @@
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;
-				$scope.getMayorByTitulo(signup.data.mayor.titulo);
+				$scope.getMayorByCPF(signup.data.mayor.cpf);
 			};
 
 			$scope.approve = function(signup) {
@@ -91,8 +91,8 @@
 
 			$scope.refresh();
 
-			$scope.getMayorByTitulo = function (numberTitulo) {
-				TenantSignups.getMayorByTitulo({titulo: numberTitulo}, function(res) {
+			$scope.getMayorByCPF = function (numberCPF) {
+				TenantSignups.getMayorByCPF({cpf: numberCPF}, function(res) {
 					$scope.electedMayor = res;
 				});
 			};

@@ -21,7 +21,7 @@
 				getViaToken: {url: API.getURI('signups/tenants/via_token/:id'), method: 'GET', headers: headers},
 				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
 
-				getMayorByTitulo: {url: API.getURI('signups/tenants/mayor/by/titulo/:titulo'), method: 'GET', headers: authHeaders},
+				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
 
 			});
 
