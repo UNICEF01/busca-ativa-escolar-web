@@ -158,6 +158,11 @@
 							<p>{{signup.data.mayor.cpf}}</p>
 						</div>
 
+						<div class="col-md-12">
+							<label class="control-label">Email</label>
+							<p>{{signup.data.mayor.email}}</p>
+						</div>
+
 						<!--<div class="form-group col-md-12">-->
 							<!--<label for="fld-signup-mayor-email" class="control-label">E-mail institucional*</label>-->
 							<!--<div class="row">-->
@@ -180,14 +185,49 @@
 							<p>{{signup.data.mayor.mobile}}</p>
 						</div>
 
+						<div class="form-group col-md-6">
+							<label class="control-label">Validação do cadastro</label>
+							<p ng-if="signup.is_approved_by_mayor"><span class="label label-success">Adesão validada pelo prefeito</span></p>
+							<p ng-if="signup.is_approved_by_mayor == false"><span class="label label-danger">Adesão não validada pelo prefeito</span></p>
+						</div>
+
+
+						<div class="form-group col-md-6">
+							<label class="control-label">Título de eleitor</label>
+							<p>{{signup.data.mayor.titulo}}</p>
+						</div>
+
+						<div class="form-group col-md-12">
+							<label class="control-label">Informações referente ao CPF informado</label>
+
+							<ul ng-if="electedMayor && electedMayor.mayor != null">
+								<li><smal><strong>Nome do candidato eleito:</strong> {{electedMayor.mayor.nome}}</smal></li>
+								<li><smal><strong>Título:</strong> {{electedMayor.mayor.nm_titulo}}</smal></li>
+								<li><smal><strong>CPF:</strong> {{electedMayor.mayor.cpf}}</smal></li>
+								<li><smal><strong>Município:</strong> {{electedMayor.mayor.municipio}}/ {{electedMayor.mayor.uf}}</smal></li>
+							</ul>
+							<p ng-if="electedMayor == null || electedMayor.mayor == null"><span class="label label-danger">CPF não localizado na base do TSE</span></p>
+
+						</div>
+
+						<div class="form-group col-md-12">
+							<label class="control-label">Documento com foto (Clique para visualizar em outra aba)</label>
+							<hr/>
+							<a href="{{signup.data.mayor.link_titulo}}" target="_blank">
+								<img src="{{signup.data.mayor.link_titulo}}" class="img-responsive" alt="{{signup.data.mayor.name}}"/>
+							</a>
+						</div>
+
 					</div>
 				</div>
+
 			</div>
 
 			<div class="panel-footer clearfix">
 
-				<a ng-show="!signup.is_approved && !signup.deleted_at" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
 				<a ng-show="!signup.is_approved  && !signup.deleted_at" class="btn btn-raised btn-danger" ng-click="reject(signup)"><i class="fa fa-ban"></i> Rejeitar</a>
+				<a ng-show="!signup.is_approved && !signup.deleted_at" class="btn btn-raised btn-success" ng-click="approve(signup)"><i class="fa fa-check"></i> Aprovar</a>
+
 
 				<div ng-show="signup.is_approved && !signup.is_provisioned">
 					<div class="alert alert-success"><strong>Adesão aprovada!</strong> Aguardando a configuração inicial pelo Gestor Político do município.</div>

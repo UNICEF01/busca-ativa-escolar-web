@@ -192,6 +192,20 @@
 					};
 				},
 
+				FileUploaderTitulo: function(title, message, uploadUrl, uploadParameters) {
+					return {
+						templateUrl: '/views/modals/file_uploader_titulo.html',
+						controller: 'FileUploaderTituloModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							uploadUrl: function() { return uploadUrl; },
+							uploadParameters: function() { return uploadParameters; },
+						}
+					};
+				},
+
 				DownloadLink: function(title, message, href) {
 					return {
 						templateUrl: '/views/modals/download_link.html',
