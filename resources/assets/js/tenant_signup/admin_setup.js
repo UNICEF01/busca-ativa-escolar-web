@@ -51,6 +51,9 @@
 				operational: {}
 			};
 
+			$scope.lastTenant = null;
+			$scope.lastCoordinators = [];
+
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
 				if($scope.step > $scope.numSteps) return;
@@ -84,6 +87,10 @@
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
 					$scope.admins.political.dob = moment(data.data.admin.dob).toDate();
+
+					$scope.lastCoordinators = data.last_coordinators;
+					$scope.lastTenant = data.last_tenant;
+
 					$scope.step = 3;
 				});
 			};
@@ -160,6 +167,14 @@
 
 			$scope.openTerm = function () {
 				$scope.panelTerm = !$scope.panelTerm;
+
+				console.log($scope.lastCoordinators);
+			};
+
+			$scope.restoreUser = function (user) {
+				TenantSignups.restoreUser({id: user.id}, function (res) {
+					ngToast.success('Usuário reativado!');
+				});
 			};
 
 		});

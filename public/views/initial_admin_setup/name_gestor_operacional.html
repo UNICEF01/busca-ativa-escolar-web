@@ -1,6 +1,52 @@
+<div class="panel panel-default" ng-if="lastCoordinators != null">
+	<div class="panel-heading">
+		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Últimos coordenadores desativados:</h3>
+	</div>
+	<div class="panel-body">
+
+		<div class="col-md-12">
+			<p>Lorem ipsum in dolor sit amet ....</p>
+		</div>
+
+		<div class="clearfix">
+
+			<table class="table table-striped table-hover">
+				<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Contato</th>
+					<th>Tipo</th>
+					<th>Grupo</th>
+					<th>Opções</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="(i, user) in lastCoordinators" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
+					<td width="20%">
+						<strong>{{user.name}}</strong>
+						<br/>
+						<span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
+						<span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
+					</td>
+					<td width="20%">{{user.email}}<br />{{user.contact_phone | brPhoneNumber}}</td>
+					<td width="20%">{{user.type | lang:'user.type'}}</td>
+					<td width="20%">{{user.group.name}}</td>
+					<td width="20%">
+						<a ng-click="restoreUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-check"></i> Ativar</a>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+</div>
+
 <form class="panel panel-default" ng-submit="provisionTenant()" autocomplete="off">
 	<div class="panel-heading">
-		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
+		<h3><strong ng-bind="(step + '.1')"></strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
 	</div>
 	<div class="panel-body">
 

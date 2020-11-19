@@ -22,6 +22,7 @@
 				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
 
 				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
+				restoreUser: {url: API.getURI('signups/tenants/restore_user/:id'), method: 'POST', headers: headers},
 
 			});
 
