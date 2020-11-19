@@ -53,6 +53,7 @@
 
 			$scope.lastTenant = null;
 			$scope.lastCoordinators = [];
+			$scope.isNecessaryNewCoordinator = true;
 
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
@@ -103,7 +104,10 @@
 			$scope.provisionTenant = function() {
 
 				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-				if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+
+				if($scope.isNecessaryNewCoordinator){
+					if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+				}
 
 				Modals.show(Modals.Confirm(
 					'Tem certeza que deseja prosseguir com o cadastro?',
@@ -121,6 +125,10 @@
 					data.operational = Object.assign({}, $scope.admins.operational);
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
 					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
+
+					data.lastTenant = $scope.lastTenant;
+					data.lastCoordinators = $scope.lastCoordinators;
+					data.isNecessaryNewCoordinator = $scope.isNecessaryNewCoordinator;
 
 					TenantSignups.complete(data, function (res) {
 						if(res.status === 'ok') {
@@ -156,11 +164,22 @@
 							return Utils.displayValidationErrors(res);
 						}
 
+						if(res.reason === 'coordinator_emails_are_the_same') {
+							$scope.step = 4;
+							return ngToast.danger('Você precisa informar e-mails diferentes para o gestor político, o novo coordenador operacional e os demais coordenadores');
+						}
+
+						if(res.reason === 'coordinator_email_in_use') {
+							$scope.step = 4;
+							return ngToast.danger('Email do coordenador desativado já está em uso por outro perfil');
+						}
+
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);
 
 					});
 
 				});
+
 			};
 
 			$scope.fetchSignupDetails();
@@ -171,10 +190,9 @@
 				console.log($scope.lastCoordinators);
 			};
 
-			$scope.restoreUser = function (user) {
-				TenantSignups.restoreUser({id: user.id}, function (res) {
-					ngToast.success('Usuário reativado!');
-				});
+			$scope.changeNecessityCoordinator = function (necessity) {
+				$scope.isNecessaryNewCoordinator = necessity;
+				$scope.admins.operational = {};
 			};
 
 		});

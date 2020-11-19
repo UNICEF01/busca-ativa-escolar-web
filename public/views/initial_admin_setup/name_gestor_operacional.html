@@ -5,7 +5,7 @@
 	<div class="panel-body">
 
 		<div class="col-md-12">
-			<p>Lorem ipsum in dolor sit amet ....</p>
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut viverra enim. Vivamus scelerisque commodo tellus varius rutrum. Vivamus nunc ante, interdum ut ligula et, aliquet faucibus ipsum. </p>
 		</div>
 
 		<div class="clearfix">
@@ -13,44 +13,59 @@
 			<table class="table table-striped table-hover">
 				<thead>
 				<tr>
+					<th></th>
 					<th>Nome</th>
 					<th>Contato</th>
 					<th>Tipo</th>
 					<th>Grupo</th>
-					<th>Opções</th>
+					<th style="color: green">Ativar</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr ng-repeat="(i, user) in lastCoordinators" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
-					<td width="20%">
-						<strong>{{user.name}}</strong>
-						<br/>
-						<span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
+					<td>
 						<span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
 					</td>
-					<td width="20%">{{user.email}}<br />{{user.contact_phone | brPhoneNumber}}</td>
+					<td width="20%">
+						<strong>{{user.name}}</strong>
+					</td>
+					<td width="30%">
+						<input type="text" ng-model="lastCoordinators[i].email" value="{{user.email}}" class="form-control" required>
+					</td>
 					<td width="20%">{{user.type | lang:'user.type'}}</td>
 					<td width="20%">{{user.group.name}}</td>
-					<td width="20%">
-						<a ng-click="restoreUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-check"></i> Ativar</a>
+					<td width="5%">
+						<label class="container_check_user_canceled" style="margin-top: 0;">
+							<input type="checkbox" ng-model="lastCoordinators[i].active">
+							<span class="checkmark"></span>
+						</label>
 					</td>
 				</tr>
 				</tbody>
 			</table>
 
+			<div class="col-md-12">
+				<span ng-if="isNecessaryNewCoordinator == false" ng-click="changeNecessityCoordinator(true)" class="btn btn-primary btn-raised pull-right"> <i class="fa fa-plus"></i> Novo coordenador</span>
+			</div>
+
+		</div>
+
+		<div class="panel-footer clearfix" ng-if="isNecessaryNewCoordinator == false">
+			<button type="button" ng-click="prevStep()" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+			<button ng-click="provisionTenant()" class="btn btn-primary btn-raised pull-right">Finalizar</button>
 		</div>
 
 	</div>
 
 </div>
 
-<form class="panel panel-default" ng-submit="provisionTenant()" autocomplete="off">
+<form class="panel panel-default" ng-submit="provisionTenant()" autocomplete="off" ng-if="isNecessaryNewCoordinator">
 	<div class="panel-heading">
-		<h3><strong ng-bind="(step + '.1')"></strong> <i class="fa fa-sitemap"></i> Cadastre o coordenador operacional</h3>
+		<h3><strong ng-bind="(step + '.1')"></strong> <i class="fa fa-sitemap"></i> Cadastre um coordenador operacional</h3>
 	</div>
 	<div class="panel-body">
 
-		<div class="col-md-12">
+		<div class="col-md-8">
 			<h4>Coordenador Operacional</h4>
 			<p>
 				Agora, informe os dados do Coordenador Operacional. Ele é o responsável por:
@@ -63,6 +78,10 @@
 				<li class="list-group-item"><i class="fa fa-circle"></i> Definir, junto com o gestor político, as estratégias para realizar o projeto no município;</li>
 				<li class="list-group-item"><i class="fa fa-circle"></i> Coordenar a formação das equipes participantes.</li>
 			</ul>
+		</div>
+
+		<div class="col-md-4">
+			<span ng-if="lastCoordinators != null" ng-click="changeNecessityCoordinator(false)" class="btn btn-danger btn-raised pull-right"> <i class="fa fa-minus"></i> Cancelar novo coordenador</span>
 		</div>
 
 		<hr />

@@ -19,10 +19,9 @@
 
 				register: {url: API.getURI('signups/tenants/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/tenants/via_token/:id'), method: 'GET', headers: headers},
-				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
+				complete: {url: API.getURI('signups/tenants/:id/complete?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers},
 
-				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
-				restoreUser: {url: API.getURI('signups/tenants/restore_user/:id'), method: 'POST', headers: headers},
+				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders}
 
 			});
 
