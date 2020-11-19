@@ -115,6 +115,10 @@
 			return ($localStorage.identity) ? !!$localStorage.identity.is_logged_in : false;
 		}
 
+		function lgpdSigned () {
+			return ($localStorage.identity) ? !!$localStorage.identity.current_user.lgpd : false;
+		}
+
 		function disconnect() {
 			//console.log('[identity] Disconnecting identity...');
 
@@ -162,6 +166,7 @@
 			getType: getType,
 			can: can,
 			isLoggedIn: isLoggedIn,
+			lgpdSigned: lgpdSigned,
 			refresh: refreshIdentity,
 			clearSession: clearSession,
 			setup: setup,
