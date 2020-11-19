@@ -9610,6 +9610,7 @@ if (!Array.prototype.find) {
 				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
 
 				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
+				restoreUser: {url: API.getURI('signups/tenants/restore_user/:id'), method: 'POST', headers: headers},
 
 			});
 
@@ -12738,6 +12739,9 @@ function identify(namespace, file) {
 				operational: {}
 			};
 
+			$scope.lastTenant = null;
+			$scope.lastCoordinators = [];
+
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
 				if($scope.step > $scope.numSteps) return;
@@ -12771,6 +12775,10 @@ function identify(namespace, file) {
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
 					$scope.admins.political.dob = moment(data.data.admin.dob).toDate();
+
+					$scope.lastCoordinators = data.last_coordinators;
+					$scope.lastTenant = data.last_tenant;
+
 					$scope.step = 3;
 				});
 			};
@@ -12847,6 +12855,14 @@ function identify(namespace, file) {
 
 			$scope.openTerm = function () {
 				$scope.panelTerm = !$scope.panelTerm;
+
+				console.log($scope.lastCoordinators);
+			};
+
+			$scope.restoreUser = function (user) {
+				TenantSignups.restoreUser({id: user.id}, function (res) {
+					ngToast.success('Usuário reativado!');
+				});
 			};
 
 		});
