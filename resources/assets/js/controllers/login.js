@@ -38,7 +38,7 @@
                 return $state.go('dashboard');
 
             } else {
-                return $state.go('lgpd_signup');
+                return $state.go('lgpd_signup', {id: Identity.getCurrentUser().id});
             }
 
 

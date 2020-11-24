@@ -53,7 +53,7 @@
             Platform.whenReady(function () {
                 //verify signature LGPD
                 if (!Identity.getCurrentUser().lgpd) {
-                    $state.go('lgpd_signup');
+                    return $state.go('lgpd_signup', {id: Identity.getCurrentUser().id});
                 }
             });
 
