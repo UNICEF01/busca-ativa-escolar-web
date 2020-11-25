@@ -116,6 +116,7 @@
 		}
 
 		function lgpdSigned () {
+			console.log('ola')
 			return ($localStorage.identity) ? !!$localStorage.identity.current_user.lgpd : false;
 		}
 
