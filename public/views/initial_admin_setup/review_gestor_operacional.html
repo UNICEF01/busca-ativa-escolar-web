@@ -1,0 +1,198 @@
+<div class="panel panel-default" ng-if="lastCoordinators != null">
+	<div class="panel-heading">
+		<h3><strong ng-bind="(step + '.')"></strong> <i class="fa fa-sitemap"></i> Últimos coordenadores desativados:</h3>
+	</div>
+	<div class="panel-body">
+
+		<div class="col-md-12">
+			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ut viverra enim. Vivamus scelerisque commodo tellus varius rutrum. Vivamus nunc ante, interdum ut ligula et, aliquet faucibus ipsum. </p>
+		</div>
+
+		<div class="clearfix">
+
+			<table class="table table-striped table-hover">
+				<thead>
+				<tr>
+					<th></th>
+					<th>Nome</th>
+					<th>Contato</th>
+					<th>Tipo</th>
+					<th>Grupo</th>
+					<th style="color: green">Ativar</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="(i, user) in lastCoordinators" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
+					<td>
+						<span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
+					</td>
+					<td width="20%">
+						<strong>{{user.name}}</strong>
+					</td>
+					<td width="30%">
+						<input type="text" ng-model="lastCoordinators[i].email" value="{{user.email}}" class="form-control" required>
+					</td>
+					<td width="20%">{{user.type | lang:'user.type'}}</td>
+					<td width="20%">{{user.group.name}}</td>
+					<td width="5%">
+						<label class="container_check_user_canceled" style="margin-top: 0;">
+							<input type="checkbox" ng-model="lastCoordinators[i].active">
+							<span class="checkmark"></span>
+						</label>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+
+			<div class="col-md-12">
+				<span ng-if="isNecessaryNewCoordinator == false" ng-click="changeNecessityCoordinator(true)" class="btn btn-primary btn-raised pull-right"> <i class="fa fa-plus"></i> Novo coordenador</span>
+			</div>
+
+		</div>
+
+		<div class="panel-footer clearfix" ng-if="isNecessaryNewCoordinator == false">
+			<button type="button" ng-click="prevStep()" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+			<button ng-click="provisionTenant()" class="btn btn-primary btn-raised pull-right">Finalizar</button>
+		</div>
+
+	</div>
+
+</div>
+
+<form class="panel panel-default" ng-submit="provisionTenant()" autocomplete="off" ng-if="isNecessaryNewCoordinator">
+	<div class="panel-heading">
+		<h3><strong ng-bind="(step + '.1')"></strong> <i class="fa fa-sitemap"></i> Cadastre um coordenador operacional</h3>
+	</div>
+	<div class="panel-body">
+
+		<div class="col-md-8">
+			<h4>Coordenador Operacional</h4>
+			<p>
+				Agora, informe os dados do Coordenador Operacional. Ele é o responsável por:
+			</p>
+
+			<ul class="list-group basic-list">
+				<li class="list-group-item"><i class="fa fa-circle"></i> Cadastrar os supervisores institucionais, os técnicos verificadores e os agentes comunitários; </li>
+				<li class="list-group-item"><i class="fa fa-circle"></i> Estabelecer os parâmetros do sistema de acordo com a realidade do município; </li>
+				<li class="list-group-item"><i class="fa fa-circle"></i> Acessar as estatísticas gerais da cidade; </li>
+				<li class="list-group-item"><i class="fa fa-circle"></i> Definir, junto com o gestor político, as estratégias para realizar o projeto no município;</li>
+				<li class="list-group-item"><i class="fa fa-circle"></i> Coordenar a formação das equipes participantes.</li>
+			</ul>
+		</div>
+
+		<div class="col-md-4">
+			<span ng-if="lastCoordinators != null" ng-click="changeNecessityCoordinator(false)" class="btn btn-danger btn-raised pull-right"> <i class="fa fa-minus"></i> Cancelar novo coordenador</span>
+		</div>
+
+		<hr />
+
+		<div class="clearfix">
+
+			<h5>Dados pessoais</h5>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-co-name">Nome*</label>
+				<input type="text" class="form-control" name="co_name" id="fld-co-name" required ng-model="admins.operational.name" >
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+				<input type="tel" ui-date-mask class="form-control" name="co_dob" id="fld-co-dob" required ng-model="admins.operational.dob" placeholder="dd/mm/yyyy">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-cpf">CPF*</label>
+				<input type="tel" ui-br-cpf-mask class="form-control" name="co_cpf" id="fld-co-cpf" required ng-model="admins.operational.cpf" placeholder="000.000.000-00">
+			</div>
+
+			<hr />
+
+			<h5>Contatos</h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-work-phone">Telefone fixo institucional*</label>
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" name="co_phone" id="fld-co-work-phone" required ng-model="admins.operational.phone" placeholder="(00) 00000-0000">
+			</div>
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-work-mobile">Telefone celular institucional</label>
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" name="co_mobile" id="fld-co-work-mobile" ng-model="admins.operational.mobile" placeholder="(00) 00000-0000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-personal-mobile">Telefone celular pessoal</label>
+				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" name="co_mobile" id="fld-co-personal-mobile" ng-model="admins.operational.personal_mobile" placeholder="(00) 00000-0000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-skype-username">Skype</label>
+				<input type="text" class="form-control" name="co_username" id="fld-co-skype-username" ng-model="admins.operational.skype" >
+			</div>
+
+			<hr />
+
+			<h5>Endereço institucional <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-12">
+				<label class="control-label" for="fld-co-address">Logradouro</label>
+				<input type="text" class="form-control" name="co_address" id="fld-co-address" ng-model="admins.operational.work_address" >
+			</div>
+
+			<app-city-select model="admins.operational" uf-field="'work_uf'" city-field="'work_city'" is-uf-required="false" is-city-required="false"></app-city-select>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-cep">CEP</label>
+				<input type="tel" ui-br-cep-mask class="form-control" name="co_cep" id="fld-co-cep" ng-model="admins.operational.work_cep" placeholder="00000-000">
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-neighborhood">Bairro</label>
+				<input type="text" class="form-control" name="co_neighborhood" id="fld-co-neighborhood" ng-model="admins.operational.work_neighborhood" >
+			</div>
+
+			<hr />
+
+			<h5>Dados organizacionais <small>(opcional)</small></h5>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-institution">Órgão</label>
+				<input type="text" class="form-control" name="co_institution" id="fld-co-institution" ng-model="admins.operational.institution" >
+			</div>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-position">Cargo</label>
+				<input type="text" class="form-control" name="co_position" id="fld-co-position" ng-model="admins.operational.position" >
+			</div>
+
+			<hr />
+
+			<h5>Dados de acesso</h5>
+
+			<p>A senha informada será enviada para o e-mail do Coordenador Operacional.</p>
+
+			<div class="form-group col-md-6">
+				<label class="control-label" for="fld-co-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
+				<input type="email" class="form-control" name="co_email" id="fld-co-email" required ng-model="admins.operational.email" >
+			</div>
+
+			<div class="form-group col-md-6">
+				<div class="input-group">
+					<label class="control-label" for="fld-co-password"><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label>
+					<input type="password" class="form-control" name="co_password" id="fld-co-password" required ng-model="admins.operational.password" >
+					<span class="input-group-btn" uib-tooltip="Exibir a senha">
+					<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd('fld-co-password')">
+						<i class="fa fa-eye"></i>
+					</button>
+				</span>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class="panel-footer clearfix">
+		<button type="button" ng-click="prevStep()" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
+		<button type="submit" class="btn btn-primary btn-raised pull-right">Finalizar</button>
+	</div>
+
+</form>
