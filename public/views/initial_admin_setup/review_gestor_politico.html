@@ -92,18 +92,7 @@
 			<hr />
 
 			<div class="panel-body" ng-if="panelTerm">
-				<div style="margin: 10px 0;">
-					<p>Leia e aceite o termo de adesão.</p>
-					<div class="panel panel-default" style="max-height: 300px; overflow-y: scroll">
-						<div class="panel-body">
-							<h4 class="text-center">TERMOS DE USO E POLÍTICA DE PRIVACIDADE</h4>
-							<h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
-							<h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
-							<p>1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta tecnológica disponibilizada gratuitamente a todos as administrações municipais e estaduais brasileiras, que objetiva auxiliar a identificação, o mapeamento e a gestão de casos de crianças e adolescentes, em idade escolar obrigatória, que estão fora da escola.</p>
-							<p>1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a ser denominada apenas por Plataforma.</p>
-						</div>
-					</div>
-				</div>
+				<div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>
 			</div>
 
 			<h5>Dados de acesso</h5>
