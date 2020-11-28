@@ -11,6 +11,7 @@
         .controller('LgpdSignupCtrl', function ($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
             $scope.signed = false;
+            $scope.term = false;
 
             $scope.currentState = $state.current.name
 
