@@ -9,7 +9,7 @@
                 unauthenticated: true
             });
         })
-        .controller('UserSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Modals) {
+        .controller('UserSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Modals, $state) {
 
             $scope.canUpdateDataUser = true;
             $scope.message = "";
@@ -39,6 +39,8 @@
             var messages = {
                 invalid_user: 'Dados do usuário incompletos! Campos inválidos: '
             };
+
+            var dateOnlyFields = ['dob'];
 
             $scope.fetchUserDetails = function() {
                 TenantSignups.getUserViaToken(
@@ -72,14 +74,56 @@
                     'Lorem ipsum in dolor sit amet ...'
                 )).then(function(res) {
 
-                    alert();
-                    //call the TenantSigup Resource and activate the user...
+                    var finalUser = Object.assign({}, $scope.user);
+                    finalUser = Utils.prepareDateFields(finalUser, dateOnlyFields);
+
+                    var data = {
+                        id: userID,
+                        token: userToken,
+                        user: finalUser
+                    };
+
+                    TenantSignups.activeUser(data, function (res) {
+
+                        if( 'status' in res && 'reason' in res ){
+
+                            if(res.reason == 'token_mismatch') {
+                                ngToast.danger("Token inválido");
+                            }
+                            if(res.reason == 'invalid_token') {
+                                ngToast.danger("Token inválido");
+                            }
+                            if(res.reason == 'lgpd_already_accepted') {
+                                ngToast.danger("Usuário já ativado");
+                            }
+                            if(res.reason == 'email_already_used') {
+                                ngToast.danger("Email inválido. Já pertence a outro usuário");
+                            }
+                            if(res.reason == 'invalid_password') {
+                                ngToast.danger("Senha inválida.");
+                            }
+                            if(res.reason == 'validation_failed') {
+                                ngToast.danger("Campos inválidos. Preencha todos os campos obrigatórios");
+                            }
+                        }
+
+                        if( 'status' in res && 'updated' in res ){
+                            ngToast.success("Perfil ativado");
+                            $state.go('login');
+                        }
+
+                    });
 
                 });
             };
 
             $scope.openTerm = function () {
                 $scope.panelTerm = !$scope.panelTerm;
+            };
+
+            $scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-co-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
             };
 
             $scope.fetchUserDetails();

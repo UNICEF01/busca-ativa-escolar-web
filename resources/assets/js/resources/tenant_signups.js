@@ -23,7 +23,7 @@
 
 				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
 				getUserViaToken: {url: API.getURI('signups/users/via_token/:id'), method: 'GET', headers: headers},
-				activeUser: {url: API.getURI('signups/users/active'), method: 'POST', headers: headers}
+				activeUser: {url: API.getURI('signups/users/:id/confirm?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers}
 
 			});
 
