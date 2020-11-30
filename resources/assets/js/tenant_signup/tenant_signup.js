@@ -30,7 +30,7 @@
             mobile: 'celular institucional',
             personal_phone: 'telefone pessoal',
             personal_mobile: 'celular pessoal',
-            link_titulo: 'Documento com foto'
+            //link_titulo: 'Documento com foto'
         };
 
         var messages = {
@@ -39,7 +39,8 @@
         };
         //Campos obrigatórios do formulario
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
-        var requiredMayorFields = ['name', 'cpf', 'dob', 'phone', 'link_titulo'];
+        //var requiredMayorFields = ['name', 'cpf', 'dob', 'phone', 'link_titulo'];
+        var requiredMayorFields = ['name', 'cpf', 'dob', 'phone'];
 
         $scope.fetchCities = function (query) {
             var data = {name: query, $hide_loading_feedback: true};
@@ -148,23 +149,23 @@
 
         };
 
-        $scope.beginImport = function() {
-            Modals.show(Modals.FileUploaderTitulo(
-                'Enviar documento com foto',
-                'Selecione uma cópia do documento em formato PNG ou JPG. Arquivos em outros formatos não serão aceitos',
-                API.getURI('signups/tenants/uploadfile')
-            )).then(function (file) {
-
-                if(file.status == "error"){
-                    $scope.form.mayor.link_titulo = null;
-                    ngToast.danger('Erro na importação! '+ file.reason);
-                }else{
-                    $scope.form.mayor.link_titulo = file.link;
-                    ngToast.warning('Arquivo importado com sucesso');
-                }
-
-            });
-        };
+        // $scope.beginImport = function() {
+        //     Modals.show(Modals.FileUploaderTitulo(
+        //         'Enviar documento com foto',
+        //         'Selecione uma cópia do documento em formato PNG ou JPG. Arquivos em outros formatos não serão aceitos',
+        //         API.getURI('signups/tenants/uploadfile')
+        //     )).then(function (file) {
+        //
+        //         if(file.status == "error"){
+        //             $scope.form.mayor.link_titulo = null;
+        //             ngToast.danger('Erro na importação! '+ file.reason);
+        //         }else{
+        //             $scope.form.mayor.link_titulo = file.link;
+        //             ngToast.warning('Arquivo importado com sucesso');
+        //         }
+        //
+        //     });
+        // };
 
     });
 
