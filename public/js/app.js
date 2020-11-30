@@ -6698,6 +6698,85 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
+			}
+
+		});
+
+})();
+(function() {
+
     angular
         .module('BuscaAtivaEscolar')
         .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
@@ -7335,85 +7414,6 @@ Highcharts.maps["countries/br/br-all"] = {
 
 			$scope.close = function() {
 				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
 			}
 
 		});
@@ -9629,10 +9629,12 @@ if (!Array.prototype.find) {
 
 				register: {url: API.getURI('signups/tenants/register'), method: 'POST', headers: headers},
 				getViaToken: {url: API.getURI('signups/tenants/via_token/:id'), method: 'GET', headers: headers},
-				complete: {url: API.getURI('signups/tenants/:id/complete?XDEBUG_SESSION_START=PHPSTORM'), method: 'POST', headers: headers},
+				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
 
-				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders}
-				
+				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
+				getUserViaToken: {url: API.getURI('signups/users/via_token/:id'), method: 'GET', headers: headers},
+				activeUser: {url: API.getURI('signups/users/active'), method: 'POST', headers: headers}
+
 			});
 
 		});
@@ -12742,10 +12744,12 @@ function identify(namespace, file) {
 				phone: 'telefone institucional',
 				mobile: 'celular institucional',
 				personal_phone: 'telefone pessoal',
-				personal_mobile: 'celular pessoal'
+				personal_mobile: 'celular pessoal',
+				lgpd: 'termo de adesão'
 			};
 
-			var requiredAdminFields = ['email','name','cpf','dob','phone','password'];
+			var requiredAdminFieldsPolitical = ['email','name','cpf','dob','phone','password', 'lgpd'];
+			var requiredAdminFieldsOperational = ['email','name','cpf','dob','phone'];
 
 			var messages = {
 				invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
@@ -12773,8 +12777,8 @@ function identify(namespace, file) {
 			$scope.nextStep = function() {
 				if($scope.step >= $scope.numSteps) return;
 
-				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
+				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
 
 				if($scope.step === 3 && !Utils.isvalidTerm($scope.admins.political.lgpd)) return;
 
@@ -12810,10 +12814,10 @@ function identify(namespace, file) {
 
 			$scope.provisionTenant = function() {
 
-				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if(!Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
 
 				if($scope.isNecessaryNewCoordinator){
-					if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+					if(!Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
 				}
 
 				Modals.show(Modals.Confirm(
@@ -12893,8 +12897,6 @@ function identify(namespace, file) {
 
 			$scope.openTerm = function () {
 				$scope.panelTerm = !$scope.panelTerm;
-
-				console.log($scope.lastCoordinators);
 			};
 
 			$scope.changeNecessityCoordinator = function (necessity) {
@@ -13180,6 +13182,95 @@ function identify(namespace, file) {
         };
 
     });
+
+})();
+(function() {
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider) {
+            $stateProvider.state('user_first_config', {
+                url: '/user_setup/{id}?token',
+                templateUrl: '/views/initial_admin_setup/review_user.html',
+                controller: 'UserSetupCtrl',
+                unauthenticated: true
+            });
+        })
+        .controller('UserSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Modals) {
+
+            $scope.canUpdateDataUser = true;
+            $scope.message = "";
+
+            var userID = $stateParams.id;
+            var userToken = $stateParams.token;
+
+            $scope.user = {};
+
+            var fieldNames = {
+                cpf: 'CPF',
+                name: 'nome',
+                email: 'e-mail institucional',
+                position: 'posição',
+                institution: 'instituição',
+                password: 'senha',
+                dob: 'data de nascimento',
+                phone: 'telefone institucional',
+                mobile: 'celular institucional',
+                personal_phone: 'telefone pessoal',
+                personal_mobile: 'celular pessoal',
+                lgpd: 'termo de adesão'
+            };
+
+            var requiredFields = ['email','name','cpf','dob','phone','password', 'lgpd'];
+
+            var messages = {
+                invalid_user: 'Dados do usuário incompletos! Campos inválidos: '
+            };
+
+            $scope.fetchUserDetails = function() {
+                TenantSignups.getUserViaToken(
+                    {id: userID, token: userToken},
+                    function (data) {
+
+                        if( 'status' in data && 'reason' in data ){
+                            $scope.canUpdateDataUser = false;
+                            if(data.reason == 'token_mismatch') { $scope.message = "Token inválido"; }
+                            if(data.reason == 'invalid_token') { $scope.message = "Token inválido"; }
+                            if(data.reason == 'lgpd_already_accepted') { $scope.message = "Usuário já ativado"; }
+                        }
+
+                        if( 'email' in data && 'name' in data ){
+                            $scope.canUpdateDataUser = true;
+                            $scope.message = "";
+
+                            $scope.user = data;
+                            $scope.user.dob = moment(data.dob).toDate();
+                        }
+
+                    });
+            };
+
+            $scope.activeUser = function () {
+
+                if(!Utils.isValid($scope.user, requiredFields, fieldNames, messages.invalid_user)) return;
+
+                Modals.show(Modals.Confirm(
+                    'Confirma os dados?',
+                    'Lorem ipsum in dolor sit amet ...'
+                )).then(function(res) {
+
+                    alert();
+                    //call the TenantSigup Resource and activate the user...
+
+                });
+            };
+
+            $scope.openTerm = function () {
+                $scope.panelTerm = !$scope.panelTerm;
+            };
+
+            $scope.fetchUserDetails();
+
+        });
 
 })();
 (function () {

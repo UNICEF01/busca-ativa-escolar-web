@@ -35,10 +35,12 @@
 				phone: 'telefone institucional',
 				mobile: 'celular institucional',
 				personal_phone: 'telefone pessoal',
-				personal_mobile: 'celular pessoal'
+				personal_mobile: 'celular pessoal',
+				lgpd: 'termo de adesão'
 			};
 
-			var requiredAdminFields = ['email','name','cpf','dob','phone','password'];
+			var requiredAdminFieldsPolitical = ['email','name','cpf','dob','phone','password', 'lgpd'];
+			var requiredAdminFieldsOperational = ['email','name','cpf','dob','phone'];
 
 			var messages = {
 				invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
@@ -66,8 +68,8 @@
 			$scope.nextStep = function() {
 				if($scope.step >= $scope.numSteps) return;
 
-				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
+				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
 
 				if($scope.step === 3 && !Utils.isvalidTerm($scope.admins.political.lgpd)) return;
 
@@ -103,10 +105,10 @@
 
 			$scope.provisionTenant = function() {
 
-				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+				if(!Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
 
 				if($scope.isNecessaryNewCoordinator){
-					if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+					if(!Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
 				}
 
 				Modals.show(Modals.Confirm(
@@ -186,8 +188,6 @@
 
 			$scope.openTerm = function () {
 				$scope.panelTerm = !$scope.panelTerm;
-
-				console.log($scope.lastCoordinators);
 			};
 
 			$scope.changeNecessityCoordinator = function (necessity) {
