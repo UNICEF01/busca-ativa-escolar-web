@@ -13278,7 +13278,6 @@ function identify(namespace, file) {
             $scope.getUserTypes = function () {
                 if (!permissions) return {};
                 if (!permissions.can_manage_types) return {};
-                if (!Identity.getCurrentUser()) return {};
 
                 var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function (el) {
                     return $scope.getUserTypesVisitantes().indexOf(el) < 0;
