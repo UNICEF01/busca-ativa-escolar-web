@@ -41,7 +41,7 @@
                 $scope.isCreating = (!$scope.identity.getCurrentUser().id || $scope.identity.getCurrentUser().id === "new");
 
                 if (!$scope.isCreating) {
-                    $scope.user = Users.find({id: $scope.identity.getCurrentUser().id}, prepareUserModel);
+                    $scope.user = Users.myself({id: $scope.identity.getCurrentUser().id}, prepareUserModel);
                 } else {
                     if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
                         $scope.groups = {};
@@ -131,7 +131,7 @@
                     return Users.create(data).$promise.then(onSaved)
                 }
 
-                Users.update(data).$promise.then(function (res) {
+                Users.updateYourself(data).$promise.then(function (res) {
                     if (res.status === "ok") {
                         ngToast.success('TERMO DE RESPONSABILIDADE E CONFIDENCIALIDADE Assinado com Sucesso');
                         $localStorage.identity.current_user.lgpd = 1
