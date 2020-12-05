@@ -16,7 +16,8 @@
 				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
 				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
 
-				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('users/:id/update_yourself?XDEBUG_SESSION_START=PHPSTORM')},
+				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('users/:id/update_yourself')},
+				sendReactivationMail: {url: API.getURI('users/:id/send_reactivation_mail'), method: 'POST', headers: headers},
 
 			});
 

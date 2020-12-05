@@ -156,6 +156,7 @@
 							<a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-pencil-square"></i> Editar</a>
 							<a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Desativar</a>
 							<a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-check"></i> Ativar</a>
+							<a ng-click="sendReactivationMail(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user) && !user.lgpd" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-ban"></i> Reenviar email de ativação</a>
 						</td>
 					</tr>
 				</tbody>

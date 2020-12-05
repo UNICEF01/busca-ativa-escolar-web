@@ -146,6 +146,13 @@
                 });
             };
 
+            $scope.sendReactivationMail = function (user) {
+                Users.sendReactivationMail({id: user.id}, function (res) {
+                    ngToast.success('Email encaminhado!');
+                    $scope.refresh();
+                });
+            };
+
             $scope.refresh();
 
             Platform.whenReady(function () {
