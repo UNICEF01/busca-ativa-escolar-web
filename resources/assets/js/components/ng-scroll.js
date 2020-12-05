@@ -5,7 +5,8 @@
             angular.element(element).bind("scroll", function () {
                 var divHeight = this.children[0].offsetHeight;
                 var divHeightVisibleScroll = this.offsetHeight;
-                if (this.scrollTop >= (divHeight - divHeightVisibleScroll)) {
+                console.log(divHeight, divHeightVisibleScroll, this.scrollTop)
+                if (this.scrollTop >= (divHeight - divHeightVisibleScroll - 50)) {
                     scope.$parent.$parent.term = true;
                 } else {
                     scope.$parent.$parent.term = false;
