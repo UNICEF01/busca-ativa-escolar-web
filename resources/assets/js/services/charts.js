@@ -135,7 +135,7 @@
 
 		function generateTimelineChart(report, chartName, labels) {
 
-			console.log("[charts] Generating timeline chart: ", chartName, report);
+			//console.log("[charts] Generating timeline chart: ", chartName, report);
 
 			if(!report || !chartName || !labels) return;
 

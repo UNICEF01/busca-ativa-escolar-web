@@ -17,7 +17,7 @@
             };
 
             scope.onSearch = function (givenUf, givenCity) {
-                console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
+                //console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
 
                 var uf = Utils.search(StaticData.getUFs(), function (uf) {
                     return (uf.code === givenUf);
@@ -30,7 +30,7 @@
             };
 
             scope.refresh = function () {
-                console.log('[widget.searchable_cases_map] Loading data...');
+                //console.log('[widget.searchable_cases_map] Loading data...');
 
                 Children.getMap({}, function (data) {
                     scope.coordinates = data.coordinates;
@@ -38,12 +38,12 @@
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
 
-                    console.log("[widget.searchable_cases_map] Data loaded: ", data.coordinates, data.center);
+                    //console.log("[widget.searchable_cases_map] Data loaded: ", data.coordinates, data.center);
                 });
             };
 
             scope.onMarkerClick = function (marker, event, coords) {
-                console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
+                //console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
             };
 
 
@@ -55,7 +55,7 @@
             };
 
             scope.lookAt = function (lat, lng, zoom) {
-                console.log("[widget.searchable_cases_map] Look at @ ", lat, lng, zoom, scope.ctrl);
+                //console.log("[widget.searchable_cases_map] Look at @ ", lat, lng, zoom, scope.ctrl);
 
                 scope.ctrl.map.panTo({lat: lat, lng: lng});
                 scope.ctrl.map.setZoom(zoom);

@@ -4,7 +4,7 @@
 		.module('BuscaAtivaEscolar')
 		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser) {
 
-			console.log("[modal] case_restart");
+			//console.log("[modal] case_restart");
 
 			$scope.step = 1;
 			$scope.reason = "";

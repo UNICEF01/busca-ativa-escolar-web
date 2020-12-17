@@ -1,65 +1,149 @@
 <form class="panel panel-default" ng-submit="nextStep(1)">
-	<div class="panel-heading">
-		<h3><strong>{{step}}.</strong> <i class="fa fa-user"></i> Insira os dados do Gestor Estadual</h3>
-	</div>
+  <div class="panel-heading">
+    <h3>
+      <strong>{{step}}.</strong> <i class="fa fa-user"></i> Insira os dados
+      do(a) Gestor(a) Estadual
+    </h3>
+  </div>
 
-	<div class="panel-body">
+  <div class="panel-body">
+    <p>Informe aqui os dados do(a) Gestor(a) Estadual.</p>
 
-		<p> Informe aqui os dados do Gestor Estadual. </p>
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-name">Nome*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        id="fld-co-name"
+        ng-model="$parent.form.admin.name"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+      <input
+        type="tel"
+        class="form-control"
+        ui-date-mask
+        required
+        id="fld-co-dob"
+        ng-model="$parent.form.admin.dob"
+        placeholder="dd/mm/yyyy"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-cpf">CPF*</label>
+      <input
+        type="tel"
+        ui-br-cpf-mask
+        class="form-control"
+        required
+        id="fld-co-cpf"
+        ng-model="$parent.form.admin.cpf"
+        placeholder="000.000.000-00"
+      />
+    </div>
 
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-name">Nome*</label>
-			<input type="text" class="form-control" required id="fld-co-name" ng-model="$parent.form.admin.name">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-dob">Data de nascimento*</label>
-			<input type="tel" class="form-control" ui-date-mask required id="fld-co-dob" ng-model="$parent.form.admin.dob" placeholder="dd/mm/yyyy">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-cpf">CPF*</label>
-			<input type="tel" ui-br-cpf-mask class="form-control"  required id="fld-co-cpf" ng-model="$parent.form.admin.cpf" placeholder="000.000.000-00">
-		</div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-email"
+        >E-mail* <small>(e-mail para entrar na plataforma)</small></label
+      >
+      <input
+        type="email"
+        class="form-control"
+        required
+        id="fld-co-email"
+        ng-model="$parent.form.admin.email"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <div class="input-group">
+        <label class="control-label" for="fld-co-email"
+          >Crie uma senha de acesso*</label
+        >
+        <input
+          type="password"
+          class="form-control"
+          required
+          id="fld-ge-password"
+          ng-model="$parent.form.admin.password"
+        />
+        <span class="input-group-btn" uib-tooltip="Exibir a senha">
+          <button
+            type="button"
+            class="btn btn-fab btn-fab-mini"
+            ng-click="showPassword('fld-ge-password')"
+          >
+            <i class="fa fa-eye"></i>
+          </button>
+        </span>
+      </div>
+    </div>
 
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-email">E-mail* <small>(e-mail para entrar na plataforma)</small></label>
-			<input type="email" class="form-control" required id="fld-co-email" ng-model="$parent.form.admin.email">
-		</div>
-		<div class="form-group col-md-6">
-			<div class="input-group">
-				<label class="control-label" for="fld-co-email">Crie uma senha de acesso*</label>
-				<input type="password" class="form-control" required id="fld-ge-password" ng-model="$parent.form.admin.password">
-				<span class="input-group-btn" uib-tooltip="Exibir a senha">
-					<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassword('fld-ge-password')">
-						<i class="fa fa-eye"></i>
-					</button>
-				</span>
-			</div>
-		</div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-work-phone"
+        >Telefone fixo*</label
+      >
+      <input
+        type="tel"
+        ui-br-phone-number
+        ng-minlength="12"
+        class="form-control"
+        required
+        id="fld-co-work-phone"
+        ng-model="$parent.form.admin.phone"
+        placeholder="(00) 00000-0000"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-work-mobile"
+        >Telefone celular</label
+      >
+      <input
+        type="tel"
+        ui-br-phone-number
+        ng-minlength="12"
+        class="form-control"
+        id="fld-co-work-mobile"
+        ng-model="$parent.form.admin.mobile"
+        placeholder="(00) 00000-0000"
+      />
+    </div>
 
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-work-phone">Telefone fixo*</label>
-			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" required id="fld-co-work-phone" ng-model="$parent.form.admin.phone" placeholder="(00) 00000-0000">
-		</div>
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-co-work-mobile">Telefone celular</label>
-			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-co-work-mobile" ng-model="$parent.form.admin.mobile" placeholder="(00) 00000-0000">
-		</div>
+    <hr />
 
-		<hr />
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-institution">Órgão*</label>
+      <input
+        type="text"
+        class="form-control"
+        id="fld-co-institution"
+        required
+        ng-model="$parent.form.admin.institution"
+      />
+    </div>
 
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-institution">Órgão*</label>
-			<input type="text" class="form-control" id="fld-co-institution" required ng-model="$parent.form.admin.institution">
-		</div>
-
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-co-position">Cargo*</label>
-			<input type="text" class="form-control" id="fld-co-position" required ng-model="$parent.form.admin.position">
-		</div>
-
-	</div>
-	<div class="panel-footer clearfix">
-		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-	</div>
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-position">Cargo*</label>
+      <input
+        type="text"
+        class="form-control"
+        id="fld-co-position"
+        required
+        ng-model="$parent.form.admin.position"
+      />
+    </div>
+  </div>
+  <div class="panel-footer clearfix">
+    <button
+      ng-click="prevStep()"
+      type="button"
+      class="btn btn-primary pull-left"
+    >
+      <i class="fa fa-arrow-left"></i> Anterior
+    </button>
+    <button type="submit" class="btn btn-primary btn-raised pull-right">
+      Próximo <i class="fa fa-arrow-right"></i>
+    </button>
+  </div>
 </form>

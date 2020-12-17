@@ -1,44 +1,150 @@
 <form class="panel panel-default" ng-submit="nextStep(2)">
-	<div class="panel-heading">
-		<h3><strong>{{step}}.</strong> <i class="fa fa-user"></i> Cadastre o prefeito</h3>
-	</div>
-	<div class="panel-body">
+  <div class="panel-heading">
+    <h3>
+      <strong>{{step}}.</strong> <i class="fa fa-user"></i> Insira os dados
+      do(a) Gestor(a) Político(a)<small>
+        (Chefe de gabinete ou funcionário com acesso direto ao prefeito(a)
+        municipal)</small
+      >
+    </h3>
+  </div>
 
-		<p> Informe aqui os dados do Prefeito do seu município. </p>
+  <div class="panel-body">
+    <p>
+      O(a) gestor(a) político(a) é o representante direto do governo municipal
+      no Busca Ativa Escolar. Ele é responsável por:
+    </p>
 
-		<div class="form-group col-md-12">
-			<label class="control-label" for="fld-name">Nome*</label>
-			<input type="text" class="form-control" id="fld-name" required ng-model="$parent.form.mayor.name">
-		</div>
+    <ul class="list-group basic-list">
+      <li class="list-group-item">
+        <i class="fa fa-circle"></i> Cadastrar o coordenador operacional no
+        sistema;
+      </li>
+      <li class="list-group-item">
+        <i class="fa fa-circle"></i> Acessar as estatísticas gerais da cidade;
+      </li>
+      <li class="list-group-item">
+        <i class="fa fa-circle"></i> Acompanhar a iniciativa;
+      </li>
+      <li class="list-group-item">
+        <i class="fa fa-circle"></i> Analisar os relatórios e pensar sobre as
+        políticas públicas para combater a exclusão escolar.
+      </li>
+    </ul>
 
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-dob">Data de nascimento*</label>
-			<input type="tel" ui-date-mask class="form-control" id="fld-dob" required ng-model="$parent.form.mayor.dob" placeholder="dd/mm/yyyy">
-		</div>
+    <p>Informe aqui os dados do(a) Gestor(a) Político(a) do município.</p>
 
-		<div class="form-group col-md-6">
-			<label class="control-label" for="fld-cpf">CPF*</label>
-			<input type="tel" ui-br-cpf-mask class="form-control" required id="fld-cpf" ng-model="$parent.form.mayor.cpf" placeholder="000.000.000-00">
-		</div>
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-name">Nome*</label>
+      <input
+        type="text"
+        class="form-control"
+        required
+        id="fld-co-name"
+        ng-model="$parent.form.admin.name"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-dob">Data de nascimento*</label>
+      <input
+        type="tel"
+        class="form-control"
+        ui-date-mask
+        required
+        id="fld-co-dob"
+        ng-model="$parent.form.admin.dob"
+        placeholder="dd/mm/yyyy"
+      />
+    </div>
+    <div class="form-group col-md-6">
+      <label class="control-label" for="fld-co-cpf">CPF*</label>
+      <input
+        type="tel"
+        ui-br-cpf-mask
+        class="form-control"
+        required
+        id="fld-co-cpf"
+        ng-model="$parent.form.admin.cpf"
+        placeholder="000.000.000-00"
+      />
+    </div>
 
-		<!--<div class="form-group col-md-4">-->
-			<!--<label class="control-label" for="fld-email">E-mail institucional*</label>-->
-			<!--<input type="email" class="form-control" id="fld-email" required ng-model="$parent.form.mayor.email">-->
-		<!--</div>-->
+    <div class="form-group col-md-4">
+      <label class="control-label" for="fld-co-email"
+        >E-mail* <small>(e-mail para entrar na plataforma)</small></label
+      >
+      <input
+        type="email"
+        class="form-control"
+        required
+        id="fld-co-email"
+        ng-model="$parent.form.admin.email"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label class="control-label" for="fld-co-work-phone"
+        >Telefone fixo*</label
+      >
+      <input
+        type="tel"
+        ui-br-phone-number
+        ng-minlength="12"
+        class="form-control"
+        required
+        id="fld-co-work-phone"
+        ng-model="$parent.form.admin.phone"
+        placeholder="(00) 00000-0000"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label class="control-label" for="fld-co-work-mobile"
+        >Telefone celular</label
+      >
+      <input
+        type="tel"
+        ui-br-phone-number
+        ng-minlength="12"
+        class="form-control"
+        id="fld-co-work-mobile"
+        ng-model="$parent.form.admin.mobile"
+        placeholder="(00) 00000-0000"
+      />
+    </div>
 
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" required id="fld-work-phone" ng-model="$parent.form.mayor.phone" placeholder="(11) 00000-000">
-		</div>
+    <hr />
 
-		<div class="form-group col-md-4">
-			<label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-			<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-work-mobile" ng-model="$parent.form.mayor.mobile" placeholder="(00) 00000-0000">
-		</div>
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-institution">Órgão*</label>
+      <input
+        type="text"
+        class="form-control"
+        id="fld-co-institution"
+        required
+        ng-model="$parent.form.admin.institution"
+      />
+    </div>
 
-	</div>
-	<div class="panel-footer clearfix">
-		<button ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>
-		<button type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-	</div>
+    <div class="form-group col-md-12">
+      <label class="control-label" for="fld-co-position">Cargo*</label>
+      <input
+        type="text"
+        class="form-control"
+        id="fld-co-position"
+        required
+        ng-model="$parent.form.admin.position"
+      />
+    </div>
+  </div>
+  <div class="panel-footer clearfix">
+    <button
+      ng-click="prevStep()"
+      type="button"
+      class="btn btn-primary pull-left"
+    >
+      <i class="fa fa-arrow-left"></i> Anterior
+    </button>
+    <button type="submit" class="btn btn-primary btn-raised pull-right">
+      Próximo <i class="fa fa-arrow-right"></i>
+    </button>
+  </div>
 </form>

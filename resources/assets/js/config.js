@@ -73,11 +73,11 @@
 
 			config.setEndpoint = function(endpoint) {
 				if(config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
-					console.error("[core.config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
+					//console.error("[core.config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
 					return;
 				}
 
-				console.info("[core.config] Setting API endpoint: ", endpoint);
+				//console.info("[core.config] Setting API endpoint: ", endpoint);
 				config.CURRENT_ENDPOINT = endpoint;
 
 				$cookies.put('FDENP_API_ENDPOINT', config.CURRENT_ENDPOINT);
@@ -90,7 +90,7 @@
 				var cookie = $cookies.get('FDENP_API_ENDPOINT');
 				if(cookie) config.setEndpoint($cookies.get('FDENP_API_ENDPOINT'));
 
-				console.info("[core.config] Resolved current API endpoint: ", config.CURRENT_ENDPOINT, "cookie=", cookie);
+				//console.info("[core.config] Resolved current API endpoint: ", config.CURRENT_ENDPOINT, "cookie=", cookie);
 
 				return config.CURRENT_ENDPOINT;
 			};

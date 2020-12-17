@@ -9,12 +9,12 @@
 		var $promise = {};
 
 		function setup() {
-			console.log("[platform.language] Setting up language service...");
+			//console.log("[platform.language] Setting up language service...");
 			loadFromAPI();
 		}
 
 		function loadFromAPI() {
-			console.log("[platform.language] Loading language file...");
+			//console.log("[platform.language] Loading language file...");
 			$promise = $http.get(langFile).then(onDataLoaded);
 		}
 
@@ -26,7 +26,7 @@
 
 			database = res.data.database;
 
-			console.log("[platform.language] Language file loaded! ", Object.keys(database).length, " strings available: ", database);
+			//console.log("[platform.language] Language file loaded! ", Object.keys(database).length, " strings available: ", database);
 
 			$rootScope.$broadcast('Language.ready');
 		}

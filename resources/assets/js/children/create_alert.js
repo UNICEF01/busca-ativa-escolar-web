@@ -24,7 +24,7 @@
 				var data = {name: query, $hide_loading_feedback: true};
 				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
 
-				console.log("[create_alert] Looking for cities: ", data);
+				//console.log("[create_alert] Looking for cities: ", data);
 
 				return Cities.search(data).$promise.then(function (res) {
 					return res.results;

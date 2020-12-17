@@ -1,235 +1,785 @@
 <div class="wnd-view">
-    <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
-        <div class="panel-heading clearfix">
-            <div class="pull-left" ng-show="!isCreating">
-                <h1>
-                    <i class="fa fa-user"></i> {{user.name}}
-                    <small>{{user.type | lang:'user.type'}}</small>
-                </h1>
-            </div>
-            <div class="pull-left" ng-show="isCreating">
-                <h1>
-                    <i class="fa fa-user-plus"></i> Cadastrar usuário
-                </h1>
+  <div class="container" ng-show="currentState == 'lgpd_signup'">
+    <div class="row">
+      <div class="col-sm">
+        <p class="text-center">
+          <img
+            src="/images/logo_bae_signup.png"
+            title="Busca Ativa Escolar"
+            alt="Busca Ativa Escolar"
+          />
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h1 ng-if="currentState === 'lgpd_signup'" class="text-center">
+    Revisão de dados e assinatura do TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+  </h1>
+
+  <form
+    name="userEdit"
+    class="panel panel-default"
+    autocomplete="off"
+    ng-submit="save()"
+  >
+    <div class="panel-heading clearfix">
+      <div class="pull-left" ng-show="!isCreating">
+        <h1>
+          <i class="fa fa-user"></i> {{user.name}}
+          <small>{{user.type | lang:'user.type'}}</small>
+        </h1>
+      </div>
+
+      <div class="pull-left" ng-show="isCreating">
+        <h1><i class="fa fa-user-plus"></i> Cadastrar usuário</h1>
+      </div>
+    </div>
+
+    <div class="panel-body">
+      <div
+        class="form-group {{currentState !== 'lgpd_signup' ? 'col-md-6' : 'col-md-12'}}"
+      >
+        <label class="control-label" for="fld-name">Nome*</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-name"
+          ng-model="user.name"
+          required
+          oninvalid="this.setCustomValidity('Por favor preencha o campo nome!')"
+          title="O campo nome não pode estar em branco."
+        />
+      </div>
+
+      <div ng-show="currentState !== 'lgpd_signup'">
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-type"
+            >Função ocupada no sistema*</label
+          >
+          <select
+            class="form-control"
+            id="fld-type"
+            ng-model="user.type"
+            ng-options="n as (n | lang:'user.type') for n in getUserTypes()"
+            ng-change="onSelectFunction()"
+            required
+          ></select>
+        </div>
+      </div>
+
+      <hr />
+
+      <div ng-if="user.type=='perfil_visitante'">
+        <div class="col-md-6">
+          <h5>Perfil de visitante</h5>
+          <br />
+          <div>
+            <div class="form-check">
+              <input
+                type="radio"
+                name="perfil_visitante"
+                ng-model="perfilVisitante.name"
+                value="visitante_nacional"
+                id="visitante_nacional"
+                required
+              />
+              <label class="form-check-label" for="visitante_nacional">
+                Visitante nacional
+              </label>
             </div>
 
+            <div class="form-check">
+              <input
+                type="radio"
+                name="perfil_visitante"
+                ng-model="perfilVisitante.name"
+                value="visitante_estadual"
+                id="visitante_estadual"
+              />
+              <label class="form-check-label" for="visitante_estadual">
+                Visitante estadual
+              </label>
+            </div>
+          </div>
         </div>
+
+        <div class="col-md-6">
+          <h5>Permissões de visualização</h5>
+          <br />
+          <div>
+            <table class="table table-hover table-bordered">
+              <tr>
+                <td align="center">
+                  <label class="form-check-label" for="inlineCheckbox1"
+                    >Relatórios</label
+                  >
+                </td>
+                <td align="center">
+                  <label class="form-check-label" for="inlineCheckbox2"
+                    >Usuários</label
+                  >
+                </td>
+                <!--td align="center"><label class="form-check-label" for="inlineCheckbox3">Casos</label></td-->
+              </tr>
+              <tr>
+                <td align="center">
+                  <input
+                    class="form-check-input"
+                    ng-model="permissionsVisitantes[0]"
+                    ng-true-value="'relatorios'"
+                    ng-false-value=""
+                    type="checkbox"
+                    id="inlineCheckbox1"
+                    disabled
+                  />
+                </td>
+                <td align="center">
+                  <input
+                    class="form-check-input"
+                    ng-model="permissionsVisitantes[1]"
+                    ng-true-value="'usuarios'"
+                    ng-false-value=""
+                    type="checkbox"
+                    id="inlineCheckbox2"
+                  />
+                </td>
+                <!--td align="center">
+                                      <input class="form-check-input" ng-model="permissionsVisitantes[2]" ng-true-value="'casos'" ng-false-value="" type="checkbox" id="inlineCheckbox3">
+                                  </td-->
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="canDefineUserTenant() || canDefineUserUF()">
+        <div
+          class="form-group col-md-12"
+          ng-if="!canDefineUserUF() && canDefineUserTenant() && user.type != 'perfil_visitante'"
+        >
+          <label class="control-label" for="fld-tenant_id"
+            ><i class="fa fa-university"></i> Município da plataforma*</label
+          >
+          <select
+            class="form-control"
+            id="fld-tenant_id"
+            ng-model="user.tenant_id"
+            ng-options="n.id as n.name for n in tenants.data"
+            ng-change="onSelectTenant()"
+          ></select>
+        </div>
+
+        <div
+          class="form-group col-md-12"
+          ng-if="canDefineUserUF() || perfilVisitante.name == 'visitante_estadual'"
+        >
+          <label class="control-label" for="fld-uf"
+            ><i class="fa fa-university"></i> Unidade Federal*</label
+          >
+          <select
+            class="form-control"
+            id="fld-uf"
+            ng-model="user.uf"
+            ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"
+            ng-change="onSelectUf()"
+          ></select>
+        </div>
+      </div>
+
+      <div ng-show="currentState !== 'lgpd_signup'">
+        <div class="col-md-12">
+          <div class="col-md-12 pl-0">
+            <h5>Dados de acesso</h5>
+          </div>
+
+          <!--                    <div class="col-md-6">-->
+          <!--                        <button class="btn btn-xs btn-raised btn-info pull-right"-->
+          <!--                                ng-click="showInputKey = !showInputKey"-->
+          <!--                                ng-show="user.tenant_id"-->
+          <!--                                type="button"><i class="fa fa-key"></i> Alterar senha-->
+          <!--                        </button>-->
+          <!--                    </div>-->
+
+          <div
+            class="form-group col-md-6"
+            ng-class="{'col-md-4': showInputKey || !user.tenant_id}"
+          >
+            <label class="control-label" for="fld-email"
+              ><i class="fa fa-envelope"></i> E-mail de acesso*</label
+            >
+            <input
+              type="email"
+              autocomplete="new-password"
+              class="form-control"
+              id="fld-email"
+              required
+              ng-model="user.email"
+            />
+          </div>
+
+          <div
+            class="form-group col-md-6"
+            ng-class="{'col-md-4': showInputKey || !user.tenant_id}"
+            ng-if="( isTargetUserTenantBound() || isTargetUserUFBound() ) && user.type != 'perfil_visitante'"
+          >
+            <label class="control-label" for="fld-group">Grupo*</label>
+            <select
+              class="form-control"
+              id="fld-group"
+              ng-model="user.group_id"
+              ng-options="n.id as n.name for n in groups.data"
+            >
+              <option value="">Nenhum</option>
+            </select>
+          </div>
+
+          <!--                    <div class="form-group col-md-4" ng-show="showInputKey || !user.tenant_id">-->
+          <!--                        <div class="input-group">-->
+          <!--                            <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de acesso*</label>-->
+          <!--                            <input type="password" autocomplete="new-password" class="form-control" id="fld-password" ng-model="user.password">-->
+          <!--                            <span class="input-group-btn" uib-tooltip="Exibir a senha">-->
+          <!--                            <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()">-->
+          <!--                                <i class="fa fa-eye"></i>-->
+          <!--                            </button>-->
+          <!--                        </span>-->
+          <!--                        </div>-->
+          <!--                    </div>-->
+        </div>
+      </div>
+
+      <hr />
+
+      <h5>Dados pessoais</h5>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-dob">Data de nascimento*</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="fld-dob"
+          ui-date-mask
+          ng-model="user.dob"
+          placeholder="dd/mm/yyyy"
+        />
+        <div id="message_date">
+          <p id="error_date"></p>
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-cpf">CPF*</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="fld-cpf"
+          ui-br-cpf-mask
+          ng-model="user.cpf"
+          placeholder="000.000.000-00"
+        />
+      </div>
+
+      <hr />
+
+      <h5>Contatos</h5>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-work-phone"
+          >Telefone fixo institucional*</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-work-phone"
+          ui-br-phone-number
+          ng-minlength="12"
+          ng-model="user.work_phone"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-work-mobile"
+          >Telefone celular institucional</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-work-mobile"
+          ui-br-phone-number
+          ng-minlength="12"
+          ng-pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
+  "
+          ng-model="user.work_mobile"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-personal-mobile"
+          >Telefone celular pessoal</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-personal-mobile"
+          ui-br-phone-number
+          ng-minlength="12"
+          ng-model="user.personal_mobile"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-skype-username">Skype</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-skype-username"
+          ng-model="user.skype_username"
+        />
+      </div>
+
+      <hr />
+
+      <h5>Endereçox institucional</h5>
+
+      <div class="form-group col-md-12">
+        <label class="control-label" for="fld-address"
+          >Endereço institucional</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-address"
+          ng-model="user.work_address"
+        />
+      </div>
+
+      <app-city-select
+        uf="user.work_uf"
+        city="user.work_city"
+        on-select="onCitySelect"
+        is-uf-required="false"
+        is-city-required="false"
+      ></app-city-select>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-cep">CEP institucional</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-cep"
+          ui-br-cep-mask
+          ng-model="user.work_cep"
+          placeholder="00000-000"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-neighborhood">Bairro</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-neighborhood"
+          ng-model="user.work_neighborhood"
+        />
+      </div>
+
+      <hr />
+
+      <h5>Dados organizacionais</h5>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-institution">Órgão</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-institution"
+          ng-model="user.institution"
+        />
+      </div>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-position">Cargo</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-position"
+          ng-model="user.position"
+        />
+      </div>
+
+      <hr />
+
+      <div ng-if="currentState === 'lgpd_signup'">
         <div class="panel-body">
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-name">Nome*</label>
-                <input type="text" class="form-control" id="fld-name" ng-model="user.name" required>
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-type">Função ocupada no sistema*</label>
-                <select class="form-control" id="fld-type" ng-model="user.type"
-                        ng-options="n as (n | lang:'user.type') for n in getUserTypes()"
-                        ng-change="onSelectFunction()" required></select>
-            </div>
-
-            <hr/>
-
-            <div ng-if="user.type=='perfil_visitante'">
-
-                <div class="col-md-6">
-                    <h5>Perfil de visitante</h5>
-                    <br/>
-                    <div>
-
-                        <div class="form-check">
-                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name" value="visitante_nacional" id="visitante_nacional" required>
-                            <label class="form-check-label" for="visitante_nacional">
-                                Visitante nacional
-                            </label>
-                        </div>
-
-                        <div class="form-check">
-                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name" value="visitante_estadual" id="visitante_estadual">
-                            <label class="form-check-label" for="visitante_estadual">
-                                Visitante  estadual
-                            </label>
-                        </div>
-
-                    </div>
-
+          <div style="margin: 10px 0;">
+            <p>Leia e aceite o termo de adesão.</p>
+            <div
+              id="scroll"
+              class="panel panel-default"
+              style="max-height: 300px; overflow-y: scroll"
+              scroll
+            >
+              <div id="sizeScroll">
+                <!-- A diretiva scroll pega o tamanho dessa div como referencia para ativar o botão do salvar no aceite do termo-->
+                <div class="panel-body">
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
                 </div>
-
-                <div class="col-md-6">
-                    <h5>Permissões de visualização</h5>
-                    <br/>
-                    <div>
-
-                        <table class="table table-hover table-bordered">
-                            <tr>
-                                <td align="center"><label class="form-check-label" for="inlineCheckbox1">Relatórios</label></td>
-                                <td align="center"><label class="form-check-label" for="inlineCheckbox2">Usuários</label></td>
-                                <!--td align="center"><label class="form-check-label" for="inlineCheckbox3">Casos</label></td-->
-                            </tr>
-                            <tr>
-                                <td align="center">
-                                    <input class="form-check-input" ng-model="permissionsVisitantes[0]" ng-true-value="'relatorios'" ng-false-value="" type="checkbox" id="inlineCheckbox1" disabled>
-                                </td>
-                                <td align="center">
-                                    <input class="form-check-input" ng-model="permissionsVisitantes[1]" ng-true-value="'usuarios'" ng-false-value="" type="checkbox" id="inlineCheckbox2">
-                                </td>
-                                <!--td align="center">
-                                    <input class="form-check-input" ng-model="permissionsVisitantes[2]" ng-true-value="'casos'" ng-false-value="" type="checkbox" id="inlineCheckbox3">
-                                </td-->
-                            </tr>
-                        </table>
-
-                    </div>
-
+                <div class="panel-body">
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
+                  <h4 class="text-center">
+                    TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+                  </h4>
+                  <h6 class="text-center">PLATAFORMA Busca Ativa Escolar</h6>
+                  <h5 style="font-weight: bold">1. DEFINIÇÃO</h5>
+                  <p>
+                    1.1. A Plataforma Busca Ativa Escolar é a base da ferramenta
+                    tecnológica disponibilizada gratuitamente a todos as
+                    administrações municipais e estaduais brasileiras, que
+                    objetiva auxiliar a identificação, o mapeamento e a gestão
+                    de casos de crianças e adolescentes, em idade escolar
+                    obrigatória, que estão fora da escola.
+                  </p>
+                  <p>
+                    1.2. A Plataforma Busca Ativa Escolar, neste Termo, passa a
+                    ser denominada apenas por Plataforma.
+                  </p>
                 </div>
-
+              </div>
             </div>
-
-            <div ng-if="canDefineUserTenant() || canDefineUserUF()">
-
-                <div class="form-group col-md-12" ng-if="!canDefineUserUF() && canDefineUserTenant() && user.type != 'perfil_visitante'">
-                    <label class="control-label" for="fld-tenant_id"><i class="fa fa-university"></i> Município da
-                        plataforma*</label>
-                    <select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id"
-                            ng-options="n.id as n.name for n in tenants.data" ng-change="onSelectTenant()"></select>
-                </div>
-
-                <div class="form-group col-md-12" ng-if="canDefineUserUF() || perfilVisitante.name == 'visitante_estadual'">
-                    <label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*</label>
-                    <select class="form-control" id="fld-uf" ng-model="user.uf"
-                            ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"
-                            ng-change="onSelectUf()"></select>
-                </div>
-
-            </div>
-
-            <hr/>
-            <div class="col-md-12">
-                <div class="col-md-6 pl-0">
-                    <h5>Dados de acesso</h5>
-                </div>
-                <div class="col-md-6">
-                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey" ng-show="user.tenant_id"
-                            type="button"><i class="fa fa-key"></i> Alterar senha
-                    </button>
-                </div>
-            </div>
-            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}">
-                <label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
-                <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required
-                       ng-model="user.email">
-            </div>
-
-            <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}" ng-if="( isTargetUserTenantBound() || isTargetUserUFBound() ) && user.type != 'perfil_visitante'">
-                <label class="control-label" for="fld-group">Grupo*</label>
-                <select class="form-control" id="fld-group" ng-model="user.group_id"
-                        ng-options="n.id as n.name for n in groups.data">
-                    <option value="">Nenhum</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-4" ng-show="showInputKey || !user.tenant_id">
-                <div class="input-group">
-                    <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de
-                        acesso*</label>
-                    <input type="password" autocomplete="new-password" class="form-control" id="fld-password"
-                           ng-model="user.password">
-                    <span class="input-group-btn" uib-tooltip="Exibir a senha">
-						<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()">
-							<i class="fa fa-eye"></i>
-						</button>
-					</span>
-                </div>
-            </div>
-
-            <hr/>
-
-            <h5>Dados pessoais</h5>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-dob">Data de nascimento*</label>
-                <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob"
-                       placeholder="dd/mm/yyyy">
-            </div>
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-cpf">CPF*</label>
-                <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf"
-                       placeholder="000.000.000-00">
-            </div>
-
-            <hr/>
-
-            <h5>Contatos</h5>
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12"
-                       ng-model="user.work_phone" placeholder="(00) 00000-0000">
-            </div>
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-pattern='^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
-'
-                       ng-model="user.work_mobile" placeholder="(00) 00000-0000">
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
-                <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12"
-                       ng-model="user.personal_mobile" placeholder="(00) 00000-0000">
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-skype-username">Skype</label>
-                <input type="text" class="form-control" id="fld-skype-username" ng-model="user.skype_username">
-            </div>
-
-            <hr/>
-
-            <h5>Endereço institucional</h5>
-
-            <div class="form-group col-md-12">
-                <label class="control-label" for="fld-address">Endereço institucional</label>
-                <input type="text" class="form-control" id="fld-address" ng-model="user.work_address">
-            </div>
-
-            <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false"
-                             is-city-required="false"></app-city-select>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-cep">CEP institucional</label>
-                <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep"
-                       placeholder="00000-000">
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-neighborhood">Bairro</label>
-                <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood">
-            </div>
-
-            <hr/>
-
-            <h5>Dados organizacionais</h5>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-institution">Órgão</label>
-                <input type="text" class="form-control" id="fld-institution" ng-model="user.institution">
-            </div>
-
-            <div class="form-group col-md-6">
-                <label class="control-label" for="fld-position">Cargo</label>
-                <input type="text" class="form-control" id="fld-position" ng-model="user.position">
-            </div>
-
-            <hr/>
-
-            <div class="clearfix">
-                <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary"><i
-                        class="fa fa-arrow-left"></i> Voltar
-                </button>
-                <button type="submit" class="btn btn-raised btn-primary pull-right"><i class="fa fa-save"></i> Salvar
-                </button>
-            </div>
-
+          </div>
         </div>
-    </form>
+
+        <h5>Dados de acesso</h5>
+
+        <p>A senha informada será enviada para o seu e-mail.</p>
+
+        <div class="form-group col-md-4">
+          <label class="control-label" for="fld-gp-email"
+            ><i class="fa fa-envelope"></i> E-mail de acesso*</label
+          >
+          <input
+            type="email"
+            class="form-control"
+            id="fld-gp-email"
+            name="gp_email"
+            required
+            ng-model="user.email"
+          />
+        </div>
+
+        <div class="form-group col-md-4">
+          <div class="input-group">
+            <label class="control-label" for="fld-gp-password"
+              ><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="fld-gp-password"
+              name="gp_password"
+              required
+              my-directive
+              onfocus="add(this)"
+              onblur="remove(this)"
+              ng-model="user.password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
+              title="Senha não pode estar em branco."
+            />
+            <span class="input-group-btn" uib-tooltip="Exibir a senha"> </span>
+          </div>
+          <div id="message">
+            <p>A senha deve conter pelo menos:</p>
+            <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
+            <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
+            <p id="number" class="invalid">Um <b>número</b></p>
+            <!-- prettier-ignore -->
+            <p id="symbol" class="invalid">
+            Um <b>caracter especial</b> (!@#$%&*?)
+            </p>
+            <!-- prettier-ignore -->
+            <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+              </p>
+          </div>
+        </div>
+
+        <div class="form-group col-md-4">
+          <label
+            class="control-label"
+            for="fld-agree_tos-yes"
+            style="margin-right: 10px;"
+            >Li e concordo com os termos de adesão:</label
+          >
+          <i
+            ng-click="openTerm()"
+            class="fa fa-search"
+            style="font-size: 20px; cursor: pointer;"
+          ></i>
+
+          <br /><br />
+
+          <div class="radio-inline">
+            <label
+              ><input
+                ng-disabled="signed"
+                id="fld-agree_tos-yes"
+                ng-model="user.lgpd"
+                required
+                ng-value="1"
+                name="agree_tos"
+                value="1"
+                type="radio"
+              />
+              Sim</label
+            >
+          </div>
+
+          <div class="radio-inline">
+            <label
+              ><input
+                ng-disabled="signed"
+                id="fld-agree_tos-no"
+                ng-model="user.lgpd"
+                ng-value="0"
+                name="agree_tos"
+                value="0"
+                type="radio"
+              />
+              Não</label
+            >
+          </div>
+
+          <div ng-if="signed">Termo Assinado</div>
+        </div>
+      </div>
+
+      <div class="clearfix">
+        <button
+          type="button"
+          ng-show="quickAdd"
+          ng-click="goBack()"
+          class="btn btn-primary"
+        >
+          <i class="fa fa-arrow-left"></i> Voltar
+        </button>
+        <button
+          ng-if="currentState !== 'lgpd_signup'"
+          type="submit"
+          class="btn btn-raised btn-primary pull-right"
+        >
+          <i class="fa fa-save"></i> Salvar
+        </button>
+
+        <button
+          ng-if="currentState === 'lgpd_signup'"
+          type="submit"
+          ng-disabled="!term"
+          class="btn btn-raised btn-primary pull-right"
+        >
+          <i class="fa fa-save"></i> Salvar
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
+
+<!--<p>The input's valid state is:</p>
+  <h1>{{userEdit.gp_password.$valid}}</h1>-->
+
+<script>
+  function add(x) {
+    document.getElementById('message').style.display = 'block';
+  }
+  function remove(x) {
+    document.getElementById('message').style.display = 'none';
+  }
+
+  /*function addErrorDate() {
+    const dateText = document.getElementById('error_date');
+    const curDate = new Date();
+    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
+    const maxDate = new Date(
+      curDate.setFullYear(curDate.getFullYear() + 100 - 18)
+    );
+    dateText.textContent = '';
+    dateText.textContent = `Data não pode ser menor que
+       ${minDate.toLocaleDateString()} e maior que ${maxDate.toLocaleDateString()}`;
+    document.getElementById('message_date').style.display = 'block';
+  }
+
+  function removeErrorDate() {
+    document.getElementById('message_date').style.display = 'none';
+  }*/
+</script>
+
+<!--<p>The input field must contain the character "e" to be consider valid.</p>-->
+
+<style>
+  #message {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message p {
+    padding: 0px 0px 0px 30px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  #message_date {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message_date p {
+    padding: 0px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  /* Add a green text color and a checkmark when the requirements are right */
+  .valid {
+    color: green;
+  }
+
+  .valid:before {
+    position: relative;
+    left: -10px;
+    content: '✔';
+  }
+
+  /* Add a red text color and an "x" icon when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+
+  .invalid:before {
+    position: relative;
+    left: -10px;
+    content: '✖';
+  }
+</style>

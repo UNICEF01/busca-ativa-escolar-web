@@ -22,6 +22,8 @@
 			$scope.numSteps = 4;
 			$scope.ready = false;
 
+			$scope.panelTerm = false;
+
 			var fieldNames = {
 				cpf: 'CPF',
 				name: 'nome',
@@ -33,13 +35,15 @@
 				phone: 'telefone institucional',
 				mobile: 'celular institucional',
 				personal_phone: 'telefone pessoal',
-				personal_mobile: 'celular pessoal'
+				personal_mobile: 'celular pessoal',
+				lgpd: 'termo de adesão'
 			};
 
-			var requiredAdminFields = ['email','name','cpf','dob','phone','password'];
+			var requiredAdminFieldsPolitical = ['email','name','cpf','dob','phone','password', 'lgpd'];
+			var requiredAdminFieldsOperational = ['email','name','cpf','dob','phone'];
 
 			var messages = {
-				invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
+				invalid_gp: 'Dados do(a) gestor(a) político(a) incompletos! Campos inválidos: ',
 				invalid_co: 'Dados do coordenador operacional incompletos! Campos inválidos: '
 			};
 
@@ -48,6 +52,10 @@
 				political: {},
 				operational: {}
 			};
+
+			$scope.lastTenant = null;
+			$scope.lastCoordinators = [];
+			$scope.isNecessaryNewCoordinator = true;
 
 			$scope.goToStep = function (step) {
 				if($scope.step < 1) return;
@@ -60,8 +68,10 @@
 			$scope.nextStep = function() {
 				if($scope.step >= $scope.numSteps) return;
 
-				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
+				if($scope.step === 4 && !Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
+
+				if($scope.step === 3 && !Utils.isvalidTerm($scope.admins.political.lgpd)) return;
 
 				$scope.step++;
 				$window.scrollTo(0, 0);
@@ -80,6 +90,10 @@
 					$scope.signup = data;
 					$scope.admins.political = data.data.admin;
 					$scope.admins.political.dob = moment(data.data.admin.dob).toDate();
+
+					$scope.lastCoordinators = data.last_coordinators;
+					$scope.lastTenant = data.last_tenant;
+
 					$scope.step = 3;
 				});
 			};
@@ -87,16 +101,19 @@
             $scope.showPassowrd = function (elementId) {
                 var field_password = document.getElementById(elementId);
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
+            };
 
 			$scope.provisionTenant = function() {
 
-				if(!Utils.isValid($scope.admins.political, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-				if(!Utils.isValid($scope.admins.operational, requiredAdminFields, fieldNames, messages.invalid_co)) return;
+				if(!Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
+
+				if($scope.isNecessaryNewCoordinator){
+					if(!Utils.isValid($scope.admins.operational, requiredAdminFieldsOperational, fieldNames, messages.invalid_co)) return;
+				}
 
 				Modals.show(Modals.Confirm(
 					'Tem certeza que deseja prosseguir com o cadastro?',
-					'Os dados informados serão usados para criar os usuários administradores. A configuração do município será efetuada pelo Coordenador Operacional.'
+					'Os dados informados serão utilizados para cadastrar os demais usuários. A configuração do município será realizada pelo(a) Coordenador(a) Operacional.'
 				)).then(function(res) {
 					var data = {
 						id: signupID,
@@ -111,6 +128,10 @@
 					data.operational = Utils.prepareDateFields(data.operational, ['dob']);
 					data.operational = Utils.prepareCityFields(data.operational, ['work_city']);
 
+					data.lastTenant = $scope.lastTenant;
+					data.lastCoordinators = $scope.lastCoordinators;
+					data.isNecessaryNewCoordinator = $scope.isNecessaryNewCoordinator;
+
 					TenantSignups.complete(data, function (res) {
 						if(res.status === 'ok') {
 							ngToast.success('Adesão finalizada!');
@@ -120,7 +141,7 @@
 
 						if(res.reason === 'political_admin_email_in_use') {
 							$scope.step = 3;
-							return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+							return ngToast.danger('O e-mail indicado para o(a) gestor(a) político(a) já está em uso. Por favor, escolha outro e-mail');
 						}
 
 						if(res.reason === 'operational_admin_email_in_use') {
@@ -130,7 +151,7 @@
 
 						if(res.reason === 'admin_emails_are_the_same') {
 							$scope.step = 4;
-							return ngToast.danger('Você precisa informar e-mails diferentes para o gestor político e o coordenador operacional');
+							return ngToast.danger('Você precisa informar e-mails diferentes para o gestor(a) político(a) e o(a) coordenador(a) operacional');
 						}
 
 						if(res.reason === 'invalid_political_admin_data') {
@@ -145,14 +166,34 @@
 							return Utils.displayValidationErrors(res);
 						}
 
+						if(res.reason === 'coordinator_emails_are_the_same') {
+							$scope.step = 4;
+							return ngToast.danger('Você precisa informar e-mails diferentes para o(a) gestor(a) político(a), o novo coordenador operacional e os demais coordenadores');
+						}
+
+						if(res.reason === 'coordinator_email_in_use') {
+							$scope.step = 4;
+							return ngToast.danger('Email do coordenador desativado já está em uso por outro perfil');
+						}
+
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);
 
 					});
 
 				});
+
 			};
 
 			$scope.fetchSignupDetails();
+
+			$scope.openTerm = function () {
+				$scope.panelTerm = !$scope.panelTerm;
+			};
+
+			$scope.changeNecessityCoordinator = function (necessity) {
+				$scope.isNecessaryNewCoordinator = necessity;
+				$scope.admins.operational = {};
+			};
 
 		});
 

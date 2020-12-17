@@ -22,12 +22,12 @@
 				filter: {status: 'pending_approval'}
 			};
 
+			$scope.electedMayor = null;
+
 			$scope.copyText = function(){
 				$scope.msgCopy = "URL COPIADA";
 				setTimeout(function(){ $scope.msgCopy = '';}, 500);
-
-
-			}
+			};
 
             $scope.onSelectType = function() {
                 $scope.query.page = 1;
@@ -55,6 +55,7 @@
 
 			$scope.preview = function(signup) {
 				$scope.signup = signup;
+				$scope.getMayorByCPF(signup.data.mayor.cpf);
 			};
 
 			$scope.approve = function(signup) {
@@ -89,6 +90,12 @@
 			};
 
 			$scope.refresh();
+
+			$scope.getMayorByCPF = function (numberCPF) {
+				TenantSignups.getMayorByCPF({cpf: numberCPF}, function(res) {
+					$scope.electedMayor = res;
+				});
+			};
 
 		});
 

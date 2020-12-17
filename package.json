@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "angular-cookies": "^1.7.5",
-    "angular-heremaps": "^0.1.9"
+    "angular-heremaps": "^0.1.9",
+    "gulp-cli": "^2.3.0"
   }
 }
