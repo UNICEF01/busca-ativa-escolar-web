@@ -44,7 +44,7 @@
 <div ng-show="isPendingAssignment() && isStepOpen('GestaoDoCaso') && identity.getType() === 'tecnico_verificador'"
      class="alert alert-success">
     <h3><i class="fa fa-check"></i> Obrigada por sua colaboração! </h3>
-    <p>A gestão do caso agora está sob a responsabilidade do Supervisor Institucional.</p>
+    <p>A gestão do caso agora está sob a responsabilidade do(a) Supervisor(a) Institucional.</p>
 </div>
 
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
@@ -914,7 +914,7 @@
                ng-click="save()">Salvar</a>
             <a class="btn btn-info" ng-click="saveAndProceed()"
                ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
-                enviar para o supervisor institucional</a>
+                enviar para o(a) supervisor(a) institucional</a>
         </div>
 
     </div>

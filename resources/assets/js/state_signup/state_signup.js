@@ -9,7 +9,7 @@
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Indique a UF', 'Gestor Estadual', 'Coordenador Estadual', 'Termo de Adesão'];
+        $scope.stepsNames = ['Indique a UF', 'Gestor(a) Estadual', 'Coordenador(a) Estadual', 'Termo de Adesão'];
 
         $scope.form = {
             uf: null,
@@ -32,8 +32,8 @@
         };
 
         var messages = {
-            invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
-            invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
+            invalid_admin: 'Dados do(a) gestor(a) estadual incompletos! Campos inválidos: ',
+            invalid_coordinator: 'Dados do(a) coordenador(a) estadual incompletos! Campos inválidos: '
         };
 
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
@@ -113,12 +113,12 @@
 
                 if (res.reason === 'admin_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) gestor(a) estadual já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'coordinator_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) coordenador(a) estadual já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'invalid_admin_data') {

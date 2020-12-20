@@ -1,98 +1,207 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
+  <div class="panel-heading">
+    <h3>
+      <strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong>
+      Revisão do cadastro
+    </h3>
+  </div>
+  <div class="panel-body">
+    <p>
+      Confira se todas as informações preenchidas sobre o(a) Coordenador(a)
+      Operacional estão corretas.
+    </p>
+    <div class="clearfix">
+      <h5>Dados pessoais</h5>
 
-	<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> Revisão do cadastro</h3>	
-	</div>
-	<div class="panel-body">
-		<p>
-			Confira se todas as informações preenchidas sobre o Coordenador Operacional estão corretas.
-		</p>
-		<div class="clearfix">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-name">Nome*</label>
+        <input
+          required
+          type="text"
+          class="form-control"
+          id="fld-confirm-name"
+          ng-model="user.name"
+        />
+      </div>
 
-			<h5>Dados pessoais</h5>
+      <div class="form-group col-md-6">
+        <label class="control-label"
+          ><i class="fa fa-envelope"></i> E-mail de acesso*</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          readonly="readonly"
+          ng-model="user.email"
+        />
+      </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-name">Nome*</label>
-				<input required type="text" class="form-control" id="fld-confirm-name" ng-model="user.name">
-			</div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-dob"
+          >Data de nascimento*</label
+        >
+        <input
+          required
+          type="tel"
+          ui-date-mask
+          class="form-control"
+          id="fld-confirm-dob"
+          ng-model="user.dob"
+          placeholder="dd/mm/yyyy"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-cpf">CPF*</label>
+        <input
+          required
+          type="tel"
+          ui-br-cpf-mask
+          class="form-control"
+          id="fld-confirm-cpf"
+          ng-model="user.cpf"
+          placeholder="000.000.000-00"
+        />
+      </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
-				<input type="text" class="form-control" readonly="readonly" ng-model="user.email" />
-			</div>
+      <hr />
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-dob">Data de nascimento*</label>
-				<input required type="tel" ui-date-mask class="form-control" id="fld-confirm-dob" ng-model="user.dob" placeholder="dd/mm/yyyy">
-			</div>
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-cpf">CPF*</label>
-				<input required type="tel" ui-br-cpf-mask class="form-control" id="fld-confirm-cpf" ng-model="user.cpf" placeholder="000.000.000-00">
-			</div>
+      <h5>Contatos</h5>
 
-			<hr />
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-work-phone"
+          >Telefone fixo institucional</label
+        >
+        <input
+          type="tel"
+          ui-br-phone-number
+          ng-minlength="12"
+          class="form-control"
+          id="fld-confirm-work-phone"
+          ng-model="user.phone"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-work-mobile"
+          >Telefone celular institucional</label
+        >
+        <input
+          type="tel"
+          ui-br-phone-number
+          ng-minlength="12"
+          class="form-control"
+          id="fld-confirm-work-mobile"
+          ng-model="user.mobile"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
 
-			<h5>Contatos</h5>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-personal-mobile"
+          >Telefone celular pessoal</label
+        >
+        <input
+          type="tel"
+          ui-br-phone-number
+          ng-minlength="12"
+          class="form-control"
+          id="fld-confirm-personal-mobile"
+          ng-model="user.personal_mobile"
+          placeholder="(00) 00000-0000"
+        />
+      </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-work-phone">Telefone fixo institucional</label>
-				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-work-phone" ng-model="user.phone" placeholder="(00) 00000-0000">
-			</div>
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-work-mobile">Telefone celular institucional</label>
-				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-work-mobile" ng-model="user.mobile" placeholder="(00) 00000-0000">
-			</div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-skype-username"
+          >Skype</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-confirm-skype-username"
+          ng-model="user.username"
+        />
+      </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-personal-mobile">Telefone celular pessoal</label>
-				<input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-confirm-personal-mobile" ng-model="user.personal_mobile" placeholder="(00) 00000-0000">
-			</div>
+      <hr />
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-skype-username">Skype</label>
-				<input type="text" class="form-control" id="fld-confirm-skype-username" ng-model="user.username">
-			</div>
+      <h5>Endereço institucional <small>(opcional)</small></h5>
 
-			<hr />
+      <div class="form-group col-md-12">
+        <label class="control-label" for="fld-confirm-address">Endereço</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-confirm-address"
+          ng-model="user.address"
+        />
+      </div>
 
-			<h5>Endereço institucional <small>(opcional)</small></h5>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-neighborhood"
+          >Bairro</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="fld-confirm-neighborhood"
+          ng-model="user.neighborhood"
+        />
+      </div>
 
-			<div class="form-group col-md-12">
-				<label class="control-label" for="fld-confirm-address">Endereço</label>
-				<input type="text" class="form-control" id="fld-confirm-address" ng-model="user.address">
-			</div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-cep">CEP</label>
+        <input
+          type="tel"
+          ui-br-cep-mask
+          class="form-control"
+          id="fld-confirm-cep"
+          ng-model="user.cep"
+          placeholder="00000-000"
+        />
+      </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-neighborhood">Bairro</label>
-				<input type="text" class="form-control" id="fld-confirm-neighborhood" ng-model="user.neighborhood">
-			</div>
+      <app-city-select
+        uf="user.work_uf"
+        city="user.work_city"
+        on-select="onCitySelect"
+        is-uf-required="false"
+        is-city-required="false"
+      ></app-city-select>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-cep">CEP</label>
-				<input type="tel" ui-br-cep-mask class="form-control" id="fld-confirm-cep" ng-model="user.cep" placeholder="00000-000">
-			</div>
+      <hr />
 
-			<app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+      <h5>Dados organizacionais <small>(opcional)</small></h5>
 
-			<hr />
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-institution">Órgão</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-confirm-institution"
+          ng-model="user.institution"
+        />
+      </div>
 
-			<h5>Dados organizacionais <small>(opcional)</small></h5>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fld-confirm-position">Cargo</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fld-confirm-position"
+          ng-model="user.position"
+        />
+      </div>
+    </div>
+  </div>
 
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-institution">Órgão</label>
-				<input type="text" class="form-control" id="fld-confirm-institution" ng-model="user.institution">
-			</div>
-
-			<div class="form-group col-md-6">
-				<label class="control-label" for="fld-confirm-position">Cargo</label>
-				<input type="text" class="form-control" id="fld-confirm-position" ng-model="user.position">
-			</div>
-
-		</div>
-
-	</div>
-
-	<div class="panel-footer clearfix">
-		<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
-	</div>
+  <div class="panel-footer clearfix">
+    <button
+      ng-click="save()"
+      type="button"
+      class="btn btn-success btn-raised pull-right"
+    >
+      Salvar <i class="fa fa-save"></i>
+    </button>
+  </div>
 </div>

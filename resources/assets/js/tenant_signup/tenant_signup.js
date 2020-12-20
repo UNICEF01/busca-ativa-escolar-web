@@ -9,7 +9,7 @@
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Cadastre o município', 'Cadastre o prefeito', 'Gestor Político', 'Termo de Adesão'];
+        $scope.stepsNames = ['Cadastre o município', 'Cadastre o(a) prefeito(a)', 'Gestor(a) Político', 'Termo de Adesão'];
 
         $scope.form = {
             uf: null,
@@ -34,8 +34,8 @@
         };
 
         var messages = {
-            invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
-            invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
+            invalid_gp: 'Dados do(a) gestor(a) político incompletos! Campos inválidos: ',
+            invalid_mayor: 'Dados do(a) prefeito(a) incompletos! Campos inválidos: '
         };
         //Campos obrigatórios do formulario
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
@@ -131,7 +131,7 @@
 
                 if (res.reason === 'political_admin_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) gestor(a) político já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'invalid_political_admin_data') {

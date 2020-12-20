@@ -52,7 +52,7 @@
 						return;
 					}
 
-					ngToast.success("E-mail do gestor atualizado!");
+					ngToast.success("E-mail do(a) gestor(a) atualizado!");
 				});
 			};
 

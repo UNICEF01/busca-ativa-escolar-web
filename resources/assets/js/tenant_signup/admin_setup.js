@@ -44,7 +44,7 @@
 
 			var messages = {
 				invalid_gp: 'Dados do(a) gestor(a) político(a) incompletos! Campos inválidos: ',
-				invalid_co: 'Dados do coordenador operacional incompletos! Campos inválidos: '
+				invalid_co: 'Dados do(a) coordenador(a) operacional incompletos! Campos inválidos: '
 			};
 
 			$scope.signup = {};
@@ -146,7 +146,7 @@
 
 						if(res.reason === 'operational_admin_email_in_use') {
 							$scope.step = 4;
-							return ngToast.danger('O e-mail indicado para o coordenador já está em uso. Por favor, escolha outro e-mail');
+							return ngToast.danger('O e-mail indicado para o(a) coordenador(a) já está em uso. Por favor, escolha outro e-mail');
 						}
 
 						if(res.reason === 'admin_emails_are_the_same') {
@@ -168,12 +168,12 @@
 
 						if(res.reason === 'coordinator_emails_are_the_same') {
 							$scope.step = 4;
-							return ngToast.danger('Você precisa informar e-mails diferentes para o(a) gestor(a) político(a), o novo coordenador operacional e os demais coordenadores');
+							return ngToast.danger('Você precisa informar e-mails diferentes para o(a) gestor(a) político(a), o(a) novo(a) coordenador(a) operacional e os demais coordenadores');
 						}
 
 						if(res.reason === 'coordinator_email_in_use') {
 							$scope.step = 4;
-							return ngToast.danger('Email do coordenador desativado já está em uso por outro perfil');
+							return ngToast.danger('Email do(a) coordenador(a) desativado já está em uso por outro perfil');
 						}
 
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);

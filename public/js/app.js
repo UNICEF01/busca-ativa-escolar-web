@@ -10950,9 +10950,9 @@ if (!Array.prototype.find) {
 
 		var userTypes = [
 			{id: 1, name: 'Agente Comunitário'},
-			{id: 2, name: 'Técnico Verificador'},
-			{id: 3, name: 'Supervisor Institucional'},
-			{id: 4, name: 'Coordenador Operacional'}
+			{id: 2, name: 'Técnico(a) Verificador'},
+			{id: 3, name: 'Supervisor(a) Institucional'},
+			{id: 4, name: 'Coordenador(a) Operacional'}
 		];
 
 		var brazilMapData = [
@@ -12527,7 +12527,7 @@ function identify(namespace, file) {
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Indique a UF', 'Gestor Estadual', 'Coordenador Estadual', 'Termo de Adesão'];
+        $scope.stepsNames = ['Indique a UF', 'Gestor(a) Estadual', 'Coordenador(a) Estadual', 'Termo de Adesão'];
 
         $scope.form = {
             uf: null,
@@ -12550,8 +12550,8 @@ function identify(namespace, file) {
         };
 
         var messages = {
-            invalid_admin: 'Dados do gestor estadual incompletos! Campos inválidos: ',
-            invalid_coordinator: 'Dados do coordenador estadual incompletos! Campos inválidos: '
+            invalid_admin: 'Dados do(a) gestor(a) estadual incompletos! Campos inválidos: ',
+            invalid_coordinator: 'Dados do(a) coordenador(a) estadual incompletos! Campos inválidos: '
         };
 
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
@@ -12631,12 +12631,12 @@ function identify(namespace, file) {
 
                 if (res.reason === 'admin_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor estadual já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) gestor(a) estadual já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'coordinator_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o coordenador estadual já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) coordenador(a) estadual já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'invalid_admin_data') {
@@ -12711,7 +12711,7 @@ function identify(namespace, file) {
 						return;
 					}
 
-					ngToast.success("E-mail do gestor atualizado!");
+					ngToast.success("E-mail do(a) gestor(a) atualizado!");
 				});
 			};
 
@@ -12809,7 +12809,7 @@ function identify(namespace, file) {
 
 			var messages = {
 				invalid_gp: 'Dados do(a) gestor(a) político(a) incompletos! Campos inválidos: ',
-				invalid_co: 'Dados do coordenador operacional incompletos! Campos inválidos: '
+				invalid_co: 'Dados do(a) coordenador(a) operacional incompletos! Campos inválidos: '
 			};
 
 			$scope.signup = {};
@@ -12911,7 +12911,7 @@ function identify(namespace, file) {
 
 						if(res.reason === 'operational_admin_email_in_use') {
 							$scope.step = 4;
-							return ngToast.danger('O e-mail indicado para o coordenador já está em uso. Por favor, escolha outro e-mail');
+							return ngToast.danger('O e-mail indicado para o(a) coordenador(a) já está em uso. Por favor, escolha outro e-mail');
 						}
 
 						if(res.reason === 'admin_emails_are_the_same') {
@@ -12933,12 +12933,12 @@ function identify(namespace, file) {
 
 						if(res.reason === 'coordinator_emails_are_the_same') {
 							$scope.step = 4;
-							return ngToast.danger('Você precisa informar e-mails diferentes para o(a) gestor(a) político(a), o novo coordenador operacional e os demais coordenadores');
+							return ngToast.danger('Você precisa informar e-mails diferentes para o(a) gestor(a) político(a), o(a) novo(a) coordenador(a) operacional e os demais coordenadores');
 						}
 
 						if(res.reason === 'coordinator_email_in_use') {
 							$scope.step = 4;
-							return ngToast.danger('Email do coordenador desativado já está em uso por outro perfil');
+							return ngToast.danger('Email do(a) coordenador(a) desativado já está em uso por outro perfil');
 						}
 
 						ngToast.danger("Ocorreu um erro ao finalizar a adesão: " + res.reason);
@@ -13080,7 +13080,7 @@ function identify(namespace, file) {
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Cadastre o município', 'Cadastre o prefeito', 'Gestor Político', 'Termo de Adesão'];
+        $scope.stepsNames = ['Cadastre o município', 'Cadastre o(a) prefeito(a)', 'Gestor(a) Político', 'Termo de Adesão'];
 
         $scope.form = {
             uf: null,
@@ -13105,8 +13105,8 @@ function identify(namespace, file) {
         };
 
         var messages = {
-            invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
-            invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
+            invalid_gp: 'Dados do(a) gestor(a) político incompletos! Campos inválidos: ',
+            invalid_mayor: 'Dados do(a) prefeito(a) incompletos! Campos inválidos: '
         };
         //Campos obrigatórios do formulario
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
@@ -13202,7 +13202,7 @@ function identify(namespace, file) {
 
                 if (res.reason === 'political_admin_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) gestor(a) político já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'invalid_political_admin_data') {
@@ -13768,7 +13768,7 @@ function identify(namespace, file) {
 						return;
 					}
 
-					ngToast.success("E-mail do gestor atualizado!");
+					ngToast.success("E-mail do(a) gestor(a) atualizado!");
 				});
 			};
 

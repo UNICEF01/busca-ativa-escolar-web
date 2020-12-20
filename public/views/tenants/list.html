@@ -246,7 +246,7 @@
                   class="label label-warning"
                   ng-show="!tenant.political_admin"
                 >
-                  Gestor da adesão não cadastrado
+                  Gestor(a) da adesão não cadastrado
                 </div>
                 <small>-----------------------------------------------</small>
 
@@ -281,7 +281,9 @@
                   ng-show="tenant.operational_admin && !tenant.operational_admin.deleted_at"
                 >
                   <small
-                    ><strong>Coordenador operacional da adesão:</strong></small
+                    ><strong
+                      >Coordenador(a) operacional da adesão:</strong
+                    ></small
                   ><br />
                   <span ng-show="tenant.operational_admin"
                     ><strong>{{tenant.operational_admin.name}}</strong></span
@@ -302,7 +304,7 @@
                   class="label label-warning"
                   ng-show="!tenant.operational_admin"
                 >
-                  Coordenador da adesão não cadastrado
+                  Coordenador(a) da adesão não cadastrado
                 </div>
 
                 <small>-----------------------------------------------</small>
