@@ -618,13 +618,13 @@
             console.log(Identity);
 
             //mapa fusion
-            // if (Identity.getCurrentUser().type == "gestor_nacional") {
-            //     $scope.initFusionChartMap();
-            // }
-            // if (Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual") {
-            //     var scope_uf = "maps/" + returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
-            //     $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
-            // }
+            if (Identity.getCurrentUser().type == "gestor_nacional") {
+                $scope.initFusionChartMap();
+            }
+            if (Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual") {
+                var scope_uf = "maps/" + returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
+                $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
+            }
             //----------
 
         });
