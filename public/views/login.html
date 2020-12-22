@@ -19,7 +19,6 @@
               Preencha os campos a seguir com seu e-mail cadastrado e senha.
             </p>
 
-<<<<<<< HEAD
             <div class="form-group">
               <label for="fld-email" class="control-label"
                 ><i class="fa fa-envelope"></i> E-mail:</label
@@ -32,67 +31,6 @@
                 ng-model="email"
               />
             </div>
-=======
-						<div class="form-group">
-							<div class="input-group">
-								<label for="fld-password" class="control-label"><i class="fa fa-key"></i> Senha:</label>
-								<input id="fld-password" class="form-control" type="password" name="password" ng-model="password" />
-								<span class="input-group-btn" uib-tooltip="Exibir a senha">
-									<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
-										<i class="fa fa-eye"></i>
-									</button>
-								</span>
-							</div>
-						</div>
-					</div>
-					<div class="panel-footer clearfix">
-						<div class="row">
-							<div class="col-lg-6">
-								<a type="button" class="btn btn-primary" ui-sref="tenant_signup"><i class="fa fa-edit"></i> Adesão/Readesão de município</a>
-								<a type="button" class="btn btn-primary" ui-sref="state_signup"><i class="fa fa-edit"></i> Adesão/Readesão de estado</a>
-							</div>
-							<div class="col-lg-6 text-right">
-								<a type="button" class="btn btn-primary" ui-sref="forgot_password"><i class="fa fa-question-circle"></i> Esqueci minha senha</a>
-								<button ng-show="!isLoading" type="submit" class="btn btn-primary btn-raised pull-right"><i class="fa fa-sign-in"></i> Entrar</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-md-6 center-block" style="float: none">
-				<div class="text-center">
-					<a type="button" class="btn btn-warning" ng-click="showAdvanced = true">Opções avançadas</a>
-				</div>
-				<div class="panel panel-default" ng-show="showAdvanced">
-					<div class="panel-heading">
-						API
-					</div>
-					<div class="panel-body">
-						<table class="table">
-							<thead>
-							<tr>
-								<th>Endpoint</th>
-								<th>Opções</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr ng-repeat="(endpointID, endpoint) in endpoints.list" ng-if="endpoints.allowed.indexOf(endpointID) !== -1">
-								<td>{{endpoint.label}}<br /><small>{{endpoint.api}}</small></td>
-								<td>
-									<a ng-show="config.CURRENT_ENDPOINT !== endpointID" ng-click="setAPIEndpoint(endpointID)" class="btn btn-xs btn-raised btn-primary">Usar</a>
-									<div ng-show="config.CURRENT_ENDPOINT === endpointID" class="btn btn-xs btn-raised btn-success">Atual</div>
-								</td>
-							</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-		</div>
-	</form>
->>>>>>> a2531864d49441df122cefbe87f2071495351c1e
 
             <div class="form-group">
               <div class="input-group">
