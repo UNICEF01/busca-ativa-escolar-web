@@ -110,20 +110,23 @@
 
           <div class="form-group col-md-12">
             <label><i class="fa fa-user"></i> Tipo</label><br />
-            <div
-              class="radio-inline"
-              ng-repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search"
-            >
-              <label>
-                <input
-                  name="type"
-                  ng-model="query.type"
-                  ng-value="type"
-                  type="radio"
-                  ng-click="refresh()"
-                />
-                {{type | lang:'user.type' | highlight: $select.search}}
-              </label>
+            <div class="grid_col">
+              <div
+                class="radio-inline"
+                style="margin-left: 0px !important;"
+                ng-repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search"
+              >
+                <label>
+                  <input
+                    name="type"
+                    ng-model="query.type"
+                    ng-value="type"
+                    type="radio"
+                    ng-click="refresh()"
+                  />
+                  {{type | lang:'user.type' | highlight: $select.search}}
+                </label>
+              </div>
             </div>
           </div>
           <!--					<div class="form-group col-md-12" ng-if="!canFilterByTenant">-->
@@ -341,3 +344,14 @@
     </div>
   </div>
 </div>
+<style>
+  .grid_col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 650px) {
+    .grid_col {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
