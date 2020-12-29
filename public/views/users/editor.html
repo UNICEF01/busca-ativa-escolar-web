@@ -47,8 +47,6 @@
           id="fld-name"
           ng-model="user.name"
           required
-          oninvalid="this.setCustomValidity('Por favor preencha o campo nome!')"
-          title="O campo nome não pode estar em branco."
         />
       </div>
 
@@ -602,7 +600,16 @@
               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
               title="Senha não pode estar em branco."
             />
-            <span class="input-group-btn" uib-tooltip="Exibir a senha"> </span>
+            <span class="input-group-btn" uib-tooltip="Exibir a senha">
+              <button
+                type="button"
+                class="btn btn-fab btn-fab-mini"
+                ng-click="showPassowrd()"
+                style="margin-top: 20px;"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+            </span>
           </div>
           <div id="message">
             <p>A senha deve conter pelo menos:</p>
@@ -610,8 +617,7 @@
             <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
             <p id="number" class="invalid">Um <b>número</b></p>
             <!-- prettier-ignore -->
-            <p id="symbol" class="invalid">
-            Um <b>caracter especial</b> (!@#$%&*?)
+            <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
             </p>
             <!-- prettier-ignore -->
             <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
