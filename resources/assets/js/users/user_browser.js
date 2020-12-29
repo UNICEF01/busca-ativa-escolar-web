@@ -10,6 +10,7 @@
         .controller('UserBrowserCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals, Maintenance) {
 
             $scope.identity = Identity;
+            console.log($scope.identity)
             $scope.query = {
                 tenant_id: null,
                 uf: null,

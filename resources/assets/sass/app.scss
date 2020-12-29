@@ -24,7 +24,8 @@
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
 
 .form-control.ng-invalid {
-  background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important;
+  background-image: linear-gradient($brand-danger, $brand-danger),
+    linear-gradient(#d2d2d2, #d2d2d2) !important;
 }
 
 .form-group {
@@ -52,17 +53,16 @@
 }
 
 .btn-raised:focus {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12) !important;
 }
 
 .list-group {
-
   &.basic-list {
     i {
       font-size: 8px;
     }
   }
-
 
   .list-group-item.timeline-item {
     overflow: visible;
@@ -97,7 +97,9 @@
   color: #777 !important;
 }
 
-.form-group .checkbox label, .form-group .radio label, .form-group label {
+.form-group .checkbox label,
+.form-group .radio label,
+.form-group label {
   color: #777 !important;
 }
 
@@ -106,7 +108,6 @@
 }
 
 .sign-up-wizard-pills {
-
   border-radius: 4px;
   overflow: hidden;
 
@@ -129,7 +130,6 @@
     background-color: $brand-success;
     color: white;
   }
-
 }
 
 .deadline-input {
@@ -140,7 +140,7 @@
   border-radius: 4px;
 }
 
-input[type=number]::-webkit-inner-spin-button {
+input[type='number']::-webkit-inner-spin-button {
   opacity: 1;
 }
 
@@ -181,8 +181,8 @@ p.agent-panel {
 }
 
 .file-drop-area {
-  background: #F8F8F8;
-  border: 5px dashed #DDD;
+  background: #f8f8f8;
+  border: 5px dashed #ddd;
   width: 170px;
   text-align: center;
   padding: 50px 10px;
@@ -199,7 +199,6 @@ p.agent-panel {
 
 .platform-updates-widget {
   .update-item {
-
     overflow: visible;
     border-bottom: 1px solid #ccc;
     padding: 10px;
@@ -335,7 +334,6 @@ a.column-sorter {
 }
 
 .btn.dashboard-btn {
-
   width: 100%;
 
   .btn-icon {
@@ -405,7 +403,7 @@ a.column-sorter {
 }
 
 .alert-color {
-  color: #F0AD4E !important;
+  color: #f0ad4e !important;
 }
 
 #container {
@@ -416,8 +414,8 @@ a.column-sorter {
 }
 
 .panel-ciano > .panel-heading {
-  color: #FFF;
-  background-color: #28ACE2;
+  color: #fff;
+  background-color: #28ace2;
   border-color: #d6e9c6;
 }
 
@@ -435,5 +433,13 @@ a.column-sorter {
   .check:before {
     color: #a8a8a8 !important;
   }
+  .grid_col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media (max-width: 650px) {
+    .grid_col {
+      grid-template-columns: 1fr;
+    }
+  }
 }
-
