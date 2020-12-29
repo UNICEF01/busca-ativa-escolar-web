@@ -196,7 +196,7 @@
                   }
             }
             $scope.showPassowrd = function () {
-                var field_password = document.getElementById("fld-password");
+                var field_password = document.getElementById("fld-gp-password");
                 
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
             }
