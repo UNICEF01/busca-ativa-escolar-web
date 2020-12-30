@@ -245,7 +245,12 @@
               name="co_password"
               id="fld-co-password"
               required
+              my-directive
               ng-model="user.password"
+              onfocus="add(this)"
+              onblur="remove(this)"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
+              title="Senha não pode estar em branco."
             />
             <span class="input-group-btn" uib-tooltip="Exibir a senha">
               <button
@@ -256,6 +261,18 @@
                 <i class="fa fa-eye"></i>
               </button>
             </span>
+            <div id="message">
+              <p>A senha deve conter pelo menos:</p>
+              <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
+              <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
+              <p id="number" class="invalid">Um <b>número</b></p>
+              <!-- prettier-ignore -->
+              <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
+              </p>
+              <!-- prettier-ignore -->
+              <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+                </p>
+            </div>
           </div>
         </div>
 
@@ -323,3 +340,85 @@
     </div>
   </form>
 </div>
+
+<script>
+  function add(x) {
+    document.getElementById('message').style.display = 'block';
+  }
+  function remove(x) {
+    document.getElementById('message').style.display = 'none';
+  }
+
+  /*function addErrorDate() {
+    const dateText = document.getElementById('error_date');
+    const curDate = new Date();
+    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
+    const maxDate = new Date(
+      curDate.setFullYear(curDate.getFullYear() + 100 - 18)
+    );
+    dateText.textContent = '';
+    dateText.textContent = `Data não pode ser menor que
+       ${minDate.toLocaleDateString()} e maior que ${maxDate.toLocaleDateString()}`;
+    document.getElementById('message_date').style.display = 'block';
+  }
+
+  function removeErrorDate() {
+    document.getElementById('message_date').style.display = 'none';
+  }*/
+</script>
+
+<!--<p>The input field must contain the character "e" to be consider valid.</p>-->
+
+<style>
+  #message {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message p {
+    padding: 0px 0px 0px 30px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  #message_date {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message_date p {
+    padding: 0px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  /* Add a green text color and a checkmark when the requirements are right */
+  .valid {
+    color: green;
+  }
+
+  .valid:before {
+    position: relative;
+    left: -10px;
+    content: '✔';
+  }
+
+  /* Add a red text color and an "x" icon when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+
+  .invalid:before {
+    position: relative;
+    left: -10px;
+    content: '✖';
+  }
+</style>
