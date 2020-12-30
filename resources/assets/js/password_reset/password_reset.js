@@ -46,20 +46,20 @@
 			var resetToken = $stateParams.token;
 
 			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-			var field_password = document.getElementById("fld-password");
-			console.log(field_password);
 			$scope.email = resetEmail;
 			$scope.newPassword = "";
 			$scope.newPasswordConfirm = "";
 			$scope.isLoading = false;
+
 			$scope.showPassowrd = function () {
-				var field_password = document.getElementById("fld-password");
-				field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-		};
-		$scope.showPassowrd2 = function () {
-			var field_password = document.getElementById("fld-password_confirm");
-			field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-	};
+				var field_password1 = document.getElementById("fld_password");
+				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
+			};
+
+			$scope.showPassowrd2 = function () {
+				var field_password2 = document.getElementById("fld_password_confirm");
+				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
+			};
 
 			$scope.resetPassword = function() {
 
