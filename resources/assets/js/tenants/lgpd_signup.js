@@ -189,17 +189,19 @@
 
                 return Utils.unpackDateFields(user, dateOnlyFields)
             }
+
             $scope.test = () => {
                 let field_password = document.getElementById("fld-gp-password"); 
                 field_password.onfocus = function() {
                     document.getElementById("message").style.display = "block";
                   }
-            }
+            };
+
             $scope.showPassowrd = function () {
                 var field_password = document.getElementById("fld-gp-password");
                 
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
+            };
 
             function onSaved(res) {
                 if (res.status === "ok") {
