@@ -230,10 +230,10 @@
             id="fld-gp-password"
             name="gp_password"
             required
-            ng-model="admins.political.password"
             my-directive
             onfocus="add(this)"
             onblur="remove(this)"
+            ng-model="admins.political.password"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
             title="Senha não pode estar em branco."
           />
@@ -241,23 +241,24 @@
             <button
               type="button"
               class="btn btn-fab btn-fab-mini"
-              ng-click="showPassowrd('fld-gp-password')"
+              ng-click="showPassowrd()"
+              style="margin-top: 20px;"
             >
               <i class="fa fa-eye"></i>
             </button>
           </span>
-          <div id="message">
-            <p>A senha deve conter pelo menos:</p>
-            <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
-            <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
-            <p id="number" class="invalid">Um <b>número</b></p>
-            <!-- prettier-ignore -->
-            <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
+        </div>
+        <div id="message">
+          <p>A senha deve conter pelo menos:</p>
+          <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
+          <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
+          <p id="number" class="invalid">Um <b>número</b></p>
+          <!-- prettier-ignore -->
+          <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
+          </p>
+          <!-- prettier-ignore -->
+          <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
             </p>
-            <!-- prettier-ignore -->
-            <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
-              </p>
-          </div>
         </div>
       </div>
 
