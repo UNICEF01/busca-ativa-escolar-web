@@ -135,11 +135,14 @@
                 Users.updateYourself(data).$promise.then(function (res) {
                     if (res.status === "ok") {
                         ngToast.success('TERMO DE RESPONSABILIDADE E CONFIDENCIALIDADE Assinado com Sucesso');
-                        $localStorage.identity.current_user.lgpd = 1
+                        $localStorage.identity.current_user.lgpd = 1;
                         $state.go('dashboard');
-                    } else {
-                        ngToast.danger("Ocorreu um erro, por favor procure o nosso suporte" + res.message, res.status);
                     }
+
+                    if (res.status === "error") {
+                        ngToast.danger("Ocorreu um erro, por favor procure o nosso suporte" + res.messages[0]);
+                    }
+
                 });
 
             };
