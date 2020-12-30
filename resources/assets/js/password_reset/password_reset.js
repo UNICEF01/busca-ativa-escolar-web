@@ -51,6 +51,14 @@
 			$scope.newPassword = "";
 			$scope.newPasswordConfirm = "";
 			$scope.isLoading = false;
+			$scope.showPassowrd = function () {
+				var field_password = document.getElementById("fld-password");
+				field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
+		};
+		$scope.showPassowrd2 = function () {
+			var field_password = document.getElementById("fld-password_confirm");
+			field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
+	};
 
 			$scope.resetPassword = function() {
 
@@ -58,14 +66,7 @@
 					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
 					return;
 				}
-				$scope.showPassowrd = function () {
-					var field_password = document.getElementById("fld-password");
-					field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-			};
-			$scope.showPassowrd2 = function () {
-				var field_password = document.getElementById("fld-password_confirm");
-				field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
-		};
+
 				$scope.isLoading = true;
 
 				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
