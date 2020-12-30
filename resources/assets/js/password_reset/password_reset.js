@@ -46,7 +46,8 @@
 			var resetToken = $stateParams.token;
 
 			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
+			var field_password = document.getElementById("fld-password");
+			console.log(field_password);
 			$scope.email = resetEmail;
 			$scope.newPassword = "";
 			$scope.newPasswordConfirm = "";
