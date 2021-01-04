@@ -16,10 +16,7 @@
 <div class="steps" ng-show="canUpdateDataUser">
   <form class="panel panel-default" ng-submit="activeUser()" autocomplete="off">
     <div class="panel-heading">
-      <h3>
-        <i class="fa fa-sitemap"></i> Confirmação dos dados e aceite do Termo de
-        uso da Plataforma
-      </h3>
+      <h3><i class="fa fa-sitemap"></i> Confirmação dos dados</h3>
     </div>
     <div class="panel-body">
       <div class="col-md-12"></div>
@@ -261,6 +258,18 @@
                 <i class="fa fa-eye"></i>
               </button>
             </span>
+            <div id="message">
+              <p>A senha deve conter pelo menos:</p>
+              <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
+              <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
+              <p id="number" class="invalid">Um <b>número</b></p>
+              <!-- prettier-ignore -->
+              <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
+              </p>
+              <!-- prettier-ignore -->
+              <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+                </p>
+            </div>
           </div>
           <div id="message">
             <p>A senha deve conter pelo menos:</p>
