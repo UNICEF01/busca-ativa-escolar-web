@@ -10,9 +10,9 @@
         .controller('LgpdSignupCtrl', function ($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
             $scope.signed = false;
-            $scope.term = false;
+            $scope.term = true;
 
-            $scope.currentState = $state.current.name
+            $scope.currentState = $state.current.name;
 
             $scope.user = {};
             $scope.isReviewing = false;
@@ -113,10 +113,12 @@
 
             $scope.save = function () {
 
-                if ($scope.user.lgpd === 0) {
-                    ngToast.danger('Para prosseguir, é preciso concordar com o termo de adesão. Em caso de dúvidas, entre em contato');
-                    return;
-                }
+                //1 pois a API valida essa opção;
+                $scope.user.lgpd = 1;
+                // if ($scope.user.lgpd === 0) {
+                //     ngToast.danger('Para prosseguir, é preciso concordar com o termo de adesão. Em caso de dúvidas, entre em contato');
+                //     return;
+                // }
 
                 if ($scope.user.type === "perfil_visitante") {
                     $scope.user.type = getFinalTypeUser();

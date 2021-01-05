@@ -207,7 +207,7 @@
         <hr />
 
         <div class="panel-body" ng-if="panelTerm">
-          <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>
+<!--          <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>-->
         </div>
 
         <h5>Dados de acesso</h5>
@@ -217,7 +217,7 @@
           Operacional.
         </p>
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <label class="control-label" for="fld-co-email"
             ><i class="fa fa-envelope"></i> E-mail de acesso*</label
           >
@@ -231,7 +231,7 @@
           />
         </div>
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
           <div class="input-group">
             <label class="control-label" for="fld-co-password"
               ><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label
@@ -258,18 +258,6 @@
                 <i class="fa fa-eye"></i>
               </button>
             </span>
-            <div id="message">
-              <p>A senha deve conter pelo menos:</p>
-              <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
-              <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
-              <p id="number" class="invalid">Um <b>número</b></p>
-              <!-- prettier-ignore -->
-              <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
-              </p>
-              <!-- prettier-ignore -->
-              <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
-                </p>
-            </div>
           </div>
           <div id="message">
             <p>A senha deve conter pelo menos:</p>
@@ -285,60 +273,61 @@
           </div>
         </div>
 
-        <div class="form-group col-md-4">
-          <label
-            class="control-label"
-            for="fld-agree_tos-yes"
-            style="margin-right: 10px;"
-            >Li e concordo com os termos de adesão:</label
-          >
-          <i
-            ng-click="openTerm()"
-            class="fa fa-search"
-            style="font-size: 20px; cursor: pointer;"
-          ></i>
+<!--        <div class="form-group col-md-4">-->
+<!--          <label-->
+<!--            class="control-label"-->
+<!--            for="fld-agree_tos-yes"-->
+<!--            style="margin-right: 10px;"-->
+<!--            >Li e concordo com os termos de adesão:</label-->
+<!--          >-->
+<!--          <i-->
+<!--            ng-click="openTerm()"-->
+<!--            class="fa fa-search"-->
+<!--            style="font-size: 20px; cursor: pointer;"-->
+<!--          ></i>-->
 
-          <br /><br />
+<!--          <br /><br />-->
 
-          <div class="radio-inline">
-            <label
-              ><input
-                id="fld-agree_tos-yes"
-                ng-model="user.lgpd"
-                required
-                ng-value="1"
-                name="agree_tos"
-                value="1"
-                type="radio"
-              />
-              Sim</label
-            >
-          </div>
+<!--          <div class="radio-inline">-->
+<!--            <label-->
+<!--              ><input-->
+<!--                id="fld-agree_tos-yes"-->
+<!--                ng-model="user.lgpd"-->
+<!--                required-->
+<!--                ng-value="1"-->
+<!--                name="agree_tos"-->
+<!--                value="1"-->
+<!--                type="radio"-->
+<!--              />-->
+<!--              Sim</label-->
+<!--            >-->
+<!--          </div>-->
 
-          <div class="radio-inline">
-            <label
-              ><input
-                id="fld-agree_tos-no"
-                ng-model="user.lgpd"
-                ng-value="0"
-                name="agree_tos"
-                value="0"
-                type="radio"
-              />
-              Não</label
-            >
-          </div>
+<!--          <div class="radio-inline">-->
+<!--            <label-->
+<!--              ><input-->
+<!--                id="fld-agree_tos-no"-->
+<!--                ng-model="user.lgpd"-->
+<!--                ng-value="0"-->
+<!--                name="agree_tos"-->
+<!--                value="0"-->
+<!--                type="radio"-->
+<!--              />-->
+<!--              Não</label-->
+<!--            >-->
+<!--          </div>-->
 
-          <div ng-show="$parent.agreeTOS == '0'">
-            Para prosseguir, é preciso concordar com o termo de adesão. Em caso
-            de dúvidas, entre em
-            <a
-              target="_blank"
-              href="https://www.buscaativaescolar.org.br/#contact"
-              >contato</a
-            >.
-          </div>
-        </div>
+<!--          <div ng-show="$parent.agreeTOS == '0'">-->
+<!--            Para prosseguir, é preciso concordar com o termo de adesão. Em caso-->
+<!--            de dúvidas, entre em-->
+<!--            <a-->
+<!--              target="_blank"-->
+<!--              href="https://www.buscaativaescolar.org.br/#contact"-->
+<!--              >contato</a-->
+<!--            >.-->
+<!--          </div>-->
+<!--        </div>-->
+
       </div>
     </div>
 

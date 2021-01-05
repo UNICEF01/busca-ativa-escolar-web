@@ -66,6 +66,10 @@
 			};
 
 			$scope.nextStep = function() {
+
+				//set lgpd = 1 - obrigatório na API
+				$scope.admins.political.lgpd = 1;
+
 				if($scope.step >= $scope.numSteps) return;
 
 				if($scope.step === 3 && !Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
@@ -100,10 +104,13 @@
 
             $scope.showPassowrd = function (elementId) {
                 var field_password = document.getElementById(elementId);
-                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
             };
 
 			$scope.provisionTenant = function() {
+
+				//set lgpd = 1 - obrigatório na API
+				$scope.admins.political.lgpd = 1;
 
 				if(!Utils.isValid($scope.admins.political, requiredAdminFieldsPolitical, fieldNames, messages.invalid_gp)) return;
 
@@ -186,9 +193,9 @@
 
 			$scope.fetchSignupDetails();
 
-			$scope.openTerm = function () {
-				$scope.panelTerm = !$scope.panelTerm;
-			};
+			// $scope.openTerm = function () {
+			// 	$scope.panelTerm = !$scope.panelTerm;
+			// };
 
 			$scope.changeNecessityCoordinator = function (necessity) {
 				$scope.isNecessaryNewCoordinator = necessity;

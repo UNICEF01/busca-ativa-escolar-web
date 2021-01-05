@@ -67,6 +67,9 @@
 
             $scope.activeUser = function () {
 
+                //set lgpd = 1 pois na API é obrigatório
+                $scope.user.lgpd = 1;
+
                 if(!Utils.isValid($scope.user, requiredFields, fieldNames, messages.invalid_user)) return;
 
                 Modals.show(Modals.Confirm(
