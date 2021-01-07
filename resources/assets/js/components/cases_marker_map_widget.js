@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function (KEYS) {
+    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function () {
 
         function init(scope) {
             /**
@@ -93,7 +93,7 @@
             //Step 1: initialize communication with the platform
             // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
-                apikey: KEYS.heremaps
+                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
             });
 
             var defaultLayers = platform.createDefaultLayers();
