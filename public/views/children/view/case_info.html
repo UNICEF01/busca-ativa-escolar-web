@@ -963,35 +963,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group col-md-12 clearfix">
-            <label class="control-label" for="fld-enroll-school">Nome da escola*</label>
-            <!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_name"-->
-            <input type="text" id="fld-enroll-school"
-                   class="form-control"
-                   ng-model="fields.school"
-                   uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
-                   typeahead-editable="false"
-                   typeahead-no-results="rematriculaNoSchoolsFound"
-                   typeahead-loading="rematriculaSchoolsLoading"
-                   typeahead-focus-first="true"
-                   typeahead-template-url="school_item.html"
-                   typeahead-wait-ms="400"
-                   typeahead-min-length="3"
-                   typeahead-input-formatter="renderSelectedSchool($model)"
-                   typeahead-on-select="putStateAndCity(fields.school)"
-            >
 
-            <small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão
-                divergentes</b></small>
-
-            <div ng-show="rematriculaSchoolsLoading">
-                <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
-            </div>
-            <div ng-show="rematriculaNoSchoolsFound">
-                <i class="fa fa-remove"></i> Nenhuma escola encontrada
-            </div>
-
-        </div>
         <div class="form-group col-md-3">
             <label class="control-label" for="fld-enroll-school_cep">CEP</label>
             <input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep"
@@ -1046,8 +1018,9 @@
             <input type="text" class="form-control" id="fld-enroll-school_contact_name"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_name">
         </div>
+
         <div class="form-group col-md-4">
-            <label class="control-label" for="fld-enroll-school_contact_email">E-mail</label>
+            <label class="control-label" for="fld-enroll-school_contact_email">E-mail do contato</label>
             <input type="email" class="form-control" id="fld-enroll-school_contact_email"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_email">
         </div>
@@ -1066,6 +1039,37 @@
             <input type="email" class="form-control" id="fld-enroll-school_email" ng-readonly="!canEditCurrentStep()"
                    ng-model="fields.school_email">
         </div>
+
+        <div class="form-group col-md-12 clearfix">
+            <label class="control-label" for="fld-enroll-school">Nome da escola*</label>
+            <!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_name"-->
+            <input type="text" id="fld-enroll-school"
+                   class="form-control"
+                   ng-model="fields.school"
+                   uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
+                   typeahead-editable="false"
+                   typeahead-no-results="rematriculaNoSchoolsFound"
+                   typeahead-loading="rematriculaSchoolsLoading"
+                   typeahead-focus-first="true"
+                   typeahead-template-url="school_item.html"
+                   typeahead-wait-ms="400"
+                   typeahead-min-length="3"
+                   typeahead-input-formatter="renderSelectedSchool($model)"
+                   typeahead-on-select="putStateAndCity(fields.school)"
+            >
+
+            <small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão
+                divergentes</b></small>
+
+            <div ng-show="rematriculaSchoolsLoading">
+                <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
+            </div>
+            <div ng-show="rematriculaNoSchoolsFound">
+                <i class="fa fa-remove"></i> Nenhuma escola encontrada
+            </div>
+
+        </div>
+        
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-reinsertion_grade">Escolha abaixo em que etapa de ensino e série que a
                 criança ou adolescente foi (re)matriculada*</label>
