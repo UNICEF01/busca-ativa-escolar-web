@@ -90,15 +90,15 @@
              * Boilerplate map initialization code starts below:
              */
 
-//Step 1: initialize communication with the platform
-// In your own code, replace variable window.apikey with your own apikey
+            //Step 1: initialize communication with the platform
+            // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
-                apikey: 'vInEtj1IrNd8VNRBh_Vee1Hljpal-oIh2uq75BB1KWo'
+                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
             });
 
             var defaultLayers = platform.createDefaultLayers();
 
-//Step 2: initialize a map - this map is centered over Boston
+            //Step 2: initialize a map - this map is centered over Boston
             scope.map = new H.Map(document.getElementById('map-marker'),
                 defaultLayers.vector.normal.map, {
                     center: {
@@ -125,20 +125,20 @@
                 parameters
             );
             scope.map.setBaseLayer(tileLayer);
-// add a resize listener to make sure that the map occupies the whole container
+
+            // add a resize listener to make sure that the map occupies the whole container
             window.addEventListener('resize', () => scope.map.getViewPort().resize());
 
-//Step 3: make the map interactive
-// MapEvents enables the event system
-// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+            //Step 3: make the map interactive
+            // MapEvents enables the event system
+            // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
             var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(scope.map));
 
-// Step 4: Create the default UI:
+            // Step 4: Create the default UI:
             var ui = H.ui.UI.createDefault(scope.map, defaultLayers, 'pt-BR');
 
-// Add the click event listener.
+            // Add the click event listener.
             addDraggableMarker(scope.map, behavior);
-
 
         }
 

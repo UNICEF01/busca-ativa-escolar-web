@@ -15,7 +15,7 @@
 				var data = {name: query, $hide_loading_feedback: true};
 				if(scope.uf) data.uf = scope.uf;
 
-				console.log("[components.city_select] Looking for cities: ", data);
+				//console.log("[components.city_select] Looking for cities: ", data);
 
 				return Cities.search(data).$promise.then(function (res) {
 					return res.results;

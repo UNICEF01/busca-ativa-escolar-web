@@ -1,27 +1,49 @@
-<form class="panel panel-default" ng-submit="$parent.hasCheckedAvailability && $parent.isCityAvailable ? nextStep(0) : null">
-	<div class="panel-heading">
-		<h3><strong>{{step}}.</strong> <i class="fa fa-building"></i> Cadastre o município</h3>
-	</div>
+<form
+  class="panel panel-default"
+  ng-submit="$parent.hasCheckedAvailability && $parent.isCityAvailable ? nextStep(0) : null"
+>
+  <div class="panel-heading">
+    <h3>
+      <strong>{{step}}.</strong> <i class="fa fa-building"></i> Cadastre o
+      município
+    </h3>
+  </div>
 
-	<div class="panel-body">
-		<div>
-			<p>
-				Selecione o estado e o município que deseja cadastrar. Alguns municípios já possuem acesso ao programa e aparecerão destacados em cinza. Caso o seu município não conste na lista, entre em contato com nossa equipe.
-			</p>
-		</div>
+  <div class="panel-body">
+    <div>
+      <p>
+        Selecione o estado e o município que deseja cadastrar. Alguns municípios
+        já possuem acesso à estratégia e aparecerão destacados em cinza. Caso o
+        seu município não conste na lista, entre em contato com nossa equipe
+        através do menu "Ajuda" no canto inferior direito.
+      </p>
+    </div>
 
-		<div class="clearfix">
-			<app-city-select uf="$parent.form.uf " city="$parent.form.city" on-select="onCitySelect" is-uf-required="true" is-city-required="true"></app-city-select>
-		</div>
+    <div class="clearfix">
+      <app-city-select
+        uf="$parent.form.uf "
+        city="$parent.form.city"
+        on-select="onCitySelect"
+        is-uf-required="true"
+        is-city-required="true"
+      ></app-city-select>
+    </div>
 
-		<div ng-show="$parent.hasCheckedAvailability && !$parent.isCityAvailable">
-			<div class="alert alert-warning">
-				<strong>Município indisponível!</strong> O município indicado já é participante da estratégia Busca Ativa Escolar, ou já possui um processo de adesão em andamento.
-			</div>
-		</div>
-
-	</div>
-	<div class="panel-footer clearfix">
-		<button ng-show="$parent.hasCheckedAvailability && $parent.isCityAvailable" type="submit" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button>
-	</div>
+    <div ng-show="$parent.hasCheckedAvailability && !$parent.isCityAvailable">
+      <div class="alert alert-warning">
+        <strong>Município indisponível!</strong> O município indicado já é
+        participante da estratégia Busca Ativa Escolar, ou já possui um processo
+        de adesão em andamento.
+      </div>
+    </div>
+  </div>
+  <div class="panel-footer clearfix">
+    <button
+      ng-show="$parent.hasCheckedAvailability && $parent.isCityAvailable"
+      type="submit"
+      class="btn btn-primary btn-raised pull-right"
+    >
+      Próximo <i class="fa fa-arrow-right"></i>
+    </button>
+  </div>
 </form>

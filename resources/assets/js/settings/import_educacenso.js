@@ -9,12 +9,12 @@
 
 			$scope.refresh = function() {
 				Tenants.getSettings(function (res) {
-					console.log("Settings: ", res);
+					//console.log("Settings: ", res);
 					$scope.importDetails = res.educacensoImportDetails;
 				});
 
 				Tenants.getEducacensoJobs(function (res) {
-					console.log("Educacenso Jobs: ", res);
+					//console.log("Educacenso Jobs: ", res);
 					$scope.jobs = res.data;
 				});
 			};

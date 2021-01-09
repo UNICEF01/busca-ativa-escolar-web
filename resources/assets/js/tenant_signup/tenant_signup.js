@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData) {
+    angular.module('BuscaAtivaEscolar').controller('TenantSignupCtrl', function ($scope, $rootScope, $window, ngToast, Utils, TenantSignups, Cities, Modals, StaticData, API, Config) {
 
         $scope.static = StaticData;
 
@@ -9,7 +9,7 @@
         $scope.isCityAvailable = false;
 
         $scope.stepChecks = [false, false, false, false];
-        $scope.stepsNames = ['Cadastre o município', 'Gestor Político', 'Cadastre o prefeito', 'Termo de Adesão'];
+        $scope.stepsNames = ['Cadastre o município', 'Cadastre o(a) prefeito(a)', 'Gestor(a) Político(a)', 'Termo de Adesão'];
 
         $scope.form = {
             uf: null,
@@ -29,15 +29,17 @@
             phone: 'telefone institucional',
             mobile: 'celular institucional',
             personal_phone: 'telefone pessoal',
-            personal_mobile: 'celular pessoal'
+            personal_mobile: 'celular pessoal',
+            //link_titulo: 'Documento com foto'
         };
 
         var messages = {
-            invalid_gp: 'Dados do gestor político incompletos! Campos inválidos: ',
-            invalid_mayor: 'Dados do prefeito incompletos! Campos inválidos: '
+            invalid_gp: 'Dados do(a) gestor(a) político incompletos! Campos inválidos: ',
+            invalid_mayor: 'Dados do(a) prefeito(a) incompletos! Campos inválidos: '
         };
         //Campos obrigatórios do formulario
         var requiredAdminFields = ['email', 'name', 'cpf', 'dob', 'phone'];
+        //var requiredMayorFields = ['name', 'cpf', 'dob', 'phone', 'link_titulo'];
         var requiredMayorFields = ['name', 'cpf', 'dob', 'phone'];
 
         $scope.fetchCities = function (query) {
@@ -55,10 +57,10 @@
         };
 
         $scope.goToStep = function (step) {
-            console.log($scope.step, $scope.numSteps)
+            //console.log($scope.step, $scope.numSteps)
             if ($scope.step < 1) return;
             if ($scope.step >= $scope.numSteps) return;
-            console.log($scope.step, $scope.numSteps)
+            //console.log($scope.step, $scope.numSteps)
 
 
             $scope.step = step;
@@ -66,10 +68,11 @@
         };
 
         $scope.nextStep = function (step) {
+
             if ($scope.step >= $scope.numSteps) return;
 
-            if ($scope.step === 2 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
-            if ($scope.step === 3 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
+            if ($scope.step === 3 && !Utils.isValid($scope.form.admin, requiredAdminFields, fieldNames, messages.invalid_gp)) return;
+            if ($scope.step === 2 && !Utils.isValid($scope.form.mayor, requiredMayorFields, fieldNames, messages.invalid_mayor)) return;
             if ($scope.step === 3 && !Utils.haveEqualsValue('Os CPFs', [$scope.form.admin.cpf, $scope.form.mayor.cpf])) return;
             if ($scope.step === 3 && !Utils.haveEqualsValue('Os nomes', [$scope.form.admin.name, $scope.form.mayor.name])) return;
 
@@ -128,7 +131,7 @@
 
                 if (res.reason === 'political_admin_email_in_use') {
                     $scope.step = 2;
-                    return ngToast.danger('O e-mail indicado para o gestor político já está em uso. Por favor, escolha outro e-mail');
+                    return ngToast.danger('O e-mail indicado para o(a) gestor(a) político já está em uso. Por favor, escolha outro e-mail');
                 }
 
                 if (res.reason === 'invalid_political_admin_data') {
@@ -145,6 +148,24 @@
 
 
         };
+
+        // $scope.beginImport = function() {
+        //     Modals.show(Modals.FileUploaderTitulo(
+        //         'Enviar documento com foto',
+        //         'Selecione uma cópia do documento em formato PNG ou JPG. Arquivos em outros formatos não serão aceitos',
+        //         API.getURI('signups/tenants/uploadfile')
+        //     )).then(function (file) {
+        //
+        //         if(file.status == "error"){
+        //             $scope.form.mayor.link_titulo = null;
+        //             ngToast.danger('Erro na importação! '+ file.reason);
+        //         }else{
+        //             $scope.form.mayor.link_titulo = file.link;
+        //             ngToast.warning('Arquivo importado com sucesso');
+        //         }
+        //
+        //     });
+        // };
 
     });
 

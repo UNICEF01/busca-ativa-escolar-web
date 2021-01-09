@@ -40,23 +40,23 @@
 
 					if(group.is_deleting && !group.is_primary) {
 						promises.push(Groups.delete({id: group.id}).$promise);
-						console.log("\t [groups.save] REMOVED, DELETE-> Group #" + i + ': ', group);
+						//console.log("\t [groups.save] REMOVED, DELETE-> Group #" + i + ': ', group);
 						continue;
 					}
 
 					if(group.is_creating) {
 						promises.push(Groups.create({name: group.name}).$promise);
-						console.log("\t [groups.save] NEW, CREATE-> Group #" + i + ': ', group);
+						//console.log("\t [groups.save] NEW, CREATE-> Group #" + i + ': ', group);
 						continue;
 					}
 
 					if($scope.groupsEdit['group_' + i] && !$scope.groupsEdit['group_' + i].$pristine) {
 						promises.push(Groups.update({id: group.id, name: group.name}).$promise);
-						console.log("\t [groups.save] MODIFIED, UPDATE -> Group #" + i + ': ', group);
+						//console.log("\t [groups.save] MODIFIED, UPDATE -> Group #" + i + ': ', group);
 						continue;
 					}
 
-					console.log("\t [groups.save] PRISTINE, NOOP -> Group #" + i + ': ', group);
+					//console.log("\t [groups.save] PRISTINE, NOOP -> Group #" + i + ': ', group);
 
 				}
 

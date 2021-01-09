@@ -239,7 +239,7 @@
 
             $scope.exportXLS = function () {
                 fetchReportData('xls').then(function (res) {
-                    console.log("Exported: ", res);
+                    //console.log("Exported: ", res);
                     Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar o relatório exportado:', res.download_url));
                 })
             };
@@ -311,7 +311,7 @@
                 if ($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
                 if ($scope.isUFScoped()) data.uf = Identity.getCurrentUser().uf;
 
-                console.log("[create_alert] Looking for cities: ", data);
+                //console.log("[create_alert] Looking for cities: ", data);
 
                 return Cities.search(data).$promise.then(function (res) {
                     return res.results;

@@ -4,7 +4,7 @@
 		.module('BuscaAtivaEscolar')
 		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
 
-			console.log("[modal] new_support_ticket_modal");
+			//console.log("[modal] new_support_ticket_modal");
 
 			$scope.isLoading = false;
 

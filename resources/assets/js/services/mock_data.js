@@ -104,9 +104,9 @@
 
 		var userTypes = [
 			{id: 1, name: 'Agente Comunitário'},
-			{id: 2, name: 'Técnico Verificador'},
-			{id: 3, name: 'Supervisor Institucional'},
-			{id: 4, name: 'Coordenador Operacional'}
+			{id: 2, name: 'Técnico(a) Verificador'},
+			{id: 3, name: 'Supervisor(a) Institucional'},
+			{id: 4, name: 'Coordenador(a) Operacional'}
 		];
 
 		var brazilMapData = [

@@ -273,7 +273,7 @@
 
                 <div class="form-group" ng-show="canFilterBy('uf')">
                     <label class="control-label" for="fld-uf">UF*</label>
-                    <select class="form-control" id="fld-uf" ng-model="filters.uf"
+                    <select class="form-control" id="fld-uf" ng-model="filters.place_uf"
                             ng-options="uf.code as uf.code for uf in static.getUFsDropdown() | orderBy:'code' track by uf.code">
                         <option value="">Todos</option>
                     </select>
@@ -291,7 +291,6 @@
                     <input type="text" id="fld-city"
                            class="form-control"
                            ng-model="filters.place_city"
-
                            uib-typeahead="city for city in fetchCities($viewValue)"
                            typeahead-editable="false"
                            typeahead-no-results="noCitiesFound"

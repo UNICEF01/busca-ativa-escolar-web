@@ -9,7 +9,6 @@
         $scope.showDetailsMap = false;
         $scope.showMessageMap = 'Ver detalhes';
 
-
         $scope.listeners = {
             click: function () {
             },
@@ -31,7 +30,7 @@
             },
             mapviewchangeend: function () {
             }
-        }
+        };
 
         $scope.ufs_selo = {data: []};
         $scope.tenants_selo = {data: []};
@@ -217,7 +216,7 @@
 
         $scope.getTablevaluesFormFusionMap = function () {
             return $scope.fusion_map_config.dataSource.data;
-        }
+        };
 
         $scope.initFusionChartMap = function () {
             FusionCharts.ready(function () {
@@ -281,7 +280,7 @@
 
                 var jsonify = function (res) {
                     return res.json();
-                }
+                };
 
                 var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf=' + $scope.query_evolution_graph.uf + '&tenant_id=' + $scope.query_evolution_graph.tenant_id + '&selo=' + $scope.query_evolution_graph.selo + '&token=' + token).then(jsonify);
 
@@ -439,7 +438,7 @@
             {name: '1º Alerta', info: ''},
             {name: '1º Caso', info: ''},
             {name: '1ª (Re)matrícula', info: ''}
-        ]
+        ];
 
         $scope.chartWithContentDownload = function () {
             window.scrollTo(0, 100);
@@ -495,7 +494,7 @@
                 });
 
             }
-        }
+        };
 
         $scope.initStatusBar = function () {
 
@@ -539,25 +538,13 @@
 
             $scope.initFusionChart();
 
-        }
+        };
 
         $scope.initTenantsSelo = function () {
             $scope.tenants_selo = Reports.getTenantsBySelo({
                 selo: $scope.query_evolution_graph.selo,
                 uf: $scope.identity.getCurrentUser().uf
             });
-        };
-
-        function init() {
-            $scope.states.length = 0;
-            for (var i = 0; i < $scope.stateCount; i++) {
-                $scope.states.push({
-                    name: 'Step ' + (i + 1).toString(),
-                    heading: 'Step ' + (i + 1).toString(),
-                    isVisible: true
-                });
-            }
-            $scope.initStatusBar();
         };
 
         $scope.stateCountChange = function () {
@@ -574,7 +561,6 @@
 
         $scope.states = [];
         $scope.stateCount = 2;
-        init();
 
         function returnStateByIDFusionMap(sigla) {
             var states =
@@ -628,14 +614,33 @@
 
         Platform.whenReady(function () {
             $scope.ready = true;
+
+            console.log(Identity);
+
             if (Identity.getCurrentUser().type == "gestor_nacional") {
                 $scope.initFusionChartMap();
             }
+
             if (Identity.getCurrentUser().type == "coordenador_estadual" || Identity.getCurrentUser().type == "gestor_estadual") {
                 var scope_uf = "maps/" + returnStateByIDFusionMap(Identity.getCurrentUser().uf).state.split(" ").join("").toLowerCase();
                 $scope.initFusionChartMapState(Identity.getCurrentUser().uf, scope_uf);
             }
+
         });
+
+        function init() {
+            $scope.states.length = 0;
+            for (var i = 0; i < $scope.stateCount; i++) {
+                $scope.states.push({
+                    name: 'Step ' + (i + 1).toString(),
+                    heading: 'Step ' + (i + 1).toString(),
+                    isVisible: true
+                });
+            }
+            $scope.initStatusBar();
+        };
+
+        init();
 
     });
 

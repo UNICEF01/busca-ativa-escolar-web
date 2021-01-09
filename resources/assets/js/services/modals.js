@@ -8,7 +8,7 @@
 
 				show: function(params) {
 
-					console.log('[modals] Show modal: ', params);
+					//console.log('[modals] Show modal: ', params);
 
 					var def = $q.defer();
 
@@ -86,25 +86,6 @@
 							schools: function() { return schools; },
 							canDismiss: function() { return canDismiss; }
 
-						}
-					};
-
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
-
-					return params;
-				},
-
-				GeneralAlerts: function(message, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/general.html',
-						controller: 'GeneralAlertsModalCtrl',
-						size: 'lg',
-						resolve: {
-							message: function() { return message; },
-							canDismiss: function() { return canDismiss; }
 						}
 					};
 
@@ -201,6 +182,20 @@
 					return {
 						templateUrl: '/views/modals/file_uploader.html',
 						controller: 'FileUploaderModalCtrl',
+						size: 'md',
+						resolve: {
+							title: function() { return title; },
+							message: function() { return message; },
+							uploadUrl: function() { return uploadUrl; },
+							uploadParameters: function() { return uploadParameters; },
+						}
+					};
+				},
+
+				FileUploaderTitulo: function(title, message, uploadUrl, uploadParameters) {
+					return {
+						templateUrl: '/views/modals/file_uploader_titulo.html',
+						controller: 'FileUploaderTituloModalCtrl',
 						size: 'md',
 						resolve: {
 							title: function() { return title; },

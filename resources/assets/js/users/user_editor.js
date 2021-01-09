@@ -16,6 +16,7 @@
 
 			$scope.identity = Identity;
 			$scope.static = StaticData;
+			$scope.showInputKey = false;
 
 			$scope.groups = {};
 			$scope.tenants = Tenants.find();

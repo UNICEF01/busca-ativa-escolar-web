@@ -26,7 +26,7 @@
                 group.addObject(marker);
 
                 group.addEventListener('pointerleave', function (evt) {
-                    console.log(evt);
+                    //console.log(evt);
                     if (scope.bubble !== undefined) {
                         scope.bubble.close();
                     }

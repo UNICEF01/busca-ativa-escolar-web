@@ -12,7 +12,7 @@
 			// TODO: cache this?
 
 			function fetchLatestVersion() {
-				console.log("[platform.static_data] Downloading latest static data definitions...");
+				//console.log("[platform.static_data] Downloading latest static data definitions...");
 				$promise = $http.get(dataFile).then(onFetch);
 			}
 
@@ -22,7 +22,7 @@
 			}
 
 			function onFetch(res) {
-				console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
 				data = res.data.data;
 
 				$rootScope.$broadcast('StaticData.ready');
@@ -74,7 +74,7 @@
 			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
-			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: []; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
 			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
 
 			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }

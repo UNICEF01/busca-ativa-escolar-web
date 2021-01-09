@@ -1,0 +1,422 @@
+<div class="row">
+  <div class="col-md-4">
+    <div ng-include="'/views/logo.html'"></div>
+  </div>
+  <div class="col-md-8 text-right">
+    <h2 style="margin-top: 50px;">
+      <i class="fa fa-sign-in"></i> Confirmação - cadastro do usuário
+    </h2>
+  </div>
+</div>
+
+<div class="alert alert-danger" ng-show="canUpdateDataUser == false">
+  <strong>Atenção</strong> {{message}}
+</div>
+
+<div class="steps" ng-show="canUpdateDataUser">
+  <form class="panel panel-default" ng-submit="activeUser()" autocomplete="off">
+    <div class="panel-heading">
+      <h3><i class="fa fa-sitemap"></i> Confirmação dos dados</h3>
+    </div>
+    <div class="panel-body">
+      <div class="col-md-12"></div>
+
+      <hr />
+
+      <div class="clearfix">
+        <h5>Dados pessoais</h5>
+
+        <div class="form-group col-md-12">
+          <label class="control-label" for="fld-co-name">Nome*</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_name"
+            id="fld-co-name"
+            required
+            ng-model="user.name"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-dob"
+            >Data de nascimento*</label
+          >
+          <input
+            type="tel"
+            ui-date-mask
+            class="form-control"
+            name="co_dob"
+            id="fld-co-dob"
+            required
+            ng-model="user.dob"
+            placeholder="dd/mm/yyyy"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-cpf">CPF*</label>
+          <input
+            type="tel"
+            ui-br-cpf-mask
+            class="form-control"
+            name="co_cpf"
+            id="fld-co-cpf"
+            required
+            ng-model="user.cpf"
+            placeholder="000.000.000-00"
+          />
+        </div>
+
+        <hr />
+
+        <h5>Contatos</h5>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-work-phone"
+            >Telefone fixo institucional*</label
+          >
+          <input
+            type="tel"
+            ui-br-phone-number
+            ng-minlength="12"
+            class="form-control"
+            name="co_phone"
+            id="fld-co-work-phone"
+            required
+            ng-model="user.phone"
+            placeholder="(00) 00000-0000"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-work-mobile"
+            >Telefone celular institucional</label
+          >
+          <input
+            type="tel"
+            ui-br-phone-number
+            ng-minlength="12"
+            class="form-control"
+            name="co_mobile"
+            id="fld-co-work-mobile"
+            ng-model="user.mobile"
+            placeholder="(00) 00000-0000"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-personal-mobile"
+            >Telefone celular pessoal</label
+          >
+          <input
+            type="tel"
+            ui-br-phone-number
+            ng-minlength="12"
+            class="form-control"
+            name="co_mobile"
+            id="fld-co-personal-mobile"
+            ng-model="user.personal_mobile"
+            placeholder="(00) 00000-0000"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-skype-username">Skype</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_username"
+            id="fld-co-skype-username"
+            ng-model="user.skype"
+          />
+        </div>
+
+        <hr />
+
+        <h5>Endereço institucional <small>(opcional)</small></h5>
+
+        <div class="form-group col-md-12">
+          <label class="control-label" for="fld-co-address">Logradouro</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_address"
+            id="fld-co-address"
+            ng-model="user.work_address"
+          />
+        </div>
+
+        <app-city-select
+          model="admins.operational"
+          uf-field="'work_uf'"
+          city-field="'work_city'"
+          is-uf-required="false"
+          is-city-required="false"
+        ></app-city-select>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-cep">CEP</label>
+          <input
+            type="tel"
+            ui-br-cep-mask
+            class="form-control"
+            name="co_cep"
+            id="fld-co-cep"
+            ng-model="user.work_cep"
+            placeholder="00000-000"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-neighborhood">Bairro</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_neighborhood"
+            id="fld-co-neighborhood"
+            ng-model="user.work_neighborhood"
+          />
+        </div>
+
+        <hr />
+
+        <h5>Dados organizacionais <small>(opcional)</small></h5>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-institution">Órgão</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_institution"
+            id="fld-co-institution"
+            ng-model="user.institution"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-position">Cargo</label>
+          <input
+            type="text"
+            class="form-control"
+            name="co_position"
+            id="fld-co-position"
+            ng-model="user.position"
+          />
+        </div>
+
+        <hr />
+
+        <div class="panel-body" ng-if="panelTerm">
+<!--          <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>-->
+        </div>
+
+        <h5>Dados de acesso</h5>
+
+        <p>
+          A senha informada será enviada para o e-mail do Coordenador
+          Operacional.
+        </p>
+
+        <div class="form-group col-md-6">
+          <label class="control-label" for="fld-co-email"
+            ><i class="fa fa-envelope"></i> E-mail de acesso*</label
+          >
+          <input
+            type="email"
+            class="form-control"
+            name="co_email"
+            id="fld-co-email"
+            required
+            ng-model="user.email"
+          />
+        </div>
+
+        <div class="form-group col-md-6">
+          <div class="input-group">
+            <label class="control-label" for="fld-co-password"
+              ><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              name="co_password"
+              id="fld-co-password"
+              required
+              my-directive
+              ng-model="user.password"
+              onfocus="add(this)"
+              onblur="remove(this)"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
+              title="Senha não pode estar em branco."
+            />
+            <span class="input-group-btn" uib-tooltip="Exibir a senha">
+              <button
+                type="button"
+                class="btn btn-fab btn-fab-mini"
+                ng-click="showPassowrd('fld-co-password')"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+            </span>
+          </div>
+          <div id="message">
+            <p>A senha deve conter pelo menos:</p>
+            <p id="letter" class="invalid">Uma letra <b>minúscula</b></p>
+            <p id="capital" class="invalid">Uma letra <b>maiúscula</b></p>
+            <p id="number" class="invalid">Um <b>número</b></p>
+            <!-- prettier-ignore -->
+            <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?)
+            </p>
+            <!-- prettier-ignore -->
+            <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+              </p>
+          </div>
+        </div>
+
+<!--        <div class="form-group col-md-4">-->
+<!--          <label-->
+<!--            class="control-label"-->
+<!--            for="fld-agree_tos-yes"-->
+<!--            style="margin-right: 10px;"-->
+<!--            >Li e concordo com os termos de adesão:</label-->
+<!--          >-->
+<!--          <i-->
+<!--            ng-click="openTerm()"-->
+<!--            class="fa fa-search"-->
+<!--            style="font-size: 20px; cursor: pointer;"-->
+<!--          ></i>-->
+
+<!--          <br /><br />-->
+
+<!--          <div class="radio-inline">-->
+<!--            <label-->
+<!--              ><input-->
+<!--                id="fld-agree_tos-yes"-->
+<!--                ng-model="user.lgpd"-->
+<!--                required-->
+<!--                ng-value="1"-->
+<!--                name="agree_tos"-->
+<!--                value="1"-->
+<!--                type="radio"-->
+<!--              />-->
+<!--              Sim</label-->
+<!--            >-->
+<!--          </div>-->
+
+<!--          <div class="radio-inline">-->
+<!--            <label-->
+<!--              ><input-->
+<!--                id="fld-agree_tos-no"-->
+<!--                ng-model="user.lgpd"-->
+<!--                ng-value="0"-->
+<!--                name="agree_tos"-->
+<!--                value="0"-->
+<!--                type="radio"-->
+<!--              />-->
+<!--              Não</label-->
+<!--            >-->
+<!--          </div>-->
+
+<!--          <div ng-show="$parent.agreeTOS == '0'">-->
+<!--            Para prosseguir, é preciso concordar com o termo de adesão. Em caso-->
+<!--            de dúvidas, entre em-->
+<!--            <a-->
+<!--              target="_blank"-->
+<!--              href="https://www.buscaativaescolar.org.br/#contact"-->
+<!--              >contato</a-->
+<!--            >.-->
+<!--          </div>-->
+<!--        </div>-->
+
+      </div>
+    </div>
+
+    <div class="panel-footer clearfix">
+      <button type="submit" class="btn btn-primary btn-raised pull-right">
+        Finalizar
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function add(x) {
+    document.getElementById('message').style.display = 'block';
+  }
+  function remove(x) {
+    document.getElementById('message').style.display = 'none';
+  }
+
+  /*function addErrorDate() {
+    const dateText = document.getElementById('error_date');
+    const curDate = new Date();
+    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
+    const maxDate = new Date(
+      curDate.setFullYear(curDate.getFullYear() + 100 - 18)
+    );
+    dateText.textContent = '';
+    dateText.textContent = `Data não pode ser menor que
+       ${minDate.toLocaleDateString()} e maior que ${maxDate.toLocaleDateString()}`;
+    document.getElementById('message_date').style.display = 'block';
+  }
+
+  function removeErrorDate() {
+    document.getElementById('message_date').style.display = 'none';
+  }*/
+</script>
+
+<!--<p>The input field must contain the character "e" to be consider valid.</p>-->
+
+<style>
+  #message {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message p {
+    padding: 0px 0px 0px 30px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  #message_date {
+    font-size: 12px;
+    display: none;
+    color: #000;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+  }
+
+  #message_date p {
+    padding: 0px;
+    font-size: 12px;
+    margin: 0px;
+  }
+
+  /* Add a green text color and a checkmark when the requirements are right */
+  .valid {
+    color: green;
+  }
+
+  .valid:before {
+    position: relative;
+    left: -10px;
+    content: '✔';
+  }
+
+  /* Add a red text color and an "x" icon when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+
+  .invalid:before {
+    position: relative;
+    left: -10px;
+    content: '✖';
+  }
+</style>

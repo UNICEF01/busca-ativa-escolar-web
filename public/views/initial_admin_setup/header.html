@@ -1,10 +1,27 @@
 <div class="sign-up-header">
-	<ul class="nav nav-pills sign-up-wizard-pills">
-		<li class="completed" style="width: 20%"><a><strong>1.</strong> <i class="fa fa-edit"></i> Cadastro</a></li>
-		<li class="completed" style="width: 20%"><a><strong>2.</strong> <i class="fa fa-check-circle"></i> Aprovação</a></li>
-		<li style="width: 25%"ng-class="{'active': (step == 3), 'completed' : (step > 3)}"><a ng-click="goToStep(3)"><strong>3.</strong> <i class="fa fa-sitemap"></i> Revisão do cadastro</a></li>
-		<li style="width: 35%"ng-class="{'active': (step == 4), 'completed' : (step > 4)}"><a ng-click="goToStep(4)"><strong>4.</strong> <i class="fa fa-users"></i> Cadastre o coordenador operacional</a></li>
-	</ul>
-	<hr style="margin-top: 0; margin-bottom: 30px;" />
+  <ul class="nav nav-pills sign-up-wizard-pills">
+    <li class="completed" style="width: 20%">
+      <a><strong>1.</strong> <i class="fa fa-edit"></i> Cadastro</a>
+    </li>
+    <li class="completed" style="width: 20%">
+      <a><strong>2.</strong> <i class="fa fa-check-circle"></i> Aprovação</a>
+    </li>
+    <li
+      style="width: 25%"
+      ng-class="{'active': (step == 3), 'completed' : (step > 3)}"
+    >
+      <a ng-click="goToStep(3)"
+        ><strong>3.</strong> <i class="fa fa-sitemap"></i> Revisão do
+        cadastro</a
+      >
+    </li>
+    <li
+      style="width: 35%"
+      ng-class="{'active': (step == 4), 'completed' : (step > 4)}"
+    >
+      <a ng-click="goToStep(4)"
+        ><strong>4.</strong> <i class="fa fa-users"></i> Cadastre o(a) coordenador(a) Operacional</a>
+    </li>
+  </ul>
+  <hr style="margin-top: 0; margin-bottom: 30px;" />
 </div>
-

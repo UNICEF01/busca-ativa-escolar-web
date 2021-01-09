@@ -1,6 +1,6 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
+	const app = angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
 			$stateProvider
 				.state('forgot_password', {
@@ -46,11 +46,20 @@
 			var resetToken = $stateParams.token;
 
 			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-
 			$scope.email = resetEmail;
 			$scope.newPassword = "";
 			$scope.newPasswordConfirm = "";
 			$scope.isLoading = false;
+
+			$scope.showPassowrd = function () {
+				var field_password1 = document.getElementById("fld_password");
+				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
+			};
+
+			$scope.showPassowrd2 = function () {
+				var field_password2 = document.getElementById("fld_password_confirm");
+				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
+			};
 
 			$scope.resetPassword = function() {
 
@@ -75,5 +84,66 @@
 			}
 
 		});
+		app.directive('myDirective', function() {
+			return {
+					require: 'ngModel',
+					link: function(scope, element, attr, mCtrl) {
+							function myValidation(value) {
+									const capital = document.getElementById('capital');
+									const number = document.getElementById('number');
+									const length = document.getElementById('length');
+									const letter = document.getElementById('letter');
+									const symbol = document.getElementById('symbol')
+									const check = function(entrada) {
+											entrada.classList.remove('invalid');
+											entrada.classList.add('valid');
+											//mCtrl.$setValidity('charE', true);
+									}
+									const uncheck = function(entrada) {
+											entrada.classList.remove('valid');
+											entrada.classList.add('invalid');
+									}
+									if(typeof(value) === "string"){
+											var lowerCaseLetters = /[a-z]/g;
+											if (value.match(lowerCaseLetters)) {
+													check(letter)
+											} else {
+													uncheck(letter)
+											}
+											var upperCaseLetters = /[A-Z]/g;
+											if (value.match(upperCaseLetters)) {
+													check(capital)
+											} else {
+													uncheck(capital)
+											}
+											var numbers = /[0-9]/g;
+											if (value.match(numbers)) {
+													check(number)
+											} else {
+													uncheck(number)
+											}
+											var symbols = /[!@#$%&*?]/g;
+											if (value.match(symbols)) {
+													check(symbol)
+											} else {
+													uncheck(symbol)
+											}
+									// Validate length
+											if (value.length >= 8 && value.length <= 16) {
+													check(length);
+											} else {
+													uncheck(length);
+											}
+									}
+									
+									/*else {
+													mCtrl.$setValidity('charE', false);
+											}*/
+									return value;
+							}
+							mCtrl.$parsers.push(myValidation);
+					}
+			};
+	});
 
 })();

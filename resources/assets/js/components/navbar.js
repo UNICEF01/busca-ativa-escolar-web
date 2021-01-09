@@ -1,61 +1,69 @@
-(function() {
+(function () {
 
-	angular.module('BuscaAtivaEscolar').directive('appNavbar', function ($location, $state, Identity, StaticData, Notifications, Platform, Auth, Children) {
+    angular.module('BuscaAtivaEscolar').directive('appNavbar', function ($localStorage, $location, $state, Identity, StaticData, Notifications, Platform, Auth, Children) {
 
-		function init(scope, element, attrs) {
+        function init(scope, element, attrs) {
 
-			scope.identity = Identity;
-			scope.auth = Auth;
-			scope.notifications = Notifications;
-			scope.pending_requests = 0;
+            scope.identity = Identity;
+            scope.auth = Auth;
+            scope.notifications = Notifications;
+            scope.pending_requests = 0;
 
-			scope.showNotifications = true;
+            scope.showNotifications = true;
 
-			scope.location = $location.url();
-			scope.state = window.location.pathname;
+            scope.location = $location.url();
+            scope.state = window.location.pathname;
 
-			scope.isHidden = function() {
-				return !!Platform.getFlag('HIDE_NAVBAR');
-			};
 
-			scope.renderTenantName = function() {
-				if(Identity.getCurrentUser().tenant) return Identity.getCurrentUser().tenant.name;
-				if(Identity.getCurrentUser().uf) return StaticData.getCurrentUF().name;
-				return '';
-			};
+            scope.isHidden = function () {
+                return !!Platform.getFlag('HIDE_NAVBAR');
+            };
 
-			scope.onMenuToggle = function(isOpen) {
-				if(isOpen) Notifications.refresh();
-			};
+            scope.renderTenantName = function () {
+                if (Identity.getCurrentUser().tenant) return Identity.getCurrentUser().tenant.name;
+                if (Identity.getCurrentUser().uf) return StaticData.getCurrentUF().name;
+                return '';
+            };
 
-			scope.toggleNotifications = function($event) {
-				scope.showNotifications = !scope.showNotifications;
+            scope.onMenuToggle = function (isOpen) {
+                if (isOpen) Notifications.refresh();
+            };
 
-				$event.stopPropagation();
-				$event.stopImmediatePropagation();
-				$event.preventDefault();
+            scope.toggleNotifications = function ($event) {
+                scope.showNotifications = !scope.showNotifications;
 
-				return false;
-			};
+                $event.stopPropagation();
+                $event.stopImmediatePropagation();
+                $event.preventDefault();
 
-			Children.requests().$promise.then( function (value) {
-				value.data.forEach( function (request) {
-					if( Identity.isUserType("supervisor_institucional") && Identity.getCurrentUserID() === request.requester_id && request.status === "requested" ){
-						scope.pending_requests += 1;
-					}
-					if( Identity.isUserType("coordenador_operacional") && request.status == "requested" ) {
-						scope.pending_requests += 1;
-					}
-				});
-			});
+                return false;
+            };
 
-		}
+            Children.requests().$promise.then(function (value) {
+                value.data.forEach(function (request) {
+                    if (Identity.isUserType("supervisor_institucional") && Identity.getCurrentUserID() === request.requester_id && request.status === "requested") {
+                        scope.pending_requests += 1;
+                    }
+                    if (Identity.isUserType("coordenador_operacional") && request.status == "requested") {
+                        scope.pending_requests += 1;
+                    }
+                });
+            });
 
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/navbar.html'
-		};
-	});
+            Platform.whenReady(function () {
+                //verify signature LGPD
+                if (!Identity.getCurrentUser().lgpd) {
+                    return $state.go('lgpd_signup', {id: Identity.getCurrentUser().id});
+                }
+            });
+
+        }
+
+        return {
+            link: init,
+            replace: true,
+            templateUrl: '/views/navbar.html'
+        };
+    });
 
 })();

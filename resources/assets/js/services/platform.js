@@ -21,12 +21,12 @@
 
 			function setup() {
 
-				console.log('[platform.service_registry] Setting up service registry...');
+				//console.log('[platform.service_registry] Setting up service registry...');
 
 				for(var i in servicesRequired) {
 					if(!servicesRequired.hasOwnProperty(i)) continue;
 
-					console.log("\tAwait for service: ", servicesRequired[i]);
+					//console.log("\tAwait for service: ", servicesRequired[i]);
 
 					$rootScope.$on(servicesRequired[i] + '.ready', function(event) {
 						onServiceReady(event.name.split('.').shift());
@@ -39,7 +39,7 @@
 			}
 
 			function setFlag(flag, value) {
-				console.log('[platform.flags] Set flag: ', flag, '->', value);
+				//console.log('[platform.flags] Set flag: ', flag, '->', value);
 				flags[flag] = value;
 			}
 
@@ -48,7 +48,7 @@
 			}
 
 			function onServiceReady(service) {
-				console.log('[platform.service_registry] Service is ready: ' + service);
+				//console.log('[platform.service_registry] Service is ready: ' + service);
 
 				if(servicesReady.indexOf(service) === -1) {
 					servicesReady.push(service);
@@ -58,7 +58,7 @@
 			}
 
 			function clearRegisteredCallbacks() {
-				console.log('[platform.service_registry] Cleared callbacks');
+				//console.log('[platform.service_registry] Cleared callbacks');
 				whenReadyCallbacks = [];
 			}
 
@@ -66,13 +66,13 @@
 				if(servicesReady.length < servicesRequired.length) return;
 				allReady = true;
 
-				console.log("[platform.service_registry] All services ready!");
+				//console.log("[platform.service_registry] All services ready!");
 
 				$rootScope.$broadcast('Platform.ready');
 			}
 
 			function fireRegisteredCallbacks() {
-				console.log('[platform.service_registry] Firing registered callbacks: ', whenReadyCallbacks);
+				//console.log('[platform.service_registry] Firing registered callbacks: ', whenReadyCallbacks);
 				for(var i in whenReadyCallbacks) {
 					if(!whenReadyCallbacks.hasOwnProperty(i)) continue;
 					whenReadyCallbacks[i]();

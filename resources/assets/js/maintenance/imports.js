@@ -26,7 +26,7 @@
 					ImportJobs.all({$hide_loading_feedback: true, per_page: $scope.query.max, page: $scope.query.page}, function (jobs) {
 						$scope.jobs = jobs.data;
 						$scope.search = $scope.returnNewSearch(jobs);
-						console.log($scope.search);
+						//console.log($scope.search);
 					});
 				};
 

@@ -34,7 +34,7 @@
 
         function openCurrentCase(child) {
 
-            console.log("[child_viewer.cases] Opening current case for child: ", child);
+            //console.log("[child_viewer.cases] Opening current case for child: ", child);
 
             $scope.openedCase = child.cases.find(function (item) {
                 if ($stateParams.case_id) return item.id === $stateParams.case_id;
@@ -45,18 +45,18 @@
             if ($stateParams.step_id) return;
             if (!$scope.openedCase) return;
 
-            console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
+            //console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
 
             var stepToOpen = $scope.openedCase.steps.find(function (step) {
                 return ($scope.openedCase.current_step_id === step.id);
             });
 
-            console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
+            //console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
 
             $scope.openStep(stepToOpen);
         }
 
-        console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
+        //console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
 
         $scope.collapseCase = function (childCase) {
             $scope.openedCase = childCase;
@@ -93,7 +93,7 @@
 
             $scope.openStepID = selectedStep.id;
 
-            console.log("[child_viewer.cases] Opening step: ", selectedStep);
+            //console.log("[child_viewer.cases] Opening step: ", selectedStep);
 
             $state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
                 .then(function () {
@@ -178,7 +178,7 @@
                 })
 
                 .then(function (res) {
-                    console.log(res);
+                    //console.log(res);
                 });
         };
 
@@ -208,7 +208,7 @@
                     ngToast.warning('Você não pode realizar essa ação.');
                 }
             }).then(function (res) {
-                console.log(res);
+                //console.log(res);
             });
         };
 
@@ -223,7 +223,7 @@
 
         $scope.completeStep = function (step) {
 
-            console.log("[child_viewer.cases] Attempting to complete step: ", step);
+            //console.log("[child_viewer.cases] Attempting to complete step: ", step);
 
             var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
             var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
@@ -345,7 +345,7 @@
                     validateSchoolWithPlace();
                 });
             }).catch(function (responseCatch) {
-                console.log(responseCatch)
+                //console.log(responseCatch);
                 $scope.noCEF = true;
                 setTimeout(function () {
                     $scope.noCEF = false;
@@ -424,10 +424,10 @@
         var handicappedCauseIDs = [];
         var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
 
-        console.log("[core] @ChildCaseStepCtrl", $scope.step);
+        //console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
         $scope.saveAndProceed = function () {
-            console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
+            //console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
 
             $scope.save()
                 .then(function () {

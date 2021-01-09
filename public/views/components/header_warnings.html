@@ -1,17 +1,26 @@
 <div class="header-warnings">
-	<div class="container" ng-if="identity.isLoggedIn() && identity.hasTenant() && !identity.isUserType('coordenador_operacional') && !identity.getCurrentUser().tenant.is_setup" style="margin: 20px auto;">
-		<div class="alert alert-warning">
-			<strong>Seu município ainda está sendo configurado! </strong>
-			O coordenador operacional do município ainda não concluiu a configuração do município.
-			Os grupos, prazos e regras podem ser alterados em breve!
-		</div>
-	</div>
-	<div class="container" ng-if="identity.isLoggedIn() && identity.hasTenant() && identity.isUserType('coordenador_operacional') && !identity.getCurrentUser().tenant.is_setup && !platform.getFlag('HIDE_NAVBAR')" style="margin: 20px auto;">
-		<div class="alert alert-danger">
-			<strong>Você ainda não configurou seu município! </strong>
-			Os grupos, prazos e prioridades exibidos são os padrões do sistema. <br />
-			Para concluir o passo-a-passo inicial e configurar o ambiente de seu município, <a class="alert-link" ui-sref="tenant_setup">clique aqui</a>.
-
-		</div>
-	</div>
+  <div
+    class="container"
+    ng-if="identity.isLoggedIn() && identity.hasTenant() && !identity.isUserType('coordenador_operacional') && !identity.getCurrentUser().tenant.is_setup"
+    style="margin: 20px auto;"
+  >
+    <div class="alert alert-warning">
+      <strong>Seu município ainda está sendo configurado! </strong>
+      O(a) coordenador(a) operacional do município ainda não concluiu a
+      configuração do município. Os grupos, prazos e regras podem ser alterados
+      em breve!
+    </div>
+  </div>
+  <div
+    class="container"
+    ng-if="identity.isLoggedIn() && identity.hasTenant() && identity.isUserType('coordenador_operacional') && !identity.getCurrentUser().tenant.is_setup && !platform.getFlag('HIDE_NAVBAR')"
+    style="margin: 20px auto;"
+  >
+    <div class="alert alert-danger">
+      <strong>Você ainda não configurou seu município! </strong>
+      Os grupos, prazos e prioridades exibidos são os padrões do sistema. <br />
+      Para concluir o passo-a-passo inicial e configurar o ambiente de seu
+      município, <a class="alert-link" ui-sref="tenant_setup">clique aqui</a>.
+    </div>
+  </div>
 </div>
