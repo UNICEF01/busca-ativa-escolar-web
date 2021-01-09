@@ -62,6 +62,12 @@
             Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
         };
 
+        $scope.showModalAdesao = function () {
+            Modals.show(Modals.GeneralAlerts('Atenção: Renovação de adesão dos municípios'));
+        };
+
+        $scope.showModalAdesao();
+        
     });
 
 })();

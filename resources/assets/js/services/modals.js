@@ -97,6 +97,25 @@
 					return params;
 				},
 
+				GeneralAlerts: function(message, canDismiss) {
+					var params = {
+						templateUrl: '/views/modals/general.html',
+						controller: 'GeneralAlertsModalCtrl',
+						size: 'lg',
+						resolve: {
+							message: function() { return message; },
+							canDismiss: function() { return canDismiss; }
+						}
+					};
+
+					if (!canDismiss) {
+						params.keyboard = false;
+						params.backdrop = 'static';
+					}
+
+					return params;
+				},
+
 				Prompt: function(question, defaultAnswer, canDismiss, answerPlaceholder) {
 					var params = {
 						templateUrl: '/views/modals/prompt.html',
