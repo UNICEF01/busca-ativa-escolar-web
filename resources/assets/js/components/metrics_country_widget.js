@@ -3,6 +3,13 @@
 	angular.module('BuscaAtivaEscolar').directive('metricsCountry', function (moment, Platform, Reports, Charts) {
 
 		function init(scope, element, attrs) {
+
+			scope.availableOptions = [
+				{id: 1, name: "Ciclo Selo | 2014 - 2020"},
+				{id: 2, name: "Ciclo Selo | 2021"},
+			];
+			scope.selectedOption = {id: 2, name: "Ciclo Selo | 2021"};
+
 			scope.stats = {};
 
 			function refreshMetrics() {

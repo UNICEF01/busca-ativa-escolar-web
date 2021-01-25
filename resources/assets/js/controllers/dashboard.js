@@ -615,8 +615,6 @@
         Platform.whenReady(function () {
             $scope.ready = true;
 
-            console.log(Identity);
-
             if (Identity.getCurrentUser().type == "gestor_nacional") {
                 $scope.initFusionChartMap();
             }
