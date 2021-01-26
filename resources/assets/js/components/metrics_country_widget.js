@@ -9,7 +9,6 @@
 				{id: 2, name: "Ciclo Selo | 2021"},
 			];
 			scope.selectedOption = {id: 2, name: "Ciclo Selo | 2021"};
-
 			scope.stats = {};
 
 			function refreshMetrics() {
