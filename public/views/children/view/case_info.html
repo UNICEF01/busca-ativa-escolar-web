@@ -5,9 +5,19 @@
         </div>
         <div class="col-md-6 text-right" ng-show="step.assigned_user">
             <div style="display: inline-block; vertical-align: middle;" uib-tooltip="Usuário responsável pela etapa">
-                <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
-                <small>{{step.assigned_user.type | lang:'user.type'}}</small>
+
+                <div ng-if="step.assigned_user.deleted_at == null">
+                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
+                    <small>{{step.assigned_user.type | lang:'user.type'}}</small>
+                </div>
+
+                <div ng-if="step.assigned_user.deleted_at != null" class="text-danger">
+                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
+                    <small>{{step.assigned_user.type | lang:'user.type'}} - DESATIVADO</small>
+                </div>
+
                 <br/>
+
             </div>
             <div style="display: inline-block; vertical-align: middle; margin-left: 20px;">
                 <a ng-show="identity.can('cases.assign')" class="btn btn-xs btn-info btn-raised"
