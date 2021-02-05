@@ -12,7 +12,7 @@
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
-
+            
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.requests = {};
 
