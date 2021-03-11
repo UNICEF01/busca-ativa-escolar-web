@@ -16,7 +16,7 @@
 			$scope.query = {
 				filter: {},
 				sort: {},
-				max: 16,
+				max: 27,
 				page: 1
 			};
 
