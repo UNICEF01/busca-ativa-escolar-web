@@ -40,6 +40,23 @@
 
         function onLoggedIn(session) {
           $scope.isLoading = false;
+          if (session.attempted_at_history) {
+            let string = session.attempted_at_history.split(' ');
+            let date = new Date(`${string[0]}`).toLocaleDateString();
+            // prettier-ignore
+            let answer =  confirm(
+            `Ocorreram ${
+              session.attempt_history
+            } tentativa(s) mal sucedida(s) de acesso anteriores ao seu perfil. A última tentativa ocorreu em ${date} às ${
+              string[1].split(':')[0]
+            }h${string[1].split(':')[1]}m. Caso não tenha sido você que tentou realizar este acesso, considere trocar a sua senha.`
+          );
+            if (answer) {
+              Auth.clearHistory($scope.email, session.token);
+            } else {
+              Auth.logout();
+            }
+          }
 
           //console.info("[login_ctrl] Logged in!", session);
           //console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
@@ -61,7 +78,6 @@
 
         function onError(err) {
           console.error('[login_ctrl] Login failed: ', err);
-          //console.log(err);
           let text = [];
           if (err.error === 'invalid_credentials')
             (text[0] = 'Usuário ou senha incorretos'),
@@ -79,10 +95,8 @@
             hours = `${hours[0]}h${hours[1]}m${hours[2].replace('.', '')}s`;
             // prettier-ignore
             text[0] = `Acesso bloqueado até ${date} ${hours}.`;
-            text[1] = `${string[5]} tentativas de acesso ao seu perfil `;
+            text[1] = `${string[5]} tentativas de acesso ao seu perfil`;
           }
-          /*(text[0] = 'Usuário bloqueado'),
-              (text[1] = 'Por favor, utilize a recuperação de senha.');*/
           Modals.show(Modals.Alert(text[0], text[1]));
           $scope.isLoading = false;
         }
