@@ -58,9 +58,6 @@
             }
           }
 
-          //console.info("[login_ctrl] Logged in!", session);
-          //console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
-
           if (Identity.getCurrentUser().lgpd) {
             if (!Identity.isUserType('coordenador_operacional'))
               return $state.go('dashboard');
