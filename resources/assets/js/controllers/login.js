@@ -41,24 +41,23 @@
         function onLoggedIn(session) {
 
           $scope.isLoading = false;
-          if (session.attempted_at_history) {
-            let string = session.attempted_at_history.split(' ');
-            let date = new Date(`${string[0]}`).toLocaleDateString();
-
-            // prettier-ignore
-            let answer =  confirm(
-            `Ocorreram ${
-              session.attempt_history
-            } tentativa(s) mal sucedida(s) de acesso anteriores ao seu perfil. A última tentativa ocorreu em ${date} às ${
-              string[1].split(':')[0]
-            }h${string[1].split(':')[1]}m. Caso não tenha sido você que tentou realizar este acesso, considere trocar a sua senha.`
-          );
-            if (answer) {
-              Auth.clearHistory($scope.email, session.token);
-            } else {
-              Auth.logout();
-            }
-          }
+          // if (session.attempted_at_history) {
+          //   let string = session.attempted_at_history.split(' ');
+          //   let date = new Date(`${string[0]}`).toLocaleDateString();
+          //   // prettier-ignore
+          //   let answer =  confirm(
+          //   `Ocorreram ${
+          //     session.attempt_history
+          //   } tentativa(s) mal sucedida(s) de acesso anteriores ao seu perfil. A última tentativa ocorreu em ${date} às ${
+          //     string[1].split(':')[0]
+          //   }h${string[1].split(':')[1]}m. Caso não tenha sido você que tentou realizar este acesso, considere trocar a sua senha.`
+          // );
+          //   if (answer) {
+          //     Auth.clearHistory($scope.email, session.token);
+          //   } else {
+          //     Auth.logout();
+          //   }
+          // }
 
           if (Identity.getCurrentUser().lgpd) {
             if (!Identity.isUserType('coordenador_operacional'))
