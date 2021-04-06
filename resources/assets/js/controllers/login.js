@@ -39,10 +39,12 @@
         };
 
         function onLoggedIn(session) {
+
           $scope.isLoading = false;
           if (session.attempted_at_history) {
             let string = session.attempted_at_history.split(' ');
             let date = new Date(`${string[0]}`).toLocaleDateString();
+
             // prettier-ignore
             let answer =  confirm(
             `Ocorreram ${
