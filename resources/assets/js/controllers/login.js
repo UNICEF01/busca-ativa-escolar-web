@@ -43,7 +43,7 @@
           $scope.isLoading = false;
           
           if (session.attempted_at_history) {
-            //let string = session.attempted_at_history.split(' ');
+            let string = session.attempted_at_history.split(' ');
             let date = new Date(`${session.attempted_at_history}`).toLocaleDateString();
 
             // prettier-ignore
