@@ -14,7 +14,7 @@
   </div>
 
   <h1 ng-if="currentState === 'lgpd_signup'" class="text-center">
-    Revisão de dados e assinatura do TERMOS DE USO E POLÍTICA DE PRIVACIDADE
+    Revisão de dados
   </h1>
 
   <form
@@ -303,8 +303,6 @@
           id="fld-work-mobile"
           ui-br-phone-number
           ng-minlength="12"
-          ng-pattern="^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
-  "
           ng-model="user.work_mobile"
           placeholder="(00) 00000-0000"
         />

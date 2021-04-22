@@ -39,16 +39,22 @@
                 return false;
             };
 
-            Children.requests().$promise.then(function (value) {
-                value.data.forEach(function (request) {
-                    if (Identity.isUserType("supervisor_institucional") && Identity.getCurrentUserID() === request.requester_id && request.status === "requested") {
-                        scope.pending_requests += 1;
-                    }
-                    if (Identity.isUserType("coordenador_operacional") && request.status == "requested") {
-                        scope.pending_requests += 1;
-                    }
-                });
-            });
+            if(Identity.isLoggedIn()) {
+
+                if( Identity.isUserType("supervisor_institucional") || Identity.isUserType("coordenador_operacional") ) {
+
+                    Children.requests().$promise.then(function (value) {
+                        value.data.forEach(function (request) {
+                            if (Identity.isUserType("supervisor_institucional") && Identity.getCurrentUserID() === request.requester_id && request.status === "requested") {
+                                scope.pending_requests += 1;
+                            }
+                            if (Identity.isUserType("coordenador_operacional") && request.status == "requested") {
+                                scope.pending_requests += 1;
+                            }
+                        });
+                    });
+                }
+            }
 
             Platform.whenReady(function () {
                 //verify signature LGPD

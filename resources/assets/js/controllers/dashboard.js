@@ -635,7 +635,13 @@
                     isVisible: true
                 });
             }
-            $scope.initStatusBar();
+
+            if( Identity.getCurrentUser().type == "coordenador_operacional" || Identity.getCurrentUser().type == "supervisor_institucional" || Identity.getCurrentUser().type == "gestor_politico" ) {
+                $scope.initStatusBar();
+            }
+
+            $scope.initFusionChart();
+
         };
 
         init();
