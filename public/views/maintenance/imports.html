@@ -62,6 +62,8 @@
 				<td class="text-center">
 					<a ng-click="processJob(job)" ng-show="job.status === 'pending'" class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-cog"></i> Processar</a>
 					<a ng-click="processJob(job)" ng-show="job.status === 'failed'" class="btn btn-xs btn-raised btn-primary " target="_blank"><i class="fa fa-refresh"></i> Tentar novamente</a>
+					<a ng-click="processJob(job)" ng-show="job.status === 'processing'" class="btn btn-xs btn-raised btn-primary " target="_blank"><i class="fa fa-refresh"></i> Tentar novamente</a>
+
 				</td>
 			</tr>
 			</tbody>
