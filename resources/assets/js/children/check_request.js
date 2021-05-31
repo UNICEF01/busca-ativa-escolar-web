@@ -90,7 +90,6 @@
                     });
                 }
 
-
             };
             $scope.reject = function (child) {
 
