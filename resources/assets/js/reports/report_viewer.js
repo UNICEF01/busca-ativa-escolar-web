@@ -311,8 +311,6 @@
           if (availableDimensions.indexOf($scope.current.dimension) === -1) {
             $scope.current.dimension = availableDimensions[0];
           }
-          console.log(value);
-          console.log($scope.current);
 
           fetchReportedData('', value).then(function (res) {
             if ($scope.current.view !== 'list') {
