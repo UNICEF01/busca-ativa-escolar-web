@@ -291,6 +291,9 @@
           });
         };
 
+        /**
+         * Função para permitir que os mapas sejam mudados.
+         */
         $scope.refreshed = function (value) {
           if ($scope.current.dimension !== 'alert_cause_id') {
             $scope.filters.alert_status = ['accepted'];
@@ -345,6 +348,9 @@
           });
         };
 
+        /**
+         * Função para gerar os gráficos com os filtros.
+         */
         function fetchReportedData(format, value) {
           var params = Object.assign({}, $scope.current);
           params.view = $scope.views[$scope.current.view].viewMode;
