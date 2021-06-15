@@ -269,7 +269,6 @@
           if (availableDimensions.indexOf($scope.current.dimension) === -1) {
             $scope.current.dimension = availableDimensions[0];
           }
-          console.log($scope.current);
 
           fetchReportData().then(function (res) {
             if ($scope.current.view !== 'list') {
@@ -337,7 +336,6 @@
 
         $scope.exportXLS = function () {
           fetchReportData('xls').then(function (res) {
-            //console.log("Exported: ", res);
             Modals.show(
               Modals.DownloadLink(
                 'Baixar arquivo XLS',
@@ -356,17 +354,24 @@
           params.view = $scope.views[$scope.current.view].viewMode;
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
-          if (value === null) {
+          if (value === null || params.view === 'time_series') {
             delete $scope.filters.created_at;
           }
-          if (value !== null) {
+
+          if (value !== null && params.view !== 'time_series') {
             $scope.filters.created_at = {
               gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
               lte: moment().format('YYYY-MM-DD'),
               format: 'YYYY-MM-dd'
             };
           }
-          //console.log($scope.filters);
+          if (value !== null && params.view === 'time_series') {
+            $scope.filters.date = {
+              from: moment().subtract(value, 'days').format('YYYY-MM-DD'),
+              to: moment().format('YYYY-MM-DD'),
+              format: 'YYYY-MM-dd'
+            };
+          }
 
           if (value == 'filter') {
             if ($scope.dt_inicial && $scope.dt_final) {
@@ -377,7 +382,7 @@
               };
             }
           }
-          console.log($scope.filters);
+
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
@@ -385,7 +390,7 @@
           if (params.format === 'xls') {
             return Reports.query(params).$promise;
           }
-          //console.log(params);
+
           $scope.reportData = Reports.query(params);
 
           return $scope.reportData.$promise;
@@ -395,7 +400,7 @@
           params.view = $scope.views[$scope.current.view].viewMode;
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
-          //console.log($scope.filters);
+
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
@@ -403,14 +408,13 @@
           if (params.format === 'xls') {
             return Reports.query(params).$promise;
           }
-          //console.log(params);
+
           $scope.reportData = Reports.query(params);
 
           return $scope.reportData.$promise;
         }
 
         $scope.generateRandomNumber = function (min, max) {
-          console.log(min, max);
           return min + Math.floor(Math.random() * (max - min));
         };
 
@@ -469,8 +473,6 @@
           var data = { name: query, $hide_loading_feedback: true };
           if ($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
           if ($scope.isUFScoped()) data.uf = Identity.getCurrentUser().uf;
-
-          //console.log("[create_alert] Looking for cities: ", data);
 
           return Cities.search(data).$promise.then(function (res) {
             return res.results;
@@ -561,10 +563,12 @@
 
         $scope.sumValuesOfReportData = function (object) {
           var final_value = 0;
-          console.log(object);
-          if (object.length !== 0) {
-            for (const property in object) {
-              final_value += object[property];
+
+          if (object !== undefined) {
+            if (object.length !== 0) {
+              for (const property in object) {
+                final_value += object[property];
+              }
             }
           }
           return final_value;
