@@ -349,7 +349,7 @@
         };
 
         /**
-         * Função para gerar os gráficos com os filtros.
+         * Função para gerar os gráficos com os filtros das datas e períodos.
          */
         function fetchReportedData(format, value) {
           var params = Object.assign({}, $scope.current);
