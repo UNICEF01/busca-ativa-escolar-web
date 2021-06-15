@@ -354,8 +354,12 @@
           params.view = $scope.views[$scope.current.view].viewMode;
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
-          if (value === null || params.view === 'time_series') {
-            delete $scope.filters.created_at;
+          if (value === null) {
+            if (params.view === 'time_series') {
+              delete $scope.filters.date;
+            } else {
+              delete $scope.filters.created_at;
+            }
           }
 
           if (value !== null && params.view !== 'time_series') {
