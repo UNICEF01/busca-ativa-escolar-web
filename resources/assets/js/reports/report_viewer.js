@@ -354,39 +354,48 @@
           params.view = $scope.views[$scope.current.view].viewMode;
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
+
           if (value === null) {
             if (params.view === 'time_series') {
-              delete $scope.filters.date;
+              delete ($scope.filters.date, $scope.filters.created_at);
             } else {
               delete $scope.filters.created_at;
             }
-          }
-
-          if (value !== null && params.view !== 'time_series') {
-            $scope.filters.created_at = {
-              gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
-              lte: moment().format('YYYY-MM-DD'),
-              format: 'YYYY-MM-dd'
-            };
-          }
-          if (value !== null && params.view === 'time_series') {
-            $scope.filters.date = {
-              from: moment().subtract(value, 'days').format('YYYY-MM-DD'),
-              to: moment().format('YYYY-MM-DD'),
-              format: 'YYYY-MM-dd'
-            };
-          }
-
-          if (value == 'filter') {
-            if ($scope.dt_inicial && $scope.dt_final) {
-              $scope.filters.created_at = {
-                gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                lte: moment($scope.dt_final).format('YYYY-MM-DD'),
-                format: 'YYYY-MM-dd'
-              };
+          } else {
+            if (value !== 'filter') {
+              if (params.view !== 'time_series') {
+                $scope.filters.created_at = {
+                  gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
+                  lte: moment().format('YYYY-MM-DD'),
+                  format: 'YYYY-MM-dd'
+                };
+              } else {
+                $scope.filters.date = {
+                  from: moment().subtract(value, 'days').format('YYYY-MM-DD'),
+                  to: moment().format('YYYY-MM-DD'),
+                  format: 'YYYY-MM-dd'
+                };
+              }
+            } else {
+              if ($scope.dt_inicial && $scope.dt_final) {
+                {
+                  if (params.view === 'time_series') {
+                    $scope.filters.date = {
+                      from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                      to: moment($scope.dt_final).format('YYYY-MM-DD'),
+                      format: 'YYYY-MM-dd'
+                    };
+                  } else {
+                    $scope.filters.created_at = {
+                      gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                      lte: moment($scope.dt_final).format('YYYY-MM-DD'),
+                      format: 'YYYY-MM-dd'
+                    };
+                  }
+                }
+              }
             }
           }
-
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
@@ -394,7 +403,7 @@
           if (params.format === 'xls') {
             return Reports.query(params).$promise;
           }
-
+          console.log($scope.filters);
           $scope.reportData = Reports.query(params);
 
           return $scope.reportData.$promise;
@@ -649,6 +658,54 @@
           $scope.selectedMenu = value;
 
           $scope.refreshed(value);
+        };
+
+        //Date Picker and Masks
+
+        $scope.today = function () {
+          $scope.dt = new Date();
+        };
+
+        $scope.today();
+
+        $scope.clear = function () {
+          $scope.dt = null;
+        };
+
+        $scope.inlineOptions = {
+          minDate: new Date(),
+          showWeeks: false
+        };
+
+        $scope.dateOptions1 = {
+          formatYear: 'yyyy',
+          showWeeks: false
+        };
+
+        $scope.dateOptions2 = {
+          formatYear: 'yyyy',
+          maxDate: new Date(),
+          showWeeks: false
+        };
+
+        $scope.open1 = function () {
+          $scope.popup1.opened = true;
+        };
+
+        $scope.open2 = function () {
+          $scope.popup2.opened = true;
+        };
+
+        $scope.format = 'ddMMyyyy';
+
+        $scope.altInputFormats = ['M!/d!/yyyy'];
+
+        $scope.popup1 = {
+          opened: false
+        };
+
+        $scope.popup2 = {
+          opened: false
         };
 
         $scope.refresByMinToMax = function () {
