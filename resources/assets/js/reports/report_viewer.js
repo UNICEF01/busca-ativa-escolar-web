@@ -357,7 +357,8 @@
 
           if (value === null) {
             if (params.view === 'time_series') {
-              delete ($scope.filters.date, $scope.filters.created_at);
+              delete $scope.filters.date;
+              delete $scope.filters.created_at;
             } else {
               delete $scope.filters.created_at;
             }
