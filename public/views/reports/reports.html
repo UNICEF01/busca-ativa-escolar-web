@@ -883,7 +883,7 @@
 
         <tbody
           ng-if="current.view === 'timeline'"
-          ng-repeat="(dimension, label) in reportData.response.report"
+          ng-repeat="(metric, value) in reportData.response.report"
         >
           <tr>
             <td><strong>{{metric | amDateFormat:'DD/MM/YYYY'}}</strong></td>
@@ -892,7 +892,7 @@
           </tr>
           <tr
             ng-if="current.view === 'timeline'"
-            ng-repeat="(dimension, label) in reportData.response.report"
+            ng-repeat="(dimension, label) in reportData.labels"
           >
             <td></td>
             <td>{{label || dimension}}</td>
