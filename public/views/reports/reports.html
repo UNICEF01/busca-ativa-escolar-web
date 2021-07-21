@@ -892,7 +892,7 @@
           </tr>
           <tr
             ng-if="current.view === 'timeline'"
-            ng-repeat="(dimension, label) in reportData.response.report"
+            ng-repeat="(metric, value) in reportData.response.report"
           >
             <td></td>
             <td>{{label || dimension}}</td>
