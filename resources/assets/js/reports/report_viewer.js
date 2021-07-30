@@ -369,7 +369,7 @@
               }
             }
           }
-
+          //teste
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
