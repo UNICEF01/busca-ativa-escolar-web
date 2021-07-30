@@ -5,7 +5,7 @@
       $stateProvider.state('reports', {
         url: '/reports',
         templateUrl: '/views/reports/reports.html',
-        controller: 'ReportViewerCtrl'
+        controller: 'ReportViewerCtrl',
       });
     })
     .controller(
@@ -43,10 +43,13 @@
         $scope.current = {
           entity: 'children',
           dimension: 'cause',
-          view: 'chart'
+          view: 'chart',
         };
 
         $scope.avaliable_graph = true;
+
+        var someVarName = 1;
+        localStorage.setItem('someVarKey', someVarName);
 
         $scope.showGraph = function () {
           return $scope.avaliable_graph;
@@ -67,11 +70,11 @@
               'out_of_school',
               'cancelled',
               'interrupted',
-              'transferred'
+              'transferred',
             ],
             age: { from: 0, to: 2000 },
             age_ranges: ['0-3', '4-5', '6-10', '11-14', '15-17', '18'],
-            age_null: true
+            age_null: true,
             //school_last_grade: null,
             //school_last_grade_null: true,
             //gender: Utils.pluck(StaticData.getGenders(), 'slug'), //['male', 'female', 'undefined'],
@@ -106,7 +109,7 @@
                 'race',
                 'guardian_schooling',
                 'country_region',
-                'school_last_grade'
+                'school_last_grade',
               ],
               filters: [
                 // 'date',
@@ -119,11 +122,11 @@
                 //'school_last_grade',
                 //'step_slug',
                 'uf',
-                'city'
+                'city',
                 //'case_cause_ids'
               ],
-              views: ['chart', 'timeline']
-            }
+              views: ['chart', 'timeline'],
+            },
           };
 
           if (Identity.can('reports.tenants')) {
@@ -134,7 +137,7 @@
               entity: 'tenant',
               dimensions: ['uf', 'region'],
               filters: ['uf'],
-              views: ['chart']
+              views: ['chart'],
             };
           }
 
@@ -146,7 +149,7 @@
               entity: 'uf',
               dimensions: ['uf', 'region'],
               filters: [],
-              views: ['chart']
+              views: ['chart'],
             };
           }
 
@@ -158,7 +161,7 @@
               entity: 'signup',
               dimensions: ['month'],
               filters: [],
-              views: ['timeline']
+              views: ['timeline'],
             };
           }
 
@@ -167,20 +170,20 @@
               id: 'map',
               name: 'Mapa',
               allowsDimension: false,
-              viewMode: 'linear'
+              viewMode: 'linear',
             },
             chart: {
               id: 'chart',
               name: 'Gráfico',
               allowsDimension: true,
-              viewMode: 'linear'
+              viewMode: 'linear',
             },
             timeline: {
               id: 'timeline',
               name: 'Linha do tempo',
               allowsDimension: true,
-              viewMode: 'time_series'
-            }
+              viewMode: 'time_series',
+            },
           };
 
           $scope.totals = {
@@ -189,7 +192,7 @@
             num_ufs: 'Número de estados participantes',
             num_signups: 'Número de adesões municipais',
             num_alerts: 'Número de alertas',
-            num_assignments: 'Número de casos sob sua responsabilidade'
+            num_assignments: 'Número de casos sob sua responsabilidade',
           };
 
           $scope.fields = {
@@ -222,7 +225,7 @@
             month: 'Mês',
             race: 'Raça / Etnia',
             guardian_schooling: 'Escolaridade do responsável',
-            country_region: 'Região geográfica'
+            country_region: 'Região geográfica',
           };
 
           $scope.chartConfig = getChartConfig();
@@ -293,46 +296,6 @@
         /**
          * Função para permitir que os mapas sejam mudados.
          */
-        $scope.refreshed = function (value) {
-          if ($scope.current.dimension !== 'alert_cause_id') {
-            $scope.filters.alert_status = ['accepted'];
-          }
-
-          // Check if selected view is available in entity
-          if (
-            $scope.entities[$scope.current.entity].views.indexOf(
-              $scope.current.view
-            ) === -1
-          ) {
-            $scope.current.view = $scope.current.entity.views[0];
-          }
-
-          // Check if selected dimension is available in entity
-          var availableDimensions =
-            $scope.entities[$scope.current.entity].dimensions;
-          if (availableDimensions.indexOf($scope.current.dimension) === -1) {
-            $scope.current.dimension = availableDimensions[0];
-          }
-
-          fetchReportedData('', value).then(function (res) {
-            if ($scope.current.view !== 'list') {
-              $scope.chartConfig = getChartConfig();
-            }
-
-            //if response has property named 'tenant' set value to $scope.avaliable_graph
-            if (res.response.hasOwnProperty('tenant')) {
-              $scope.avaliable_graph = res.response.tenant;
-              if ($scope.avaliable_graph == false)
-                ngToast.danger(
-                  'Este município ainda não fez adesão ao Busca Ativa Escolar!'
-                );
-            } else {
-              $scope.avaliable_graph = true;
-            }
-
-            window.scrollTo(1, 1);
-          });
-        };
 
         $scope.exportXLS = function () {
           fetchReportData('xls').then(function (res) {
@@ -349,71 +312,63 @@
         /**
          * Função para gerar os gráficos com os filtros das datas e períodos.
          */
-        function fetchReportedData(format, value) {
-          var params = Object.assign({}, $scope.current);
-          params.view = $scope.views[$scope.current.view].viewMode;
-          params.filters = $scope.filters;
-          params.format = format ? format : 'json';
 
-          if (value === null) {
-            if (params.view === 'time_series') {
-              delete $scope.filters.date;
-              delete $scope.filters.created_at;
-            } else {
-              delete $scope.filters.created_at;
-            }
-          } else {
-            if (value !== 'filter') {
-              if (params.view !== 'time_series') {
-                $scope.filters.created_at = {
-                  gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
-                  lte: moment().format('YYYY-MM-DD'),
-                  format: 'YYYY-MM-dd'
-                };
-              } else {
-                $scope.filters.date = {
-                  from: moment().subtract(value, 'days').format('YYYY-MM-DD'),
-                  to: moment().format('YYYY-MM-DD'),
-                  format: 'YYYY-MM-dd'
-                };
-              }
-            } else {
-              if ($scope.dt_inicial && $scope.dt_final) {
-                {
-                  if (params.view === 'time_series') {
-                    $scope.filters.date = {
-                      from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                      to: moment($scope.dt_final).format('YYYY-MM-DD'),
-                      format: 'YYYY-MM-dd'
-                    };
-                  } else {
-                    $scope.filters.created_at = {
-                      gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                      lte: moment($scope.dt_final).format('YYYY-MM-DD'),
-                      format: 'YYYY-MM-dd'
-                    };
-                  }
-                }
-              }
-            }
-          }
-          params.filters.place_city_id = params.filters.place_city
-            ? params.filters.place_city.id
-            : null;
-
-          if (params.format === 'xls') {
-            return Reports.query(params).$promise;
-          }
-          console.log($scope.filters);
-          $scope.reportData = Reports.query(params);
-
-          return $scope.reportData.$promise;
-        }
         function fetchReportData(format) {
           var params = Object.assign({}, $scope.current);
           params.view = $scope.views[$scope.current.view].viewMode;
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
+          var filter = localStorage.getItem('someVarKey');
+          console.log(filter);
+          if (filter != '1') {
+            if (filter === null) {
+              if (params.view === 'time_series') {
+                delete $scope.filters.date;
+                delete $scope.filters.created_at;
+              } else {
+                delete $scope.filters.created_at;
+              }
+            } else {
+              if (filter !== 'filter') {
+                if (params.view !== 'time_series') {
+                  delete $scope.filters.date;
+                  $scope.filters.created_at = {
+                    gte: moment().subtract(filter, 'days').format('YYYY-MM-DD'),
+                    lte: moment().format('YYYY-MM-DD'),
+                    format: 'YYYY-MM-dd',
+                  };
+                } else {
+                  delete $scope.filters.date;
+                  delete $scope.filters.created_at;
+                  $scope.filters.date = {
+                    from: moment()
+                      .subtract(filter, 'days')
+                      .format('YYYY-MM-DD'),
+                    to: moment().format('YYYY-MM-DD'),
+                    format: 'YYYY-MM-dd',
+                  };
+                }
+              } else {
+                if ($scope.dt_inicial && $scope.dt_final) {
+                  {
+                    if (params.view === 'time_series') {
+                      $scope.filters.date = {
+                        from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                        to: moment($scope.dt_final).format('YYYY-MM-DD'),
+                        format: 'YYYY-MM-dd',
+                      };
+                    } else {
+                      $scope.filters.created_at = {
+                        gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                        lte: moment($scope.dt_final).format('YYYY-MM-DD'),
+                        format: 'YYYY-MM-dd',
+                      };
+                    }
+                  }
+                }
+              }
+            }
+          }
 
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
@@ -602,28 +557,28 @@
             visitante_nacional_1: [
               'school_last_id',
               'place_city_id',
-              'city_id'
+              'city_id',
             ],
             visitante_nacional_2: [
               'school_last_id',
               'place_city_id',
-              'city_id'
+              'city_id',
             ],
             visitante_nacional_3: [
               'school_last_id',
               'place_city_id',
-              'city_id'
+              'city_id',
             ],
             visitante_nacional_4: [
               'school_last_id',
               'place_city_id',
-              'city_id'
+              'city_id',
             ],
 
             visitante_estadual_1: ['place_uf'],
             visitante_estadual_2: ['place_uf'],
             visitante_estadual_3: ['place_uf'],
-            visitante_estadual_4: ['place_uf']
+            visitante_estadual_4: ['place_uf'],
           };
 
           return function (item) {
@@ -648,17 +603,18 @@
           { name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7 },
           { name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30 },
           { name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90 },
-          { name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180 }
+          { name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180 },
         ];
 
         $scope.fetchCausesData = function (value) {
           if (value === null || typeof value === 'number') {
             $scope.showFilter = false;
           }
-
+          console.log(value);
+          localStorage.setItem('someVarKey', value);
           $scope.selectedMenu = value;
 
-          $scope.refreshed(value);
+          $scope.refresh();
         };
 
         //Date Picker and Masks
@@ -675,18 +631,18 @@
 
         $scope.inlineOptions = {
           minDate: new Date(),
-          showWeeks: false
+          showWeeks: false,
         };
 
         $scope.dateOptions1 = {
           formatYear: 'yyyy',
-          showWeeks: false
+          showWeeks: false,
         };
 
         $scope.dateOptions2 = {
           formatYear: 'yyyy',
           maxDate: new Date(),
-          showWeeks: false
+          showWeeks: false,
         };
 
         $scope.open1 = function () {
@@ -702,11 +658,11 @@
         $scope.altInputFormats = ['M!/d!/yyyy'];
 
         $scope.popup1 = {
-          opened: false
+          opened: false,
         };
 
         $scope.popup2 = {
-          opened: false
+          opened: false,
         };
 
         $scope.refresByMinToMax = function () {
