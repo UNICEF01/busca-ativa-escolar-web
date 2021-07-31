@@ -319,57 +319,53 @@
           params.filters = $scope.filters;
           params.format = format ? format : 'json';
           var filter = localStorage.getItem('someVarKey');
-          console.log(filter);
           if (filter != '1') {
-            if (filter === null) {
-              if (params.view === 'time_series') {
+            if (filter !== 'filter') {
+              if (params.view === 'linear') {
                 delete $scope.filters.date;
-                delete $scope.filters.created_at;
-              } else {
-                delete $scope.filters.created_at;
+                $scope.filters.created_at = {
+                  gte: moment().subtract(filter, 'days').format('YYYY-MM-DD'),
+                  lte: moment().format('YYYY-MM-DD'),
+                  format: 'YYYY-MM-dd',
+                };
               }
-            } else {
-              if (filter !== 'filter') {
-                if (params.view !== 'time_series') {
+              if (params.view === 'time_series') {
+                delete $scope.filters.created_at;
+                $scope.filters.date = {
+                  from: moment().subtract(filter, 'days').format('YYYY-MM-DD'),
+                  to: moment().format('YYYY-MM-DD'),
+                  format: 'YYYY-MM-dd',
+                };
+              }
+              if (filter === 'null') {
+                if ($scope.filters.hasOwnProperty('created_at'))
+                  delete $scope.filters.created_at;
+                if ($scope.filters.hasOwnProperty('date'))
                   delete $scope.filters.date;
-                  $scope.filters.created_at = {
-                    gte: moment().subtract(filter, 'days').format('YYYY-MM-DD'),
-                    lte: moment().format('YYYY-MM-DD'),
-                    format: 'YYYY-MM-dd',
-                  };
-                } else {
-                  delete $scope.filters.date;
+              }
+            }
+            if (filter === 'filter') {
+              if ($scope.dt_inicial && $scope.dt_final) {
+                if (params.view === 'time_series') {
                   delete $scope.filters.created_at;
                   $scope.filters.date = {
-                    from: moment()
-                      .subtract(filter, 'days')
-                      .format('YYYY-MM-DD'),
-                    to: moment().format('YYYY-MM-DD'),
+                    from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                    to: moment($scope.dt_final).format('YYYY-MM-DD'),
                     format: 'YYYY-MM-dd',
                   };
                 }
-              } else {
-                if ($scope.dt_inicial && $scope.dt_final) {
-                  {
-                    if (params.view === 'time_series') {
-                      $scope.filters.date = {
-                        from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                        to: moment($scope.dt_final).format('YYYY-MM-DD'),
-                        format: 'YYYY-MM-dd',
-                      };
-                    } else {
-                      $scope.filters.created_at = {
-                        gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                        lte: moment($scope.dt_final).format('YYYY-MM-DD'),
-                        format: 'YYYY-MM-dd',
-                      };
-                    }
-                  }
+                if (params.view === 'linear') {
+                  delete $scope.filters.date;
+                  $scope.filters.created_at = {
+                    gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
+                    lte: moment($scope.dt_final).format('YYYY-MM-DD'),
+                    format: 'YYYY-MM-dd',
+                  };
                 }
               }
             }
           }
-          //teste
+
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
@@ -610,7 +606,6 @@
           if (value === null || typeof value === 'number') {
             $scope.showFilter = false;
           }
-          console.log(value);
           localStorage.setItem('someVarKey', value);
           $scope.selectedMenu = value;
 
