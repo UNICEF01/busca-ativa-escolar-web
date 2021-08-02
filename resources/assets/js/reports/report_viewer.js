@@ -50,6 +50,8 @@
 
         var someVarName = 1;
         localStorage.setItem('someVarKey', someVarName);
+        //console.log('tste');
+        $scope.selectedMenu = null;
 
         $scope.showGraph = function () {
           return $scope.avaliable_graph;
@@ -591,6 +593,7 @@
         $scope.filterShow = function () {
           $scope.showFilter = !$scope.showFilter;
         };
+
         /**
          * Funções abaixo servem para filtra as datas.
          */

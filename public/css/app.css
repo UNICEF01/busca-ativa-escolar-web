@@ -148,6 +148,9 @@
 
 .active-nav-chart {
   border-bottom: 1px solid;
+  background-color:#256E9A;
+  color: white;
+  font-size: 16px;
 }
 
 .case-container .panel-body {
