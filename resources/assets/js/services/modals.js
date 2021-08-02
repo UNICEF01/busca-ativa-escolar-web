@@ -142,6 +142,12 @@
           return params;
         },
 
+        /**
+         * Função do pop-up após o login.
+         * @param {*} message
+         * @param {*} canDismiss
+         * @returns
+         */
         GeneralPopUpAlerts: function (message, canDismiss) {
           var params = {
             templateUrl: '/views/modals/add_popup_search.html',

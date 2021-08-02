@@ -45,6 +45,8 @@
               'QUESTIONÁRIO SOBRE IMPLEMENTAÇÃO DA ESTRATÉGIA'
             )
           );
+          //console.info("[login_ctrl] Logged in!", session);
+          //console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
 
           if (Identity.getCurrentUser().lgpd) {
             if (!Identity.isUserType('coordenador_operacional'))
@@ -57,6 +59,8 @@
           } else {
             return $state.go('lgpd_signup');
           }
+
+          // Check if user should see tenant first time setup
         }
 
         function onError(err) {
