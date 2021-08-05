@@ -1,130 +1,306 @@
 <form name="newAlert" ng-submit="createAlert()">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="fa fa-bell"></i> Criar alerta</h3>
-		</div>
-		<div class="panel-body">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3><i class="fa fa-bell"></i> Criar alerta</h3>
+    </div>
+    <div class="panel-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="material-icons">person</i> Informações da criança ou
+          adolescente
+        </div>
+        <div class="panel-body">
+          <div class="form-group col-md-12">
+            <label class="control-label" for="fld-name"
+              >Nome da criança ou adolescente*</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="fld-name"
+              required
+              ng-model="alert.name"
+            />
+          </div>
+          <div class="form-grouo col-md-4">
+            <label class="control-label" for="fld-gender">Sexo</label>
+            <select
+              id="fld-gender"
+              class="form-control"
+              ng-model="alert.gender"
+              ng-options="n.slug as n.label for n in static.getGenders()"
+            ></select>
+          </div>
+          <div class="form-grouo col-md-3">
+            <label class="control-label" for="fld-raca">Raça / Etnia</label>
+            <select
+              id="fld-raca"
+              class="form-control"
+              ng-model="alert.race"
+              ng-options="n.slug as n.label for n in static.getRaces()"
+            ></select>
+          </div>
+          <div class="form-grouo col-md-3">
+            <label class="control-label" for="fld-raca">Nacionalidade</label>
+            <select
+              id="fld-raca"
+              class="form-control"
+              ng-model="alert.children_country"
+              ng-options="n.slug as n.label for n in static.getChildrenCountry()"
+            ></select>
+          </div>
+          <div class="form-group col-md-2">
+            <label class="control-label" for="fld-dob"
+              >Data de nascimento</label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="fld-dob"
+              ng-model="alert.dob"
+              min="{{birthdayDateStart}}"
+              max="{{birthdayDateEnd}}"
+              placeholder="dd/mm/yyyy"
+            />
+          </div>
+          <div class="form-group col-md-4">
+            <label class="control-label" for="fld-codnis"
+              >NIS (Número de Identificação Social)</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-codnis"
+              ng-model="alert.nis"
+            />
+          </div>
+          <div class="form-group col-md-3">
+            <label class="control-label" for="fld-cpf">CPF</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-cpf"
+              ng-model="alert.cpf"
+              ui-br-cpf-mask
+              placeholder="000.000.000-00"
+            />
+          </div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
-				<div class="panel-body">
-					<div class="form-group col-md-12">
-						<label class="control-label" for="fld-name">Nome da criança ou adolescente*</label>
-						<input type="text" class="form-control" id="fld-name" required ng-model="alert.name">
-					</div>
-					<div class="form-grouo col-md-4">
-						<label class="control-label" for="fld-gender">Sexo</label>
-						<select id="fld-gender" class="form-control" ng-model="alert.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
-					</div>
-					<div class="form-grouo col-md-4">
-						<label class="control-label" for="fld-raca">Raça / Etnia</label>
-						<select id="fld-raca" class="form-control" ng-model="alert.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
-					</div>
-					<div class="form-group col-md-4">
-						<label class="control-label" for="fld-dob">Data de nascimento</label>
-						<input type="date" class="form-control" id="fld-dob" ng-model="alert.dob" min="{{birthdayDateStart}}" max="{{birthdayDateEnd}}" placeholder="dd/mm/yyyy">
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="fld-rg">RG</label>
-						<input type="tel" class="form-control" id="fld-rg" ng-model="alert.rg" ui-br-rg-mask>
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="fld-cpf">CPF</label>
-						<input type="tel" class="form-control" id="fld-cpf" ng-model="alert.cpf" ui-br-cpf-mask placeholder="000.000.000-00">
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
-						<input type="tel" class="form-control" id="fld-codnis" ng-model="alert.nis">
-					</div>
-					<div class="form-group col-md-3">
-						<label class="control-label" for="fld-codcns">CNS (Cartão Nacional do SUS)</label>
-						<input type="tel" class="form-control" id="fld-codcns" ng-model="alert.cns" maxlength="15">
-					</div>
-					<div class="form-group col-md-12">
-						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o principal motivo identificado:</label>
-						<div class="radio" ng-repeat="alertCause in static.getVisibleAlertCauses()">
-							<label>
-								<input name="alert_cause_id" ng-model="alert.alert_cause_id" required ng-value="alertCause.id" type="radio"> {{alertCause.label}}
-							</label>
-						</div>
-					</div>
-				</div>
-			</div>
+          <div class="form-group col-md-3">
+            <label class="control-label" for="fld-codcns"
+              >CNS (Cartão Nacional do SUS)</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-codcns"
+              ng-model="alert.cns"
+              maxlength="15"
+            />
+          </div>
+          <div class="form-group col-md-2">
+            <label class="control-label" for="fld-rg">RG</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-rg"
+              ng-model="alert.rg"
+              ui-br-rg-mask
+            />
+          </div>
+          <div class="form-group col-md-12">
+            <label class="control-label"
+              >Por que a criança ou adolescente está fora da escola?*
+              <br />Selecione o principal motivo identificado:</label
+            >
+            <div
+              class="radio"
+              ng-repeat="alertCause in static.getVisibleAlertCauses()"
+            >
+              <label>
+                <input
+                  name="alert_cause_id"
+                  ng-model="alert.alert_cause_id"
+                  required
+                  ng-value="alertCause.id"
+                  type="radio"
+                />
+                {{alertCause.label}}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading"><i class="material-icons">person</i> Dados do responsável</div>
-				<div class="panel-body">
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-mother-name">Nome da mãe ou responsável*</label>
-						<input type="text" class="form-control" id="fld-mother-name" required ng-model="alert.mother_name">
-					</div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="material-icons">person</i> Dados do responsável
+        </div>
+        <div class="panel-body">
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-mother-name"
+              >Nome da mãe ou responsável*</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="fld-mother-name"
+              required
+              ng-model="alert.mother_name"
+            />
+          </div>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-father-name">Nome do pai ou responsável</label>
-						<input type="text" class="form-control" id="fld-father-name" ng-model="alert.father_name">
-					</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-father-name"
+              >Nome do pai ou responsável</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="fld-father-name"
+              ng-model="alert.father_name"
+            />
+          </div>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-mother-rg">RG da mãe ou responsável</label>
-						<input type="tel" class="form-control" id="fld-mother-rg" ng-model="alert.mother_rg" ui-br-rg-mask>
-					</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-mother-rg"
+              >RG da mãe ou responsável</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-mother-rg"
+              ng-model="alert.mother_rg"
+              ui-br-rg-mask
+            />
+          </div>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-father-rg">RG do pai ou responsável</label>
-						<input type="tel" class="form-control" id="fld-father-rg" ng-model="alert.father_rg" ui-br-rg-mask>
-					</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-father-rg"
+              >RG do pai ou responsável</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-father-rg"
+              ng-model="alert.father_rg"
+              ui-br-rg-mask
+            />
+          </div>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-mother-phone">Telefone da mãe ou responsável</label>
-						<input type="tel" class="form-control" id="fld-mother-phone" ng-model="alert.mother_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
-					</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-mother-phone"
+              >Telefone da mãe ou responsável</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-mother-phone"
+              ng-model="alert.mother_phone"
+              ui-br-phone-number
+              ng-minlength="12"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-father-phone">Telefone do pai ou responsável</label>
-						<input type="tel" class="form-control" id="fld-father-phone" ng-model="alert.father_phone" ui-br-phone-number ng-minlength="12" placeholder="(00) 00000-0000">
-					</div>
-				</div>
-			</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-father-phone"
+              >Telefone do pai ou responsável</label
+            >
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-father-phone"
+              ng-model="alert.father_phone"
+              ui-br-phone-number
+              ng-minlength="12"
+              placeholder="(00) 00000-0000"
+            />
+          </div>
+        </div>
+      </div>
 
-			<div class="panel panel-default">
-				<div class="panel-heading"><i class="material-icons">map</i> Dados de localização</div>
-				<div class="panel-body">
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-address">Endereço*</label>
-						<input type="text" class="form-control" id="fld-address" required ng-model="alert.place_address">
-					</div>
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-reference">Referência geográfica</label>
-						<input type="text" class="form-control" id="fld-reference" ng-model="alert.place_referene">
-					</div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="material-icons">map</i> Dados de localização
+        </div>
+        <div class="panel-body">
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-address">Endereço*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fld-address"
+              required
+              ng-model="alert.place_address"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-reference"
+              >Referência geográfica</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="fld-reference"
+              ng-model="alert.place_referene"
+            />
+          </div>
 
-					<app-city-select model="alert" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>
+          <app-city-select
+            model="alert"
+            uf-field="'place_uf'"
+            city-field="'place_city'"
+            is-uf-required="true"
+            is-city-required="true"
+          ></app-city-select>
 
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-cep">CEP</label>
-						<input type="tel" class="form-control" id="fld-cep" ng-model="alert.place_cep" ui-br-cep-mask placeholder="00000-000">
-					</div>
-					<div class="form-group col-md-6">
-						<label class="control-label" for="fld-neighborhood">Bairro*</label>
-						<input type="text" class="form-control" id="fld-neighborhood" required ng-model="alert.place_neighborhood">
-					</div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-cep">CEP</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="fld-cep"
+              ng-model="alert.place_cep"
+              ui-br-cep-mask
+              placeholder="00000-000"
+            />
+          </div>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-neighborhood">Bairro*</label>
+            <input
+              type="text"
+              class="form-control"
+              id="fld-neighborhood"
+              required
+              ng-model="alert.place_neighborhood"
+            />
+          </div>
+        </div>
+      </div>
 
+      <div class="panel panel-default">
+        <div class="panel-heading">Observações (caso necessário)</div>
+        <div class="panel-body">
+          <label class="control-label" for="fld-neighborhood"
+            >Anotações ou registros</label
+          >
+          <textarea
+            class="form-control"
+            ng-model="alert.observation"
+          ></textarea>
+        </div>
+      </div>
 
-				</div>
-			</div>
+      <hr />
 
-			<div class="panel panel-default">
-				<div class="panel-heading">Observações (caso necessário)</div>
-				<div class="panel-body">
-					<label class="control-label" for="fld-neighborhood">Anotações ou registros</label>
-					<textarea class="form-control" ng-model="alert.observation"></textarea>
-				</div>
-			</div>
-
-			<hr />
-
-			<button type="submit" ng-disabled="disableCreateAlertButton" class="btn btn-raised btn-info pull-right">Criar alerta</button>
-
-		</div>
-	</div>
+      <button
+        type="submit"
+        ng-disabled="disableCreateAlertButton"
+        class="btn btn-raised btn-info pull-right"
+      >
+        Criar alerta
+      </button>
+    </div>
+  </div>
 </form>
