@@ -40,11 +40,11 @@
 
         function onLoggedIn(session) {
           $scope.isLoading = false;
-          Modals.show(
+          /*Modals.show(
             Modals.GeneralPopUpAlerts(
               'QUESTIONÁRIO SOBRE IMPLEMENTAÇÃO DA ESTRATÉGIA'
             )
-          );
+          );*/
           //console.info("[login_ctrl] Logged in!", session);
           //console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
 
