@@ -2,15 +2,15 @@
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
-      $stateProvider.state('mayor_confirmation', {
-        url: '/confirmacao_prefeito/{id}',
-        templateUrl: '/views/initial_tenant_setup/mayor_confirmation.html',
-        controller: 'MayorConfirmationCtrl',
+      $stateProvider.state('manager_confirmation', {
+        url: '/confirmacao_gestor_estadual/{id}',
+        templateUrl: '/views/state_signup/manager_confirmation.html',
+        controller: 'ManagerConfirmationCtrl',
         unauthenticated: true,
       });
     })
     .controller(
-      'MayorConfirmationCtrl',
+      'ManagerConfirmationCtrl',
       function ($scope, $state, $stateParams, Tenants, ngToast) {
         $scope.prevStep = function () {
           return $state.go('login');
@@ -31,7 +31,9 @@
               $scope.resposta =
                 'A sua solicitação de adesão foi confirmada com sucesso!';*/
             } else {
-              ngToast.danger('Adesão já realizada.');
+              $scope.css = 'alert alert-danger';
+              $scope.resposta =
+                'Problema na solicitação, por favor entre em contato com o nosso suporte!';
             }
           });
         };

@@ -467,7 +467,6 @@
           </div>
         </div>
       </div>
-
       <div class="panel-heading">
         <h3>
           <strong>{{step}}.</strong> <i class="fa fa-building"></i> Termo de
@@ -1994,9 +1993,6 @@
   </form>
 </div>
 
-<!--<p>The input's valid state is:</p>
-  <h1>{{userEdit.gp_password.$valid}}</h1>-->
-
 <script>
   function add(x) {
     document.getElementById('message').style.display = 'block';
@@ -2004,26 +2000,7 @@
   function remove(x) {
     document.getElementById('message').style.display = 'none';
   }
-
-  /*function addErrorDate() {
-    const dateText = document.getElementById('error_date');
-    const curDate = new Date();
-    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
-    const maxDate = new Date(
-      curDate.setFullYear(curDate.getFullYear() + 100 - 18)
-    );
-    dateText.textContent = '';
-    dateText.textContent = `Data não pode ser menor que
-       ${minDate.toLocaleDateString()} e maior que ${maxDate.toLocaleDateString()}`;
-    document.getElementById('message_date').style.display = 'block';
-  }
-
-  function removeErrorDate() {
-    document.getElementById('message_date').style.display = 'none';
-  }*/
 </script>
-
-<!--<p>The input field must contain the character "e" to be consider valid.</p>-->
 
 <style>
   #message {
