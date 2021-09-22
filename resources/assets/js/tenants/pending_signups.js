@@ -74,8 +74,7 @@
 
         $scope.preview = function (signup) {
           $scope.signup = signup;
-          //console.log(signup.data.admin.dob.toLocaleDateString());
-          console.log(signup.data.admin.dob);
+
           let adminDate = signup.data.admin.dob.split('-');
           adminDate = adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
           signup.data.admin.dob = adminDate;

@@ -380,7 +380,17 @@
 
             <div class="form-group col-md-6">
               <label class="control-label">CPF*</label>
-              <p>{{signup.data.mayor.cpf}}</p>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-cpf"
+                    type="text"
+                    ng-model="signup.data.mayor.cpf"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-12">
@@ -390,47 +400,46 @@
               <div class="row">
                 <div class="col-md-10">
                   <input
+                    style="font-size: 13px !important;"
                     class="form-control"
                     id="fld-signup-mayor-email"
                     type="text"
                     ng-model="signup.data.mayor.email"
                   />
                 </div>
-                <div class="col-md-2">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-raised btn-primary"
-                    uib-tooltip="Alterar e-mail do gestor"
-                    ng-click="updateRegistrationEmail('mayor', signup)"
-                  >
-                    <i class="fa fa-save"></i>
-                  </button>
+              </div>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label class="control-label">Telefone fixo institucional*</label>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-phone"
+                    type="text"
+                    ng-model="signup.data.mayor.phone"
+                  />
                 </div>
               </div>
             </div>
 
-            <!--<div class="form-group col-md-12">-->
-            <!--<label for="fld-signup-mayor-email" class="control-label">E-mail institucional*</label>-->
-            <!--<div class="row">-->
-            <!--<div class="col-md-10">-->
-            <!--<input class="form-control" id="fld-signup-mayor-email" type="text" ng-model="signup.data.mayor.email" />-->
-            <!--</div>-->
-            <!--<div class="col-md-2">-->
-            <!--<button type="button" class="btn btn-sm btn-raised btn-primary" uib-tooltip="Alterar e-mail do prefeito" ng-click="updateRegistrationEmail('mayor', signup)"><i class="fa fa-save"></i></button>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <div class="form-group col-md-6">
-              <label class="control-label">Telefone fixo institucional*</label>
-              <p>{{signup.data.mayor.phone}}</p>
-            </div>
-
             <div class="form-group col-md-6">
               <label class="control-label"
-                >Telefone celular institucional</label
+                >Telefone celular institucional*</label
               >
-              <p>{{signup.data.mayor.mobile}}</p>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-mobile"
+                    type="text"
+                    ng-model="signup.data.mayor.mobile"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-6">
@@ -448,8 +457,18 @@
             </div>
 
             <div class="form-group col-md-6">
-              <label class="control-label">Título de eleitor</label>
-              <p>{{signup.data.mayor.titulo}}</p>
+              <label class="control-label">Titulo de eleitor*</label>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-titulo"
+                    type="text"
+                    ng-model="signup.data.mayor.titulo"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-12">
@@ -486,15 +505,16 @@
                   >CPF não localizado na base do TSE</span
                 >
               </p>
-            </div>
 
-            <!--						<div class="form-group col-md-12">-->
-            <!--							<label class="control-label">Documento com foto (Clique para visualizar em outra aba)</label>-->
-            <!--							<hr/>-->
-            <!--							<a href="{{signup.data.mayor.link_titulo}}" target="_blank">-->
-            <!--								<img src="{{signup.data.mayor.link_titulo}}" class="img-responsive" alt="{{signup.data.mayor.name}}"/>-->
-            <!--							</a>-->
-            <!--						</div>-->
+              <button
+                type="button"
+                class="btn btn-sm btn-raised btn-primary"
+                uib-tooltip="Alterar dados do prefeito"
+                ng-click="updateRegistrationEmail('mayor', signup)"
+              >
+                Alterar dados do prefeito
+              </button>
+            </div>
           </div>
         </div>
       </div>
