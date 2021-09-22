@@ -5023,9 +5023,7 @@ function addErrorDate() {
         };
 
         $scope.showModalAdesao = function () {
-          Modals.show(
-            Modals.GeneralAlerts('Atenção: Renovação de adesão dos municípios')
-          );
+          Modals.show(Modals.GeneralAlerts('Aviso importante!'));
         };
 
         $scope.showModalAdesao();
@@ -5990,6 +5988,25 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -6531,25 +6548,6 @@ Highcharts.maps["countries/br/br-all"] = {
             };
 
         });
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' | ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
 })();
 (function() {
 	angular
@@ -9886,37 +9884,88 @@ if (!Array.prototype.find) {
 
 		});
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
+      var authHeaders = API.REQUIRE_AUTH;
+      var headers = {};
 
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
+      return $resource(
+        API.getURI('signups/tenants/:id'),
+        { id: '@id' },
+        {
+          find: { method: 'GET', headers: authHeaders },
 
-			return $resource(API.getURI('signups/tenants/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
+          getPending: {
+            url: API.getURI('signups/tenants/pending'),
+            method: 'POST',
+            isArray: false,
+            headers: authHeaders,
+          },
+          approve: {
+            url: API.getURI('signups/tenants/:id/approve'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          reject: {
+            url: API.getURI('signups/tenants/:id/reject'),
+            method: 'POST',
+            headers: authHeaders,
+          },
 
-				getPending: {url: API.getURI('signups/tenants/pending'), method: 'POST', isArray: false, headers: authHeaders},
-				approve: {url: API.getURI('signups/tenants/:id/approve'), method: 'POST', headers: authHeaders},
-				reject: {url: API.getURI('signups/tenants/:id/reject'), method: 'POST', headers: authHeaders},
+          updateRegistrationData: {
+            url: API.getURI('signups/tenants/:id/update_registration_data'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendNotification: {
+            url: API.getURI('signups/tenants/:id/resend_notification'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          completeSetup: {
+            url: API.getURI('signups/tenants/complete_setup'),
+            method: 'POST',
+            headers: authHeaders,
+          },
 
-				updateRegistrationEmail: {url: API.getURI('signups/tenants/:id/update_registration_email'), method: 'POST', headers: authHeaders},
-				resendNotification: {url: API.getURI('signups/tenants/:id/resend_notification'), method: 'POST', headers: authHeaders},
-				completeSetup: {url: API.getURI('signups/tenants/complete_setup'), method: 'POST', headers: authHeaders},
+          register: {
+            url: API.getURI('signups/tenants/register'),
+            method: 'POST',
+            headers: headers,
+          },
+          getViaToken: {
+            url: API.getURI('signups/tenants/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          complete: {
+            url: API.getURI('signups/tenants/:id/complete'),
+            method: 'POST',
+            headers: headers,
+          },
 
-				register: {url: API.getURI('signups/tenants/register'), method: 'POST', headers: headers},
-				getViaToken: {url: API.getURI('signups/tenants/via_token/:id'), method: 'GET', headers: headers},
-				complete: {url: API.getURI('signups/tenants/:id/complete'), method: 'POST', headers: headers},
-
-				getMayorByCPF: {url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'), method: 'GET', headers: authHeaders},
-				getUserViaToken: {url: API.getURI('signups/users/via_token/:id'), method: 'GET', headers: headers},
-				activeUser: {url: API.getURI('signups/users/:id/confirm'), method: 'POST', headers: headers}
-
-			});
-
-		});
+          getMayorByCPF: {
+            url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'),
+            method: 'GET',
+            headers: authHeaders,
+          },
+          getUserViaToken: {
+            url: API.getURI('signups/users/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          activeUser: {
+            url: API.getURI('signups/users/:id/confirm'),
+            method: 'POST',
+            headers: headers,
+          },
+        }
+      );
+    });
 })();
+
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -14652,11 +14701,12 @@ function identify(namespace, file) {
           });
         };
 
-        $scope.updateRegistrationEmail = function (type, signup) {
-          TenantSignups.updateRegistrationEmail(
+        $scope.updateRegistrationData = function (type, signup) {
+          TenantSignups.updateRegistrationData(
             { id: signup.id, type: type, data: signup.data[type] },
             function (res) {
               typeName = type === 'mayor' ? 'prefeito' : 'gestor';
+
               if (res.status !== 'ok') {
                 ngToast.danger(
                   `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `

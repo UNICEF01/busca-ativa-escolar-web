@@ -98,11 +98,12 @@
           });
         };
 
-        $scope.updateRegistrationEmail = function (type, signup) {
-          TenantSignups.updateRegistrationEmail(
+        $scope.updateRegistrationData = function (type, signup) {
+          TenantSignups.updateRegistrationData(
             { id: signup.id, type: type, data: signup.data[type] },
             function (res) {
               typeName = type === 'mayor' ? 'prefeito' : 'gestor';
+
               if (res.status !== 'ok') {
                 ngToast.danger(
                   `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `

@@ -258,6 +258,14 @@
                     type="text"
                     ng-model="signup.data.admin.email"
                   />
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-raised btn-info"
+                    uib-tooltip="Reenviar o e-mail para o (a) gestor(a)"
+                    ng-click="updateRegistrationEmail('admin', signup)"
+                  >
+                    Reenviar e-mail
+                  </button>
                 </div>
               </div>
             </div>
@@ -333,10 +341,10 @@
               <button
                 type="button"
                 class="btn btn-sm btn-raised btn-primary"
-                uib-tooltip="Alterar dados do gestor"
-                ng-click="updateRegistrationEmail('admin', signup)"
+                uib-tooltip="Alterar dados do(a) gestor(a)"
+                ng-click="updateRegistrationData('admin', signup)"
               >
-                Alterar dados do gestor
+                Alterar dados do(a) gestor(a)
               </button>
             </div>
           </div>
@@ -344,7 +352,7 @@
 
         <div class="panel panel-default">
           <div class="panel-heading">
-            <i class="material-icons">person</i> Dados do prefeito
+            <i class="material-icons">person</i> Dados do(a) prefeito(a)
           </div>
           <div class="panel-body">
             <div class="form-group col-md-12">
@@ -406,6 +414,14 @@
                     type="text"
                     ng-model="signup.data.mayor.email"
                   />
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-raised btn-info"
+                    uib-tooltip="Reenviar o e-mail para o(a) prefeito(a)"
+                    ng-click="updateRegistrationData('admin', signup)"
+                  >
+                    Reenviar e-mail
+                  </button>
                 </div>
               </div>
             </div>
@@ -446,12 +462,12 @@
               <label class="control-label">Validação do cadastro</label>
               <p ng-if="signup.is_approved_by_mayor">
                 <span class="label label-success"
-                  >Adesão validada pelo prefeito</span
+                  >Adesão validada pelo(a) prefeito(a)</span
                 >
               </p>
               <p ng-if="signup.is_approved_by_mayor == false">
                 <span class="label label-danger"
-                  >Adesão não validada pelo prefeito</span
+                  >Adesão não validada pelo(a) prefeito(a)</span
                 >
               </p>
             </div>
@@ -509,10 +525,10 @@
               <button
                 type="button"
                 class="btn btn-sm btn-raised btn-primary"
-                uib-tooltip="Alterar dados do prefeito"
-                ng-click="updateRegistrationEmail('mayor', signup)"
+                uib-tooltip="Alterar dados do(a) prefeito(a)"
+                ng-click="updateRegistrationData('mayor', signup)"
               >
-                Alterar dados do prefeito
+                Alterar dados do(a) prefeito(a)
               </button>
             </div>
           </div>

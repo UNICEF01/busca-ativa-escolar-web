@@ -85,9 +85,7 @@
         };
 
         $scope.showModalAdesao = function () {
-          Modals.show(
-            Modals.GeneralAlerts('Atenção: Renovação de adesão dos municípios')
-          );
+          Modals.show(Modals.GeneralAlerts('Aviso importante!'));
         };
 
         $scope.showModalAdesao();
