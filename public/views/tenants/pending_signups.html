@@ -1,6 +1,6 @@
 <div>
   <div class="col-md-6">
-    <div class="panel panel-default">
+    <div class="panel panel-default" style="height: 100% !important;">
       <div class="panel-heading clearfix">
         <h3 class="pull-left">
           <i class="fa fa-university"></i> Adesões municipais
@@ -198,16 +198,51 @@
           </div>
           <div class="panel-body">
             <div class="form-group col-md-12">
-              <label class="control-label">Nome*</label>
-              <p>{{signup.data.admin.name}}</p>
+              <label for="fld-signup-admin-name" class="control-label"
+                >Nome*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-name"
+                    type="text"
+                    ng-model="signup.data.admin.name"
+                  />
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-6">
               <label class="control-label">Data de nascimento*</label>
-              <p>{{signup.data.admin.dob | amDateFormat:'DD/MM/YYYY'}}</p>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-dob"
+                    type="text"
+                    ui-date-mask
+                    ng-model="signup.data.admin.dob"
+                  />
+                </div>
+              </div>
             </div>
             <div class="form-group col-md-6">
-              <label class="control-label">CPF*</label>
-              <p>{{signup.data.admin.cpf}}</p>
+              <label for="fld-signup-admin-cpf" class="control-label"
+                >CPF*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-cpf"
+                    type="text"
+                    ng-model="signup.data.admin.cpf"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-12">
@@ -217,43 +252,92 @@
               <div class="row">
                 <div class="col-md-10">
                   <input
+                    style="font-size: 13px !important;"
                     class="form-control"
                     id="fld-signup-admin-email"
                     type="text"
                     ng-model="signup.data.admin.email"
                   />
                 </div>
-                <div class="col-md-2">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-raised btn-primary"
-                    uib-tooltip="Alterar e-mail do gestor"
-                    ng-click="updateRegistrationEmail('admin', signup)"
-                  >
-                    <i class="fa fa-save"></i>
-                  </button>
+              </div>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="fld-signup-admin-phone" class="control-label"
+                >Telefone Fixo*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-phone"
+                    type="text"
+                    ng-model="signup.data.admin.phone"
+                  />
                 </div>
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label class="control-label">Telefone fixo*</label>
-              <p>{{signup.data.admin.phone}}</p>
-            </div>
-            <div class="form-group col-md-6">
-              <label class="control-label">Telefone celular</label>
-              <p>{{signup.data.admin.mobile}}</p>
+              <label for="fld-signup-admin-mobile" class="control-label"
+                >Telefone Celular</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-mobile"
+                    type="text"
+                    ng-model="signup.data.admin.mobile"
+                  />
+                </div>
+              </div>
             </div>
 
             <hr />
 
             <div class="form-group col-md-12">
-              <label class="control-label">Órgão*</label>
-              <p>{{signup.data.admin.institution}}</p>
+              <label for="fld-signup-admin-institution" class="control-label"
+                >Órgão*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-institution"
+                    type="text"
+                    ng-model="signup.data.admin.institution"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-12">
-              <label class="control-label">Cargo*</label>
-              <p>{{signup.data.admin.position}}</p>
+              <label for="fld-signup-admin-position" class="control-label"
+                >Cargo*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-admin-position"
+                    type="text"
+                    ng-model="signup.data.admin.position"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-raised btn-primary"
+                uib-tooltip="Alterar dados do gestor"
+                ng-click="updateRegistrationEmail('admin', signup)"
+              >
+                Alterar dados do gestor
+              </button>
             </div>
           </div>
         </div>
@@ -265,12 +349,33 @@
           <div class="panel-body">
             <div class="form-group col-md-12">
               <label class="control-label">Nome*</label>
-              <p>{{signup.data.mayor.name}}</p>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-name"
+                    type="text"
+                    ng-model="signup.data.mayor.name"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-6">
               <label class="control-label">Data de nascimento*</label>
-              <p>{{signup.data.mayor.dob | amDateFormat:'DD/MM/YYYY'}}</p>
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    style="font-size: 13px !important;"
+                    class="form-control"
+                    id="fld-signup-mayor-dob"
+                    type="text"
+                    ui-date-mask
+                    ng-model="signup.data.mayor.dob"
+                  />
+                </div>
+              </div>
             </div>
 
             <div class="form-group col-md-6">
@@ -278,9 +383,30 @@
               <p>{{signup.data.mayor.cpf}}</p>
             </div>
 
-            <div class="col-md-12">
-              <label class="control-label">Email</label>
-              <p>{{signup.data.mayor.email}}</p>
+            <div class="form-group col-md-12">
+              <label for="fld-signup-mayor-email" class="control-label"
+                >E-mail*</label
+              >
+              <div class="row">
+                <div class="col-md-10">
+                  <input
+                    class="form-control"
+                    id="fld-signup-mayor-email"
+                    type="text"
+                    ng-model="signup.data.mayor.email"
+                  />
+                </div>
+                <div class="col-md-2">
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-raised btn-primary"
+                    uib-tooltip="Alterar e-mail do gestor"
+                    ng-click="updateRegistrationEmail('mayor', signup)"
+                  >
+                    <i class="fa fa-save"></i>
+                  </button>
+                </div>
+              </div>
             </div>
 
             <!--<div class="form-group col-md-12">-->
