@@ -65,6 +65,7 @@
 
         function onError(err) {
           console.error('[login_ctrl] Login failed: ', err);
+
           Modals.show(
             Modals.Alert(
               'Usuário ou senha incorretos',
