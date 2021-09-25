@@ -100,6 +100,12 @@
           });
         };
 
+        $scope.resendMail = function (signup) {
+          StateSignups.resendMail({ id: signup.id }, function () {
+            ngToast.success('Notificação reenviada!');
+          });
+        };
+
         $scope.refresh();
       }
     );

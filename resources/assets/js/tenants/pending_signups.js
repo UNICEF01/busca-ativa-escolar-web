@@ -123,6 +123,12 @@
           });
         };
 
+        $scope.resendMail = function (signup) {
+          TenantSignups.resendMail({ id: signup.id }, function () {
+            ngToast.success('Notificação reenviada!');
+          });
+        };
+
         $scope.refresh();
 
         $scope.getMayorByCPF = function (numberCPF) {

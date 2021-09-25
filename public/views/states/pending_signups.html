@@ -192,9 +192,10 @@
               </div>
               <button
                 type="button"
+                ng-if="signup.is_approved_by_manager == false"
                 class="btn btn-sm btn-raised btn-info"
                 uib-tooltip="Reenviar o e-mail para o(a) gestor(a)"
-                ng-click="updateRegistrationData('admin', signup)"
+                ng-click="resendMail(signup)"
               >
                 Reenviar e-mail
               </button>
