@@ -11,13 +11,13 @@
     })
     .controller(
       'ManagerConfirmationCtrl',
-      function ($scope, $state, $stateParams, Tenants, ngToast) {
+      function ($scope, $state, $stateParams, StateSignups, ngToast) {
         $scope.prevStep = function () {
           return $state.go('login');
         };
 
-        $scope.provisionTenant = function () {
-          var confirm = Tenants.mayorConfirmation({
+        $scope.provisionState = function () {
+          var confirm = StateSignups.accept({
             id: $stateParams.id,
           }).$promise;
 
@@ -27,9 +27,6 @@
                 'A sua solicitação de adesão foi confirmada com sucesso!'
               );
               $state.go('login');
-              /*$scope.css = 'alert alert-success';
-              $scope.resposta =
-                'A sua solicitação de adesão foi confirmada com sucesso!';*/
             } else {
               $scope.css = 'alert alert-danger';
               $scope.resposta =

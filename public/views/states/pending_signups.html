@@ -150,15 +150,30 @@
           <div class="panel-body">
             <div class="form-group col-md-12">
               <label class="control-label">Nome*</label>
-              <p>{{signup.data.admin.name}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-name"
+                type="text"
+                ng-model="signup.data.admin.name"
+              />
             </div>
             <div class="form-group col-md-6">
               <label class="control-label">Data de nascimento*</label>
-              <p>{{signup.data.admin.dob | amDateFormat:'DD/MM/YYYY'}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-dob"
+                type="text"
+                ng-model="signup.data.admin.dob"
+              />
             </div>
             <div class="form-group col-md-6">
               <label class="control-label">CPF*</label>
-              <p>{{signup.data.admin.cpf}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-cpf"
+                type="text"
+                ng-model="signup.data.admin.cpf"
+              />
             </div>
 
             <div class="form-group col-md-12">
@@ -174,37 +189,83 @@
                     ng-model="signup.data.admin.email"
                   />
                 </div>
-                <div class="col-md-2">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-raised btn-primary"
-                    uib-tooltip="Alterar e-mail do gestor"
-                    ng-click="updateRegistrationEmail('admin', signup)"
-                  >
-                    <i class="fa fa-save"></i>
-                  </button>
-                </div>
               </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-raised btn-info"
+                uib-tooltip="Reenviar o e-mail para o(a) gestor(a)"
+                ng-click="updateRegistrationData('admin', signup)"
+              >
+                Reenviar e-mail
+              </button>
             </div>
             <div class="form-group col-md-6">
               <label class="control-label">Telefone fixo*</label>
-              <p>{{signup.data.admin.phone}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-phone"
+                type="text"
+                ng-model="signup.data.admin.phone"
+              />
             </div>
             <div class="form-group col-md-6">
               <label class="control-label">Telefone celular</label>
-              <p>{{signup.data.admin.mobile}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-mobile"
+                type="text"
+                ng-model="signup.data.admin.mobile"
+              />
             </div>
 
             <hr />
 
             <div class="form-group col-md-12">
               <label class="control-label">Órgão*</label>
-              <p>{{signup.data.admin.institution}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-institution"
+                type="text"
+                ng-model="signup.data.admin.institution"
+              />
             </div>
 
             <div class="form-group col-md-12">
               <label class="control-label">Cargo*</label>
-              <p>{{signup.data.admin.position}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-admin-position"
+                type="text"
+                ng-model="signup.data.admin.position"
+              />
+              <div class="form-group col-md-12">
+                <div class="row">
+                  <label class="control-label">Validação do cadastro</label>
+                  <p ng-if="signup.is_approved_by_manager">
+                    <span class="label label-success"
+                      >Adesão validada pelo(a) gestor(a)</span
+                    >
+                  </p>
+                </div>
+                <div class="row">
+                  <p ng-if="signup.is_approved_by_manager == false">
+                    <span class="label label-danger"
+                      >Adesão não validada pelo(a) gestor(a)</span
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-raised btn-primary"
+                uib-tooltip="Alterar e-mail do gestor"
+                ng-click="updateRegistrationData('admin', signup)"
+              >
+                Alterar dados do(a) gestor(a)
+              </button>
             </div>
           </div>
         </div>
@@ -217,17 +278,32 @@
           <div class="panel-body">
             <div class="form-group col-md-12">
               <label class="control-label">Nome*</label>
-              <p>{{signup.data.coordinator.name}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-coordinator-name"
+                type="text"
+                ng-model="signup.data.coordinator.name"
+              />
             </div>
 
             <div class="form-group col-md-6">
               <label class="control-label">Data de nascimento*</label>
-              <p>{{signup.data.coordinator.dob | amDateFormat:'DD/MM/YYYY'}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-coordinator-dob"
+                type="text"
+                ng-model="signup.data.coordinator.dob"
+              />
             </div>
 
             <div class="form-group col-md-6">
               <label class="control-label">CPF*</label>
-              <p>{{signup.data.coordinator.cpf}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-coordinator-cpf"
+                type="text"
+                ng-model="signup.data.coordinator.cpf"
+              />
             </div>
 
             <div class="form-group col-md-12">
@@ -243,29 +319,39 @@
                     ng-model="signup.data.coordinator.email"
                   />
                 </div>
-                <div class="col-md-2">
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-raised btn-primary"
-                    uib-tooltip="Alterar e-mail do coordenador"
-                    ng-click="updateRegistrationEmail('coordinator', signup)"
-                  >
-                    <i class="fa fa-save"></i>
-                  </button>
-                </div>
               </div>
             </div>
 
             <div class="form-group col-md-6">
               <label class="control-label">Telefone fixo institucional*</label>
-              <p>{{signup.data.coordinator.phone}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-coordinator-phone"
+                type="text"
+                ng-model="signup.data.coordinator.phone"
+              />
             </div>
 
             <div class="form-group col-md-6">
               <label class="control-label"
                 >Telefone celular institucional</label
               >
-              <p>{{signup.data.coordinator.mobile}}</p>
+              <input
+                class="form-control"
+                id="fld-signup-coordinator-mobile"
+                type="text"
+                ng-model="signup.data.coordinator.mobile"
+              />
+            </div>
+            <div class="col-md-2">
+              <button
+                type="button"
+                class="btn btn-sm btn-raised btn-primary"
+                uib-tooltip="Alterar e-mail do coordenador"
+                ng-click="updateRegistrationData('coordinator', signup)"
+              >
+                Alterar dados do(a) coordenador(a)
+              </button>
             </div>
           </div>
         </div>
