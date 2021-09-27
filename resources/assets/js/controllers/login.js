@@ -68,7 +68,7 @@
             Modals.show(
               Modals.Alert(
                 'Prezado(a)',
-                'Seu município/estado ainda não aceitou o termo de adesão. Entre em contato seu/sua prefeito(a)/gestor(a) para aceitar o termo de adesão.'
+                'Seu município/estado ainda não aceitou o novo termo de adesão à estratégia, atualizado segundo a LGPD. Entre em contato com o(a) coordenador(a) operacional / coordenador(a) estadual para se certificar sobre quando esse aceite será feito.'
               )
             );
           } else {
