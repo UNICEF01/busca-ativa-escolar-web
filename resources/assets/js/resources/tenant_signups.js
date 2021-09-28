@@ -51,6 +51,11 @@
             headers: authHeaders,
           },
 
+          accepted: {
+            url: API.getURI('signups/tenants/:id/accepted'),
+            method: 'GET',
+          },
+
           register: {
             url: API.getURI('signups/tenants/register'),
             method: 'POST',

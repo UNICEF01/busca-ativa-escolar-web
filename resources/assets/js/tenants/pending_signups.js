@@ -73,17 +73,30 @@
         };
 
         $scope.preview = function (signup) {
-          $scope.signup = signup;
-          if (signup.data.admin.dob.includes('-')) {
-            let adminDate = signup.data.admin.dob.split('-');
-            adminDate = adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
-            signup.data.admin.dob = adminDate;
-          }
-          if (signup.data.mayor.dob.includes('-')) {
-            let mayorDate = signup.data.mayor.dob.split('-');
-            mayorDate = mayorDate[2] + '/' + mayorDate[1] + '/' + mayorDate[0];
-            signup.data.mayor.dob = mayorDate;
-          }
+          const accepted = TenantSignups.accepted({ id: signup.id }).$promise;
+
+          accepted.then(function (res) {
+            if (res.status === 200) {
+              $scope.signup = signup;
+              if (signup.data.admin.dob.includes('-')) {
+                let adminDate = signup.data.admin.dob.split('-');
+                adminDate =
+                  adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
+                signup.data.admin.dob = adminDate;
+              }
+              if (signup.data.mayor.dob.includes('-')) {
+                let mayorDate = signup.data.mayor.dob.split('-');
+                mayorDate =
+                  mayorDate[2] + '/' + mayorDate[1] + '/' + mayorDate[0];
+                signup.data.mayor.dob = mayorDate;
+              }
+
+              signup.is_approved_by_manager = false;
+              if (res.data) {
+                signup.is_approved_by_manager = true;
+              }
+            }
+          });
 
           $scope.getMayorByCPF(signup.data.mayor.cpf);
         };
@@ -115,7 +128,6 @@
                 return;
               }
 
-              //`horseThumb_${id}`
               ngToast.success(`Dados do(a) ${typeName}(a)  atualizado!`);
             }
           );
