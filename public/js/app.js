@@ -4952,8 +4952,6 @@ function addErrorDate() {
         Auth,
         Identity
       ) {
-        //console.log("[core] @Login");
-
         $rootScope.section = '';
 
         $scope.email = '';
@@ -5023,9 +5021,7 @@ function addErrorDate() {
         };
 
         $scope.showModalAdesao = function () {
-          Modals.show(
-            Modals.GeneralAlerts('Atenção: Renovação de adesão dos municípios')
-          );
+          Modals.show(Modals.GeneralAlerts('Aviso importante!'));
         };
 
         $scope.showModalAdesao();
@@ -14380,6 +14376,22 @@ function identify(namespace, file) {
 		});
 
 })();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
+      $stateProvider.state('pdf', {
+        url: '/pdf',
+        templateUrl: '/views/users/pdf.html',
+        controller: 'PdfCtrl',
+        unauthenticated: true,
+      });
+    })
+    .controller('PdfCtrl', function () {
+      console.log('');
+    });
+})();
+
 (function() {
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
