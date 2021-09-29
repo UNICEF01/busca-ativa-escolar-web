@@ -38,6 +38,8 @@
             : (field_password.type = 'password');
         };
 
+        $scope.downloadPdf = function () {};
+
         function onLoggedIn(session) {
           $scope.isLoading = false;
           /*Modals.show(
