@@ -9835,8 +9835,8 @@ if (!Array.prototype.find) {
             method: 'POST',
             headers: authHeaders,
           },
-          updateRegistrationEmail: {
-            url: API.getURI('signups/state/:id/update_registration_email'),
+          updateRegistrationData: {
+            url: API.getURI('signups/state/:id/update_registration_data'),
             method: 'POST',
             headers: authHeaders,
           },
