@@ -45,6 +45,11 @@
             method: 'POST',
             headers: authHeaders,
           },
+          resendMail: {
+            url: API.getURI('signups/state/:id/resendmail'),
+            method: 'POST',
+            headers: authHeaders,
+          },
           register: {
             url: API.getURI('signups/state/register'),
             method: 'POST',
