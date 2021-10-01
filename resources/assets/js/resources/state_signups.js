@@ -26,6 +26,10 @@
             url: API.getURI('signups/state/:id/accept'),
             method: 'GET',
           },
+          accepted: {
+            url: API.getURI('signups/state/:id/accepted'),
+            method: 'GET',
+          },
           reject: {
             url: API.getURI('signups/state/:id/reject'),
             method: 'POST',
