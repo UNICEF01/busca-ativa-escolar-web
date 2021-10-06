@@ -36,34 +36,36 @@
         };
 
         $scope.preview = function (signup) {
-          const accepted = StateSignups.accepted({ id: signup.id }).$promise;
+          $scope.signup = signup;
+          if (signup.deleted_at === null) {
+            const accepted = StateSignups.accepted({ id: signup.id }).$promise;
+            accepted.then(function (res) {
+              if (res.status === 200) {
+                $scope.signup = signup;
+                if (signup.data.admin.dob.includes('-')) {
+                  let adminDate = signup.data.admin.dob.split('-');
+                  adminDate =
+                    adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
+                  signup.data.admin.dob = adminDate;
+                }
+                if (signup.data.coordinator.dob.includes('-')) {
+                  let coordinationDate = signup.data.coordinator.dob.split('-');
+                  coordinationDate =
+                    coordinationDate[2] +
+                    '/' +
+                    coordinationDate[1] +
+                    '/' +
+                    coordinationDate[0];
+                  signup.data.coordinator.dob = coordinationDate;
+                }
 
-          accepted.then(function (res) {
-            if (res.status === 200) {
-              $scope.signup = signup;
-              if (signup.data.admin.dob.includes('-')) {
-                let adminDate = signup.data.admin.dob.split('-');
-                adminDate =
-                  adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
-                signup.data.admin.dob = adminDate;
+                signup.is_approved_by_manager = false;
+                if (res.data) {
+                  signup.is_approved_by_manager = true;
+                }
               }
-              if (signup.data.coordinator.dob.includes('-')) {
-                let coordinationDate = signup.data.coordinator.dob.split('-');
-                coordinationDate =
-                  coordinationDate[2] +
-                  '/' +
-                  coordinationDate[1] +
-                  '/' +
-                  coordinationDate[0];
-                signup.data.coordinator.dob = coordinationDate;
-              }
-
-              signup.is_approved_by_manager = false;
-              if (res.data) {
-                signup.is_approved_by_manager = true;
-              }
-            }
-          });
+            });
+          }
         };
 
         $scope.approve = function (signup) {
