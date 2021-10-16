@@ -41,10 +41,13 @@
 </div>
 
 <script>
-  document.getElementById(
-    'greeting'
-  ).innerHTML = new Date().toLocaleDateString();
-  document.getElementById(
-    'greetings'
-  ).innerHTML = new Date().toLocaleDateString();
+  var date = new Date();
+  date = date.setDate(date.getDate() - 1);
+  console.log(date);
+  document.getElementById('greeting').innerHTML = new Date(
+    date
+  ).toLocaleDateString();
+  document.getElementById('greetings').innerHTML = new Date(
+    date
+  ).toLocaleDateString();
 </script>

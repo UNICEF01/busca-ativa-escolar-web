@@ -121,9 +121,6 @@
               </div>
             </div>
           </div>
-          <!-- FINAL BRASIL E UFs -->
-
-          <!-- CIDADES -->
           <div ng-if="fusionmap_scope_city.id != null">
             <div class="col-md-6">
               <cases-map
@@ -140,19 +137,15 @@
               ></metrics-overview>
             </div>
           </div>
-          <!-- FINAL CIDADES -->
         </div>
       </div>
     </div>
-    <!-- FINAL Fusion map -->
-
-    <!--            <div id="dashboard-map-gestor-nacional">-->
-    <!--                <searchable-cases-map></searchable-cases-map>-->
-    <!--            </div>-->
   </div>
 </div>
 <script>
-  document.getElementById(
-    'greetings'
-  ).innerHTML = new Date().toLocaleDateString();
+  var date = new Date();
+  date = date.setDate(date.getDate() - 1);
+  document.getElementById('greetings').innerHTML = new Date(
+    date
+  ).toLocaleDateString();
 </script>
