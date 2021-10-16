@@ -1,70 +1,85 @@
-(function() {
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .controller(
+      'FirstTimeSetupCtrl',
+      function (
+        $scope,
+        $rootScope,
+        $window,
+        $location,
+        Auth,
+        Modals,
+        MockData,
+        Identity
+      ) {
+        $rootScope.section = 'first_time_setup';
 
-	angular.module('BuscaAtivaEscolar').controller('FirstTimeSetupCtrl', function ($scope, $rootScope, $window, $location, Auth, Modals, MockData, Identity) {
+        $scope.identity = Identity;
+        $scope.step = 2; // Step 1 is sign-up
+        $scope.isEditing = false;
 
-		$rootScope.section = 'first_time_setup';
+        $scope.causes = MockData.alertReasonsPriority;
+        $scope.newGroupName = '';
+        $scope.groups = [
+          { name: 'Secretaria Municipal de Educação', canChange: false },
+          {
+            name: 'Secretaria Municipal de Assistência Social',
+            canChange: true,
+          },
+          { name: 'Secretaria Municipal da Saúde', canChange: true },
+        ];
 
-		$scope.identity = Identity;
-		$scope.step = 2; // Step 1 is sign-up
-		$scope.isEditing = false;
+        Identity.clearSession();
 
-		$scope.causes = MockData.alertReasonsPriority;
-		$scope.newGroupName = "";
-		$scope.groups = [
-			{name: 'Secretaria Municipal de Educação', canChange: false},
-			{name: 'Secretaria Municipal de Assistência Social', canChange: true},
-			{name: 'Secretaria Municipal da Saúde', canChange: true}
-		];
+        $scope.range = function (start, end) {
+          var arr = [];
 
-		Identity.clearSession();
+          for (var i = start; i <= end; i++) {
+            arr.push(i);
+          }
 
-		$scope.range = function (start, end) {
-			var arr = [];
+          return arr;
+        };
 
-			for(var i = start; i <= end; i++) {
-				arr.push(i);
-			}
+        $scope.goToStep = function (step) {
+          $scope.step = step;
+          $window.scrollTo(0, 0);
+        };
 
-			return arr;
-		};
+        $scope.nextStep = function () {
+          $scope.step++;
+          $window.scrollTo(0, 0);
+          if ($scope.step > 7) $scope.step = 7;
+        };
 
-		$scope.goToStep = function (step) {
-			$scope.step = step;
-			$window.scrollTo(0, 0);
-		};
+        $scope.prevStep = function () {
+          $scope.step--;
+          $window.scrollTo(0, 0);
+          if ($scope.step < 2) $scope.step = 1;
+        };
 
-		$scope.nextStep = function() {
-			$scope.step++;
-			$window.scrollTo(0, 0);
-			if($scope.step > 7) $scope.step = 7;
-		};
+        $scope.removeGroup = function (i) {
+          $scope.groups.splice(i, 1);
+        };
 
-		$scope.prevStep = function() {
-			$scope.step--;
-			$window.scrollTo(0, 0);
-			if($scope.step < 2) $scope.step = 1;
-		};
+        $scope.addGroup = function () {
+          $scope.groups.push({ name: $scope.newGroupName, canChange: true });
+          $scope.newGroupName = '';
+        };
 
-		$scope.removeGroup = function(i) {
-			$scope.groups.splice(i, 1);
-		};
-
-		$scope.addGroup = function() {
-			$scope.groups.push({name: $scope.newGroupName, canChange: true});
-			$scope.newGroupName = "";
-		};
-
-		$scope.finish = function() {
-			Modals.show(Modals.Confirm(
-				'Tem certeza que deseja prosseguir com o cadastro?',
-				'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
-			)).then(function(res) {
-				Auth.login('manager_sp@lqdi.net', 'demo').then(function() {
-					$location.path('/dashboard');
-				});
-			});
-		};
-
-	});
-
+        $scope.finish = function () {
+          Modals.show(
+            Modals.Confirm(
+              'Tem certeza que deseja prosseguir com o cadastro?',
+              'Os dados informados poderão ser alterados por você e pelos gestores na área de Configurações.'
+            )
+          ).then(function (res) {
+            Auth.login('manager_sp@lqdi.net', 'demo').then(function () {
+              $location.path('/dashboard');
+            });
+          });
+        };
+      }
+    );
 })();
