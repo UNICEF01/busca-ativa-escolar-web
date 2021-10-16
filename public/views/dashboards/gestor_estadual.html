@@ -34,6 +34,7 @@
   <div class="row">
     <div class="col-md-12">
       <h3><i class="material-icons">map</i> Mapa de casos</h3>
+      <span>Valores se referem à data de: <span id="greetings"></span></span>
       <cases-map></cases-map>
     </div>
   </div>
@@ -42,5 +43,8 @@
 <script>
   document.getElementById(
     'greeting'
+  ).innerHTML = new Date().toLocaleDateString();
+  document.getElementById(
+    'greetings'
   ).innerHTML = new Date().toLocaleDateString();
 </script>
