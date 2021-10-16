@@ -56,7 +56,9 @@
 </div>
 
 <script>
-  document.getElementById(
-    'greeting'
-  ).innerHTML = new Date().toLocaleDateString();
+  var date = new Date();
+  date = date.setDate(date.getDate() - 1);
+  document.getElementById('greeting').innerHTML = new Date(
+    date
+  ).toLocaleDateString();
 </script>
