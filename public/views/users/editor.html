@@ -406,53 +406,52 @@
       <hr />
 
       <div ng-if="currentState === 'lgpd_signup'">
-
         <h5>Dados de acesso</h5>
 
         <p>A senha informada será enviada para o seu e-mail.</p>
 
         <div class="form-group col-md-6">
           <label class="control-label" for="fld-gp-email"
-          ><i class="fa fa-envelope"></i> E-mail de acesso*</label
+            ><i class="fa fa-envelope"></i> E-mail de acesso*</label
           >
           <input
-                  type="email"
-                  class="form-control"
-                  id="fld-gp-email"
-                  name="gp_email"
-                  required
-                  ng-model="user.email"
+            type="email"
+            class="form-control"
+            id="fld-gp-email"
+            name="gp_email"
+            required
+            ng-model="user.email"
           />
         </div>
 
         <div class="form-group col-md-6">
           <div class="input-group">
             <label class="control-label" for="fld-gp-password"
-            ><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label
+              ><i class="fa fa-key"></i> Crie uma nova senha de acesso*</label
             >
             <input
-                    type="password"
-                    class="form-control"
-                    id="fld-gp-password"
-                    name="gp_password"
-                    required
-                    my-directive
-                    onfocus="add(this)"
-                    onblur="remove(this)"
-                    ng-model="user.password"
-                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
-                    title="Senha não pode estar em branco."
+              type="password"
+              class="form-control"
+              id="fld-gp-password"
+              name="gp_password"
+              required
+              my-directive
+              onfocus="add(this)"
+              onblur="remove(this)"
+              ng-model="user.password"
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
+              title="Senha não pode estar em branco."
             />
             <span class="input-group-btn" uib-tooltip="Exibir a senha">
-        <button
+              <button
                 type="button"
                 class="btn btn-fab btn-fab-mini"
                 ng-click="showPassowrd()"
                 style="margin-top: 20px;"
-        >
-          <i class="fa fa-eye"></i>
-        </button>
-      </span>
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+            </span>
           </div>
           <div id="message">
             <p>A senha deve conter pelo menos:</p>
@@ -467,7 +466,1494 @@
             </p>
           </div>
         </div>
+      </div>
+      <div class="panel-heading">
+        <h3>
+          <strong>{{step}}.</strong> <i class="fa fa-building"></i> Termo de
+          Adesão
+        </h3>
+      </div>
 
+      <div style="margin: 10px 0;">
+        <p>
+          Leia e aceite o termo de adesão.(Só será possível prosseguir caso
+          todas as opções estejam selecionadas.)
+        </p>
+
+        <div
+          class="panel panel-default"
+          style="max-height: 300px; overflow-y: scroll"
+        >
+          <div class="panel-body" style="text-align: justify;">
+            <div style="text-align: justify;">
+              <p style="margin-top:0pt; margin-bottom:0pt; text-align:center;">
+                <strong>AVISO DE PRIVACIDADE&nbsp;</strong>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt; text-align:center;">
+                PLATAFORMA BUSCA ATIVA ESCOLAR
+              </p>
+
+              <p style="margin-top:0pt; margin-bottom:0pt;">&nbsp;</p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                AO ACESSAR, NAVEGAR OU USAR A PLATAFORMA, DISPON&Iacute;VEL NO
+                SITE
+                <a
+                  href="https://buscaativaescolar.org.br"
+                  style="text-decoration:none;"
+                  ><span style="letter-spacing:0.3pt; color:#000000;"
+                    >BUSCAATIVAESCOLAR.ORG.BR</span
+                  ></a
+                >
+                E RESPECTIVOS APLICATIVOS (&ldquo;<strong
+                  ><u>Plataforma</u></strong
+                >&rdquo;), BEM COMO SE RELACIONAR E/OU USUFRUIR, DIRETA E/OU
+                INDIRETAMENTE, DA REFERIDA PLATAFORMA, A QUAL &Eacute; GERIDA
+                PELA UNITED NATIONS CHILDREN&apos;S FUND - UNICEF, COM SEDE SEPN
+                510, BLOCO A, 2o ANDAR, ASA NORTE, 201, CONJ. 171,
+                BRAS&Iacute;LIA - DF, CEP
+                <span style="letter-spacing:0.3pt;">70750-521</span>, INSCRITA
+                NO CNPJ/ME SOB O N&ordm; 03.744.126/0001-69 (&ldquo;<strong
+                  ><u>UNICEF</u></strong
+                >&rdquo;) E PELA
+                <strong
+                  ><span style="letter-spacing:0.3pt;"
+                    >UNI&Atilde;O NACIONAL DOS DIRIGENTES MUNICIPAIS DE
+                    EDUCA&Ccedil;&Atilde;O - UNDIME,&nbsp;</span
+                  ></strong
+                ><span style="letter-spacing:0.3pt;"
+                  >com sede em Bras&iacute;lia, Distrito Federal, no SCS, Quadra
+                  06, Bloco A, Edif&iacute;cio Carioca, salas 611 a 615, Asa
+                  Sul, CEP 70325-900, inscrita no CNPJ/MF sob o n&ordm;
+                  03.604.410/0001-30 (&ldquo;</span
+                ><strong
+                  ><u
+                    ><span style="letter-spacing:0.3pt;">UNDIME</span></u
+                  ></strong
+                ><span style="letter-spacing:0.3pt;">&rdquo;)</span>, VOC&Ecirc;
+                DECLARA ESTAR CIENTE E COMPREENDER INTEGRALMENTE OS TERMOS DO
+                PRESENTE AVISO DE PRIVACIDADE (&ldquo;<strong
+                  ><u>Aviso de Privacidade</u></strong
+                >&rdquo;).
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Para os fins deste Aviso de Privacidade, &ldquo;<strong
+                  ><u>Titular</u></strong
+                >&rdquo; &eacute; toda pessoa f&iacute;sica que acessa, e/ou que
+                se relaciona, de forma direta ou indireta com a Plataforma. Em
+                algumas opera&ccedil;&otilde;es (<em>e</em>.<em>g</em>. cadastro
+                de usu&aacute;rios nacionais na Plataforma), o UNICEF e a UNDIME
+                ser&atilde;o &ldquo;<strong><u>Controladoras</u></strong
+                >&rdquo; dos dados pessoais,
+                <span style="letter-spacing:0.3pt;"
+                  >ficando respons&aacute;vel pelas decis&otilde;es referentes
+                  ao tratamento de dados pessoais</span
+                >
+                realizado direta e/ou indiretamente pela Plataforma. Para outras
+                determinadas opera&ccedil;&otilde;es de tratamento
+                (<em>e</em>.<em>g</em>. cadastro de usu&aacute;rios municipais e
+                estaduais e de crian&ccedil;as e adolescentes na Plataforma por
+                estes Usu&aacute;rios), o UNICEF e a UNDIME ser&atilde;o
+                &ldquo;<strong><u>Operadoras</u></strong
+                >&rdquo;, devendo tratar os dados pessoais de acordo com
+                orienta&ccedil;&otilde;es de terceiros.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Entre outros indiv&iacute;duos que podem se relacionar com a
+                Plataforma, s&atilde;o considerados Titulares: usu&aacute;rios
+                da Plataforma provenientes dos estados e munic&iacute;pios
+                cadastrados na Plataforma, tais como: prefeitos(as),
+                secret&aacute;rios (as), gestores e t&eacute;cnicos das
+                administra&ccedil;&otilde;es p&uacute;blicas municipais e
+                estaduais, representantes de organiza&ccedil;&otilde;es da
+                sociedade civil, bem como as crian&ccedil;as e/ou adolescentes
+                cadastradas na Plataforma e os seus respectivos
+                respons&aacute;veis legais.&nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Caso voc&ecirc; esteja usando a Plataforma em nome de entidade,
+                &oacute;rg&atilde;o p&uacute;blico, estados, munic&iacute;pios
+                e/ou pessoa jur&iacute;dica de direito privado, voc&ecirc;
+                garante estar autorizado e ter todos os poderes
+                necess&aacute;rios para tomar ci&ecirc;ncia e aceitar este Aviso
+                de Privacidade em nome da respectiva entidade e/ou pessoa
+                jur&iacute;dica, assim como garante que a entidade e/ou pessoa
+                jur&iacute;dica que voc&ecirc; representa concorda em indenizar
+                o UNICEF e a UNDIME por qualquer viola&ccedil;&atilde;o deste
+                Aviso de Privacidade por voc&ecirc; cometida.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">1.</span
+                ><span
+                  style="width:9.98pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;">dA PLATAFORMA</span>
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;"
+                  >A Plataforma objetiva auxiliar os estados e munic&iacute;pios
+                  a identificar crian&ccedil;as e adolescentes que est&atilde;o,
+                  por algum motivo, fora da escola ou em risco de abandono
+                  escolar. A Plataforma registra informa&ccedil;&otilde;es
+                  provenientes de profissionais do setor p&uacute;blico e/ou
+                  social que j&aacute; atuam em campo e identificam as
+                  crian&ccedil;as e adolescentes que est&atilde;o fora da escola
+                  e os motivos relacionados, bem como auxilia os estados e
+                  munic&iacute;pios na gest&atilde;o e planejamento para a
+                  (re)inser&ccedil;&atilde;o destas crian&ccedil;as e
+                  adolescentes na escola.&nbsp;</span
+                >
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;">&nbsp;</span>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;"
+                  >A Plataforma tamb&eacute;m oferece ferramentas para o
+                  acompanhamento de frequ&ecirc;ncia escolar a fim de evitar e
+                  controlar a evas&atilde;o e abandono da escola pelos
+                  estudantes.&nbsp;</span
+                >
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;">&nbsp;</span>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;">
+                  Os munic&iacute;pios e estados interessados dever&atilde;o
+                  aderir &agrave; Plataforma e cadastrar os seus respectivos
+                  usu&aacute;rios.&nbsp;</span
+                >
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;">&nbsp;</span>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <span style="letter-spacing:0.3pt;"
+                  >Os prefeitos(as), secret&aacute;rios (as), gestores e
+                  t&eacute;cnicos do munic&iacute;pio e do estado, ou membros de
+                  organiza&ccedil;&otilde;es da sociedade civil, cadastrados
+                  pelos munic&iacute;pios e estados na Plataforma, s&atilde;o
+                  considerados Usu&aacute;rios da Plataforma, uma vez que
+                  acessam, imputam e gerenciam informa&ccedil;&otilde;es na
+                  Plataforma.&nbsp;</span
+                >
+              </p>
+
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="font-variant:small-caps; text-transform:uppercase;"
+                  >2.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><a name="_Encarregado.__A"></a><a name="_Encarregado."></a
+                ><a name="_Encarregado"></a
+                ><a name="_Ref528011702"
+                  ><span style="text-transform:uppercase;"
+                    >Encarregado&nbsp;</span
+                  ></a
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A Plataforma indica a pessoa f&iacute;sica abaixo qualificada
+                para o cargo de “Encarregado”, que ficar&aacute; ent&atilde;o
+                respons&aacute;vel por auxiliar e orientar os Titulares de dados
+                em todas as quest&otilde;es relativas a este Aviso de
+                Privacidade ou ao tratamento de dados pessoais realizado pela
+                Plataforma, assim como para atuar como canal de
+                comunica&ccedil;&atilde;o entre os Titulares, o UNICEF, a UNDIME
+                e a Autoridade Nacional de Prote&ccedil;&atilde;o de Dados.<a
+                  name="_Ref53139401"
+                ></a>
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:28.35pt; margin-bottom:0pt;"
+              >
+                <strong>Nome</strong>: Vilmar Klemann
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:28.35pt; margin-bottom:0pt;"
+              >
+                <strong>Telefone</strong>: 061 9981284896
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:28.35pt; margin-bottom:0pt;"
+              >
+                <strong>Contato</strong>: bae@undime.org.br
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">3.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >tratamento de Dados</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                <strong
+                  >Para acessar e utilizar a Plataforma, o Titular
+                  precisar&aacute; fornecer determinadas
+                  informa&ccedil;&otilde;es para a Plataforma, as quais
+                  s&atilde;o imprescind&iacute;veis para presta&ccedil;&atilde;o
+                  de servi&ccedil;os e/ou para as atividades da Plataforma.
+                  Assim, ser&atilde;o coletados e tratados, entre outros dados
+                  pessoais necess&aacute;rios &agrave;s atividades da Plataforma
+                  (inclusive em fun&ccedil;&atilde;o de obriga&ccedil;&otilde;es
+                  legais ou regulatórias), os seguintes dados pessoais – ou
+                  documentos contendo dados pessoais - dos Titulares:</strong
+                >
+              </p>
+
+              <table
+                cellpadding="0"
+                cellspacing="0"
+                style="border:0.75pt solid #000000; border-collapse:collapse;"
+              >
+                <tbody>
+                  <tr style="height:21.7pt;">
+                    <td
+                      style="width:215.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Tipo de Titular / Usu&aacute;rio</strong>
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Dados Pessoais</strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Prefeitos
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, data de nascimento, CPF, e-mail institucional,
+                        telefone.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Gestor Pol&iacute;tico e Gestor Estadual
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, data de nascimento, CPF, e-mail, telefone,
+                        órg&atilde;o e cargo, endere&ccedil;o, celular, Skype.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Coordenador Operacional e Coordenador Estadual
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, data de nascimento, CPF, e-mail, telefone,
+                        celular, Skype, &oacute;rg&atilde;o e cargo,
+                        endere&ccedil;o.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Supervisores Institucionais e Supervisores Estaduais,
+                        T&eacute;cnicos Verificadores e Agentes
+                        Comunit&aacute;rios
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, fun&ccedil;&atilde;o, data de nascimento, CPF,
+                        e-mail, telefone, celular endere&ccedil;o, grupo.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Gestores nacionais e Membros do Comit&ecirc; Nacional
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, fun&ccedil;&atilde;o, data de nascimento, CPF,
+                        e-mail, telefone, celular endere&ccedil;o, grupo.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Interessados em obter esclarecimentos atrav&eacute;s da
+                        Plataforma (visitantes que acessam a Plataforma apenas
+                        para conhecer e enviam mensagens via Fale Conosco)
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, e-mail, telefone, munic&iacute;pio, UF
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <strong>&nbsp;</strong>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                <strong
+                  >Para usufruir das ferramentas e funcionalidades da
+                  Plataforma, alguns usu&aacute;rios da Plataforma imputam dados
+                  pessoais de Titulares diversos, sendo que o controle dos
+                  referidos dados est&aacute; sujeito exclusivamente aos
+                  Usu&aacute;rios - e/ou da entidade que representam - da
+                  Plataforma. Assim, ser&atilde;o coletados e tratados, entre
+                  outros dados pessoais necess&aacute;rios &agrave;s atividades
+                  da Plataforma:</strong
+                >
+              </p>
+
+              <table
+                cellpadding="0"
+                cellspacing="0"
+                style="border:0.75pt solid #000000; border-collapse:collapse;"
+              >
+                <tbody>
+                  <tr style="height:21.7pt;">
+                    <td
+                      style="width:215.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Tipo de Titular</strong>
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Dados Pessoais</strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Crian&ccedil;as e Adolescentes cadastrados na
+                        Plataforma.
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, sexo, ra&ccedil;a, data de nascimento, RG, CPF,
+                        n&uacute;mero de identidade social, escolaridade, se
+                        trabalha ou n&atilde;o, motivo de aus&ecirc;ncia na
+                        escola (<em>e</em>.<em>g</em>. doen&ccedil;a,
+                        defici&ecirc;ncia, gravidez precoce, desinteresse, falta
+                        de documentos, trabalho infantil, viol&ecirc;ncia
+                        sexual, preconceito, viol&ecirc;ncia familiar/escolar,
+                        uso ou abuso de drogas, em situa&ccedil;&atilde;o de
+                        acolhimento institucional), endere&ccedil;o, dados
+                        escolares (ano e etapa de ensino, escola em que estuda).
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Respons&aacute;veis das crian&ccedil;as e adolescentes
+                        cujos dados s&atilde;o imputados na Plataforma
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Nome, escolaridade, RG, CPF, telefone, endere&ccedil;o,
+                        data de nascimento, renda familiar, ra&ccedil;a / etnia.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Tipo de Titular</strong>
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        <strong>Dados Pessoais Sens&iacute;veis</strong>
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Crian&ccedil;as e Adolescentes (podem ser maiores de
+                        idade) cadastrados na Plataforma.
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; border-bottom-style:solid; border-bottom-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Ra&ccedil;a e etnia
+                      </p>
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Em raz&atilde;o do levantamento dos motivos de
+                        aus&ecirc;ncia na escola, poder&atilde;o ser coletados
+                        os dados de sa&uacute;de, histórico de viol&ecirc;ncia
+                        familiar, condi&ccedil;&atilde;o socioecon&ocirc;mica e
+                        religi&atilde;o.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-right-style:solid; border-right-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-bottom:18pt; text-align:center; line-height:150%; font-size:12pt;"
+                      >
+                        Respons&aacute;veis das crian&ccedil;as e adolescentes
+                        cujos dados s&atilde;o imputados na Plataforma
+                      </p>
+                    </td>
+                    <td
+                      style="width:215.75pt; border-top-style:solid; border-top-width:0.75pt; border-left-style:solid; border-left-width:0.75pt; padding-right:5.03pt; padding-left:5.03pt; vertical-align:top;"
+                    >
+                      <p
+                        style="margin-top:0pt; margin-left:17.85pt; margin-bottom:18pt; text-align:justify; line-height:150%; font-size:12pt;"
+                      >
+                        Ra&ccedil;a, etnia e condi&ccedil;&atilde;o
+                        socioecon&ocirc;mica.
+                      </p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                <strong>&nbsp;</strong>
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Ao acessar ou usar a Plataforma, voc&ecirc; Titular est&aacute;
+                ciente - como pessoa f&iacute;sica e, sempre que
+                aplic&aacute;vel, tamb&eacute;m como representante da
+                crian&ccedil;a e/ou do adolescente, de pessoa jur&iacute;dica ou
+                de entidade por voc&ecirc; representada - do tratamento dos
+                dados listados acima, bem como declara que ao fornecer dados de
+                terceiros, pessoais ou n&atilde;o, na Plataforma (diretamente ou
+                mediante a inser&ccedil;&atilde;o de documentos contendo tais
+                dados), tal disponibiliza&ccedil;&atilde;o est&aacute; de acordo
+                com os termos da legisla&ccedil;&atilde;o vigente e n&atilde;o
+                viola direitos de terceiros, responsabilizando-se por toda e
+                qualquer reclama&ccedil;&atilde;o ou preju&iacute;zo decorrente
+                do tratamento de dados pessoais por voc&ecirc; inseridos na
+                Plataforma (diretamente ou mediante a inser&ccedil;&atilde;o de
+                documentos contendo tais dados) e/ou fornecidos, de qualquer
+                modo, para a Plataforma.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A Plataforma tamb&eacute;m poder&aacute; coletar dados pessoais
+                do Titular a partir de base de dados de terceiros, que podem ser
+                p&uacute;blicas ou n&atilde;o. A Plataforma poder&aacute;
+                combinar esses dados com as informa&ccedil;&otilde;es existentes
+                que a Plataforma det&eacute;m sobre o Titular ou us&aacute;-las
+                de forma independente.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">4.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Finalidades e Uso dos Dados&nbsp;</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O presente Aviso de Privacidade lista abaixo as principais
+                situa&ccedil;&otilde;es em que - e as finalidades para as quais
+                - os dados dos Titulares, assim como os dados de terceiros de
+                qualquer modo coletados pela Plataforma, s&atilde;o utilizados:
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Servi&ccedil;os</u></strong
+                >: A Plataforma utilizar&aacute; os dados pessoais para: (a)
+                cadastro na Plataforma para fins de acesso; (b) controle de
+                acesso dos usu&aacute;rios na Plataforma; (c) abertura de
+                chamados e suporte; (d) emiss&atilde;o de relatórios; (e)
+                cadastros de alertas relativos a crian&ccedil;as e adolescentes
+                que est&atilde;o fora da escola; (f) an&aacute;lise dos motivos
+                e das condi&ccedil;&otilde;es das crian&ccedil;as e adolescentes
+                fora da escola; (g) planejamento, gest&atilde;o e controle de
+                provid&ecirc;ncias para a (re)inser&ccedil;&atilde;o das
+                crian&ccedil;as e adolescentes na escola e nos demais
+                servi&ccedil;os p&uacute;blicos; (h) acompanhamento da
+                crian&ccedil;a e/ou do adolescente (re)matriculado na escola,
+                bem como acompanhamento de frequ&ecirc;ncia escolar e; (i)
+                integra&ccedil;&atilde;o entre as ferramentas da Plataforma.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Uso da Plataforma</u></strong
+                ><strong>:&nbsp;</strong>A Plataforma utilizar&aacute; dados
+                pessoais para: (a) facilitar a identifica&ccedil;&atilde;o do
+                Titular na Plataforma; (b) fornecer a interatividade
+                necess&aacute;ria na Plataforma; (c) operar e aperfei&ccedil;oar
+                a Plataforma, e; (d) identificar o perfil do usu&aacute;rio da
+                Plataforma para adequar funcionalidades e
+                comunica&ccedil;&otilde;es.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u>Estudos de Comportamento e Estat&iacute;sticas</u></strong
+                ><strong>:</strong> A Plataforma utilizar&aacute; dados pessoais
+                para: (a) mapeamento de perfis para fins de envio de
+                comunica&ccedil;&atilde;o; (b) contatar os Titulares para
+                realizar pesquisas e entrevistas; (c) fomentar a
+                comunica&ccedil;&atilde;o entre os Titulares da Plataforma para
+                trocas de experi&ecirc;ncias, e; (d) elabora&ccedil;&atilde;o de
+                estudos para fins estat&iacute;sticos.
+              </p>
+              <p style="margin-top:0pt; margin-left:45.9pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Comunica&ccedil;&atilde;o</u></strong
+                >: A Plataforma utilizar&aacute; os dados pessoais dos Titulares
+                para entrar em contato com o Titular, assim como para enviar
+                avisos, mensagens de texto, <em>newsletters</em> e/ou lembretes.
+                A Plataforma poder&aacute; enviar aos Titulares
+                comunica&ccedil;&otilde;es sobre a disponibilidade da
+                Plataforma, sobre a seguran&ccedil;a da Plataforma ou sobre
+                outras quest&otilde;es de qualquer modo relacionadas &agrave;
+                Plataforma, como mensagens sobre como usar servi&ccedil;os e
+                solu&ccedil;&otilde;es ou informa&ccedil;&otilde;es sobre
+                atualiza&ccedil;&otilde;es eventualmente dispon&iacute;veis.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">&nbsp;</p>
+              <p
+                style="margin-top:0pt; margin-left:35.4pt; margin-bottom:18pt;"
+              >
+                <strong><u>Atividades dos Titulares na Plataforma</u></strong
+                >: A Plataforma registra os dados de acesso e uso da Plataforma
+                quando os Titulares de qualquer forma acessam ou de qualquer
+                forma usam a Plataforma. A Plataforma utiliza as
+                informa&ccedil;&otilde;es de acesso, os <em>cookies</em>, as
+                informa&ccedil;&otilde;es do dispositivo e os endere&ccedil;os
+                de IP (<em>Internet Protocol</em>) para identificar os Titulares
+                ou registrar o uso que eles fazem da - ou a atividade deles na -
+                Plataforma.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Armazenamento e backup</u></strong
+                ><strong>:&nbsp;</strong>A Plataforma realiza cópias de
+                seguran&ccedil;a das informa&ccedil;&otilde;es relativas
+                &agrave; Plataforma, as quais podem incluir dados pessoais.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">5.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Cookies E TECNOLOGIAS SIMILARES</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A Plataforma poder&aacute; usar <em>cookies</em> ou outras
+                tecnologias para ajudar a personalizar a experi&ecirc;ncia dos
+                Titulares. <em>Cookies</em> s&atilde;o pequenos arquivos de
+                texto armazenados na memória do seu computador. Um
+                <em>cookie</em> cont&eacute;m informa&ccedil;&otilde;es que
+                poder&atilde;o ser lidas posteriormente por um servidor
+                localizado no dom&iacute;nio que o emitiu. As
+                informa&ccedil;&otilde;es que os cookies coletam incluem, entre
+                outras, a data e o hor&aacute;rio da visita dos Titulares,
+                histórico de navega&ccedil;&atilde;o dos Titulares etc.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Os <em>cookies</em> trazem diversos benef&iacute;cios, uma vez
+                que permitem identificar Titulares antigos quando estes retornam
+                &agrave; Plataforma, possibilitando seu direcionamento a
+                conte&uacute;do personalizado e/ou servi&ccedil;os e produtos
+                similares. Os <em>cookies</em> tamb&eacute;m poupam tempo,
+                tornando desnecess&aacute;rio inserir as mesmas
+                informa&ccedil;&otilde;es diversas vezes.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">6.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Dura&ccedil;&atilde;o do Tratamento dos Dados</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Os dados pessoais ser&atilde;o tratados pela Plataforma enquanto
+                perdurarem as finalidades indicadas neste Aviso de Privacidade
+                e/ou houver necessidade de manuten&ccedil;&atilde;o dos mesmos,
+                como, por exemplo, para respeitar os prazos legais de guarda,
+                incluindo aqueles descritos na Lei no. 12.965/14 (Marco Civil da
+                Internet) e no Decreto no. 8.771/16, ou para cumprimento de
+                obriga&ccedil;&otilde;es legais ou regulatórias
+                aplic&aacute;veis.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Esgotada a finalidade ou a necessidade legal, os dados
+                ser&atilde;o exclu&iacute;dos atrav&eacute;s de m&eacute;todos
+                de descarte seguro, ou anonimizados para fins meramente
+                estat&iacute;sticos.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="font-variant:small-caps; text-transform:uppercase;"
+                  >7.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Responsabilidades e declara&ccedil;&otilde;es DO
+                  TITULAR</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular declara e reconhece que, ao disponibilizar dados,
+                incluindo dados pessoais de terceiros, na Plataforma
+                (diretamente ou mediante a inser&ccedil;&atilde;o ou
+                disponibiliza&ccedil;&atilde;o de documentos contendo tais
+                dados):
+              </p>
+              <ul style="margin:0pt; padding-left:0pt;" type="disc">
+                <li
+                  style="margin-right:3.4pt; margin-left:42.78pt; widows:0; orphans:0; padding-left:21.57pt;  letter-spacing:0.3pt;"
+                >
+                  <span
+                    >previamente, informou os respectivos terceiros e tomou
+                    todas as medidas necess&aacute;rias para que os terceiros
+                    tivessem ci&ecirc;ncia do tratamento de seus dados pessoais
+                    pela Plataforma;</span
+                  >
+                </li>
+              </ul>
+              <p style="margin:0pt 3.4pt 0pt 63.8pt; widows:0; orphans:0;">
+                <span style="letter-spacing:0.3pt;">&nbsp;</span>
+              </p>
+              <ul style="margin:0pt; padding-left:0pt;" type="disc">
+                <li
+                  style="margin-right:3.4pt; margin-left:42.78pt; widows:0; orphans:0; padding-left:21.57pt;  letter-spacing:0.3pt;"
+                >
+                  <span>
+                    no caso da inser&ccedil;&atilde;o de dados pessoais
+                    sens&iacute;veis (origem racial ou &eacute;tnica,
+                    convic&ccedil;&atilde;o religiosa, opini&atilde;o
+                    pol&iacute;tica, filia&ccedil;&atilde;o a sindicato ou a
+                    organiza&ccedil;&atilde;o de car&aacute;ter religioso,
+                    filosófico ou pol&iacute;tico, dado referente &agrave;
+                    sa&uacute;de ou &agrave; vida sexual, dado gen&eacute;tico
+                    ou biom&eacute;trico, quando vinculado a uma pessoa natural
+                    etc.), cientificou e obteve, previamente, o consentimento
+                    dos Titulares de tais dados no tocante ao tratamento dos
+                    referidos dados pela Plataforma;</span
+                  >
+                </li>
+              </ul>
+              <p style="margin:0pt 3.4pt 0pt 63.8pt; widows:0; orphans:0;">
+                <span style="letter-spacing:0.3pt;">&nbsp;</span>
+              </p>
+              <ul style="margin:0pt; padding-left:0pt;" type="disc">
+                <li
+                  style="margin-right:3.4pt; margin-left:42.78pt; widows:0; orphans:0; padding-left:21.57pt;  letter-spacing:0.3pt;"
+                >
+                  <span>
+                    as informa&ccedil;&otilde;es disponibilizadas para a
+                    Plataforma, incluindo eventuais dados pessoais, s&atilde;o
+                    completas, ver&iacute;dicas e atualizadas, bem como
+                    n&atilde;o violam quaisquer direitos de terceiros ou normas
+                    legais aplic&aacute;veis.</span
+                  >
+                </li>
+              </ul>
+              <p
+                style="margin-top:0pt; margin-left:28.35pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Caso as declara&ccedil;&otilde;es acima n&atilde;o estejam
+                totalmente corretas e/ou as obriga&ccedil;&otilde;es ora
+                assumidas n&atilde;o sejam adequadamente cumpridas, o Titular se
+                responsabiliza de forma exclusiva e integral por quaisquer
+                preju&iacute;zos causados &agrave; UNDIME e/ou UNICEF ou a
+                quaisquer terceiros.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular se responsabiliza pelas atividades que executa na
+                Plataforma ou pelas informa&ccedil;&otilde;es, incluindo dados
+                pessoais, que insere na Plataforma (diretamente ou mediante a
+                inser&ccedil;&atilde;o de documentos contendo tais dados).
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular dever&aacute; informar atrav&eacute;s da Plataforma
+                todos os dados necess&aacute;rios para a forma&ccedil;&atilde;o
+                de seu cadastro e desempenho adequado das fun&ccedil;&otilde;es
+                da Plataforma, comprometendo-se a fornecer, sempre,
+                informa&ccedil;&otilde;es verdadeiras, corretas, atuais e
+                completas relativas aos seus dados cadastrais,
+                responsabilizando-se civil e criminalmente por estas
+                informa&ccedil;&otilde;es.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular dever&aacute; manter o seu cadastro atualizado junto
+                &agrave; Plataforma.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular n&atilde;o poder&aacute;: (a) acessar a Plataforma de
+                forma il&iacute;cita; (b) burlar mecanismos de
+                autentica&ccedil;&atilde;o e/ou de seguran&ccedil;a da
+                Plataforma; (c) permitir que terceiros acessem a Plataforma
+                utilizando as suas credenciais; (d) utilizar a Plataforma para
+                finalidade ilegal e/ou que viole direitos de terceiros.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular dever&aacute; comunicar a Plataforma, atrav&eacute;s
+                do Encarregado, imediatamente, a eventual perda,
+                altera&ccedil;&atilde;o n&atilde;o autorizada, extravio e/ou
+                divulga&ccedil;&atilde;o das informa&ccedil;&otilde;es de login
+                e senha a ele eventualmente atribu&iacute;das para acessar a
+                Plataforma.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                &Eacute; expressamente vedada a utiliza&ccedil;&atilde;o de um
+                mesmo login e senha por mais de uma pessoa ou o compartilhamento
+                de dados de acesso entre m&uacute;ltiplos Usu&aacute;rios
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                &Eacute; expressamente proibido que o conte&uacute;do
+                eventualmente disponibilizado na Plataforma seja copiado,
+                imitado ou usado, no todo ou em parte, sem a pr&eacute;via
+                permiss&atilde;o por escrito dos respectivos titulares.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Na hipótese da UNDIME ou UNICEF ser demandado, a qualquer tempo,
+                em raz&atilde;o de fatos ou atos cuja responsabilidade seja
+                atribu&iacute;da ao Titular nos termos deste Aviso de
+                Privacidade, o Titular, assim como a crian&ccedil;a e/ou
+                adolescente a entidade ou a sociedade que ele representa,
+                ser&atilde;o respons&aacute;veis de forma solid&aacute;ria e
+                dever&atilde;o: (a) intervir voluntariamente no feito,
+                pleiteando a imediata exclus&atilde;o da UNDIME e/ou UNICEF da
+                lide, (b) assumir a responsabilidade integral e exclusiva pelo
+                pagamento e/ou pelas provid&ecirc;ncias reclamadas, e (c)
+                ressarcir integralmente a UNDIME e/ou UNICEF pelos custos e
+                despesas porventura incorridos em consequ&ecirc;ncia da demanda.
+                Caso n&atilde;o se opere a referida exclus&atilde;o, o Titular,
+                a crian&ccedil;a e/ou adolescente e/ou a entidade ou sociedade
+                que o Titular representa, responder&aacute; pelo pagamento e
+                pelo cumprimento integral da decis&atilde;o ou, se
+                aplic&aacute;vel, dever&aacute; ressarcir imediatamente a UNDIME
+                e/ou UNICEF .
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">8.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><a name="_Compartilhamento_de_Dados."></a
+                ><span style="text-transform:uppercase;"
+                  >Compartilhamento de Dados</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O presente Aviso de Privacidade indica abaixo as
+                situa&ccedil;&otilde;es em que os dados pessoais dos Titulares,
+                assim como os dados pessoais de terceiros de qualquer modo
+                inseridos na Plataforma pelos Titulares, ser&atilde;o
+                compartilhados:
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Parceiras</u></strong
+                >:&nbsp; A Plataforma poder&aacute; compartilhar
+                informa&ccedil;&otilde;es, incluindo dados pessoais dos
+                Titulares e de terceiros, com as institui&ccedil;&otilde;es e
+                funda&ccedil;&otilde;es ou demais órg&atilde;os parceiros sempre
+                que tal compartilhamento for importante para a
+                opera&ccedil;&atilde;o da Plataforma, para o fornecimento dos
+                servi&ccedil;os, para o cumprimento de obriga&ccedil;&otilde;es
+                legais ou regulatórias e/ou forem do interesse do Titular.
+              </p>
+              <p style="margin-top:0pt; margin-left:45.9pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u>Opera&ccedil;&otilde;es societ&aacute;rias</u></strong
+                >: Em decorr&ecirc;ncia de eventuais opera&ccedil;&otilde;es de
+                reestrutura&ccedil;&atilde;o societ&aacute;ria, fus&otilde;es,
+                aquisi&ccedil;&otilde;es, incorpora&ccedil;&otilde;es e
+                similares, a Plataforma poder&aacute; compartilhar ou mesmo
+                transferir informa&ccedil;&otilde;es, incluindo dados pessoais
+                dos Titulares e de terceiros, para as pessoas f&iacute;sicas ou
+                jur&iacute;dicas de qualquer modo envolvidas na
+                opera&ccedil;&atilde;o.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:0pt;">&nbsp;</p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u>Parceiros e prestadores de servi&ccedil;os</u></strong
+                >: A Plataforma poder&aacute; compartilhar
+                informa&ccedil;&otilde;es, incluindo dados pessoais dos
+                Titulares e de terceiros, com empresas,
+                organiza&ccedil;&otilde;es ou indiv&iacute;duos que prestam
+                servi&ccedil;os em nome do UNICEF, UNDIME e da Plataforma para,
+                por exemplo, implementar medidas de seguran&ccedil;a da
+                informa&ccedil;&atilde;o, disponibilizar software e/ou
+                repositórios necess&aacute;rios &agrave;s atividades da
+                Plataforma etc. Essas empresas receber&atilde;o permiss&atilde;o
+                para obter apenas as informa&ccedil;&otilde;es
+                necess&aacute;rias para prestar o servi&ccedil;o adequadamente e
+                poder&atilde;o ser obrigadas a manter a confidencialidade das
+                informa&ccedil;&otilde;es.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:8pt;">
+                <strong
+                  ><u
+                    >Preven&ccedil;&atilde;o de fraudes e seguran&ccedil;a</u
+                  ></strong
+                >:&nbsp; A Plataforma poder&aacute; divulgar ou compartilhar
+                informa&ccedil;&otilde;es, incluindo dados pessoais dos
+                Titulares e de terceiros, se acreditar, de boa-f&eacute;, que o
+                acesso, o uso, a conserva&ccedil;&atilde;o ou a
+                divulga&ccedil;&atilde;o das informa&ccedil;&otilde;es seja
+                razoavelmente necess&aacute;rio para (a) detectar ou impedir
+                fraudes, bem como resolver quest&otilde;es t&eacute;cnicas ou de
+                seguran&ccedil;a, e; (b) garantir a seguran&ccedil;a da
+                Plataforma, dos Titulares e de terceiros. Neste caso, os dados e
+                as informa&ccedil;&otilde;es poder&atilde;o ser compartilhados
+                com terceiros respons&aacute;veis pela
+                investiga&ccedil;&atilde;o, incluindo órg&atilde;os do
+                judici&aacute;rio, autoridades e empresas de tecnologia da
+                informa&ccedil;&atilde;o ou seguran&ccedil;a da
+                informa&ccedil;&atilde;o.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong>&nbsp;</strong>
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Demandas judiciais e investiga&ccedil;&otilde;es</u
+                  ></strong
+                >: A Plataforma poder&aacute; divulgar ou compartilhar
+                informa&ccedil;&otilde;es, incluindo dados pessoais dos
+                Titulares e de terceiros, com autoridades e/ou órg&atilde;os
+                p&uacute;blicos, ag&ecirc;ncias regulatórias, autoridades legais
+                (<em>e</em>.<em>g</em>. delegacias regionais), autarquias,
+                órg&atilde;os de defesa do consumidor, órg&atilde;os do governo
+                e do judici&aacute;rio e/ou advogados nos seguintes casos: (a)
+                para cumprir decis&atilde;o judicial ou
+                solicita&ccedil;&atilde;o governamental; (b) para resguardar
+                direitos e prevenir responsabilidades da Plataforma ; (c) para
+                investigar, impedir ou tomar medidas relacionadas a atividades
+                ilegais, suspeitas ou reais, ou para cooperar com órg&atilde;os
+                p&uacute;blicos, e; (d) investigar poss&iacute;veis
+                viola&ccedil;&otilde;es de direitos da Plataforma e/ou de
+                terceiros. <strong>&nbsp;</strong>
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Cumprimento de obriga&ccedil;&otilde;es legais ou
+                    regulat&oacute;rias</u
+                  ></strong
+                ><strong>:&nbsp;</strong>A Plataforma poder&aacute; divulgar ou
+                compartilhar informa&ccedil;&otilde;es, incluindo dados pessoais
+                de Titulares e de terceiros, para cumprir
+                obriga&ccedil;&otilde;es legais, regulatórias ou qualquer outra
+                determina&ccedil;&atilde;o perante órg&atilde;os do governo e do
+                judici&aacute;rio, incluindo, mas n&atilde;o se limitando a,
+                Minist&eacute;rios e/ou Secretarias do Governo, autarquias
+                federais, ag&ecirc;ncias regulatórias e/ou autoridades legais
+                (<em>e</em>.<em>g</em>. Secretaria da Receita Federal),
+                órg&atilde;os de defesa do consumidor, órg&atilde;os judiciais e
+                outros.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">9.</span
+                ><span
+                  style="width:9.1pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >AGENTES DE TRATAMENTO&nbsp;</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:0pt;">
+                Toda e qualquer sociedade, entidade p&uacute;blica ou privada,
+                autoridade, órg&atilde;o, ag&ecirc;ncia e/ou pessoa que tiver
+                acesso aos dados pessoais dos Titulares e/ou de terceiros, de
+                acordo com as situa&ccedil;&otilde;es previstas no
+                cap&iacute;tulo &ldquo;<a
+                  href="#_Compartilhamento_de_Dados."
+                  style="text-decoration:none;"
+                  ><u
+                    ><span style="color:#0563c1;"
+                      >Compartilhamento de Dados</span
+                    ></u
+                  ></a
+                >&rdquo;, passar&aacute; a assumir a posi&ccedil;&atilde;o de
+                agente de tratamento e estar&aacute; obrigada, nos termos da
+                legisla&ccedil;&atilde;o aplic&aacute;vel e/ou dos contratos
+                firmados com o UNICEF e/ou UNDIME e/ou com a Plataforma, a
+                adotar as melhores pr&aacute;ticas de seguran&ccedil;a e
+                governan&ccedil;a no tocante &agrave; prote&ccedil;&atilde;o e
+                tratamento dos dados pessoais que tiverem acesso.&nbsp;
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">10.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >SEGURAN&Ccedil;A DA INFORMA&Ccedil;&Atilde;O&nbsp;</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A seguran&ccedil;a das informa&ccedil;&otilde;es &eacute; muito
+                importante para o UNICEF e/ou UNDIME A Plataforma segue os
+                padr&otilde;es de seguran&ccedil;a do setor para ajudar a
+                proteger as informa&ccedil;&otilde;es inseridas na Plataforma.
+                Entretanto, n&atilde;o existe nenhum m&eacute;todo de
+                armazenamento eletr&ocirc;nico que seja totalmente seguro. DESSA
+                FORMA, EMBORA EMPREGUEMOS TODOS OS ESFOR&Ccedil;OS PARA PROTEGER
+                AS INFORMA&Ccedil;&Otilde;ES TRATADAS PELA SOCIEDADE, AS QUAIS
+                INCLUEM DADOS PESSOAIS, N&Atilde;O PODEMOS GARANTIR
+                SEGURAN&Ccedil;A ABSOLUTA.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A Plataforma armazenar&aacute; os dados pessoais dos Titulares e
+                de terceiros em ambiente seguro, comprometendo-se a adotar
+                medidas administrativas e t&eacute;cnicas razo&aacute;veis de
+                precau&ccedil;&atilde;o para evitar perdas, abusos,
+                altera&ccedil;&otilde;es ou acessos n&atilde;o autorizados
+                relacionados a estes dados.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="font-variant:small-caps; text-transform:uppercase;"
+                  >11.</span
+                ><span
+                  style="width:5.22pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;">Links</span>
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                <strong
+                  >O Titular concorda em n&atilde;o responsabilizar o UNICEF
+                  e/ou UNDIME por perdas, danos ou outros problemas de qualquer
+                  esp&eacute;cie que possam surgir da utiliza&ccedil;&atilde;o
+                  de&nbsp;</strong
+                ><strong><em>websites</em></strong
+                ><strong>&nbsp;que contenham&nbsp;</strong
+                ><strong><em>links</em></strong
+                ><strong>&nbsp;para a Plataforma ou cujos&nbsp;</strong
+                ><strong><em>links</em></strong
+                ><strong
+                  >&nbsp;estejam dispon&iacute;veis na Plataforma, bem como
+                  est&aacute; ciente de que tais&nbsp;</strong
+                ><strong><em>websites</em></strong
+                ><strong
+                  >&nbsp;podem n&atilde;o adotar pr&aacute;ticas adequadas no
+                  tocante ao tratamento de dados pessoais e privacidade dos
+                  Titulares.&nbsp;</strong
+                >
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">12.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Controle de seus Dados</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A Plataforma disponibilizar&aacute; meios para que Titulares
+                possam acessar, corrigir, excluir ou modificar os dados que
+                foram por eles inseridos na Plataforma, possam solicitar a
+                corre&ccedil;&atilde;o, a exclus&atilde;o ou a
+                modifica&ccedil;&atilde;o dos respectivos dados pessoais. As
+                op&ccedil;&otilde;es dos Titulares de dados pessoais seguem
+                abaixo listadas:
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Confirma&ccedil;&atilde;o da exist&ecirc;ncia de
+                    tratamento:</u
+                  ></strong
+                >
+                Os Titulares de dados pessoais podem solicitar a
+                confirma&ccedil;&atilde;o no tocante &agrave; exist&ecirc;ncia
+                de tratamento de seus dados pessoais.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Direito de acessar os seus dados:</u></strong> Os
+                Titulares de dados pessoais podem solicitar uma cópia dos dados
+                tratados, a qual ser&aacute; disponibilizada em um formato
+                leg&iacute;vel e eletr&ocirc;nico.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Altera&ccedil;&atilde;o ou corre&ccedil;&atilde;o de
+                    dados</u
+                  ></strong
+                >: Os Titulares de dados pessoais podem solicitar
+                atualiza&ccedil;&otilde;es, altera&ccedil;&otilde;es ou
+                corre&ccedil;&otilde;es de seus dados em determinados casos,
+                especialmente se os referidos dados estiverem incorretos ou
+                desatualizados.
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:17.55pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Exclus&atilde;o, bloqueio e/ou anonimiza&ccedil;&atilde;o
+                    de dados:</u
+                  ></strong
+                >
+                Os Titulares de dados pessoais podem solicitar a exclus&atilde;o
+                de seus dados da Plataforma e dos seus respectivos repositórios
+                sem a necessidade de apresentar qualquer justificativa, assim
+                como poder&atilde;o solicitar a exclus&atilde;o, o bloqueio e/ou
+                a anonimiza&ccedil;&atilde;o dos referidos dados pessoais.
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:17.55pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Portabilidade</u></strong
+                >: Os Titulares de dados pessoais podem solicitar a
+                portabilidade dos seus dados a outro fornecedor de
+                servi&ccedil;os ou produtos.
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:17.55pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Informa&ccedil;&otilde;es sobre o compartilhamento dos
+                    dados:</u
+                  ></strong
+                >
+                Os Titulares de dados pessoais poder&atilde;o solicitar
+                informa&ccedil;&otilde;es acerca das entidades p&uacute;blicas
+                e/ou privadas com as quais a Plataforma compartilhou seus dados
+                pessoais.&nbsp;
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:17.55pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong
+                  ><u
+                    >Informa&ccedil;&otilde;es sobre o consentimento:</u
+                  ></strong
+                >
+                Os Titulares de dados pessoais poder&atilde;o solicitar
+                informa&ccedil;&otilde;es sobre a possibilidade de n&atilde;o
+                fornecer consentimento em situa&ccedil;&otilde;es
+                espec&iacute;ficas e sobre as consequ&ecirc;ncias do n&atilde;o
+                fornecimento do consentimento.
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Revoga&ccedil;&atilde;o de consentimento</u></strong
+                >: Para os casos em que os Titulares outorgaram consentimento
+                &agrave; Plataforma para o tratamento de seus dados pessoais, os
+                Titulares poder&atilde;o, a qualquer tempo, revogar este
+                consentimento.
+              </p>
+              <p style="margin-top:0pt; margin-left:45.9pt; margin-bottom:0pt;">
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-left:35.4pt; margin-bottom:0pt;">
+                <strong><u>Canais para exercer os seus direitos:</u></strong>
+                Para exercer os direitos acima elencados, os Titulares de dados
+                pessoais dever&atilde;o dirigir sua solicita&ccedil;&atilde;o ao
+                <a href="#_Encarregado.__A" style="text-decoration:none;"
+                  ><u><span style="color:#0563c1;">Encarregado</span></u></a
+                >. Na referida solicita&ccedil;&atilde;o, dever&aacute; constar:
+                (a) a qualifica&ccedil;&atilde;o do Titular (nome completo e
+                e-mail) dos dados pessoais; (b) a especifica&ccedil;&atilde;o da
+                medida que o Titular de dados pessoais pretende em
+                rela&ccedil;&atilde;o aos seus dados pessoais, e; (c) se for o
+                caso, a especifica&ccedil;&atilde;o dos dados que s&atilde;o
+                objeto da solicita&ccedil;&atilde;o. Dentro do prazo de 15 dias,
+                se a lei n&atilde;o estabelecer prazo distinto, o
+                <a href="#_Encarregado.__A" style="text-decoration:none;"
+                  ><u><span style="color:#0563c1;">Encarregado</span></u></a
+                >
+                responder&aacute; &agrave; solicita&ccedil;&atilde;o do Titular
+                de dados pessoais: (a) comunicando o atendimento da
+                solicita&ccedil;&atilde;o; (b) apresentando justificativa, caso
+                n&atilde;o seja poss&iacute;vel cumprir &agrave;
+                solicita&ccedil;&atilde;o, ou; (c) estimando novo prazo para
+                atendimento da solicita&ccedil;&atilde;o e a justificativa
+                relativa &agrave; prorroga&ccedil;&atilde;o do prazo.
+              </p>
+              <p
+                style="margin-top:0pt; margin-left:28.35pt; margin-bottom:0pt;"
+              >
+                &nbsp;
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                H&aacute; situa&ccedil;&otilde;es em que a Plataforma
+                precisar&aacute; manter ou n&atilde;o poder&aacute; alterar os
+                dados pessoais e, por tal raz&atilde;o, n&atilde;o poder&aacute;
+                atender plenamente &agrave;s solicita&ccedil;&otilde;es que um
+                Titular realizar, ainda que observadas as regras acima
+                (<em>e</em>.<em>g</em>. quando a manuten&ccedil;&atilde;o dos
+                dados pessoais se mostrar necess&aacute;ria para o cumprimento
+                de obriga&ccedil;&otilde;es legais ou para atender ordem
+                judicial).
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O Titular dever&aacute; informar imediatamente a Plataforma,
+                atrav&eacute;s do
+                <a href="#_Encarregado.__A" style="text-decoration:none;"
+                  ><u><span style="color:#0563c1;">Encarregado</span></u></a
+                >, quando for necess&aacute;ria a coopera&ccedil;&atilde;o da
+                Plataforma para alterar, atualizar, complementar, corrigir ou
+                excluir dados pessoais que foram disponibilizados na Plataforma.
+                O Titular dever&aacute; fornecer todas as
+                informa&ccedil;&otilde;es relevantes para que a Plataforma possa
+                envidar esfor&ccedil;os para tomar as provid&ecirc;ncias
+                necess&aacute;rias dentro de um prazo razo&aacute;vel.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">13.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Reivindica&ccedil;&atilde;o de Direitos</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Se um Titular de dados pessoais acreditar que a Plataforma viola
+                seus direitos e/ou a sua privacidade, incluindo no tocante ao
+                tratamento de dados pessoais, poder&aacute; ele comunicar o
+                UNICEF e/ou UNDIME atrav&eacute;s do
+                <a href="#_Encarregado.__A" style="text-decoration:none;"
+                  ><u><span style="color:#0563c1;">Encarregado</span></u></a
+                >.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Nada do que est&aacute; escrito neste Aviso de Privacidade tem
+                como inten&ccedil;&atilde;o excluir ou limitar qualquer
+                condi&ccedil;&atilde;o, garantia, direito ou responsabilidade
+                que n&atilde;o possa ser legalmente exclu&iacute;da ou limitada.
+                Algumas jurisdi&ccedil;&otilde;es n&atilde;o permitem a
+                exclus&atilde;o de certas garantias ou condi&ccedil;&otilde;es
+                ou a limita&ccedil;&atilde;o ou exclus&atilde;o de
+                responsabilidade civil. Consequentemente, apenas as
+                limita&ccedil;&otilde;es que forem permitidas por lei na sua
+                jurisdi&ccedil;&atilde;o se aplicar&atilde;o a voc&ecirc;.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">14.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><a name="_Ref25330631"
+                  ><span style="text-transform:uppercase;"
+                    >Transfer&ecirc;ncia de Dados entre Fronteiras</span
+                  ></a
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                A PLATAFORMA PROCESSA DADOS, INCLUINDO DADOS PESSOAIS, DENTRO DO
+                BRASIL E EM OUTROS PA&Iacute;SES. &Eacute; POSS&Iacute;VEL QUE
+                ALGUNS DOS PA&Iacute;SES EM QUEST&Atilde;O TENHAM LEIS MENOS
+                PROTETIVAS NO TOCANTE &Agrave; PRIVACIDADE E/OU DADOS PESSOAIS,
+                OU SEQUER POSSUAM REGULAMENTA&Ccedil;&Atilde;O ESPEC&Iacute;FICA
+                SOBRE O ASSUNTO.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                VOC&Ecirc; EST&Aacute; CIENTE E CONCORDA QUE OS SEUS DADOS
+                PESSOAIS E OS DADOS PESSOAIS DE TERCEIROS POR VOC&Ecirc;
+                INSERIDOS NA PLATAFORMA PODER&Atilde;O TRANSITAR POR - OU
+                RECEBER TRATAMENTO EM - OUTROS PA&Iacute;SES.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="font-variant:small-caps; text-transform:uppercase;"
+                  >15.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Altera&ccedil;&otilde;es, VALIDADE e Vig&ecirc;ncia das
+                  Cl&aacute;usulas</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Qualquer ren&uacute;ncia ou altera&ccedil;&atilde;o dos
+                dispositivos deste Aviso de Privacidade só ter&aacute; efeito
+                caso apresentada por escrito e assinada pelos representantes
+                legais do UNICEF /e a UNDIME. Se alguma disposi&ccedil;&atilde;o
+                do Aviso de Privacidade for anulada ou considerada
+                inaplic&aacute;vel, as demais disposi&ccedil;&otilde;es, sempre
+                que poss&iacute;vel, permanecer&atilde;o v&aacute;lidas e
+                vigentes.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                O UNICEF e UNDIME reserva-se o direito de alterar o Aviso de
+                Privacidade, bem como qualquer pol&iacute;tica ou documento, a
+                qualquer momento e ao seu exclusivo crit&eacute;rio.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                As altera&ccedil;&otilde;es entrar&atilde;o em vigor no momento
+                da respectiva publica&ccedil;&atilde;o na Plataforma. O uso da
+                Plataforma depois da publica&ccedil;&atilde;o constituir&aacute;
+                ci&ecirc;ncia das eventuais altera&ccedil;&otilde;es do Aviso de
+                Privacidade. Dessa forma, aconselhamos os Titulares a relerem o
+                Aviso de Privacidade com frequ&ecirc;ncia.
+              </p>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Caso haja diverg&ecirc;ncia entre o conte&uacute;do deste Aviso
+                de Privacidade e aquele constante de outro(s) documento(s)
+                assinado(s), relacionados &agrave; Plataforma, entre o Titular o
+                UNICEF e/ou UNDIME, prevalecer&aacute;, sempre, o
+                conte&uacute;do do(s) outro(s) documento(s) assinado(s) pelo
+                Titular.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="font-variant:small-caps; text-transform:uppercase;"
+                  >16.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Legisla&ccedil;&atilde;o, Lit&iacute;gios e
+                  Controv&eacute;rsias</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Qualquer lit&iacute;gio relacionado ao presente Aviso de
+                Privacidade dever&aacute; ser submetido ao Foro de
+                Bras&iacute;lia/DF, Brasil, que prevalecer&aacute; sobre
+                qualquer outro, por mais privilegiado que seja ou venha a se
+                tornar, e ser&aacute; julgado exclusivamente conforme as leis da
+                Rep&uacute;blica Federativa do Brasil.
+              </p>
+              <h1
+                style="margin-top:18pt; margin-left:17.85pt; margin-bottom:18pt; text-indent:-17.85pt; font-size:12pt;"
+              >
+                <span style="text-transform:uppercase;">17.</span
+                ><span
+                  style="width:4.35pt; font:7pt 'Times New Roman'; display:inline-block;"
+                  >&nbsp;&nbsp;&nbsp;</span
+                ><span style="text-transform:uppercase;"
+                  >Perguntas e Esclarecimentos</span
+                >
+              </h1>
+              <p style="margin-top:0pt; margin-bottom:18pt;">
+                Perguntas, solicita&ccedil;&otilde;es, reclama&ccedil;&otilde;es
+                e coment&aacute;rios sobre a Plataforma ou sobre o Aviso de
+                Privacidade poder&atilde;o ser dirigidos ao
+                <a href="#_Encarregado.__A" style="text-decoration:none;"
+                  ><u><span style="color:#0563c1;">Encarregado</span></u></a
+                >.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p style="margin-top:0pt; margin-bottom:18pt;">
+          <input type="checkbox" ng-model="checked" />&nbsp;Declaro que estou
+          ciente dos termos deste Aviso de Privacidade.
+        </p>
+        <p style="margin-top:0pt; margin-bottom:18pt;">
+          <input type="checkbox" ng-model="checked1" />
+          Declaro que estou ciente e concordo com a transfer&ecirc;ncia dos meus
+          dados pessoais e dos dados pessoais da crian&ccedil;a e/ou adolescente
+          que represento para o exterior, nos termos do cap&iacute;tulo
+          &ldquo;<a href="#_Ref25330631" style="text-decoration:none;"
+            ><span style="color:#0563c1;"
+              >Transfer&ecirc;ncia de Dados entre Fronteiras</span
+            ></a
+          >&rdquo; deste Aviso de Privacidade.
+        </p>
+        <p style="margin-top:0pt; margin-bottom:18pt;">
+          <input type="checkbox" ng-model="checked2" />&nbsp;Declaro que estou
+          ciente e concordo com o tratamento dos dados pessoais do(a)
+          crian&ccedil;a e/ou adolescente que aqui represento, ou em
+          rela&ccedil;&atilde;o ao(&agrave;) qual sou o respons&aacute;vel
+          legal, conforme previsto neste Aviso de Privacidade.
+        </p>
       </div>
 
       <div class="panel-heading">
@@ -1996,9 +3482,6 @@
   </form>
 </div>
 
-<!--<p>The input's valid state is:</p>
-  <h1>{{userEdit.gp_password.$valid}}</h1>-->
-
 <script>
   function add(x) {
     document.getElementById('message').style.display = 'block';
@@ -2006,26 +3489,7 @@
   function remove(x) {
     document.getElementById('message').style.display = 'none';
   }
-
-  /*function addErrorDate() {
-    const dateText = document.getElementById('error_date');
-    const curDate = new Date();
-    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
-    const maxDate = new Date(
-      curDate.setFullYear(curDate.getFullYear() + 100 - 18)
-    );
-    dateText.textContent = '';
-    dateText.textContent = `Data não pode ser menor que
-       ${minDate.toLocaleDateString()} e maior que ${maxDate.toLocaleDateString()}`;
-    document.getElementById('message_date').style.display = 'block';
-  }
-
-  function removeErrorDate() {
-    document.getElementById('message_date').style.display = 'none';
-  }*/
 </script>
-
-<!--<p>The input field must contain the character "e" to be consider valid.</p>-->
 
 <style>
   #message {

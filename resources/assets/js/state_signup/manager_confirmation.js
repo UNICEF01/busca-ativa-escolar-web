@@ -2,22 +2,22 @@
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
-      $stateProvider.state('mayor_confirmation', {
-        url: '/confirmacao_prefeito/{id}',
-        templateUrl: '/views/initial_tenant_setup/mayor_confirmation.html',
-        controller: 'MayorConfirmationCtrl',
+      $stateProvider.state('manager_confirmation', {
+        url: '/confirmacao_gestor_estadual/{id}',
+        templateUrl: '/views/state_signup/manager_confirmation.html',
+        controller: 'ManagerConfirmationCtrl',
         unauthenticated: true,
       });
     })
     .controller(
-      'MayorConfirmationCtrl',
-      function ($scope, $state, $stateParams, Tenants, ngToast) {
+      'ManagerConfirmationCtrl',
+      function ($scope, $state, $stateParams, StateSignups, ngToast) {
         $scope.prevStep = function () {
           return $state.go('login');
         };
 
-        $scope.provisionTenant = function () {
-          var confirm = Tenants.mayorConfirmation({
+        $scope.provisionState = function () {
+          var confirm = StateSignups.accept({
             id: $stateParams.id,
           }).$promise;
 
@@ -28,7 +28,7 @@
               );
               $state.go('login');
             } else {
-              ngToast.danger('Adesão já realizada.');
+              ngToast.danger('Adesão já realizada');
             }
           });
         };

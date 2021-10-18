@@ -1,322 +1,456 @@
-(function() {
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('Modals', function ($q, $uibModal) {
+      return {
+        show: function (params) {
+          //console.log('[modals] Show modal: ', params);
 
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Modals', function($q, $uibModal) {
+          var def = $q.defer();
 
-			return {
+          var instance = $uibModal.open(params);
 
-				show: function(params) {
+          instance.result.then(
+            function (data) {
+              def.resolve(data.response);
+            },
+            function (data) {
+              def.reject(data);
+            }
+          );
 
-					//console.log('[modals] Show modal: ', params);
+          return def.promise;
+        },
 
-					var def = $q.defer();
+        Alert: function (message, details) {
+          return {
+            templateUrl: '/views/modals/alert.html',
+            controller: 'AlertModalCtrl',
+            size: 'sm',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              details: function () {
+                return details;
+              },
+            },
+          };
+        },
 
-					var instance = $uibModal.open(params);
+        Confirm: function (message, details, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/confirm.html',
+            controller: 'ConfirmModalCtrl',
+            size: 'sm',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              details: function () {
+                return details;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-					instance.result.then(function (data) {
-						def.resolve(data.response);
-					}, function (data) {
-						def.reject(data);
-					});
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-					return def.promise;
-				},
+          return params;
+        },
 
-				Alert: function(message, details) {
-					return {
-						templateUrl: '/views/modals/alert.html',
-						controller: 'AlertModalCtrl',
-						size: 'sm',
-						resolve: {
-							message: function() { return message; },
-							details: function() { return details; }
-						}
-					};
-				},
+        ConfirmLarge: function (message, details, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/confirm.html',
+            controller: 'ConfirmLargeModalCtrl',
+            size: 'lg',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              details: function () {
+                return details;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-				Confirm: function(message, details, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/confirm.html',
-						controller: 'ConfirmModalCtrl',
-						size: 'sm',
-						resolve: {
-							message: function() { return message; },
-							details: function() { return details; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+          return params;
+        },
 
-					return params;
-				},
+        ConfirmEmail: function (message, details, schools, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/confirm_email.html',
+            controller: 'ConfirmEmailModalCtrl',
+            size: 'lg',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              details: function () {
+                return details;
+              },
+              schools: function () {
+                return schools;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-				ConfirmLarge: function(message, details, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/confirm.html',
-						controller: 'ConfirmLargeModalCtrl',
-						size: 'lg',
-						resolve: {
-							message: function() { return message; },
-							details: function() { return details; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+          return params;
+        },
 
-					return params;
-				},
+        GeneralAlerts: function (message, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/general.html',
+            controller: 'GeneralAlertsModalCtrl',
+            size: 'lg',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-				ConfirmEmail: function(message, details, schools, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/confirm_email.html',
-						controller: 'ConfirmEmailModalCtrl',
-						size: 'lg',
-						resolve: {
-							message: function() { return message; },
-							details: function() { return details; },
-							schools: function() { return schools; },
-							canDismiss: function() { return canDismiss; }
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-						}
-					};
+          return params;
+        },
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+        /**
+         * Função do pop-up após o login.
+         * @param {*} message
+         * @param {*} canDismiss
+         * @returns
+         */
+        GeneralPopUpAlerts: function (message, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/add_popup_search.html',
+            controller: 'GeneralAlertsModalCtrl',
+            size: 'md',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-					return params;
-				},
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-				GeneralAlerts: function(message, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/general.html',
-						controller: 'GeneralAlertsModalCtrl',
-						size: 'lg',
-						resolve: {
-							message: function() { return message; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
+          return params;
+        },
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+        Prompt: function (
+          question,
+          defaultAnswer,
+          canDismiss,
+          answerPlaceholder
+        ) {
+          var params = {
+            templateUrl: '/views/modals/prompt.html',
+            controller: 'PromptModalCtrl',
+            size: 'md',
+            resolve: {
+              question: function () {
+                return question;
+              },
+              defaultAnswer: function () {
+                return defaultAnswer;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+              answerPlaceholder: function () {
+                return answerPlaceholder;
+              },
+            },
+          };
 
-					return params;
-				},
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-				Prompt: function(question, defaultAnswer, canDismiss, answerPlaceholder) {
-					var params = {
-						templateUrl: '/views/modals/prompt.html',
-						controller: 'PromptModalCtrl',
-						size: 'md',
-						resolve: {
-							question: function() { return question; },
-							defaultAnswer: function() { return defaultAnswer; },
-							canDismiss: function() { return canDismiss; },
-							answerPlaceholder: function() { return answerPlaceholder; }
-						}
-					};
+          return params;
+        },
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+        NewSupportTicketModal: function () {
+          var params = {
+            templateUrl: '/views/modals/new_support_ticket.html',
+            controller: 'NewSupportTicketModalCtrl',
+            size: 'md',
+            resolve: {},
+          };
 
-					return params;
-				},
+          return params;
+        },
 
-				NewSupportTicketModal: function() {
-					var params = {
-						templateUrl: '/views/modals/new_support_ticket.html',
-						controller: 'NewSupportTicketModalCtrl',
-						size: 'md',
-						resolve: {}
-					};
+        Login: function (reason, canDismiss) {
+          var params = {
+            templateUrl: '/views/modals/login.html',
+            controller: 'LoginModalCtrl',
+            size: 'md',
+            resolve: {
+              reason: function () {
+                return reason;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-					return params;
-				},
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-				Login: function(reason, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/login.html',
-						controller: 'LoginModalCtrl',
-						size: 'md',
-						resolve: {
-							reason: function() { return reason; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
+          return params;
+        },
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+        UserPicker: function (
+          title,
+          message,
+          users,
+          canDismiss,
+          noUsersMessage
+        ) {
+          var params = {
+            templateUrl: '/views/modals/user_picker.html',
+            controller: 'UserPickerModalCtrl',
+            size: 'md',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              noUsersMessage: function () {
+                return noUsersMessage;
+              },
+              users: function () {
+                return users;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-					return params;
-				},
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-				UserPicker: function(title, message, users, canDismiss, noUsersMessage) {
-					var params = {
-						templateUrl: '/views/modals/user_picker.html',
-						controller: 'UserPickerModalCtrl',
-						size: 'md',
-						resolve: {
-							title: function() { return title; },
-							message: function() { return message; },
-							noUsersMessage: function() { return noUsersMessage; },
-							users: function() { return users; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
+          return params;
+        },
 
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
+        CaseCancel: function () {
+          return {
+            templateUrl: '/views/modals/case_cancel.html',
+            controller: 'CaseCancelModalCtrl',
+            size: 'md',
+          };
+        },
 
-					return params;
-				},
+        FileUploader: function (title, message, uploadUrl, uploadParameters) {
+          return {
+            templateUrl: '/views/modals/file_uploader.html',
+            controller: 'FileUploaderModalCtrl',
+            size: 'md',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              uploadUrl: function () {
+                return uploadUrl;
+              },
+              uploadParameters: function () {
+                return uploadParameters;
+              },
+            },
+          };
+        },
 
-				CaseCancel: function() {
-					return {
-						templateUrl: '/views/modals/case_cancel.html',
-						controller: 'CaseCancelModalCtrl',
-						size: 'md'
-					};
-				},
+        FileUploaderTitulo: function (
+          title,
+          message,
+          uploadUrl,
+          uploadParameters
+        ) {
+          return {
+            templateUrl: '/views/modals/file_uploader_titulo.html',
+            controller: 'FileUploaderTituloModalCtrl',
+            size: 'md',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              uploadUrl: function () {
+                return uploadUrl;
+              },
+              uploadParameters: function () {
+                return uploadParameters;
+              },
+            },
+          };
+        },
 
-				FileUploader: function(title, message, uploadUrl, uploadParameters) {
-					return {
-						templateUrl: '/views/modals/file_uploader.html',
-						controller: 'FileUploaderModalCtrl',
-						size: 'md',
-						resolve: {
-							title: function() { return title; },
-							message: function() { return message; },
-							uploadUrl: function() { return uploadUrl; },
-							uploadParameters: function() { return uploadParameters; },
-						}
-					};
-				},
+        DownloadLink: function (title, message, href) {
+          return {
+            templateUrl: '/views/modals/download_link.html',
+            controller: 'DownloadLinkModalCtrl',
+            size: 'md',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              href: function () {
+                return href;
+              },
+            },
+          };
+        },
 
-				FileUploaderTitulo: function(title, message, uploadUrl, uploadParameters) {
-					return {
-						templateUrl: '/views/modals/file_uploader_titulo.html',
-						controller: 'FileUploaderTituloModalCtrl',
-						size: 'md',
-						resolve: {
-							title: function() { return title; },
-							message: function() { return message; },
-							uploadUrl: function() { return uploadUrl; },
-							uploadParameters: function() { return uploadParameters; },
-						}
-					};
-				},
+        CaseReopen: function ($typeUser) {
+          var params = {
+            templateUrl: '/views/modals/case_reopen.html',
+            controller: 'CaseReopenModalCtrl',
+            size: 'md',
+            resolve: {
+              $typeUser: function () {
+                return $typeUser;
+              },
+            },
+          };
 
-				DownloadLink: function(title, message, href) {
-					return {
-						templateUrl: '/views/modals/download_link.html',
-						controller: 'DownloadLinkModalCtrl',
-						size: 'md',
-						resolve: {
-							title: function() { return title; },
-							message: function() { return message; },
-							href: function() { return href; }
-						}
-					};
-				},
+          return params;
+        },
 
-				CaseReopen: function($typeUser) {
-					var params = {
-						templateUrl: '/views/modals/case_reopen.html',
-						controller: 'CaseReopenModalCtrl',
-						size: 'md',
-						resolve: {
-							$typeUser: function() { return $typeUser; }
-						}
-					};
+        CaseTransfer: function ($typeUser) {
+          var params = {
+            templateUrl: '/views/modals/case_transfer.html',
+            controller: 'CaseTransferModalCtrl',
+            size: 'md',
+            resolve: {
+              $typeUser: function () {
+                return $typeUser;
+              },
+            },
+          };
 
-					return params;
-				},
+          return params;
+        },
 
-				CaseTransfer: function($typeUser) {
-					var params = {
-						templateUrl: '/views/modals/case_transfer.html',
-						controller: 'CaseTransferModalCtrl',
-						size: 'md',
-						resolve: {
-							$typeUser: function() { return $typeUser; }
-						}
-					};
+        CaseReject: function ($typeUser) {
+          var params = {
+            templateUrl: '/views/modals/case_reject.html',
+            controller: 'CaseRejectModalCtrl',
+            size: 'md',
+            resolve: {
+              $typeUser: function () {
+                return $typeUser;
+              },
+            },
+          };
 
-					return params;
-				},
+          return params;
+        },
 
-				CaseReject: function($typeUser) {
-					var params = {
-						templateUrl: '/views/modals/case_reject.html',
-						controller: 'CaseRejectModalCtrl',
-						size: 'md',
-						resolve: {
-							$typeUser: function() { return $typeUser; }
-						}
-					};
+        CaseActivityLogEntry: function () {
+          var params = {
+            templateUrl: '/views/modals/case_activity_log_entry.html',
+            controller: 'CaseActivityLogEntryCtrl',
+            size: 'md',
+            resolve: {},
+          };
 
-					return params;
-				},
+          //if (!canDismiss) {
+          //params.keyboard = false;
+          //params.backdrop = 'static';
+          //}
 
-				CaseActivityLogEntry: function() {
-					var params = {
-						templateUrl: '/views/modals/case_activity_log_entry.html',
-						controller: 'CaseActivityLogEntryCtrl',
-						size: 'md',
-						resolve: {
+          return params;
+        },
 
-						}
-					};
+        AddPeriodFrequency: function (
+          message,
+          subtitle,
+          clazz,
+          period,
+          canDismiss
+        ) {
+          var params = {
+            templateUrl: '/views/modals/add_period_frequency.html',
+            controller: 'AddPeriodFrequencyModalCtrl',
+            size: 'md',
+            resolve: {
+              message: function () {
+                return message;
+              },
+              subtitle: function () {
+                return subtitle;
+              },
+              clazz: function () {
+                return clazz;
+              },
+              period: function () {
+                return period;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
 
-					//if (!canDismiss) {
-						//params.keyboard = false;
-						//params.backdrop = 'static';
-					//}
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
 
-					return params;
-				},
-
-				AddPeriodFrequency: function(message, subtitle, clazz, period, canDismiss) {
-					var params = {
-						templateUrl: '/views/modals/add_period_frequency.html',
-						controller: 'AddPeriodFrequencyModalCtrl',
-						size: 'md',
-						resolve: {
-							message: function() { return message; },
-							subtitle: function() { return subtitle; },
-							clazz: function () { return clazz; },
-							period: function() { return period; },
-							canDismiss: function() { return canDismiss; }
-						}
-					};
-
-					if (!canDismiss) {
-						params.keyboard = false;
-						params.backdrop = 'static';
-					}
-
-					return params;
-				}
-
-			};
-		});
+          return params;
+        },
+      };
+    });
 })();
