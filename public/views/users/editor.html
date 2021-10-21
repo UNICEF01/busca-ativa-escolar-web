@@ -167,6 +167,7 @@
         <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
         <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000" />
       </div>
+
       <hr />
 
       <h5>Endereço institucional</h5>
@@ -174,84 +175,64 @@
         <label class="control-label" for="fld-address">Endereço institucional</label>
         <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
       </div>
-
       <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
-
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-cep">CEP institucional</label>
         <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
       </div>
-
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-neighborhood">Bairro</label>
         <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
       </div>
       <hr />
-
       <h5>Dados organizacionais</h5>
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-institution">Órgão</label>
         <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
       </div>
-
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-position">Cargo</label>
         <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
       </div>
       <hr />
 
-      <div ng-if="currentState === 'lgpd_signup'">
+      <div ng-show="currentState === 'lgpd_signup'">
 
-        <h5>Dados de acesso</h5>
-
-        <p>A senha informada será enviada para o seu e-mail.</p>
-
-        <div class="form-group col-md-6">
-          <label class="control-label" for="fld-gp-email">
-            <i class="fa fa-envelope"></i> E-mail de acesso* </label>
-          <input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="user.email" />
-        </div>
-
-        <div class="form-group col-md-6">
-
-          <div class="input-group">
-            <label class="control-label" for="fld-gp-password">
-              <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
-            <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}" title="Senha não pode estar em branco." />
-            <span class="input-group-btn" uib-tooltip="Exibir a senha">
-              <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
-                <i class="fa fa-eye"></i>
-              </button>
-            </span>
+        <div >
+          <h5>Dados de acesso</h5>
+          <p>A senha informada será enviada para o seu e-mail.</p>
+          <div class="form-group col-md-6">
+            <label class="control-label" for="fld-gp-email">
+              <i class="fa fa-envelope"></i> E-mail de acesso* </label>
+            <input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="user.email" />
           </div>
-
-          <div id="message">
-            <p>A senha deve conter pelo menos:</p>
-            <p id="letter" class="invalid">Uma letra <b>minúscula</b>
-            </p>
-            <p id="capital" class="invalid">Uma letra <b>maiúscula</b>
-            </p>
-            <p id="number" class="invalid">Um <b>número</b>
-            </p>
-            <!-- prettier-ignore -->
-            <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?) </p>
-            <!-- prettier-ignore -->
-            <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
-            </p>
+          <div class="form-group col-md-6">
+            <div class="input-group">
+              <label class="control-label" for="fld-gp-password">
+                <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
+              <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}" title="Senha não pode estar em branco." />
+              <span class="input-group-btn" uib-tooltip="Exibir a senha">
+                <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
+                  <i class="fa fa-eye"></i>
+                </button>
+              </span>
+            </div>
+            <div id="message">
+              <p>A senha deve conter pelo menos:</p>
+              <p id="letter" class="invalid">Uma letra <b>minúscula</b>
+              </p>
+              <p id="capital" class="invalid">Uma letra <b>maiúscula</b>
+              </p>
+              <p id="number" class="invalid">Um <b>número</b>
+              </p>
+              <!-- prettier-ignore -->
+              <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?) </p>
+              <!-- prettier-ignore -->
+              <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+              </p>
+            </div>
           </div>
-
         </div>
-
-      </div>
-
-      <div class="panel-heading">
-        <h3>
-          <strong>{{step}}.</strong>
-          <i class="fa fa-building"></i> Termo de Adesão
-        </h3>
-      </div>
-
-      <div ng-if="currentState === 'lgpd_signup'">
 
         <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>
 
@@ -279,9 +260,7 @@
         <button ng-if="currentState === 'lgpd_signup'" type="submit" ng-disabled="!checked || !checked1 || !checked2" class="btn btn-raised btn-primary pull-right">
           <i class="fa fa-save"></i> Salvar </button>
       </div>
-
     </div>
-
   </form>
 
 </div>
