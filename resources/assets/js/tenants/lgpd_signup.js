@@ -115,24 +115,18 @@
 
                 //1 pois a API valida essa opção;
                 $scope.user.lgpd = 1;
-                // if ($scope.user.lgpd === 0) {
-                //     ngToast.danger('Para prosseguir, é preciso concordar com o termo de adesão. Em caso de dúvidas, entre em contato');
-                //     return;
-                // }
 
                 if ($scope.user.type === "perfil_visitante") {
                     $scope.user.type = getFinalTypeUser();
                 }
 
                 var data = Object.assign({}, $scope.user);
-                //onsole.log(data);
                 data = Utils.prepareDateFields(data, dateOnlyFields);
                 data = Utils.prepareCityFields(data, ['work_city']);
 
                 if ($scope.isCreating) {
                     return Users.create(data).$promise.then(onSaved)
                 }
-                console.log(data);
 
                 Users.updateYourself(data).$promise.then(function (res) {
                     if (res.status === "ok") {
