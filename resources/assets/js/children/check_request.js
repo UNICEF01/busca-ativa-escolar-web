@@ -69,7 +69,7 @@
         $scope.aprove = function (child) {
           if (child.type_request === 'reopen') {
             Children.reopenCase({
-              case_id: child.child.alert.case_id,
+              case_id: child.child.current_case_id,
               reason: 'request',
             }).$promise.then(function (res) {
               if (res.status !== 'error') {
@@ -83,10 +83,10 @@
               }
             });
           }
-
+          
           if (child.type_request === 'transfer') {
             Children.transferCase({
-              case_id: child.child.alert.case_id,
+              case_id: child.child.current_case_id,
             }).$promise.then(function (res) {
               if (res.status !== 'error') {
                 ngToast.success(res.result);
