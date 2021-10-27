@@ -11,10 +11,7 @@
 				<p>Você pode importar a planilha de evasões escolares do Educacenso do INEP diretamente para a plataforma. Os casos do Educacenso são importados como alertas pendentes. Esta ação pode ser realizada pelo Coordenador(a) Operacional ou pelo(a) Supervisor(a) Educacional.</p>
 
 				<br/>
-
-				<div class="alert alert-warning">
-					<i class="fa fa-warning"></i> Neste momento, a plataforma importa apenas a relação de alunos na faixa etária de 4 a 17 anos matriculados no Censo de 2018 e não localizados no Censo de 2019
-				</div>
+				
 				<a class="btn btn-success btn-raised btn-lg" ng-show="!hasImported" ng-click="beginImport()"><i class="fa fa-upload"></i> Importar planilha</a>
 
 				<div class="alert alert-info" ng-show="hasImported"><strong>O arquivo foi enviado para processamento!</strong> Os alertas aparecerão no painel ao longo da próxima hora. Arquivos muito grandes podem levar bastante tempo.</div>
