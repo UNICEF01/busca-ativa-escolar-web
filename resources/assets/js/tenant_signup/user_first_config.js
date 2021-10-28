@@ -120,10 +120,6 @@
                 });
             };
 
-            $scope.openTerm = function () {
-                $scope.panelTerm = !$scope.panelTerm;
-            };
-
             $scope.showPassowrd = function () {
                 var field_password = document.getElementById("fld-co-password");
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";

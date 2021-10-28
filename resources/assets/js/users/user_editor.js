@@ -10,6 +10,8 @@
 		})
 		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
+			$scope.currentState = $state.current.name;
+
 			$scope.user = {};
 			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
 			$scope.isReviewing = false;
