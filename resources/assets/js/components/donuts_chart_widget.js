@@ -9,7 +9,6 @@
                 }
             });
         }
-
         function init(scope, element, attrs, data) {
 
             var meta = data.goal_box.goal;

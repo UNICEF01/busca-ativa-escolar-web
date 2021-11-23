@@ -138,6 +138,7 @@
       <hr />
 
       <h5>Dados pessoais</h5>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-dob">Data de nascimento*</label>
         <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" />
@@ -153,6 +154,7 @@
       <hr />
 
       <h5>Contatos</h5>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
         <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" />
@@ -171,34 +173,44 @@
       <hr />
 
       <h5>Endereço institucional</h5>
+
       <div class="form-group col-md-12">
         <label class="control-label" for="fld-address">Endereço institucional</label>
         <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
       </div>
+
       <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-cep">CEP institucional</label>
         <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
       </div>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-neighborhood">Bairro</label>
         <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
       </div>
+
       <hr />
+
       <h5>Dados organizacionais</h5>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-institution">Órgão</label>
         <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
       </div>
+
       <div class="form-group col-md-6">
         <label class="control-label" for="fld-position">Cargo</label>
         <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
       </div>
+
       <hr />
 
       <div ng-if="currentState === 'lgpd_signup'">
 
         <h5>Dados de acesso</h5>
+
         <div class="form-group col-md-6">
           <label class="control-label" for="fld-gp-email">
             <i class="fa fa-envelope"></i> E-mail de acesso* </label>
@@ -265,7 +277,9 @@
         <button ng-if="currentState === 'lgpd_signup'" type="submit" ng-disabled="!checked || !checked1 || !checked2" class="btn btn-raised btn-primary pull-right">
           <i class="fa fa-save"></i> Salvar </button>
       </div>
+
     </div>
+
   </form>
 
 </div>

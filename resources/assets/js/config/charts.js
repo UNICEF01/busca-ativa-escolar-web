@@ -1,6 +1,5 @@
 (function () {
   identify('config', 'charts.js');
-
   angular.module('BuscaAtivaEscolar').run(function (Config) {
     Highcharts.setOptions({
       lang: {
