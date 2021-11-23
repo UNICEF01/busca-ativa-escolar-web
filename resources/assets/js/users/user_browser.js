@@ -24,9 +24,7 @@
             };
 
             $scope.info = false;
-
             $scope.quickAdd = false;
-
             $scope.onCheckCanceled = function () {
                 $scope.query.show_suspended = $scope.query.show_suspended ? false : true;
                 $scope.refresh();

@@ -8,6 +8,7 @@
         $scope.tenants = [];
         $scope.showDetailsMap = false;
         $scope.showMessageMap = 'Ver detalhes';
+        $scope.otherData = {};
 
         $scope.listeners = {
             click: function () {
@@ -510,7 +511,7 @@
                     $scope.query_evolution_graph.selo = $scope.selo_unicef_participa;
                 }
 
-                var atingido = data.goal_box && data.goal_box.reinsertions_classes || 0;
+                var atingido = data.goal_box && (data.goal_box.reinsertions_classes - data.goal_box.accumulated_ciclo1) || 0;
                 $scope.percentualAtingido = Math.floor((atingido * 100) / meta);
                 // $scope.percentualAtingido = 100;
 

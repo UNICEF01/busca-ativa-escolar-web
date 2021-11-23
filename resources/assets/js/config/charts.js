@@ -54,8 +54,8 @@
         rangeSelectorTo: 'Para',
         rangeSelectorZoom: 'Zoom',
         resetZoom: 'Voltar zoom',
-        resetZoomTitle: 'Voltar zoom para nível 1:1',
-      },
+        resetZoomTitle: 'Voltar zoom para nível 1:1'
+      }
     });
   });
 })();

@@ -3,6 +3,7 @@
     <br><br>
 
     <div class="dashboard dashboard-coordenador-operacional" id="regua">
+
         <div class="panel panel-default animated fadeInUp">
             <div class="panel-heading">
                 <h4><i class="material-icons">beenhere</i>Status do município: <b ng-bind="renderTenantName()"></b>
@@ -137,15 +138,6 @@
             </div>
         </div>
 
-        <!--            <div class="panel panel-default animated fadeInUp" ng-show="showInfo === 0">-->
-        <!--                <div class="panel-body">-->
-        <!--                    <h3 class="text-center">Existe alguma problema com o painel de metas do Selo UNICEF, por favor,-->
-        <!--                        entre em-->
-        <!--                        contato com o suporte!</h3>-->
-        <!--                </div>-->
-        <!--            </div>-->
-
-
         <div class="row">
 
             <div class="col-md-12">
@@ -227,109 +219,108 @@
             </div>
 
             <div class="col-md-12" ng-if="otherData.goal_box.goal > 0">
-                <div class="panel panel-default animated fadeInUp">
-                    <div class="panel-heading"><h4><i class="fa fa-file-text-o"></i> (Re)Matrículas</h4>
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-md-9">
-                            <div class="panel panel-default" id="ba_donut">
-                                <!--                            <div class="panel-heading panel-heading-selo">Meu status no Selo UNICEF</div>-->
 
+                <div class="panel panel-default animated fadeInUp">
+
+                    <div class="panel-heading">
+                        <h4>
+                            <i class="fa fa-file-text-o"></i> (Re)Matrículas acumuladas <span ng-bind="otherData.goal_box.reinsertions_classes || 0"></span></span>
+                        </h4>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+
+                            <div style="flex: 1; padding: 10px;">
                                 <donuts-chart></donuts-chart>
                             </div>
-                        </div>
-                        <div class="col-md-3">
 
-                            <div class="panel panel-warning">
-                                <div class="panel-body">
-                                    <div class="panel-body font-panel-big-number text-center"
-                                         ng-bind="otherData.goal_box.goal || 0 "></div>
-                                </div>
-                                <div class="panel-footer panel-footer-gool text-center"><b>MINHA META</b></div>
-                            </div>
-
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-
-                                    <div class="panel-body font-panel-big-number text-center"
-                                         ng-bind="otherData.goal_box.reinsertions_classes || 0 "></div>
-                                </div>
-                                <!--                            <div class="panel-footer panel-footer-rematricula text-center" >Total de (Re)Matrículas</div>-->
-                                <div class="panel-footer text-center"
-                                     ng-class="{'panel-footer-ciano': percentualAtingido > 99, 'panel-footer-success': percentualAtingido >= 50 && percentualAtingido < 100, 'panel-footer-warning': percentualAtingido > 19 && percentualAtingido <=49, 'panel-footer-danger': percentualAtingido <= 19}">
-                                    Total de (Re)Matrículas
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-md-12 pl-0 pr-0">
-                            <div class="col-md-3">
-                                <div class="panel" ng-class="{'panel-danger': percentualAtingido <= 19}">
+                            <div ng-if=" percentualAtingido <= 19" style="flex: 1; padding: 10px;">
+                                <div class="panel panel-danger">
                                     <div class="panel-heading">Alto Risco</div>
                                     <div class="panel-body">
-                                        <small>
-                                            O município realizou menos de 20% (vinte por cento) de (re)matrículas, de
-                                            acordo
-                                            com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta
-                                            o
-                                            município poderá ser certificado com o Selo, uma vez que a Busca Ativa
-                                            Escolar é
-                                            resultado sistêmico obrigatório.
-                                        </small>
+                                        <p>
+                                            O município realizou menos de 20% (vinte por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="panel"
-                                     ng-class="{'panel-warning': percentualAtingido > 19 && percentualAtingido <=49}">
+                            <div ng-if=" percentualAtingido > 19 && percentualAtingido <= 49" style="flex: 1; padding: 10px;">
+                                <div class="panel panel-warning">
                                     <div class="panel-heading">Médio Risco</b></div>
                                     <div class="panel-body">
-                                        <small>
-                                            O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por
-                                            cento)
-                                            de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF.
-                                            Apenas
-                                            com
-                                            o atingimento da meta o município poderá ser certificado com o Selo, uma vez
-                                            que
-                                            a
-                                            Busca Ativa Escolar é resultado sistêmico obrigatório.
-                                        </small>
+                                        <p>
+                                            O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <div class="panel" ng-class="{'panel-success': percentualAtingido >= 50 && percentualAtingido < 100}">
+
+                            <div ng-if=" percentualAtingido >= 50 && percentualAtingido < 100" style="flex: 1; padding: 10px;">
+                                <div class="panel panel-success">
                                     <div class="panel-heading">Baixo Risco</div>
                                     <div class="panel-body">
-                                        <small>
-                                            O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de
-                                            acordo
-                                            com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta
-                                            o
-                                            município poderá ser certificado com o Selo, uma vez que a Busca Ativa
-                                            Escolar é
-                                            resultado sistêmico obrigatório.
-                                        </small>
+                                        <p>
+                                            O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if=" percentualAtingido >= 100" class="col-md-3">
-                                <div class="panel" ng-class="{'panel-ciano': percentualAtingido >= 100}">
+
+                            <div ng-if=" percentualAtingido >= 100"style="flex: 1; padding: 10px;">
+                                <div class="panel panel-ciano">
                                     <div class="panel-heading">Parabéns!</div>
                                     <div class="panel-body">
-                                        <small>
-                                            <p> O seu município já atingiu a meta de (re)matrículas da Busca Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe municipal que demonstra a dedicação de profissionais ao enfrentamento da exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu município faça da Busca Ativa Escolar um processo contínuo para assegurar o direito à educação para cada menina e menino.</p>
-                                        </small>
+                                        <p>
+                                        <p> O seu município já atingiu a meta de (re)matrículas da Busca Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe municipal que demonstra a dedicação de profissionais ao enfrentamento da exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu município faça da Busca Ativa Escolar um processo contínuo para assegurar o direito à educação para cada menina e menino.</p>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
+
+                        <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+
+
+                            <div class="panel panel-default" style="flex: 1; margin: 10px;">
+                                <h1 class="panel-body" ng-bind="otherData.goal_box.accumulated_ciclo1 || 0"></h1>
+                                <div class="panel-footer" style="min-height: 100px;">
+                                    <small>(Re)matrículas realizadas até 31/10/2021 (data de corte)</small>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" style="flex: 1; margin: 10px;">
+                                <h1 class="panel-body" ng-bind="otherData.goal_box.goal || 0"></h1>
+                                <div class="panel-footer" style="min-height: 100px;">
+                                    <small>Meta de novas (Re)matrículas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" style="flex: 1; margin: 10px;">
+                                <h1 class="panel-body" ng-bind="(otherData.goal_box.accumulated_ciclo1 + otherData.goal_box.goal) || 0"></h1>
+                                <div class="panel-footer" style="min-height: 100px;">
+                                    <small>Meta de (Re)matrículas acumuladas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default" style="flex: 1; margin: 10px;">
+                                <h1 class="panel-body" ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
+                                <div class="panel-footer" style="min-height: 100px;">
+                                    <small>Total de novas (Re)matrículas realizadas até o momento, válidas para o cumprimento das metas do Selo edição 21/24</small>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
     </div>
 
