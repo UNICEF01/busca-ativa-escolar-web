@@ -224,7 +224,7 @@
 
                     <div class="panel-heading">
                         <h4>
-                            <i class="fa fa-file-text-o"></i> (Re)Matrículas acumuladas <span ng-bind="otherData.goal_box.reinsertions_classes || 0"></span></span>
+                            <i class="fa fa-file-text-o"></i> (Re)matrículas acumuladas <span ng-bind="otherData.goal_box.reinsertions_classes || 0"></span></span>
                         </h4>
                     </div>
 
@@ -236,48 +236,59 @@
                                 <donuts-chart></donuts-chart>
                             </div>
 
-                            <div ng-if=" percentualAtingido <= 19" style="flex: 1; padding: 10px;">
-                                <div class="panel panel-danger">
-                                    <div class="panel-heading">Alto Risco</div>
-                                    <div class="panel-body">
-                                        <p>
-                                            O município realizou menos de 20% (vinte por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            <div style="flex: 1; padding: 10px;">
 
-                            <div ng-if=" percentualAtingido > 19 && percentualAtingido <= 49" style="flex: 1; padding: 10px;">
-                                <div class="panel panel-warning">
-                                    <div class="panel-heading">Médio Risco</b></div>
-                                    <div class="panel-body">
-                                        <p>
-                                            O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
-                                        </p>
+                                <div ng-if=" percentualAtingido <= 19">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">Alto Risco</div>
+                                        <div class="panel-body">
+                                            <p>
+                                                O município realizou menos de 20% (vinte por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div ng-if=" percentualAtingido >= 50 && percentualAtingido < 100" style="flex: 1; padding: 10px;">
-                                <div class="panel panel-success">
-                                    <div class="panel-heading">Baixo Risco</div>
-                                    <div class="panel-body">
-                                        <p>
-                                            O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
-                                        </p>
+                                <div ng-if=" percentualAtingido > 19 && percentualAtingido <= 49">
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">Médio Risco</b></div>
+                                        <div class="panel-body">
+                                            <p>
+                                                O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div ng-if=" percentualAtingido >= 100"style="flex: 1; padding: 10px;">
-                                <div class="panel panel-ciano">
-                                    <div class="panel-heading">Parabéns!</div>
-                                    <div class="panel-body">
-                                        <p>
-                                        <p> O seu município já atingiu a meta de (re)matrículas da Busca Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe municipal que demonstra a dedicação de profissionais ao enfrentamento da exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu município faça da Busca Ativa Escolar um processo contínuo para assegurar o direito à educação para cada menina e menino.</p>
-                                        </p>
+                                <div ng-if=" percentualAtingido >= 50 && percentualAtingido < 100">
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">Baixo Risco</div>
+                                        <div class="panel-body">
+                                            <p>
+                                                O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div ng-if=" percentualAtingido >= 100">
+                                    <div class="panel panel-ciano">
+                                        <div class="panel-heading">Parabéns!</div>
+                                        <div class="panel-body">
+                                            <p>
+                                            <p> O seu município já atingiu a meta de (re)matrículas da Busca Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe municipal que demonstra a dedicação de profissionais ao enfrentamento da exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu município faça da Busca Ativa Escolar um processo contínuo para assegurar o direito à educação para cada menina e menino.</p>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <span class="badge" style="color: white; background-color: #d9534f;">O município realizou menos de 20% (vinte por cento) de (re)matrículas</span><br/>
+                                    <span class="badge" style="color: white; background-color: #f0ad4e;">O município realizou de 20% a 49% de (re)matrículas</span><br/>
+                                    <span class="badge" style="color: white; background-color: #5cb85c;">O município realizou de 50% a 99% de (re)matrículas</span><br/>
+                                    <span class="badge" style="color: white; background-color: #28ACE2;">O município realizou 100% de (re)matrículas</span>
+                                </div>
+
                             </div>
 
                         </div>
@@ -294,22 +305,24 @@
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="otherData.goal_box.goal || 0"></h1>
-                                <div class="panel-footer" style="min-height: 100px;">
-                                    <small>Meta de novas (Re)matrículas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                <div class="panel-footer" style="min-height: 100px; background-color: #f4b48e; color: white;">
+                                    <small>Meta de novas (re)matrículas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="(otherData.goal_box.accumulated_ciclo1 + otherData.goal_box.goal) || 0"></h1>
                                 <div class="panel-footer" style="min-height: 100px;">
-                                    <small>Meta de (Re)matrículas acumuladas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                    <small>Meta de (re)matrículas acumuladas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
-                                <div class="panel-footer" style="min-height: 100px;">
-                                    <small>Total de novas (Re)matrículas realizadas até o momento, válidas para o cumprimento das metas do Selo edição 21/24</small>
+                                <div class="panel-footer"
+                                     ng-style="percentualAtingido <= 19 && {'color': 'white', 'background-color': '#d9534f'} || percentualAtingido <= 49 && {'color': 'white', 'background-color': '#f0ad4e'} || percentualAtingido < 100 && {'color': 'white', 'background-color': '#5cb85c'} || percentualAtingido >= 100 && {'color': 'white', 'background-color': '#28ACE2'}"
+                                     style="min-height: 100px;">
+                                    <small>Total de novas (re)matrículas realizadas até o momento, válidas para o cumprimento das metas do Selo edição 21/24</small>
                                 </div>
                             </div>
 
@@ -327,5 +340,7 @@
     <div id="regua_print"></div>
 
     <div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
+
+    <span class="badge" style="color: white; background-color: #d9534f;">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
 
 </div>
