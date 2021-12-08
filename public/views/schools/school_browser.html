@@ -18,21 +18,21 @@
 
                 <div class="row">
                         
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label class="container_check_school">
                             <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
                             <span class="checkmark"></span>
                         </label>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                         <label class="container_year_educacenso">
                             <select ng-model="query.year_educacenso" ng-options="option for option in avaliable_years_educacenso track by option" ng-change="onSelectYear()">
                             </select> Ano de importação do Educacenso
                         </label>
                     </div>
                     
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-5">
                         <div class="clearfix" style="margin-top: 10px;">
                             <ul class="nav nav-pills adm-max-results-filter">
                                 <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
