@@ -65,7 +65,9 @@
 					&& child.alert.place_address
 					&& (child.alert.place_address.trim().length > 0)
 					&& child.alert.place_neighborhood
-					&& (child.alert.place_neighborhood.trim().length > 0);
+					&& (child.alert.place_neighborhood.trim().length > 0)
+					&& child.alert.place_city_name
+					&& (child.alert.place_city_name.trim().length > 0);
 			};
 
 			$scope.accept = function(child) {
@@ -75,7 +77,7 @@
 
 				$scope.sendingAlert = true;
 
-				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
+				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood, place_city_name: child.alert.place_city_name}, function() {
 					$scope.refresh();
 					$scope. child = {};
 					$('#modalChild').modal('hide');
