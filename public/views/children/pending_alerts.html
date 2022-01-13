@@ -54,6 +54,7 @@
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
 								<td><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
 								<td><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>
+								<td><i class="fa fa-map-marker" ng-show="child.alert.place_city_name"></i> {{child.alert.place_city_name}}</td>
 								<td><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
 							</tr>
 						</tbody>
