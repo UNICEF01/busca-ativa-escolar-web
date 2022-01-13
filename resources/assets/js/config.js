@@ -10,10 +10,30 @@
 			moment.locale('pt-br');
 
 			function env(key) {
+
+				var default_endpoint = 'prod_https';
+
+				switch (location.host) {
+					case 'plataforma.busca-ativa-escolar.test':
+						default_endpoint = 'local_http';
+						break;
+					case 'panel.busca-ativa-escolar.test':
+						default_endpoint = 'local_http';
+						break
+					case 'plataforma.testes.buscaativaescolar.org.br':
+						default_endpoint = 'tests_https';
+						break;
+					case 'plataforma.dev.buscaativaescolar.org.br':
+						default_endpoint = 'dev_https';
+						break;
+					default:
+						default_endpoint = 'prod_https';
+				}
+
 				if(!window.ENVIRONMENT) {
 					window.ENVIRONMENT = {
 						SERVER_NAME: "Default (not configured)",
-						DEFAULT_ENDPOINT: 'prod_https'
+						DEFAULT_ENDPOINT: default_endpoint
 					};
 				}
 
