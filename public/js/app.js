@@ -1509,9 +1509,7 @@
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
-				
 				$scope.search = $scope.children;
-				console.log($scope.children)
 			};
 
 			$scope.preview = function(child) {
