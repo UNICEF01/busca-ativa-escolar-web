@@ -98,9 +98,8 @@
                 }
             };
 
-
 			$scope.refresh = function() {
-				Groups.find(function(res) {
+				Groups.findGroupedGroups(function(res) {
 					$scope.groups = res.data;
 					$scope.groupsCopy = angular.copy($scope.groups);
 				});
@@ -109,6 +108,7 @@
 			Platform.whenReady(function() {
 				$scope.refresh();
 			});
+
 		});
 
 })();

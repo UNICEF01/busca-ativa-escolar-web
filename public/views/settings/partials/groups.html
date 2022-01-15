@@ -1,13 +1,18 @@
 <div class="panel panel-default">
+
 	<div class="panel-heading">
 		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-users"></i> Cadastre os grupos de trabalho</h3>
 	</div>
+
 	<form name="$parent.$parent.groupsEdit" class="panel-body">
+
 		<p ng-if="identity.getCurrentTenant()">
 			Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
 		</p>
 		<p ng-if="!identity.getCurrentTenant()">
-			Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.</p>
+			Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.
+		</p>
+
 		<table class="table sign-up-groups">
 			<thead>
 			<tr>
@@ -15,29 +20,109 @@
 				<th width="10%">Opções</th>
 			</tr>
 			</thead>
+
 			<tbody>
+
 			<tr ng-repeat="(i, group) in getGroups() track by i">
+
 				<td>
-					<input id="id_{{i}}" type="text" ng-enter="updateGroup(group.name, i)" ng-blur="updateGroup(group.name, i)" ng-disabled="group.is_deleting" ng-class="{'text-will-remove': group.is_deleting}" ng-model="group.name" ng-enter="addGroup()" name="group_{{i}}" class="form-control"/>
+
+					<input
+							id="id_{{i}}"
+							type="text"
+							ng-model="group.name"
+							name="group_{{i}}"
+							class="form-control"/>
+
+					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
+
+						<input
+								id="id_{{j}}"
+								type="text"
+								ng-model="group2.name"
+								class="form-control"/>
+
+						<div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
+
+							<input
+									id="id_{{k}}"
+									type="text"
+									ng-model="group3.name"
+									class="form-control"/>
+
+							<div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
+
+								<input
+										id="id_{{l}}"
+										type="text"
+										ng-model="group4.name"
+										name="group4_{{l}}"
+										class="form-control"/>
+
+							</div>
+
+							<div class="row">
+								<div class="col-md-11">
+									<input
+											type="text"
+											style="margin-left: 30px;"
+											placeholder="Novo subgrupo para {{group3.name}}"
+											class="form-control"/>
+								</div>
+								<div class="col-md-1">
+									<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="row">
+							<div class="col-md-11">
+								<input
+										type="text"
+										style="margin-left: 30px;"
+										placeholder="Novo subgrupo para {{group2.name}}"
+										class="form-control"/>
+							</div>
+							<div class="col-md-1">
+								<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="row">
+						<div class="col-md-11">
+							<input
+									type="text"
+									style="margin-left: 30px;"
+									placeholder="Novo subgrupo para {{group.name}}"
+									class="form-control"/>
+						</div>
+						<div class="col-md-1">
+							<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
+						</div>
+					</div>
+
 				</td>
+
 				<td>
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
 					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 					<a class="btn btn-raised btn-warning" ng-show="group.is_deleting" ng-click="cancelRemoval(i);" uib-tooltip="Cancelar remoção"><i class="fa fa-undo"></i></a>
 				</td>
+
 			</tr>
+
 			<tr>
-				<td><input type="text" ng-model="$parent.newGroupName" ng-blur="addGroup()" class="form-control" placeholder="Nome da secretaria..." ng-enter="addGroup()"/></td>
+				<td><input type="text" ng-model="$parent.newGroupName" ng-blur="addGroup()" class="form-control" placeholder="Novo grupo principal..." ng-enter="addGroup()"/></td>
 				<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo">Salvar</a></td>
 			</tr>
+
 			</tbody>
+
 		</table>
 
 	</form>
 
-	<!--<div class="panel-footer clearfix">-->
-		<!--&lt;!&ndash;button ng-show="!$parent.isEditing" ng-click="prevStep()" type="button" class="btn btn-primary pull-left"><i class="fa fa-arrow-left"></i> Anterior</button>-->
-		<!--<button ng-show="!$parent.isEditing" ng-click="nextStep()" type="button" class="btn btn-primary btn-raised pull-right">Próximo <i class="fa fa-arrow-right"></i></button&ndash;&gt;-->
-		<!--<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right"><i class="fa fa-save"></i></button>-->
-	<!--</div>-->
 </div>
