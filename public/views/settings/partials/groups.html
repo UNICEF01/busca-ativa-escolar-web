@@ -36,87 +36,103 @@
 
 					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
-						<input
-								id="id_{{j}}"
-								type="text"
-								ng-model="group2.name"
-								class="form-control"/>
+						<div class="row">
+							<div class="col-md-10">
+								<input
+										id="id_{{j}}"
+										type="text"
+										ng-model="group2.name"
+										class="form-control"/>
+							</div>
+							<div class="col-md-2" ng-if="group2.children.length == 0">
+								<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+							</div>
+						</div>
 
 						<div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
 
-							<input
-									id="id_{{k}}"
-									type="text"
-									ng-model="group3.name"
-									class="form-control"/>
+							<div class="row">
+								<div class="col-md-10">
+									<input
+											id="id_{{k}}"
+											type="text"
+											ng-model="group3.name"
+											class="form-control"/>
+								</div>
+								<div class="col-md-2" ng-if="group3.children.length == 0">
+									<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+								</div>
+							</div>
 
 							<div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
 
-								<input
-										id="id_{{l}}"
-										type="text"
-										ng-model="group4.name"
-										name="group4_{{l}}"
-										class="form-control"/>
-
-							</div>
-
-							<div class="row">
-								<div class="col-md-11">
-									<input
-											type="text"
-											style="margin-left: 30px;"
-											placeholder="Novo subgrupo para {{group3.name}}"
-											class="form-control"/>
+								<div class="row">
+									<div class="col-md-10">
+										<input
+												id="id_{{l}}"
+												type="text"
+												ng-model="group4.name"
+												name="group4_{{l}}"
+												class="form-control"/>
+									</div>
+									<div class="col-md-2">
+										<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+									</div>
 								</div>
-								<div class="col-md-1">
-									<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
-								</div>
+
 							</div>
 
-						</div>
-
-						<div class="row">
-							<div class="col-md-11">
-								<input
-										type="text"
-										style="margin-left: 30px;"
-										placeholder="Novo subgrupo para {{group2.name}}"
-										class="form-control"/>
-							</div>
-							<div class="col-md-1">
-								<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="row">
-						<div class="col-md-11">
 							<input
 									type="text"
-									style="margin-left: 30px;"
-									placeholder="Novo subgrupo para {{group.name}}"
-									class="form-control"/>
+									ng-model="$parent.newSubgroupGroupNames[i][j][k+1]"
+									ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
+									class="form-control"
+									placeholder="Novo subgrupo para {{group3.name}}"
+									ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
+									style="margin-left: 30px;"/>
+
 						</div>
-						<div class="col-md-1">
-							<a class="btn btn-raised btn-success" ng-click="" uib-tooltip="Adicionar grupo">Salvar</a>
-						</div>
+
+						<input
+								type="text"
+								ng-model="$parent.newSubgroupGroupNames[i][j+1][0]"
+								ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
+								class="form-control"
+								placeholder="Novo subgrupo para {{group2.name}}"
+								ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
+								style="margin-left: 30px;"/>
+
 					</div>
+
+					<input
+							type="text"
+							ng-model="$parent.newSubgroupGroupNames[i][0][0]"
+							ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
+							class="form-control"
+							placeholder="Novo subgrupo para {{group.name}}"
+							ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
+							style="margin-left: 30px;"/>
 
 				</td>
 
 				<td>
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
-					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary" ng-click="removeGroup(i);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
-					<a class="btn btn-raised btn-warning" ng-show="group.is_deleting" ng-click="cancelRemoval(i);" uib-tooltip="Cancelar remoção"><i class="fa fa-undo"></i></a>
+					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary && group.children.length == 0" ng-click="removeGroup(group);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 				</td>
 
 			</tr>
 
 			<tr>
-				<td><input type="text" ng-model="$parent.newGroupName" ng-blur="addGroup()" class="form-control" placeholder="Novo grupo principal..." ng-enter="addGroup()"/></td>
-				<td><a class="btn btn-raised btn-success" ng-click="addGroup()" uib-tooltip="Adicionar grupo">Salvar</a></td>
+				<td>
+					<input
+							type="text"
+							ng-model="$parent.newPrincipalGroupName"
+							ng-blur="addPrincipalGroup()"
+							class="form-control"
+							placeholder="Novo grupo principal..."
+							ng-enter="addPrincipalGroup()"/>
+				</td>
+				<td><a class="btn btn-raised btn-success" ng-click="addPrincipalGroup()" uib-tooltip="Adicionar grupo">Salvar</a></td>
 			</tr>
 
 			</tbody>

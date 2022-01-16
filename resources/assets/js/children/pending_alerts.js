@@ -8,7 +8,7 @@
 				controller: 'PendingAlertsCtrlCtrl'
 			})
 		})
-		.controller('PendingAlertsCtrlCtrl', function ($scope, $rootScope, Platform, Identity, Alerts, StaticData) {
+		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, StaticData) {
 
 			$scope.identity = Identity;
 			$scope.sendingAlert = false;
@@ -23,6 +23,7 @@
                 max: 16,
 				page: 1,
 				neighborhood: null,
+				city_name: null,
 				show_suspended: false
             };
 

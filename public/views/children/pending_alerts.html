@@ -18,6 +18,9 @@
 							<input type="search" class="form-control" ng-model="query.neighborhood" placeholder="Bairro..." />
 						</div>
 						<div class="form-group col-md-3">
+							<input type="search" class="form-control" ng-model="query.city_name" placeholder="Município..." />
+						</div>
+						<div class="form-group col-md-3">
 							<label class="container_check_alert_rejected">Rejeitados
 								<input type="checkbox" ng-model="query.show_suspended">
 								<span class="checkmark"></span>
@@ -38,6 +41,7 @@
 								<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'neighborhood'">Bairro</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="query.sort" field="'city_name'">Município</column-sorter></th>
 								<th></th>
 							</tr>
 						</thead>
@@ -53,6 +57,7 @@
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
 								<td><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
 								<td><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>
+								<td><i class="fa fa-map-marker" ng-show="child.alert.place_city_name"></i> {{child.alert.place_city_name}}</td>
 								<td><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
 							</tr>
 						</tbody>
