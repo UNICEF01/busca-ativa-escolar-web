@@ -32,7 +32,9 @@
 							type="text"
 							ng-model="group.name"
 							name="group_{{i}}"
-							class="form-control"/>
+							class="form-control"
+							ng-enter="updateGroup(group.name, group.id)"
+							ng-blur="updateGroup(group.name, group.id)"/>
 
 					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
@@ -42,7 +44,9 @@
 										id="id_{{j}}"
 										type="text"
 										ng-model="group2.name"
-										class="form-control"/>
+										class="form-control"
+										ng-enter="updateGroup(group2.name, group2.id)"
+										ng-blur="updateGroup(group2.name, group2.id)"/>
 							</div>
 							<div class="col-md-2" ng-if="group2.children.length == 0">
 								<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
@@ -57,7 +61,9 @@
 											id="id_{{k}}"
 											type="text"
 											ng-model="group3.name"
-											class="form-control"/>
+											class="form-control"
+											ng-enter="updateGroup(group3.name, group3.id)"
+											ng-blur="updateGroup(group3.name, group3.id)"/>
 								</div>
 								<div class="col-md-2" ng-if="group3.children.length == 0">
 									<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
@@ -69,11 +75,13 @@
 								<div class="row">
 									<div class="col-md-10">
 										<input
-												id="id_{{l}}"
-												type="text"
-												ng-model="group4.name"
-												name="group4_{{l}}"
-												class="form-control"/>
+											id="id_{{l}}"
+											type="text"
+											ng-model="group4.name"
+											name="group4_{{l}}"
+											class="form-control"
+											ng-enter="updateGroup(group4.name, group4.id)"
+											ng-blur="updateGroup(group4.name, group4.id)"/>
 									</div>
 									<div class="col-md-2">
 										<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>

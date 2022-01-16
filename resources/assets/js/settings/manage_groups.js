@@ -62,6 +62,28 @@
 
 			}
 
+			$scope.updateGroup = function (newName, id){
+
+				if(!newName) return;
+				if(newName.length < 3) return;
+
+				var group = {
+					name: newName,
+					id: id
+				};
+
+				var promiseGroup = Groups.update(group).$promise
+
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupo editado com sucesso!')
+					$scope.refresh();
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao editar o grupo!')
+					$scope.refresh();
+				});
+
+			}
+
 			$scope.removeGroup = function (group){
 				if(group.is_primary) return;
 
@@ -71,7 +93,7 @@
 
 				$scope.newSubgroupGroupNames = [];
 				$scope.newPrincipalGroupName = '';
-				
+
 				promiseGroup.then(function(res) {
 					ngToast.success('Grupo removido com sucesso!')
 					$scope.refresh();
