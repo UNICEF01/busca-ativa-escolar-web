@@ -4,7 +4,6 @@
 		.factory('Groups', function Groups(API, $resource) {
 
 			var headers = API.REQUIRE_AUTH;
-
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
 				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
