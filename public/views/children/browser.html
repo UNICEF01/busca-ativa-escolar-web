@@ -4,6 +4,7 @@
 		<div class="panel-heading">
 			<h3><a href="#" class="children_filter"><i class="material-icons">filter_list</i></a> Filtrar</h3>
 		</div>
+
 		<div class="body_filter">
 			<div class="panel-body">
 
@@ -103,6 +104,7 @@
 					<tr>
 						<th>Nome <br /><small>da criança ou adolescente</small></th>
 						<th>Responsáveis <br /> pela criança</th>
+						<th>Município</th>						
 						<th>Risco <br /> <small> </small></th>
 						<th>Nascimento <br /> <small> </small></th>
 						<th>Etapa <br /> <small> </small></th>
@@ -125,6 +127,9 @@
 								{{Decorators.Child.parents(child)}}
 							</span>
 						</td>
+						<td width="10%" style="vertical-align: middle;">
+							{{child.place_city_name}}/{{child.place_uf}}
+						</td>						
 						<td width="10%" style="vertical-align: middle;">
 							<div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
 							<div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M</div>

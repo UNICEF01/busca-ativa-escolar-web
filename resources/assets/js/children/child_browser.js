@@ -1,4 +1,5 @@
 (function () {
+    
 
     angular.module('BuscaAtivaEscolar')
         .config(function ($stateProvider) {
@@ -7,7 +8,9 @@
                 templateUrl: '/views/children/browser.html',
                 controller: 'ChildSearchCtrl'
             });
+
         })
+
         .controller('ChildSearchCtrl', function ($scope, Identity, Config, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast) {
 
             $scope.Decorators = Decorators;
@@ -43,7 +46,7 @@
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
             };
-
+            
             $scope.resetQuery = function () {
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.refresh();
