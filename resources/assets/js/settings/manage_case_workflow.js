@@ -29,6 +29,8 @@
 				var promises = [];
 
 				for(var i in $scope.groups) {
+
+					console.log($scope.groups[i]);
 					if(!$scope.groups.hasOwnProperty(i)) continue;
 					//console.log('\t[manage_case_workflow.save] Update group: ', $scope.groups[i]);
 					promises.push( Groups.updateSettings($scope.groups[i]).$promise );

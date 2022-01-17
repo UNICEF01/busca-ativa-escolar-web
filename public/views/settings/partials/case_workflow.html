@@ -33,11 +33,50 @@
 				</th>
 			</tr>
 			<tr ng-if="!cause.blocked" ng-repeat="(j, group) in getGroups() track by group.id">
-				<td width="70%"><label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; color: black;">{{group.name}}</label></td>
+
+				<td width="70%">
+					<label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; color: black;">{{group.name}}</label>
+
+						<div ng-repeat="(k, group2) in group.children track by group2.id" style="margin-left: 10px;">
+							<label>{{group2.name}}</label>
+							<div ng-repeat="(l, group3) in group2.children track by group3.id" style="margin-left: 10px;">
+								<label>{{group3.name}}</label>
+								<div ng-repeat="(m, group4) in group3.children track by group4.id" style="margin-left: 10px;">
+									<label>{{group4.name}}</label>
+								</div>
+							</div>
+						</div>
+
+				</td>
+
 				<td width="30%">
-					<label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip-html="(group.settings.alerts[cause.id]) ? 'Visualiza e notifica' : 'Não visualiza'">
-						<input id="chk-group-view-{{i}}-{{j}}" type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="group.settings.alerts[cause.id]"  />  Visualiza e notifica <i class="fa fa-eye"></i>
-					</label>
+
+					<div style="margin-left: 100px;">
+						<label for="chk-group-view-{{i}}-{{j}}" uib-tooltip-html="(group.settings.alerts[cause.id]) ? 'Visualiza e notifica' : 'Não visualiza'">
+							<input id="chk-group-view-{{i}}-{{j}}" type="checkbox" ng-true-value="true" ng-false-value="false" ng-model="group.settings.alerts[cause.id]"  />  Visualiza e notifica <i class="fa fa-eye"></i>
+						</label>
+
+						<div ng-repeat="(k, group2) in group.children track by group2.id">
+
+							<label for="chk-group-view-{{i}}-{{j}}-{{k}}">
+								<input id="chk-group-view-{{i}}-{{j}}-{{k}}" type="checkbox" ng-true-value="true" ng-false-value="false" ng-model=""  />  Visualiza e notifica <i class="fa fa-eye"></i>
+							</label>
+
+							<div ng-repeat="(l, group3) in group2.children track by group3.id">
+
+								<label for="chk-group-view-{{i}}-{{j}}-{{k}}-{{l}}">
+									<input id="chk-group-view-{{i}}-{{j}}-{{k}}-{{l}}" type="checkbox" ng-true-value="true" ng-false-value="false" ng-model=""  />  Visualiza e notifica <i class="fa fa-eye"></i>
+								</label>
+
+								<div ng-repeat="(m, group4) in group3.children track by group4.id">
+									<label for="chk-group-view-{{i}}-{{j}}-{{k}}-{{l}}-{{m}}">
+										<input id="chk-group-view-{{i}}-{{j}}-{{k}}-{{l}}-{{m}}" type="checkbox" ng-true-value="true" ng-false-value="false" ng-model=""  /> Visualiza e notifica <i class="fa fa-eye"></i>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</td>
 			</tr>
 			</tbody>
