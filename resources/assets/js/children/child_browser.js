@@ -21,6 +21,7 @@
             };
             $scope.identity = Identity;
 
+            
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -57,7 +58,6 @@
                     Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
                 });
             };
-
             $scope.exportXLSReport = function(file){
                 Identity.provideToken().then(function (token) {
                     window.open(Config.getAPIEndpoint() + 'reports/child/download?token=' + token + "&file=" + file);
@@ -105,6 +105,7 @@
                     "sSortDescending": ": Ordenar colunas de forma descendente"
                 }
             }
+
             //Configura a linguagem na diretiva dt-options=""
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withLanguage(language);

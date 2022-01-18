@@ -16,6 +16,7 @@
 					<div class="col-md-2">
 						<input type="text" class="form-control" id="filter-type"  ng-model="query.cause_name" placeholder="Motivo do caso...">
 					</div>
+					
 					<div class="col-md-2">
 						<input type="text" class="form-control" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso...">
 					</div>
@@ -23,7 +24,9 @@
 						<input type="text" class="form-control" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário...">
 					</div>
 					<div class="col-md-2">
-						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, nome da rua...">
+						<span uib-tooltip="Bairro, CEP, UF, Cidade, Rua">
+						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, UF, Cidade, Rua ...">
+						</span>
 					</div>
 
 					<div class="col-md-2"></div>
