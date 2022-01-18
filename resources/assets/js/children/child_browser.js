@@ -21,6 +21,7 @@
             };
             $scope.identity = Identity;
 
+            
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -105,6 +106,7 @@
                     "sSortDescending": ": Ordenar colunas de forma descendente"
                 }
             }
+
             //Configura a linguagem na diretiva dt-options=""
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withLanguage(language);
