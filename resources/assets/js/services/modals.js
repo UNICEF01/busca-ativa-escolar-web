@@ -277,6 +277,44 @@
           return params;
         },
 
+        GroupPicker: function (
+            title,
+            message,
+            groups,
+            canDismiss,
+            noGroupsMessage
+        ) {
+          var params = {
+            templateUrl: '/views/modals/group_picker.html',
+            controller: 'GroupPickerModalCtrl',
+            size: 'md',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              noGroupsMessage: function () {
+                return noGroupsMessage;
+              },
+              groups: function () {
+                return groups;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
+
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
+
+          return params;
+        },
+
         CaseCancel: function () {
           return {
             templateUrl: '/views/modals/case_cancel.html',

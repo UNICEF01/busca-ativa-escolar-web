@@ -1,0 +1,29 @@
+<div class="modal-template" id="md-user-picker">
+	<div class="modal-header">
+		<h3 class="modal-title">{{title || 'Selecione um grupo:'}}</h3>
+	</div>
+	<div class="modal-body" ng-show="hasGroups()">
+		<div ng-show="message">{{message}}</div>
+		<div class="block">
+			<label class="control-label">Grupo</label>
+			<ui-select ng-model="$parent.selectedGroup">
+				<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
+				<ui-select-choices repeat="group in groups | filter: $select.search track by group.id">
+					<div>
+						<div style="margin-left: {{group.margin}}px">
+							<i class="fa fa-users"></i>
+							<span ng-bind-html="group.name | highlight: $select.search"></span>
+						</div>
+					</div>
+				</ui-select-choices>
+			</ui-select>
+		</div>
+	</div>
+	<div class="modal-body" ng-show="!hasGroups()">
+		<div class="alert alert-warning"><strong>Nenhum grupo disponível! </strong><span ng-bind="noGroupsMessage"></span></div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" type="button" ng-show="canDismiss || !hasGroups()" ng-click="close()">Cancelar</button>
+		<button class="btn btn-primary btn-raised" type="button" ng-show="hasGroups()" ng-click="onSelect()">Selecionar</button>
+	</div>
+</div>

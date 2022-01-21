@@ -39,7 +39,7 @@
 					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
 						<div class="row">
-							<div class="col-md-10">
+							<div class="col-md-9">
 								<input
 										id="id_{{j}}"
 										type="text"
@@ -48,15 +48,16 @@
 										ng-enter="updateGroup(group2.name, group2.id)"
 										ng-blur="updateGroup(group2.name, group2.id)"/>
 							</div>
-							<div class="col-md-2" ng-if="group2.children.length == 0">
-								<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+							<div class="col-md-3">
+								<a ng-if="group2.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+								<a class="btn btn-raised btn-info" ng-click="moveGroup(group2);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 							</div>
 						</div>
 
 						<div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
 
 							<div class="row">
-								<div class="col-md-10">
+								<div class="col-md-9">
 									<input
 											id="id_{{k}}"
 											type="text"
@@ -65,15 +66,16 @@
 											ng-enter="updateGroup(group3.name, group3.id)"
 											ng-blur="updateGroup(group3.name, group3.id)"/>
 								</div>
-								<div class="col-md-2" ng-if="group3.children.length == 0">
-									<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+								<div class="col-md-3">
+									<a ng-if="group3.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+									<a class="btn btn-raised btn-info" ng-click="moveGroup(group3);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 								</div>
 							</div>
 
 							<div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
 
 								<div class="row">
-									<div class="col-md-10">
+									<div class="col-md-9">
 										<input
 											id="id_{{l}}"
 											type="text"
@@ -83,8 +85,9 @@
 											ng-enter="updateGroup(group4.name, group4.id)"
 											ng-blur="updateGroup(group4.name, group4.id)"/>
 									</div>
-									<div class="col-md-2">
-										<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+									<div class="col-md-3">
+										<a class="btn btn-raised btn-danger" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+										<a class="btn btn-raised btn-info" ng-click="moveGroup(group4);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 									</div>
 								</div>
 
