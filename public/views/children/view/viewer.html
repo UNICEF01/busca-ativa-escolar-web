@@ -12,6 +12,12 @@
                           ng-show="child.child_status === 'in_observation'">Em observação</span>
                     <span class="label label-success"
                           ng-show="child.child_status === 'in_school'">Dentro da Escola</span>
+
+                    <a class="btn btn-xs btn-default btn-raised" ng-click="assignGroup()">
+                        <i class="material-icons fa fa-edit"></i>
+                        <span ng-show="child.currentCase.group"><strong>Grupo:</strong> {{child.currentCase.group.name}}</span>
+                        <span ng-show="!child.currentCase.group">Sem grupo</span>
+                    </a>
                 </div>
             </div>
 

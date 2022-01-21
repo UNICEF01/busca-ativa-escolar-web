@@ -20,11 +20,15 @@
 		$scope.StaticData = StaticData;
 
 		$scope.refreshChildData = function(callback) {
-			return $scope.child = Children.find({id: $scope.child_id}, callback);
+			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
 		};
 
 		$scope.child_id = $stateParams.child_id;
 		$scope.child = $scope.refreshChildData();
+
+		$scope.assignGroup = function (){
+			alert("Modal para selecao de grupos ...");
+		}
 
 		//console.log("[core] @ChildViewCtrl", $scope.child);
 
