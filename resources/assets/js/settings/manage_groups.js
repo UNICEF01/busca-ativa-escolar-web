@@ -106,7 +106,7 @@
 
 				Modals.show(
 					Modals.Confirm(
-						'Confirma a remoção do grupo?',
+						'Confirma a remoção do grupo '+group.name+' ?',
 						'A remoção do grupo pode levar mais tempo considerando a quantidade de usuários e casos que serão alterados....'
 					)).then(function () {
 
@@ -115,7 +115,7 @@
 					var promiseGroup = Groups.delete(
 						{id: group.id}
 					).$promise
-
+					
 					$scope.newSubgroupGroupNames = [];
 					$scope.newPrincipalGroupName = '';
 
