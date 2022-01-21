@@ -12,12 +12,28 @@
 				})
 		});
 
-	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData) {
+	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast) {
 		if ($state.current.name === "child_viewer") $state.go('.consolidated');
 
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.StaticData = StaticData;
+
+		$scope.groups = [];
+
+		$scope.getGroupsToMove = function() {
+			var groupsToMove = [];
+			$scope.groups.forEach(function(v, k){
+				groupsToMove.push({id: v.id, name: v.name});
+				v.children.forEach(function(v2, k2){
+					groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+					v2.children.forEach(function(v3, k3){
+						groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+					});
+				});
+			});
+			return groupsToMove;
+		};
 
 		$scope.refreshChildData = function(callback) {
 			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
@@ -27,9 +43,26 @@
 		$scope.child = $scope.refreshChildData();
 
 		$scope.assignGroup = function (){
-			alert("Modal para selecao de grupos ...");
-		}
+			var promiseGroup = Groups.findGroupedGroups().$promise
+			promiseGroup.then(function(res) {
+				$scope.groups = res.data;
+				Modals.show(
+					Modals.GroupPicker(
+						'Atribuir grupo',
+						'Indique grupo ...:',
+						$scope.getGroupsToMove(),
+						true)
+				).then(function (parentGroup) {
+					alert("Atualizar grupo .....")
+				}).then(function (res) {
+					ngToast.success('Grupo atribuído com sucesso!')
+					alert("Reload ...")
+				});
 
+			}, function (err) {
+				ngToast.danger('Ocorreu um erro ao retornar grupos!')
+			});
+		}
 		//console.log("[core] @ChildViewCtrl", $scope.child);
 
 	}
