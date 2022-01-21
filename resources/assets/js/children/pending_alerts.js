@@ -24,8 +24,11 @@
 				page: 1,
 				neighborhood: null,
 				city_name: null,
+				alert_cause_id: null,
 				show_suspended: false
             };
+
+			
 
             $scope.search = {};
 			
@@ -47,6 +50,7 @@
 			$scope.static = StaticData;
 			
 			$scope.refresh = function() {
+				console.log($scope.query);
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
 				$scope.search = $scope.children;
