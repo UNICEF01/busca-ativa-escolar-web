@@ -18,7 +18,9 @@
                             <span ng-show="!child.currentCase.group.deleted_at"><i class="material-icons fa fa-edit"></i> <strong>Grupo:</strong> {{child.currentCase.group.name}}</span>
                             <span ng-show="child.currentCase.group.deleted_at" style="color: #d9534f;"><i class="material-icons fa fa-edit"></i> <strong>Grupo removido:</strong> {{child.currentCase.group.name}}</span>
                         </span>
-                        <span ng-show="!child.currentCase.group">Sem grupo</span>
+                    </a>
+                    <a ng-show="!child.currentCase.group" class="btn btn-xs btn-raised" ng-click="assignGroup()" >
+                        <span>Sem grupo</span>
                     </a>
 
                 </div>
