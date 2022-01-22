@@ -1417,7 +1417,7 @@
 					ngToast.success('Grupo atribuído com sucesso!')
 					$scope.refreshChildData(function (){});
 				});
-				
+
 			}, function (err) {
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
