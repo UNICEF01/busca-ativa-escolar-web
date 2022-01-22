@@ -28,6 +28,9 @@
 					groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
 					v2.children.forEach(function(v3, k3){
 						groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+						v3.children.forEach(function(v4, k4){
+							groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+						});
 					});
 				});
 			});
