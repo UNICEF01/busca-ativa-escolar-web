@@ -7,7 +7,7 @@
 
 			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
-				update: {method: 'POST', headers: headers}
+				update: {method: 'PUT', headers: headers}
 			});
 
 		});

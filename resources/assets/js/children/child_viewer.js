@@ -12,7 +12,7 @@
 				})
 		});
 
-	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast) {
+	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast, Cases) {
 		if ($state.current.name === "child_viewer") $state.go('.consolidated');
 
 		$scope.Decorators = Decorators;
@@ -20,7 +20,6 @@
 		$scope.StaticData = StaticData;
 
 		$scope.groups = [];
-
 		$scope.getGroupsToMove = function() {
 			var groupsToMove = [];
 			$scope.groups.forEach(function(v, k){
@@ -43,8 +42,10 @@
 		$scope.child = $scope.refreshChildData();
 
 		$scope.assignGroup = function (){
+
 			var promiseGroup = Groups.findGroupedGroups().$promise
 			promiseGroup.then(function(res) {
+
 				$scope.groups = res.data;
 				Modals.show(
 					Modals.GroupPicker(
@@ -52,13 +53,17 @@
 						'Indique grupo ...:',
 						$scope.getGroupsToMove(),
 						true)
-				).then(function (parentGroup) {
-					alert("Atualizar grupo .....")
+				).then(function (selectedGroup) {
+					var currentCase = {
+						id: $scope.child.currentCase.id,
+						group_id: selectedGroup.id
+					};
+					return Cases.update(currentCase)
 				}).then(function (res) {
 					ngToast.success('Grupo atribuído com sucesso!')
-					alert("Reload ...")
+					$scope.refreshChildData(function (){});
 				});
-
+				
 			}, function (err) {
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});

@@ -1366,7 +1366,7 @@
 				})
 		});
 
-	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast) {
+	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast, Cases) {
 		if ($state.current.name === "child_viewer") $state.go('.consolidated');
 
 		$scope.Decorators = Decorators;
@@ -1374,7 +1374,6 @@
 		$scope.StaticData = StaticData;
 
 		$scope.groups = [];
-
 		$scope.getGroupsToMove = function() {
 			var groupsToMove = [];
 			$scope.groups.forEach(function(v, k){
@@ -1397,8 +1396,10 @@
 		$scope.child = $scope.refreshChildData();
 
 		$scope.assignGroup = function (){
+
 			var promiseGroup = Groups.findGroupedGroups().$promise
 			promiseGroup.then(function(res) {
+
 				$scope.groups = res.data;
 				Modals.show(
 					Modals.GroupPicker(
@@ -1406,13 +1407,17 @@
 						'Indique grupo ...:',
 						$scope.getGroupsToMove(),
 						true)
-				).then(function (parentGroup) {
-					alert("Atualizar grupo .....")
+				).then(function (selectedGroup) {
+					var currentCase = {
+						id: $scope.child.currentCase.id,
+						group_id: selectedGroup.id
+					};
+					return Cases.update(currentCase)
 				}).then(function (res) {
 					ngToast.success('Grupo atribuído com sucesso!')
-					alert("Reload ...")
+					$scope.refreshChildData(function (){});
 				});
-
+				
 			}, function (err) {
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
@@ -1618,224 +1623,6 @@
 		})
 		.controller('UserAlertsCtrlCtrl', function () {
 		});
-
-})();
-(function () {
-  identify('config', 'charts.js');
-  angular.module('BuscaAtivaEscolar').run(function (Config) {
-    Highcharts.setOptions({
-      lang: {
-        months: [
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ],
-        shortMonths: [
-          'Jan',
-          'Fev',
-          'Mar',
-          'Abr',
-          'Mai',
-          'Jun',
-          'Jul',
-          'Ago',
-          'Set',
-          'Out',
-          'Nov',
-          'Dez',
-        ],
-        weekdays: [
-          'Domingo',
-          'Segunda',
-          'Terça',
-          'Quarta',
-          'Quinta',
-          'Sexta',
-          'Sábado',
-        ],
-        loading: ['Atualizando o gráfico...'],
-        contextButtonTitle: 'Exportar gráfico',
-        decimalPoint: ',',
-        thousandsSep: '.',
-        downloadJPEG: 'Baixar imagem JPEG',
-        downloadPDF: 'Baixar arquivo PDF',
-        downloadPNG: 'Baixar imagem PNG',
-        downloadSVG: 'Baixar vetor SVG',
-        printChart: 'Imprimir gráfico',
-        rangeSelectorFrom: 'De',
-        rangeSelectorTo: 'Para',
-        rangeSelectorZoom: 'Zoom',
-        resetZoom: 'Voltar zoom',
-        resetZoomTitle: 'Voltar zoom para nível 1:1'
-      }
-    });
-  });
-})();
-
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-// (function () {
-//     identify('config', 'here_api.js');
-//
-//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
-//         HereMapsConfigProvider.setOptions({
-//             app_id: 'IaV356sfi2gAreQwtVsB',
-//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
-//             useHTTPS: true,
-//             apiVersion: '3.0',
-//             useCIT: true,
-//             mapTileConfig: {
-//                 scheme: 'reduced.day',
-//                 size: 256,
-//                 format: 'png8',
-//                 metadataQueryParams: {}
-//             }
-//         });
-//     }]);
-// })();
-//
-
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function () {
-  identify('config', 'on_init.js');
-
-  angular
-    .module('BuscaAtivaEscolar')
-    .run(function (
-      $cookies,
-      $rootScope,
-      $state,
-      Identity,
-      Auth,
-      Config,
-      StaticData
-    ) {
-      $.material.init();
-
-      $rootScope.$on('unauthorized', function () {
-        Auth.logout();
-        $state.go('login');
-      });
-    });
-})();
-
-(function () {
-    identify('config', 'states.js');
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
-
-            $locationProvider.html5Mode({
-                    enabled: true,
-                    requireBase: true
-                }
-            );
-            $urlRouterProvider.otherwise('/dashboard');
-
-            $stateProvider
-                .state('login', {
-                    url: '/login',
-                    templateUrl: '/views/login.html',
-                    controller: 'LoginCtrl',
-                    unauthenticated: true
-                })
-                .state('dashboard', {
-                    url: '/dashboard',
-                    templateUrl: '/views/dashboard.html',
-                    controller: 'DashboardCtrl'
-                })
-                .state('developer_mode', {
-                    url: '/developer_mode',
-                    templateUrl: '/views/developer/developer_dashboard.html',
-                    controller: 'DeveloperCtrl',
-                    unauthenticated: true
-
-                })
-                .state('settings', {
-                    url: '/settings?step',
-                    templateUrl: '/views/settings/manage_settings.html',
-                    controller: 'SettingsCtrl'
-                })
-                .state('settings.parameterize_group', {
-                    url: '/parameterize_group/{group_id}',
-                    templateUrl: '/views/settings/parameterize_group.html',
-                    controller: 'ParameterizeGroupCtrl'
-                })
-                .state('credits', {
-                    url: '/credits',
-                    templateUrl: '/views/static/credits.html',
-                    controller: 'CreditsCtrl',
-                    unauthenticated: true
-                })
-                .state('tenant_signup', {
-                    url: '/tenant_signup',
-                    templateUrl: '/views/tenant_signup/main.html',
-                    controller: 'TenantSignupCtrl',
-                    unauthenticated: true
-                })
-                .state('state_signup', {
-                    url: '/state_signup',
-                    templateUrl: '/views/state_signup/main.html',
-                    controller: 'StateSignupCtrl',
-                    unauthenticated: true
-                })
-
-        });
-
-})();
-
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
 
 })();
 (function () {
@@ -4191,6 +3978,224 @@
 
 })();
 
+(function () {
+  identify('config', 'charts.js');
+  angular.module('BuscaAtivaEscolar').run(function (Config) {
+    Highcharts.setOptions({
+      lang: {
+        months: [
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ],
+        shortMonths: [
+          'Jan',
+          'Fev',
+          'Mar',
+          'Abr',
+          'Mai',
+          'Jun',
+          'Jul',
+          'Ago',
+          'Set',
+          'Out',
+          'Nov',
+          'Dez',
+        ],
+        weekdays: [
+          'Domingo',
+          'Segunda',
+          'Terça',
+          'Quarta',
+          'Quinta',
+          'Sexta',
+          'Sábado',
+        ],
+        loading: ['Atualizando o gráfico...'],
+        contextButtonTitle: 'Exportar gráfico',
+        decimalPoint: ',',
+        thousandsSep: '.',
+        downloadJPEG: 'Baixar imagem JPEG',
+        downloadPDF: 'Baixar arquivo PDF',
+        downloadPNG: 'Baixar imagem PNG',
+        downloadSVG: 'Baixar vetor SVG',
+        printChart: 'Imprimir gráfico',
+        rangeSelectorFrom: 'De',
+        rangeSelectorTo: 'Para',
+        rangeSelectorZoom: 'Zoom',
+        resetZoom: 'Voltar zoom',
+        resetZoomTitle: 'Voltar zoom para nível 1:1'
+      }
+    });
+  });
+})();
+
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+// (function () {
+//     identify('config', 'here_api.js');
+//
+//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
+//         HereMapsConfigProvider.setOptions({
+//             app_id: 'IaV356sfi2gAreQwtVsB',
+//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
+//             useHTTPS: true,
+//             apiVersion: '3.0',
+//             useCIT: true,
+//             mapTileConfig: {
+//                 scheme: 'reduced.day',
+//                 size: 256,
+//                 format: 'png8',
+//                 metadataQueryParams: {}
+//             }
+//         });
+//     }]);
+// })();
+//
+
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function () {
+  identify('config', 'on_init.js');
+
+  angular
+    .module('BuscaAtivaEscolar')
+    .run(function (
+      $cookies,
+      $rootScope,
+      $state,
+      Identity,
+      Auth,
+      Config,
+      StaticData
+    ) {
+      $.material.init();
+
+      $rootScope.$on('unauthorized', function () {
+        Auth.logout();
+        $state.go('login');
+      });
+    });
+})();
+
+(function () {
+    identify('config', 'states.js');
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
+
+            $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: true
+                }
+            );
+            $urlRouterProvider.otherwise('/dashboard');
+
+            $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/login.html',
+                    controller: 'LoginCtrl',
+                    unauthenticated: true
+                })
+                .state('dashboard', {
+                    url: '/dashboard',
+                    templateUrl: '/views/dashboard.html',
+                    controller: 'DashboardCtrl'
+                })
+                .state('developer_mode', {
+                    url: '/developer_mode',
+                    templateUrl: '/views/developer/developer_dashboard.html',
+                    controller: 'DeveloperCtrl',
+                    unauthenticated: true
+
+                })
+                .state('settings', {
+                    url: '/settings?step',
+                    templateUrl: '/views/settings/manage_settings.html',
+                    controller: 'SettingsCtrl'
+                })
+                .state('settings.parameterize_group', {
+                    url: '/parameterize_group/{group_id}',
+                    templateUrl: '/views/settings/parameterize_group.html',
+                    controller: 'ParameterizeGroupCtrl'
+                })
+                .state('credits', {
+                    url: '/credits',
+                    templateUrl: '/views/static/credits.html',
+                    controller: 'CreditsCtrl',
+                    unauthenticated: true
+                })
+                .state('tenant_signup', {
+                    url: '/tenant_signup',
+                    templateUrl: '/views/tenant_signup/main.html',
+                    controller: 'TenantSignupCtrl',
+                    unauthenticated: true
+                })
+                .state('state_signup', {
+                    url: '/state_signup',
+                    templateUrl: '/views/state_signup/main.html',
+                    controller: 'StateSignupCtrl',
+                    unauthenticated: true
+                })
+
+        });
+
+})();
+
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
@@ -5238,25 +5243,6 @@ function addErrorDate() {
 	});
 
 })();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' | ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
 (function () {
   angular.module('BuscaAtivaEscolar').factory('AppDependencies', function () {
     return [
@@ -6247,6 +6233,25 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -7124,155 +7129,6 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
-	const app = angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.showPassowrd = function () {
-				var field_password1 = document.getElementById("fld_password");
-				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
-			};
-
-			$scope.showPassowrd2 = function () {
-				var field_password2 = document.getElementById("fld_password_confirm");
-				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
-			};
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
-			}
-
-		});
-		app.directive('myDirective', function() {
-			return {
-					require: 'ngModel',
-					link: function(scope, element, attr, mCtrl) {
-							function myValidation(value) {
-									const capital = document.getElementById('capital');
-									const number = document.getElementById('number');
-									const length = document.getElementById('length');
-									const letter = document.getElementById('letter');
-									const symbol = document.getElementById('symbol')
-									const check = function(entrada) {
-											entrada.classList.remove('invalid');
-											entrada.classList.add('valid');
-											//mCtrl.$setValidity('charE', true);
-									}
-									const uncheck = function(entrada) {
-											entrada.classList.remove('valid');
-											entrada.classList.add('invalid');
-									}
-									if(typeof(value) === "string"){
-											var lowerCaseLetters = /[a-z]/g;
-											if (value.match(lowerCaseLetters)) {
-													check(letter)
-											} else {
-													uncheck(letter)
-											}
-											var upperCaseLetters = /[A-Z]/g;
-											if (value.match(upperCaseLetters)) {
-													check(capital)
-											} else {
-													uncheck(capital)
-											}
-											var numbers = /[0-9]/g;
-											if (value.match(numbers)) {
-													check(number)
-											} else {
-													uncheck(number)
-											}
-											var symbols = /[!@#$%&*?]/g;
-											if (value.match(symbols)) {
-													check(symbol)
-											} else {
-													uncheck(symbol)
-											}
-									// Validate length
-											if (value.length >= 8 && value.length <= 16) {
-													check(length);
-											} else {
-													uncheck(length);
-											}
-									}
-									
-									/*else {
-													mCtrl.$setValidity('charE', false);
-											}*/
-									return value;
-							}
-							mCtrl.$parsers.push(myValidation);
-					}
-			};
-	});
-
-})();
-(function() {
-
     angular
         .module('BuscaAtivaEscolar')
         .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
@@ -7970,49 +7826,155 @@ Highcharts.maps["countries/br/br-all"] = {
 		});
 
 })();
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
+(function() {
+
+	const app = angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
 			}
 
-			var o = Object(this);
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
 
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
 
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
 
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
+			$scope.showPassowrd = function () {
+				var field_password1 = document.getElementById("fld_password");
+				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
+			};
 
-			// 5. Let k be 0.
-			var k = 0;
+			$scope.showPassowrd2 = function () {
+				var field_password2 = document.getElementById("fld_password_confirm");
+				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
+			};
 
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
 				}
-				// e. Increase k by 1.
-				k++;
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
 			}
 
-			// 7. Return undefined.
-			return undefined;
-		}
+		});
+		app.directive('myDirective', function() {
+			return {
+					require: 'ngModel',
+					link: function(scope, element, attr, mCtrl) {
+							function myValidation(value) {
+									const capital = document.getElementById('capital');
+									const number = document.getElementById('number');
+									const length = document.getElementById('length');
+									const letter = document.getElementById('letter');
+									const symbol = document.getElementById('symbol')
+									const check = function(entrada) {
+											entrada.classList.remove('invalid');
+											entrada.classList.add('valid');
+											//mCtrl.$setValidity('charE', true);
+									}
+									const uncheck = function(entrada) {
+											entrada.classList.remove('valid');
+											entrada.classList.add('invalid');
+									}
+									if(typeof(value) === "string"){
+											var lowerCaseLetters = /[a-z]/g;
+											if (value.match(lowerCaseLetters)) {
+													check(letter)
+											} else {
+													uncheck(letter)
+											}
+											var upperCaseLetters = /[A-Z]/g;
+											if (value.match(upperCaseLetters)) {
+													check(capital)
+											} else {
+													uncheck(capital)
+											}
+											var numbers = /[0-9]/g;
+											if (value.match(numbers)) {
+													check(number)
+											} else {
+													uncheck(number)
+											}
+											var symbols = /[!@#$%&*?]/g;
+											if (value.match(symbols)) {
+													check(symbol)
+											} else {
+													uncheck(symbol)
+											}
+									// Validate length
+											if (value.length >= 8 && value.length <= 16) {
+													check(length);
+											} else {
+													uncheck(length);
+											}
+									}
+									
+									/*else {
+													mCtrl.$setValidity('charE', false);
+											}*/
+									return value;
+							}
+							mCtrl.$parsers.push(myValidation);
+					}
+			};
 	});
-}
+
+})();
 /*!
  * canvg.js - Javascript SVG parser and renderer on Canvas
  * MIT Licensed
@@ -9121,6 +9083,49 @@ if (!Array.prototype.find) {
         scaleHeight: dh
     })
 });
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function () {
   angular
     .module('BuscaAtivaEscolar')
@@ -9173,722 +9178,6 @@ if (!Array.prototype.find) {
     );
 })();
 
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Alerts', function Alerts(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
-				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
-				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
-				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
-				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
-			});
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
-				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
-				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
-			});
-
-			repository.where = {
-				idEquals: function(id) {
-					return function(item) { return item.id === id; }
-				},
-
-				caseCurrentStepIdEquals: function(id) {
-					return function(item) { return item.current_step_id === id; }
-				}
-			};
-
-			return repository;
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Cases', function Cases(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				update: {method: 'POST', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Children', function Children(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			var Children = $resource(API.getURI('children/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers, params: {with: 'reopens'}},
-				update: {method: 'POST', headers: headers},
-				search: {url: API.getURI('children/search'), method: 'POST', isArray: false, headers: headers},
-				export: {url: API.getURI('children/export'), method: 'POST', isArray: false, headers: headers},
-				getComments: {url: API.getURI('children/:id/comments'), isArray: false, method: 'GET', headers: headers},
-				getMap: {url: API.getURI('children/map'), method: 'GET', headers: headers},
-				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
-				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
-				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
-				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
-				spawnFromAlert: {method: 'POST', headers: headers},
-				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				reopenCase: {url: API.getURI('cases/:id/reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requestReopenCase: {url: API.getURI('cases/:id/request-reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requestTransferCase: {url: API.getURI('cases/:id/request-transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				transferCase: {url: API.getURI('cases/:id/transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requests: {url: API.getURI('requests/all'), method: 'GET', isArray: false, headers: headers},
-				reject: {url: API.getURI('requests/:id/reject'), method: 'PUT', headers: headers}
-			});
-			return Children;
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Cities', function Cities(API, Identity, $resource) {
-
-			var headers = {};
-
-			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
-				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
-				checkIfAvailable: {url: API.getURI('cities/check_availability'), method: 'POST', headers: headers},
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Classes', function Schools(API, $resource) {
-            var Classes = $resource(API.getURI('classes/:id'), {id: '@id'}, {
-                find: {method: 'GET', params: {}},
-                update: {method: 'PUT'},
-                create: {method: 'POST'},
-                deleteClasse: {method: 'DELETE', url: API.getURI('classes/:id')},
-                updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
-                frequencies: {method: 'GET', params: {}, url: API.getURI('frequencies/:id')},
-                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')},
-                updateFrequencies: {method: 'PUT', url: API.getURI('frequencies')}
-            });
-            return Classes;
-        });
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Graph', function Reports(API, Identity, $resource) {
-            return $resource(API.getURI('graph/:entity'), {entity: '@entity'}, {
-                getReinsertEvolution: {method: 'GET', url: API.getURI('graph/reinsertion_evolution?uf=:uf&tenant_id=:tenant_id')},
-            });
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Groups', function Groups(API, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
-                findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
-                findByUf: {method: 'POST', url: API.getURI('groups/uf'), headers: headers},
-				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
-				create: {method: 'POST', headers: headers},
-				delete: {method: 'DELETE', headers: headers},
-				update: {method: 'PUT', headers: headers}
-			});
-
-		});
-})();
-// (function() {
-// 	angular
-// 		.module('BuscaAtivaEscolar')
-// 		.factory('Alerts', function Alerts(API, Identity, $resource) {
-//
-// 			var headers = API.REQUIRE_AUTH;
-//
-// 			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
-// 				find: {method: 'GET', headers: headers},
-// 				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
-// 				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
-// 				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
-// 				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
-// 			});
-// 		});
-// })();
-'use strict';
-(function () {
-    //these are just references the instance of related lib so we can inject them to the controllers/services in an angular way.
-    angular.module('BuscaAtivaEscolar').factory('H', [
-        '$window',
-        function ($window) {
-    	//console.log($window);
-            return $window.H;
-        }
-    ]);
-
-    // app.factory('Modernizr', [
-    // 	'$window',
-    // 	function ($window) {
-    // 		return $window.Modernizr;
-    // 	}
-    // ]);
-    //
-    // app.factory('Highcharts', [
-    // 	'$window',
-    // 	function ($window) {
-    // 		return $window.Highcharts;
-    // 	}
-    // ]);
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-				all: {url: API.getURI('maintenance/import_jobs'), method: 'GET', headers: authHeaders},
-				upload: {url: API.getURI('maintenace/import_jobs/new'), method: 'POST', headers: authHeaders},
-				process: {url: API.getURI('maintenance/import_jobs/:id/process'), method: 'POST', headers: authHeaders}
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Maintenance', function CaseSteps(API, Identity, $resource) {
-            var headers = API.REQUIRE_AUTH;
-            var repository = $resource(API.getURI('maintenance/:user_id'), {user_id: '@id'}, {
-                assignForAdminUser: {url: API.getURI('maintenance/:user_id'), method: 'POST', headers: headers}
-            });
-            return repository;
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('PasswordReset', function Users(API, $resource) {
-
-			var headers = {};
-
-			return $resource(API.getURI('password_reset/:id'), {id: '@id', with: '@with'}, {
-				begin: {url: API.getURI('password_reset/begin'), method: 'POST', headers: headers},
-				complete: {url: API.getURI('password_reset/complete'), method: 'POST', headers: headers}
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Report', function Reports(API_PUBLIC, Identity, $resource) {
-            return $resource(API_PUBLIC.getURI('report/:entity'), {entity: '@entity'}, {
-                getStatusCity: {method: 'GET', url: API_PUBLIC.getURI('report/city?city=:city&uf=:uf')},
-                getStatusCityByCountry: {method: 'GET', url: API_PUBLIC.getURI('report/city?ibge_id=:ibge_id&uf=:uf')}
-            });
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Reports', function Reports(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
-				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
-				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
-				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
-				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
-				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
-				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
-				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers},
-				getUfsBySelo: {url: API.getURI('reports/ufs_by_selo'), method: 'GET', headers: headers},
-				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers},
-				getDataMapFusionChart: {method: 'GET', url: API.getURI('reports/data_map_fusion_chart'), headers: headers},
-				reportsChild: {url: API.getURI('reports/child'), method: 'GET', headers: headers},
-				createReportChild: {url: API.getURI('reports/child/create'), method: 'POST', headers: headers}
-			});
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Schools', function Schools(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-		
-			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
-
-				find: {method: 'GET', headers: headers},
-				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers}, 
-				getById: {url: API.getURI('schools/public'), method: 'GET'},
-				all_educacenso: {url: API.getURI('schools/all_educacenso'), method: 'GET', headers: headers},
-				update: {method: 'PUT', headers: headers},
-				send_educacenso_notifications: {url: API.getURI('schools/educacenso/notification'), method: 'POST', headers: headers},
-
-				all_schools: {url: API.getURI('schools/all'), method: 'GET', headers: headers},
-				send_frequency_notifications: {url: API.getURI('schools/frequency/notification'), method: 'POST', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/sms_conversations/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-				all: {url: API.getURI('maintenance/sms_conversations'), method: 'GET', headers: authHeaders},
-			});
-
-		});
-})();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .factory('StateSignups', function StateSignups(API, Identity, $resource) {
-      var authHeaders = API.REQUIRE_AUTH;
-      var headers = {};
-
-      return $resource(
-        API.getURI('signups/state/:id'),
-        { id: '@id' },
-        {
-          find: { method: 'GET', headers: authHeaders },
-
-          getPending: {
-            url: API.getURI('signups/state/pending'),
-            method: 'POST',
-            isArray: false,
-            headers: authHeaders,
-          },
-          approve: {
-            url: API.getURI('signups/state/:id/approve'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          accept: {
-            url: API.getURI('signups/state/:id/accept'),
-            method: 'GET',
-          },
-          accepted: {
-            url: API.getURI('signups/state/:id/accepted'),
-            method: 'GET',
-          },
-          reject: {
-            url: API.getURI('signups/state/:id/reject'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          updateRegistrationData: {
-            url: API.getURI('signups/state/:id/update_registration_data'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendNotification: {
-            url: API.getURI('signups/state/:id/resend_notification'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendMail: {
-            url: API.getURI('signups/state/:id/resendmail'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          register: {
-            url: API.getURI('signups/state/register'),
-            method: 'POST',
-            headers: headers,
-          },
-          checkIfAvailable: {
-            url: API.getURI('signups/state/check_if_available'),
-            method: 'POST',
-            headers: headers,
-          },
-        }
-      );
-    });
-})();
-
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('States', function States(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
-
-			return $resource(API.getURI('states/:id'), {id: '@id'}, {
-				all: {url: API.getURI('states/all'), method: 'POST', headers: authHeaders, params: {'with': 'users'}},
-				cancel: {url: API.getURI('states/:id/cancel'), method: 'POST', headers: authHeaders},
-				find: {method: 'GET', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
-
-			var data = {};
-			var self = this;
-
-			var dataFile = API.getURI('static/static_data?version=latest');
-			var $promise = {};
-
-			// TODO: cache this?
-
-			function fetchLatestVersion() {
-				//console.log("[platform.static_data] Downloading latest static data definitions...");
-				$promise = $http.get(dataFile).then(onFetch);
-			}
-
-			function refresh() {
-				// TODO: validate timestamp?
-				fetchLatestVersion();
-			}
-
-			function onFetch(res) {
-				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
-				data = res.data.data;
-
-				$rootScope.$broadcast('StaticData.ready');
-			}
-
-			function getDataFile() {
-				return dataFile;
-			}
-
-			function getNumChains() {
-				return data.length ? data.length : 0;
-			}
-
-			function isReady() {
-				return getNumChains() > 0;
-			}
-			// Ordena pelo valor do indice do objeto
-			function orderMotives(value) {
-				return _.orderBy(value, ['label'], ['asc']);
-			}
-
-			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
-			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
-			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
-			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
-			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
-			function getGenders() { return (data.Gender) ? data.Gender : []; }
-			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
-			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
-			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
-			function getRaces() { return (data.Race) ? data.Race : []; }
-			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
-			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
-			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
-			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
-			function getUFs() { return (data.UFs) ? data.UFs : []; }
-			function getUFsDropdown() {
-				var dropdown = [];
-
-				angular.forEach(data.UFsByCode, function (uf, key) {
-					dropdown.push(uf);
-				});
-
-				return dropdown;
-			}
-			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
-			function getRegions() { return (data.Regions) ? data.Regions : []; }
-			function getTypesWithGlobalScope() { return (data.UsersWithGlobalScope) ? data.UsersWithGlobalScope : []; }
-			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
-			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
-			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
-			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
-			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
-
-			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
-			
-			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
-
-			function getCurrentUF() {
-				var user = Identity.getCurrentUser();
-				if(!user) return null;
-				if(!user.uf) return null;
-
-				return getUFByCode(user.uf);
-			}
-
-			return {
-				fetchLatestVersion: fetchLatestVersion,
-				refresh: refresh,
-				getUserTypes: getUserTypes,
-				getAlertCauses: getAlertCauses,
-				getVisibleAlertCauses: getVisibleAlertCauses,
-				getCaseCauses: getCaseCauses,
-				getVisibleCaseCauses: getVisibleCaseCauses,
-				getGenders: getGenders,
-				getHandicappedRejectReasons: getHandicappedRejectReasons,
-				getIncomeRanges: getIncomeRanges,
-				getAgeRanges: getAgeRanges,
-				getRaces: getRaces,
-				getSchoolGrades: getSchoolGrades,
-				getSchoolingLevels: getSchoolingLevels,
-				getWorkActivities: getWorkActivities,
-				getCaseStepSlugs: getCaseStepSlugs,
-				getAllowedMimeTypes: getAllowedMimeTypes,
-				getUFs: getUFs,
-				getUFsDropdown: getUFsDropdown,
-				getUFByCode: getUFByCode,
-				getCurrentUF: getCurrentUF,
-				getRegions: getRegions,
-				getTypesWithGlobalScope: getTypesWithGlobalScope,
-				getTypesWithUFScope: getTypesWithUFScope,
-				getAPIEndpoints: getAPIEndpoints,
-				getCaseCancelReasons: getCaseCancelReasons,
-				isReady: isReady,
-				getNumChains: getNumChains,
-				getDataFile: getDataFile,
-				getPermissions: getPermissions,
-				getUserTypeVisitantes: getUserTypeVisitantes,
-				getPermissionsFormForVisitante: getPermissionsFormForVisitante
-			};
-
-		})
-		.run(function (StaticData) {
-			StaticData.refresh();
-		});
-})();
-
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SupportTicket', function SupportTicket(API, Identity, $resource) {
-
-			var authRequiredHeaders = API.REQUIRE_AUTH;
-			var authOptionalHeaders = API.OPTIONAL_AUTH;
-
-			return $resource(API.getURI('support/tickets/:id'), {id: '@id'}, {
-				all: {url: API.getURI('support/tickets/all'), method: 'POST', headers: authRequiredHeaders},
-				submit: {url: API.getURI('support/tickets/submit'), method: 'POST', headers: authOptionalHeaders},
-				find: {method: 'GET', headers: authRequiredHeaders}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SystemHealth', function SystemHealth(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/system_health'), {}, {
-				getStats: {method: 'GET', headers: authHeaders},
-			});
-
-		});
-})();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
-      var authHeaders = API.REQUIRE_AUTH;
-      var headers = {};
-
-      return $resource(
-        API.getURI('signups/tenants/:id'),
-        { id: '@id' },
-        {
-          find: { method: 'GET', headers: authHeaders },
-
-          getPending: {
-            url: API.getURI('signups/tenants/pending'),
-            method: 'POST',
-            isArray: false,
-            headers: authHeaders,
-          },
-          approve: {
-            url: API.getURI('signups/tenants/:id/approve'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          reject: {
-            url: API.getURI('signups/tenants/:id/reject'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-
-          updateRegistrationData: {
-            url: API.getURI('signups/tenants/:id/update_registration_data'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          accepted: {
-            url: API.getURI('signups/tenants/:id/accepted'),
-            method: 'GET',
-          },
-          resendNotification: {
-            url: API.getURI('signups/tenants/:id/resend_notification'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendMail: {
-            url: API.getURI('signups/tenants/:id/resendmail'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          completeSetup: {
-            url: API.getURI('signups/tenants/complete_setup'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-
-          register: {
-            url: API.getURI('signups/tenants/register'),
-            method: 'POST',
-            headers: headers,
-          },
-          getViaToken: {
-            url: API.getURI('signups/tenants/via_token/:id'),
-            method: 'GET',
-            headers: headers,
-          },
-          complete: {
-            url: API.getURI('signups/tenants/:id/complete'),
-            method: 'POST',
-            headers: headers,
-          },
-
-          getMayorByCPF: {
-            url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'),
-            method: 'GET',
-            headers: authHeaders,
-          },
-          getUserViaToken: {
-            url: API.getURI('signups/users/via_token/:id'),
-            method: 'GET',
-            headers: headers,
-          },
-          activeUser: {
-            url: API.getURI('signups/users/:id/confirm'),
-            method: 'POST',
-            headers: headers,
-          },
-        }
-      );
-    });
-})();
-
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Tenants', function Tenants(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
-
-			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
-				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
-				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
-				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
-				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
-				find: {method: 'GET', headers: headers},
-                findByUfPublic: {url: API.getURI('tenants/public/uf'), method: 'GET', headers: authHeaders},
-                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
-				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
-				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
-			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
-			    mayorConfirmation: {url: API.getURI('signups/tenants/:id/accept'), method: 'GET'}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-
-				getUnread: {url: API.getURI('notifications/unread'), method: 'GET', isArray: false, headers: authHeaders},
-				markAsRead: {url: API.getURI('notifications/:id/mark_as_read'), method: 'POST', headers: authHeaders},
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('UserPreferences', function UserPreferences(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('user_preferences'), {id: '@id'}, {
-				get: {method: 'GET', isArray: false, headers: authHeaders},
-				update: {method: 'POST', headers: authHeaders},
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Users', function Users(API, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
-				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
-				find: {method: 'GET', headers: headers},
-				create: {method: 'POST', headers: headers},
-				update: {method: 'PUT', headers: headers, url: API.getURI('users/:id')},
-				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
-				suspend: {method: 'DELETE', headers: headers},
-				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
-				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
-				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
-				
-				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('user/:id/update_yourself')},
-				sendReactivationMail: {url: API.getURI('user/:id/send_reactivation_mail'), method: 'POST', headers: headers},
-
-			});
-
-		});
-})();
 (function () {
   angular
     .module('BuscaAtivaEscolar')
@@ -10617,6 +9906,722 @@ if (!Array.prototype.find) {
 
         });
 
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Alerts', function Alerts(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
+				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
+				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
+			});
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				save: {method: 'POST', headers: headers},
+				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
+				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
+				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
+			});
+
+			repository.where = {
+				idEquals: function(id) {
+					return function(item) { return item.id === id; }
+				},
+
+				caseCurrentStepIdEquals: function(id) {
+					return function(item) { return item.current_step_id === id; }
+				}
+			};
+
+			return repository;
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Cases', function Cases(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'PUT', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Children', function Children(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			var Children = $resource(API.getURI('children/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers, params: {with: 'reopens'}},
+				update: {method: 'POST', headers: headers},
+				search: {url: API.getURI('children/search'), method: 'POST', isArray: false, headers: headers},
+				export: {url: API.getURI('children/export'), method: 'POST', isArray: false, headers: headers},
+				getComments: {url: API.getURI('children/:id/comments'), isArray: false, method: 'GET', headers: headers},
+				getMap: {url: API.getURI('children/map'), method: 'GET', headers: headers},
+				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
+				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
+				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
+				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
+				spawnFromAlert: {method: 'POST', headers: headers},
+				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				reopenCase: {url: API.getURI('cases/:id/reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requestReopenCase: {url: API.getURI('cases/:id/request-reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requestTransferCase: {url: API.getURI('cases/:id/request-transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				transferCase: {url: API.getURI('cases/:id/transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requests: {url: API.getURI('requests/all'), method: 'GET', isArray: false, headers: headers},
+				reject: {url: API.getURI('requests/:id/reject'), method: 'PUT', headers: headers}
+			});
+			return Children;
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Cities', function Cities(API, Identity, $resource) {
+
+			var headers = {};
+
+			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
+				checkIfAvailable: {url: API.getURI('cities/check_availability'), method: 'POST', headers: headers},
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Classes', function Schools(API, $resource) {
+            var Classes = $resource(API.getURI('classes/:id'), {id: '@id'}, {
+                find: {method: 'GET', params: {}},
+                update: {method: 'PUT'},
+                create: {method: 'POST'},
+                deleteClasse: {method: 'DELETE', url: API.getURI('classes/:id')},
+                updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
+                frequencies: {method: 'GET', params: {}, url: API.getURI('frequencies/:id')},
+                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')},
+                updateFrequencies: {method: 'PUT', url: API.getURI('frequencies')}
+            });
+            return Classes;
+        });
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Graph', function Reports(API, Identity, $resource) {
+            return $resource(API.getURI('graph/:entity'), {entity: '@entity'}, {
+                getReinsertEvolution: {method: 'GET', url: API.getURI('graph/reinsertion_evolution?uf=:uf&tenant_id=:tenant_id')},
+            });
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Groups', function Groups(API, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
+                findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
+                findByUf: {method: 'POST', url: API.getURI('groups/uf'), headers: headers},
+				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
+				create: {method: 'POST', headers: headers},
+				delete: {method: 'DELETE', headers: headers},
+				update: {method: 'PUT', headers: headers}
+			});
+
+		});
+})();
+// (function() {
+// 	angular
+// 		.module('BuscaAtivaEscolar')
+// 		.factory('Alerts', function Alerts(API, Identity, $resource) {
+//
+// 			var headers = API.REQUIRE_AUTH;
+//
+// 			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
+// 				find: {method: 'GET', headers: headers},
+// 				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
+// 				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
+// 				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+// 				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
+// 			});
+// 		});
+// })();
+'use strict';
+(function () {
+    //these are just references the instance of related lib so we can inject them to the controllers/services in an angular way.
+    angular.module('BuscaAtivaEscolar').factory('H', [
+        '$window',
+        function ($window) {
+    	//console.log($window);
+            return $window.H;
+        }
+    ]);
+
+    // app.factory('Modernizr', [
+    // 	'$window',
+    // 	function ($window) {
+    // 		return $window.Modernizr;
+    // 	}
+    // ]);
+    //
+    // app.factory('Highcharts', [
+    // 	'$window',
+    // 	function ($window) {
+    // 		return $window.Highcharts;
+    // 	}
+    // ]);
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/import_jobs'), method: 'GET', headers: authHeaders},
+				upload: {url: API.getURI('maintenace/import_jobs/new'), method: 'POST', headers: authHeaders},
+				process: {url: API.getURI('maintenance/import_jobs/:id/process'), method: 'POST', headers: authHeaders}
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Maintenance', function CaseSteps(API, Identity, $resource) {
+            var headers = API.REQUIRE_AUTH;
+            var repository = $resource(API.getURI('maintenance/:user_id'), {user_id: '@id'}, {
+                assignForAdminUser: {url: API.getURI('maintenance/:user_id'), method: 'POST', headers: headers}
+            });
+            return repository;
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('PasswordReset', function Users(API, $resource) {
+
+			var headers = {};
+
+			return $resource(API.getURI('password_reset/:id'), {id: '@id', with: '@with'}, {
+				begin: {url: API.getURI('password_reset/begin'), method: 'POST', headers: headers},
+				complete: {url: API.getURI('password_reset/complete'), method: 'POST', headers: headers}
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Report', function Reports(API_PUBLIC, Identity, $resource) {
+            return $resource(API_PUBLIC.getURI('report/:entity'), {entity: '@entity'}, {
+                getStatusCity: {method: 'GET', url: API_PUBLIC.getURI('report/city?city=:city&uf=:uf')},
+                getStatusCityByCountry: {method: 'GET', url: API_PUBLIC.getURI('report/city?ibge_id=:ibge_id&uf=:uf')}
+            });
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Reports', function Reports(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
+				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
+				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
+				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
+				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
+				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
+				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
+				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers},
+				getUfsBySelo: {url: API.getURI('reports/ufs_by_selo'), method: 'GET', headers: headers},
+				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers},
+				getDataMapFusionChart: {method: 'GET', url: API.getURI('reports/data_map_fusion_chart'), headers: headers},
+				reportsChild: {url: API.getURI('reports/child'), method: 'GET', headers: headers},
+				createReportChild: {url: API.getURI('reports/child/create'), method: 'POST', headers: headers}
+			});
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Schools', function Schools(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+		
+			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
+
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers}, 
+				getById: {url: API.getURI('schools/public'), method: 'GET'},
+				all_educacenso: {url: API.getURI('schools/all_educacenso'), method: 'GET', headers: headers},
+				update: {method: 'PUT', headers: headers},
+				send_educacenso_notifications: {url: API.getURI('schools/educacenso/notification'), method: 'POST', headers: headers},
+
+				all_schools: {url: API.getURI('schools/all'), method: 'GET', headers: headers},
+				send_frequency_notifications: {url: API.getURI('schools/frequency/notification'), method: 'POST', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/sms_conversations/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/sms_conversations'), method: 'GET', headers: authHeaders},
+			});
+
+		});
+})();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('StateSignups', function StateSignups(API, Identity, $resource) {
+      var authHeaders = API.REQUIRE_AUTH;
+      var headers = {};
+
+      return $resource(
+        API.getURI('signups/state/:id'),
+        { id: '@id' },
+        {
+          find: { method: 'GET', headers: authHeaders },
+
+          getPending: {
+            url: API.getURI('signups/state/pending'),
+            method: 'POST',
+            isArray: false,
+            headers: authHeaders,
+          },
+          approve: {
+            url: API.getURI('signups/state/:id/approve'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          accept: {
+            url: API.getURI('signups/state/:id/accept'),
+            method: 'GET',
+          },
+          accepted: {
+            url: API.getURI('signups/state/:id/accepted'),
+            method: 'GET',
+          },
+          reject: {
+            url: API.getURI('signups/state/:id/reject'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          updateRegistrationData: {
+            url: API.getURI('signups/state/:id/update_registration_data'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendNotification: {
+            url: API.getURI('signups/state/:id/resend_notification'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendMail: {
+            url: API.getURI('signups/state/:id/resendmail'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          register: {
+            url: API.getURI('signups/state/register'),
+            method: 'POST',
+            headers: headers,
+          },
+          checkIfAvailable: {
+            url: API.getURI('signups/state/check_if_available'),
+            method: 'POST',
+            headers: headers,
+          },
+        }
+      );
+    });
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('States', function States(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('states/:id'), {id: '@id'}, {
+				all: {url: API.getURI('states/all'), method: 'POST', headers: authHeaders, params: {'with': 'users'}},
+				cancel: {url: API.getURI('states/:id/cancel'), method: 'POST', headers: authHeaders},
+				find: {method: 'GET', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
+
+			var data = {};
+			var self = this;
+
+			var dataFile = API.getURI('static/static_data?version=latest');
+			var $promise = {};
+
+			// TODO: cache this?
+
+			function fetchLatestVersion() {
+				//console.log("[platform.static_data] Downloading latest static data definitions...");
+				$promise = $http.get(dataFile).then(onFetch);
+			}
+
+			function refresh() {
+				// TODO: validate timestamp?
+				fetchLatestVersion();
+			}
+
+			function onFetch(res) {
+				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				data = res.data.data;
+
+				$rootScope.$broadcast('StaticData.ready');
+			}
+
+			function getDataFile() {
+				return dataFile;
+			}
+
+			function getNumChains() {
+				return data.length ? data.length : 0;
+			}
+
+			function isReady() {
+				return getNumChains() > 0;
+			}
+			// Ordena pelo valor do indice do objeto
+			function orderMotives(value) {
+				return _.orderBy(value, ['label'], ['asc']);
+			}
+
+			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
+			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
+			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
+			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
+			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
+			function getGenders() { return (data.Gender) ? data.Gender : []; }
+			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
+			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
+			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
+			function getRaces() { return (data.Race) ? data.Race : []; }
+			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
+			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
+			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
+			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
+			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getUFsDropdown() {
+				var dropdown = [];
+
+				angular.forEach(data.UFsByCode, function (uf, key) {
+					dropdown.push(uf);
+				});
+
+				return dropdown;
+			}
+			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
+			function getRegions() { return (data.Regions) ? data.Regions : []; }
+			function getTypesWithGlobalScope() { return (data.UsersWithGlobalScope) ? data.UsersWithGlobalScope : []; }
+			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
+			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
+			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
+			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
+
+			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
+			
+			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
+
+			function getCurrentUF() {
+				var user = Identity.getCurrentUser();
+				if(!user) return null;
+				if(!user.uf) return null;
+
+				return getUFByCode(user.uf);
+			}
+
+			return {
+				fetchLatestVersion: fetchLatestVersion,
+				refresh: refresh,
+				getUserTypes: getUserTypes,
+				getAlertCauses: getAlertCauses,
+				getVisibleAlertCauses: getVisibleAlertCauses,
+				getCaseCauses: getCaseCauses,
+				getVisibleCaseCauses: getVisibleCaseCauses,
+				getGenders: getGenders,
+				getHandicappedRejectReasons: getHandicappedRejectReasons,
+				getIncomeRanges: getIncomeRanges,
+				getAgeRanges: getAgeRanges,
+				getRaces: getRaces,
+				getSchoolGrades: getSchoolGrades,
+				getSchoolingLevels: getSchoolingLevels,
+				getWorkActivities: getWorkActivities,
+				getCaseStepSlugs: getCaseStepSlugs,
+				getAllowedMimeTypes: getAllowedMimeTypes,
+				getUFs: getUFs,
+				getUFsDropdown: getUFsDropdown,
+				getUFByCode: getUFByCode,
+				getCurrentUF: getCurrentUF,
+				getRegions: getRegions,
+				getTypesWithGlobalScope: getTypesWithGlobalScope,
+				getTypesWithUFScope: getTypesWithUFScope,
+				getAPIEndpoints: getAPIEndpoints,
+				getCaseCancelReasons: getCaseCancelReasons,
+				isReady: isReady,
+				getNumChains: getNumChains,
+				getDataFile: getDataFile,
+				getPermissions: getPermissions,
+				getUserTypeVisitantes: getUserTypeVisitantes,
+				getPermissionsFormForVisitante: getPermissionsFormForVisitante
+			};
+
+		})
+		.run(function (StaticData) {
+			StaticData.refresh();
+		});
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SupportTicket', function SupportTicket(API, Identity, $resource) {
+
+			var authRequiredHeaders = API.REQUIRE_AUTH;
+			var authOptionalHeaders = API.OPTIONAL_AUTH;
+
+			return $resource(API.getURI('support/tickets/:id'), {id: '@id'}, {
+				all: {url: API.getURI('support/tickets/all'), method: 'POST', headers: authRequiredHeaders},
+				submit: {url: API.getURI('support/tickets/submit'), method: 'POST', headers: authOptionalHeaders},
+				find: {method: 'GET', headers: authRequiredHeaders}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SystemHealth', function SystemHealth(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/system_health'), {}, {
+				getStats: {method: 'GET', headers: authHeaders},
+			});
+
+		});
+})();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
+      var authHeaders = API.REQUIRE_AUTH;
+      var headers = {};
+
+      return $resource(
+        API.getURI('signups/tenants/:id'),
+        { id: '@id' },
+        {
+          find: { method: 'GET', headers: authHeaders },
+
+          getPending: {
+            url: API.getURI('signups/tenants/pending'),
+            method: 'POST',
+            isArray: false,
+            headers: authHeaders,
+          },
+          approve: {
+            url: API.getURI('signups/tenants/:id/approve'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          reject: {
+            url: API.getURI('signups/tenants/:id/reject'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+
+          updateRegistrationData: {
+            url: API.getURI('signups/tenants/:id/update_registration_data'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          accepted: {
+            url: API.getURI('signups/tenants/:id/accepted'),
+            method: 'GET',
+          },
+          resendNotification: {
+            url: API.getURI('signups/tenants/:id/resend_notification'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendMail: {
+            url: API.getURI('signups/tenants/:id/resendmail'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          completeSetup: {
+            url: API.getURI('signups/tenants/complete_setup'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+
+          register: {
+            url: API.getURI('signups/tenants/register'),
+            method: 'POST',
+            headers: headers,
+          },
+          getViaToken: {
+            url: API.getURI('signups/tenants/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          complete: {
+            url: API.getURI('signups/tenants/:id/complete'),
+            method: 'POST',
+            headers: headers,
+          },
+
+          getMayorByCPF: {
+            url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'),
+            method: 'GET',
+            headers: authHeaders,
+          },
+          getUserViaToken: {
+            url: API.getURI('signups/users/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          activeUser: {
+            url: API.getURI('signups/users/:id/confirm'),
+            method: 'POST',
+            headers: headers,
+          },
+        }
+      );
+    });
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Tenants', function Tenants(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
+				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
+				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
+				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
+				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
+				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
+				find: {method: 'GET', headers: headers},
+                findByUfPublic: {url: API.getURI('tenants/public/uf'), method: 'GET', headers: authHeaders},
+                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
+				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
+				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
+			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
+			    mayorConfirmation: {url: API.getURI('signups/tenants/:id/accept'), method: 'GET'}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+
+				getUnread: {url: API.getURI('notifications/unread'), method: 'GET', isArray: false, headers: authHeaders},
+				markAsRead: {url: API.getURI('notifications/:id/mark_as_read'), method: 'POST', headers: authHeaders},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('UserPreferences', function UserPreferences(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('user_preferences'), {id: '@id'}, {
+				get: {method: 'GET', isArray: false, headers: authHeaders},
+				update: {method: 'POST', headers: authHeaders},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Users', function Users(API, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
+				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
+				find: {method: 'GET', headers: headers},
+				create: {method: 'POST', headers: headers},
+				update: {method: 'PUT', headers: headers, url: API.getURI('users/:id')},
+				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+				suspend: {method: 'DELETE', headers: headers},
+				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
+				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
+				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
+				
+				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('user/:id/update_yourself')},
+				sendReactivationMail: {url: API.getURI('user/:id/send_reactivation_mail'), method: 'POST', headers: headers},
+
+			});
+
+		});
 })();
 (function() {
 
