@@ -11,7 +11,7 @@
 
         })
 
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, $anchorScroll, $httpParamSerializer, API, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
