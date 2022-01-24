@@ -152,6 +152,7 @@
 						<th>Etapa <br /> <small> </small></th>
 						<th>Responsável <br /> <small>pela etapa</small></th>
 						<th>Bairro</th>
+						<th>Grupo</th>
 						<th>Status <br /> <small>do caso</small></th>
 						<th class="text-center"><br />&nbsp;</th>
 					</tr>
@@ -195,6 +196,9 @@
 
 						<td>
 							{{child.place_neighborhood}}
+						</td>
+						<td>
+							{{child.group_name}}
 						</td>
 						<td width="8%" style="vertical-align: middle;" class="text-center">
 							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
