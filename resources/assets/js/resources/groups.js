@@ -12,7 +12,8 @@
 				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
 				create: {method: 'POST', headers: headers},
 				delete: {method: 'DELETE', headers: headers},
-				update: {method: 'PUT', headers: headers}
+				update: {method: 'PUT', headers: headers},
+				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers}
 			});
 
 		});

@@ -13,7 +13,7 @@
                     <span class="label label-success"
                           ng-show="child.child_status === 'in_school'">Dentro da Escola</span>
 
-                    <a ng-show="child.currentCase.group" class="btn btn-xs btn-raised" ng-click="assignGroup()" >
+                    <a class="btn btn-xs btn-raised" ng-click="assignGroup()" >
                         <span>
                             <span ng-show="!child.currentCase.group.deleted_at"><i class="material-icons fa fa-edit"></i> <strong>Grupo:</strong> {{child.currentCase.group.name}}</span>
                             <span ng-show="child.currentCase.group.deleted_at" style="color: #d9534f;"><i class="material-icons fa fa-edit"></i> <strong>Grupo removido:</strong> {{child.currentCase.group.name}}</span>

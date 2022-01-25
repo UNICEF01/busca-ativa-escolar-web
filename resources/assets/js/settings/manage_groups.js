@@ -102,32 +102,23 @@
 
 			}
 
-			$scope.removeGroup = function (group){
+			$scope.removeGroup = function (groupToRemove){
 
 				Modals.show(
-
-					Modals.Confirm(
-						'Confirma a remoção do grupo '+group.name+' ?',
-						'A remoção do grupo pode levar mais tempo considerando a quantidade de usuários e casos que serão alterados....'
-					)).then(function () {
-
-					if(group.is_primary) return;
-
-					var promiseGroup = Groups.delete(
-						{id: group.id}
-					).$promise
-
-					$scope.newSubgroupGroupNames = [];
-					$scope.newPrincipalGroupName = '';
-
-					promiseGroup.then(function(res) {
-						ngToast.success('Grupo removido com sucesso!')
-						$scope.refresh();
-					}, function (err) {
-						ngToast.danger('Ocorreu um erro ao remover o grupo!')
-						$scope.refresh();
-					});
-
+					Modals.GroupPicker(
+						'Remover grupo '+ groupToRemove.name,
+						'Existem X casos, X alertas e X usuários que pertencem a esse grupo ...',
+						$scope.getGroupsToMove(groupToRemove),
+						true)
+				).then(function (selectedGroup) {
+					var obj = {
+						id: groupToRemove.id,
+						replace: selectedGroup.id
+					}
+					return Groups.replaceAndDelete(obj)
+				}).then(function (res) {
+					ngToast.success('Grupo removido com sucesso!')
+					$scope.refresh();
 				});
 
 			}
