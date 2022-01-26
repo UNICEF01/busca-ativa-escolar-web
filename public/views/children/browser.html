@@ -14,7 +14,46 @@
 						<input type="text" class="form-control" id="filter-name" ng-model="query.name" placeholder="Nome da criança...">
 					</div>
 					<div class="col-md-2">
-						<input type="text" class="form-control" id="filter-type"  ng-model="query.cause_name" placeholder="Motivo do caso...">
+						<select class="form-control" id="filter-name" style="max-width:200px;" ng-model="query.cause_name" >
+							<option value="" disabled selected>Escolha um motivo...</option>
+							<option value="adolescente_em_conflito_com_a_lei">Adolescente em conflito com a lei </option>
+			<option value="crianca_com_deficiencia_fisica">Criança ou adolescente com deficiência física </option>
+			<option value="crianca_com_deficiencia_intelectual">Criança ou adolescente com deficiência intelectual </option>
+			<option value="crianca_com_deficiencia_mental">Criança ou adolescente com deficiência mental</option>
+			<option value="crianca_com_deficiencia_sensorial">Criança ou adolescente com deficiência sensorial</option>
+			<option value="crianca_com_deficiencia_impeditiva">Criança ou adolescente com deficiência(s) que impeça(m) ou dificulte(m) a frequência à escola</option>
+			<option value="crianca_com_doencas">Criança ou adolescente com doenças (que impedem e/ou dificultem a frequência à escola)</option>
+			<option value="crianca_em_abrigo">Criança ou adolescente em abrigos</option>
+			<option value="crianca_na_rua">Criança ou adolescente em situação de rua </option>
+			<option value="crianca_vitima_abuso">Criança ou adolescente que sofrem ou sofreram abuso / violência sexual </option>
+			<option value="crianca_adolescente_estrangeiro">Crianças ou adolescentes migrantes estrangeiros</option>
+			<option value="evasao_desinteresse">Evasão porque sente a escola desinteressante </option>
+			<option value="evasao_desinteresse_escola">Evasão porque sente a escola desinteressante (Desinteresse pela escola) </option>
+			<option value="evasao_desinteresse_estudo">Evasão porque sente a escola desinteressante (Desinteresse pelos estudos) </option>
+			<option value="falta_documentacao">Falta de documentação da criança ou adolescente </option>
+			<option value="falta_infraestrutura_escola">Falta de infraestrutura escolar (Escola) </option>
+			<option value="falta_infraestrutura_vagas">Falta de infraestrutura escolar (Vagas) </option>
+			<option value="falta_transporte">Falta de transporte escolar </option>
+			<option value="falta_transporte_escolar">Falta de transporte escolar (Transporte escolar público) </option>
+			<option value="falta_transporte_publico">Falta de transporte escolar (Transporte público - ônibus, metrô, trem, balsa, barco etc.) </option>
+			<option value="falta_transporte_particular">Falta de transporte escolar (Transporte particular - veículo próprio) </option>
+			<option value="gravidez_adolescencia">Gravidez na adolescência </option>
+			<option value="preconceito_racial">Preconceito ou discriminação racial </option>
+			<option value="trabalho_infantil">Trabalho infantil </option>
+			<option value="uso_substancias">Uso, abuso ou dependência de substâncias psicoativas </option>
+			<option value="violencia_familiar">Violência familiar </option>
+			<option value="violencia_escolar_genero">Violência na escola (Discriminação de gênero) </option>
+			<option value="violencia_escolar_raca">Violência na escola (Discriminação racial) </option>
+			<option value="violencia_escolar_religiao">Violência na escola (Discriminação religiosa) </option>
+			<option value="violencia_escolar_sexualidade">Violência na escola (discriminação por orientação sexual) </option>
+			<option value="violencia_escolar_bullying">Violência na escola (bullying) </option>
+			<option value="violencia_escolar_conf_estudantes">Violência na escola (conflitos com outros estudantes) </option>
+			<option value="violencia_escolar_conf_colaboradores">Violência na escola (conflitos da criança e/ou adolescente com funcionários, docentes ou gestores da escola) </option>
+			<option value="mudanca_endereco">Mudança de domicílio, viagem ou deslocamentos frequentes </option>
+			<option value="violencia_territorio">Violência no território </option>
+			<option value="educacenso_inep">Evasão reportada pelo Educacenso/INEP</option>
+			<option value="xls_import">Evasão e/ou infrequência reportada pela escola ou município</option>
+						  </select>
 					</div>
 					
 					<div class="col-md-2">
@@ -113,6 +152,7 @@
 						<th>Etapa <br /> <small> </small></th>
 						<th>Responsável <br /> <small>pela etapa</small></th>
 						<th>Bairro</th>
+						<th>Grupo</th>
 						<th>Status <br /> <small>do caso</small></th>
 						<th class="text-center"><br />&nbsp;</th>
 					</tr>
@@ -156,6 +196,9 @@
 
 						<td>
 							{{child.place_neighborhood}}
+						</td>
+						<td>
+							{{child.group_name}}
 						</td>
 						<td width="8%" style="vertical-align: middle;" class="text-center">
 							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
