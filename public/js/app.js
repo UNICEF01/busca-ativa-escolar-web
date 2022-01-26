@@ -407,7 +407,7 @@
             };
             $scope.identity = Identity;
             
-            $scope.groups =  [];
+      
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -433,6 +433,7 @@
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
+                $scope.groups =  [];
                 Groups.findGroupedGroups(function(res){
                     res.data.forEach(function(v){
                         $scope.groups.push({value: v.id, displayName: v.name});
