@@ -10078,7 +10078,8 @@ if (!Array.prototype.find) {
 				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
 				create: {method: 'POST', headers: headers},
 				delete: {method: 'DELETE', headers: headers},
-				update: {method: 'PUT', headers: headers}
+				update: {method: 'PUT', headers: headers},
+				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers}
 			});
 
 		});
@@ -13497,14 +13498,20 @@ function identify(namespace, file) {
 				if(!$scope.groups) return [];
 				var groupsToMove = [];
 				$scope.groups.forEach(function(v, k){
-					if (groupFromMove.id == v.id) return;
+					///if (groupFromMove.id == v.id) return;
 					groupsToMove.push({id: v.id, name: v.name});
 					v.children.forEach(function(v2, k2){
-						if (groupFromMove.id == v2.id) return;
+						//if (groupFromMove.id == v2.id) return;
 						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
 						v2.children.forEach(function(v3, k3){
-							if (groupFromMove.id == v3.id) return;
+							//if (groupFromMove.id == v3.id) return;
 							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+
+							v3.children.forEach(function(v4, k4){
+								//if (groupFromMove.id == v4.id) return;
+								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+							});
+
 						});
 					});
 				});
@@ -13583,32 +13590,23 @@ function identify(namespace, file) {
 
 			}
 
-			$scope.removeGroup = function (group){
+			$scope.removeGroup = function (groupToRemove){
 
 				Modals.show(
-
-					Modals.Confirm(
-						'Confirma a remoção do grupo '+group.name+' ?',
-						'A remoção do grupo pode levar mais tempo considerando a quantidade de usuários e casos que serão alterados....'
-					)).then(function () {
-
-					if(group.is_primary) return;
-
-					var promiseGroup = Groups.delete(
-						{id: group.id}
-					).$promise
-
-					$scope.newSubgroupGroupNames = [];
-					$scope.newPrincipalGroupName = '';
-
-					promiseGroup.then(function(res) {
-						ngToast.success('Grupo removido com sucesso!')
-						$scope.refresh();
-					}, function (err) {
-						ngToast.danger('Ocorreu um erro ao remover o grupo!')
-						$scope.refresh();
-					});
-
+					Modals.GroupPicker(
+						'Remover grupo '+ groupToRemove.name,
+						'Existem X casos, X alertas e X usuários que pertencem a esse grupo ...',
+						$scope.getGroupsToMove(groupToRemove),
+						true)
+				).then(function (selectedGroup) {
+					var obj = {
+						id: groupToRemove.id,
+						replace: selectedGroup.id
+					}
+					return Groups.replaceAndDelete(obj)
+				}).then(function (res) {
+					ngToast.success('Grupo removido com sucesso!')
+					$scope.refresh();
 				});
 
 			}
@@ -13644,7 +13642,6 @@ function identify(namespace, file) {
 			});
 
 		});
-
 })();
 (function () {
   angular
