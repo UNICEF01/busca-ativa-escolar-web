@@ -11,7 +11,7 @@
 
         })
 
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -20,8 +20,8 @@
                 date: null
             };
             $scope.identity = Identity;
-
             
+            $scope.groups =  [];
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -37,16 +37,40 @@
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
+                group_id: null
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
-
+            $scope.operators = [];
             $scope.search = {};
 
             $scope.refresh = function () {
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
+                Groups.findGroupedGroups(function(res){
+                    res.data.forEach(function(v){
+                        $scope.groups.push({value: v.id, displayName: v.name});
+                        v.children.forEach(function(v2){ 
+                            v2.name = v2.name.trim()
+                            v2.name = Array(3).fill('\xa0').join('') + v2.name
+                            $scope.groups.push({value: v2.id, displayName: v2.name});
+                            v2.children.forEach(function(v3){
+                                v3.name = v3.name.trim()
+                                v3.name = Array(6).fill('\xa0').join('') + v3.name
+                                $scope.groups.push({value: v3.id, displayName: v3.name});
+                                v3.children.forEach(function(v4){ 
+                                    v4.name = v4.name.trim()
+                                    v4.name = Array(9).fill('\xa0').join('') + v4.name
+                                    $scope.groups.push({value: v4.id, displayName: v4.name});
+                                  
+                                });
+                            });
+                        });
+                       
+                    });
+                })
             };
+
             
             $scope.resetQuery = function () {
                 $scope.query = angular.merge({}, $scope.defaultQuery);

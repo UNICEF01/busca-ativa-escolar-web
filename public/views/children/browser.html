@@ -67,6 +67,16 @@
 						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, UF, Cidade, Rua ...">
 						</span>
 					</div>
+					<div class="col-md-2">
+						<select name="parent" id="select_parent" style="max-width:185px;" ng-model="query.group_id" class="form-control">
+						
+							<option ng-repeat="group in groups"
+									value="{{group.value}}">
+									
+							  {{group.displayName}}
+							</option>
+							</select>
+					</div>
 
 					<div class="col-md-2"></div>
 				</div>
@@ -233,3 +243,20 @@
 		</div>
 	</div>
 </div>
+<script>
+
+$(function() {
+    $('#select_parent').bind("change", function() {
+        var space_offset =7;
+        var matches = $('#select_parent option:selected').text().search(/\S/);
+		var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75 : 0; 
+        $(this).css('text-indent', -(number));
+    });
+});
+</script>
+
+<style>
+select {
+    font-family: monospace;
+}
+</style>
