@@ -34,11 +34,13 @@
 							name="group_{{i}}"
 							class="form-control"
 							ng-enter="updateGroup(group.name, group.id)"
-							ng-blur="updateGroup(group.name, group.id)"/>
+							ng-blur="updateGroup(group.name, group.id)"
+							ng-show="$parent.isGroupPartOfUserGroups(group)"
+							ng-disabled="true"/>
 
 					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
-						<div class="row">
+						<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group2)">
 							<div class="col-md-9">
 								<input
 										id="id_{{j}}"
@@ -56,7 +58,7 @@
 
 						<div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
 
-							<div class="row">
+							<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group3)">
 								<div class="col-md-9">
 									<input
 											id="id_{{k}}"
@@ -74,7 +76,7 @@
 
 							<div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
 
-								<div class="row">
+								<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group4)">
 									<div class="col-md-9">
 										<input
 											id="id_{{l}}"
@@ -98,9 +100,10 @@
 									ng-model="$parent.newSubgroupGroupNames[i][j][k+1]"
 									ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
 									class="form-control"
-									placeholder="Novo subgrupo para {{group3.name}} - Exemplo: XXX"
+									placeholder="Novo subgrupo para {{group3.name}}"
 									ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
-									style="margin-left: 30px;"/>
+									style="margin-left: 30px;"
+									ng-show="$parent.isGroupPartOfUserGroups(group3)"/>
 
 						</div>
 
@@ -109,9 +112,10 @@
 								ng-model="$parent.newSubgroupGroupNames[i][j+1][0]"
 								ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
 								class="form-control"
-								placeholder="Novo subgrupo para {{group2.name}} - Exemplo: Secretaria de ..."
+								placeholder="Novo subgrupo para {{group2.name}}"
 								ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
-								style="margin-left: 30px;"/>
+								style="margin-left: 30px;"
+								ng-show="$parent.isGroupPartOfUserGroups(group2)"/>
 
 					</div>
 
@@ -120,13 +124,14 @@
 							ng-model="$parent.newSubgroupGroupNames[i][0][0]"
 							ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
 							class="form-control"
-							placeholder="Novo subgrupo para {{group.name}} - Exemplo: DRE/ CRE"
+							placeholder="Novo subgrupo para {{group.name}}"
 							ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
-							style="margin-left: 30px;"/>
+							style="margin-left: 30px;"
+							ng-show="$parent.isGroupPartOfUserGroups(group)"/>
 
 				</td>
 
-				<td>
+				<td ng-show="$parent.isGroupPartOfUserGroups(group)">
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
 					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary && group.children.length == 0" ng-click="removeGroup(group);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 				</td>

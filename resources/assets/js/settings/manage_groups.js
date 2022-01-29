@@ -15,24 +15,20 @@
 			$scope.getGroupsToMove = function(groupFromMove) {
 				if(!$scope.groups) return [];
 				var groupsToMove = [];
+
 				$scope.groups.forEach(function(v, k){
-					///if (groupFromMove.id == v.id) return;
 					groupsToMove.push({id: v.id, name: v.name});
 					v.children.forEach(function(v2, k2){
-						//if (groupFromMove.id == v2.id) return;
 						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
 						v2.children.forEach(function(v3, k3){
-							//if (groupFromMove.id == v3.id) return;
 							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-
 							v3.children.forEach(function(v4, k4){
-								//if (groupFromMove.id == v4.id) return;
 								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
 							});
-
 						});
 					});
 				});
+
 				return groupsToMove;
 			};
 
@@ -60,7 +56,7 @@
 					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
 					$scope.refresh();
 				});
-			}
+			};
 
 			$scope.addSubGroup = function (newName, parent_id){
 
@@ -84,7 +80,7 @@
 					$scope.refresh();
 				});
 
-			}
+			};
 
 			$scope.updateGroup = function (newName, id){
 
@@ -106,7 +102,7 @@
 					$scope.refresh();
 				});
 
-			}
+			};
 
 			$scope.removeGroup = function (groupToRemove){
 
@@ -127,7 +123,7 @@
 					$scope.refresh();
 				});
 
-			}
+			};
 
 			$scope.moveGroup = function (groupFromMove){
 				Modals.show(
@@ -146,7 +142,7 @@
 					ngToast.success('Grupo movimentado com sucesso!')
 					$scope.refresh();
 				});
-			}
+			};
 
 			$scope.refresh = function() {
 				Groups.findGroupedGroups(function(res) {
@@ -158,6 +154,44 @@
 			Platform.whenReady(function() {
 				$scope.refresh();
 			});
+
+			$scope.isGroupPartOfUserGroups = function (group){
+				var groupedGroupsOfUser = $scope.getGroupsOfLoggedUser();
+				var belongsTo = false;
+
+				groupedGroupsOfUser.forEach(function(v, k){
+					if(v.id == group.id) { belongsTo = true; }
+					v.children.forEach(function(v2, k2){
+						if(v2.id == group.id) { belongsTo = true; }
+						v2.children.forEach(function(v3, k3){
+							if(v3.id == group.id) { belongsTo = true; }
+							v3.children.forEach(function(v4, k4){
+								if(v4.id == group.id) { belongsTo = true; }
+							});
+						});
+					});
+				});
+
+				return belongsTo;
+			};
+
+			$scope.getGroupsOfLoggedUser = function (){
+				var groupedGroupsOfUser = [];
+				var userId = Identity.getCurrentUser().group.id;
+				$scope.groups.forEach(function(v, k){
+					if (v.id == userId) { groupedGroupsOfUser = [v]; }
+					v.children.forEach(function(v2, k2){
+						if (v2.id == userId) { groupedGroupsOfUser = [v2]; }
+						v2.children.forEach(function(v3, k3){
+							if (v3.id == userId) { groupedGroupsOfUser = [v3]; }
+							v3.children.forEach(function(v4, k4){
+								if (v4.id == userId) { groupedGroupsOfUser = [v4]; }
+							});
+						});
+					});
+				});
+				return groupedGroupsOfUser;
+			}
 
 		});
 })();
