@@ -117,10 +117,21 @@
 						id: groupToRemove.id,
 						replace: selectedGroup.id
 					}
-					return Groups.replaceAndDelete(obj)
+					var promissGroup = Groups.replaceAndDelete(obj).$promise
+
+					promissGroup.then(
+						function (res){
+							ngToast.success('Grupo removido com sucesso!')
+							$scope.refresh();
+						},
+						function (err){
+							ngToast.danger('Grupo não pôde ser removido!')
+							$scope.refresh();
+						}
+					)
+
 				}).then(function (res) {
-					ngToast.success('Grupo removido com sucesso!')
-					$scope.refresh();
+					console.log(res);
 				});
 
 			};
@@ -133,14 +144,27 @@
 						$scope.getGroupsToMove(groupFromMove),
 						true)
 				).then(function (parentGroup) {
+
 					var group = {
 						parent_id: parentGroup.id,
 						id: groupFromMove.id
 					};
-					return Groups.update(group)
+
+					var promiseGroup = Groups.update(group).$promise
+
+					promiseGroup.then(
+						function (res){
+							ngToast.success('Grupo movimentado com sucesso!')
+							$scope.refresh();
+						},
+						function (err){
+							ngToast.danger('Grupo não pôde ser movimentado!')
+							$scope.refresh();
+						}
+					);
+
 				}).then(function (res) {
-					ngToast.success('Grupo movimentado com sucesso!')
-					$scope.refresh();
+
 				});
 			};
 
@@ -174,7 +198,7 @@
 
 				return belongsTo;
 			};
-			
+
 			$scope.getGroupsOfLoggedUser = function (){
 				var groupedGroupsOfUser = [];
 				var userId = Identity.getCurrentUser().group.id;
