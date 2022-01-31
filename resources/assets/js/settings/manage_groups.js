@@ -174,7 +174,7 @@
 
 				return belongsTo;
 			};
-
+			
 			$scope.getGroupsOfLoggedUser = function (){
 				var groupedGroupsOfUser = [];
 				var userId = Identity.getCurrentUser().group.id;

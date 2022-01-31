@@ -35,12 +35,11 @@
 							class="form-control"
 							ng-enter="updateGroup(group.name, group.id)"
 							ng-blur="updateGroup(group.name, group.id)"
-							ng-show="$parent.isGroupPartOfUserGroups(group)"
 							ng-disabled="true"/>
 
 					<div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
-						<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group2)">
+						<div class="row">
 							<div class="col-md-9">
 								<input
 										id="id_{{j}}"
@@ -50,7 +49,7 @@
 										ng-enter="updateGroup(group2.name, group2.id)"
 										ng-blur="updateGroup(group2.name, group2.id)"/>
 							</div>
-							<div class="col-md-3">
+							<div class="col-md-3" ng-show="$parent.isGroupPartOfUserGroups(group2)">
 								<a ng-if="group2.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 								<a class="btn btn-raised btn-info" ng-click="moveGroup(group2);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 							</div>
@@ -58,7 +57,7 @@
 
 						<div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
 
-							<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group3)">
+							<div class="row">
 								<div class="col-md-9">
 									<input
 											id="id_{{k}}"
@@ -68,7 +67,7 @@
 											ng-enter="updateGroup(group3.name, group3.id)"
 											ng-blur="updateGroup(group3.name, group3.id)"/>
 								</div>
-								<div class="col-md-3">
+								<div class="col-md-3"ng-show="$parent.isGroupPartOfUserGroups(group3)">
 									<a ng-if="group3.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 									<a class="btn btn-raised btn-info" ng-click="moveGroup(group3);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 								</div>
@@ -76,7 +75,7 @@
 
 							<div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
 
-								<div class="row" ng-show="$parent.isGroupPartOfUserGroups(group4)">
+								<div class="row">
 									<div class="col-md-9">
 										<input
 											id="id_{{l}}"
@@ -87,7 +86,7 @@
 											ng-enter="updateGroup(group4.name, group4.id)"
 											ng-blur="updateGroup(group4.name, group4.id)"/>
 									</div>
-									<div class="col-md-3">
+									<div class="col-md-3" ng-show="$parent.isGroupPartOfUserGroups(group4)">
 										<a class="btn btn-raised btn-danger" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 										<a class="btn btn-raised btn-info" ng-click="moveGroup(group4);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
 									</div>
@@ -131,7 +130,7 @@
 
 				</td>
 
-				<td ng-show="$parent.isGroupPartOfUserGroups(group)">
+				<td>
 					<span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
 					<a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary && group.children.length == 0" ng-click="removeGroup(group);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
 				</td>
