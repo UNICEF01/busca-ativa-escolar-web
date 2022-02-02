@@ -43,6 +43,7 @@
           required
           ng-model="admins.political.dob"
           placeholder="dd/mm/yyyy"
+          onkeyup="addErrorDate()"
         />
       </div>
       <div class="form-group col-md-6">
@@ -1762,10 +1763,10 @@
     document.getElementById('message').style.display = 'none';
   }
 
-  /*function addErrorDate() {
+  function addErrorDate() {
     const dateText = document.getElementById('error_date');
     const curDate = new Date();
-    const minDate = new Date(curDate.setFullYear(curDate.getFullYear() - 100));
+    const minDate = new Date(today.setDate(today.getDate() + 1));
     const maxDate = new Date(
       curDate.setFullYear(curDate.getFullYear() + 100 - 18)
     );
@@ -1777,7 +1778,7 @@
 
   function removeErrorDate() {
     document.getElementById('message_date').style.display = 'none';
-  }*/
+  }
 </script>
 
 <!--<p>The input field must contain the character "e" to be consider valid.</p>-->
