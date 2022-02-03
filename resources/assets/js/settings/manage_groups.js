@@ -182,9 +182,8 @@
 			$scope.isGroupPartOfUserGroups = function (group){
 				var groupedGroupsOfUser = $scope.getGroupsOfLoggedUser();
 				var belongsTo = false;
-
 				groupedGroupsOfUser.forEach(function(v, k){
-					if(v.id == group.id) { belongsTo = true; }
+					//if(v.id == group.id) { belongsTo = true; }
 					v.children.forEach(function(v2, k2){
 						if(v2.id == group.id) { belongsTo = true; }
 						v2.children.forEach(function(v3, k3){
@@ -195,7 +194,6 @@
 						});
 					});
 				});
-
 				return belongsTo;
 			};
 
