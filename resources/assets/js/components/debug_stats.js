@@ -8,11 +8,12 @@
 			scope.auth = Auth;
 			scope.config = Config;
 		}
-
+		
 		return {
 			link: init,
 			replace: true,
-			templateUrl: '/views/components/debug_stats.html'
+			templateUrl: '/views/components/debug_stats.html' 
+
 		};
 	});
 

@@ -17,7 +17,6 @@
 			$scope.birthdayDateEnd = moment(new Date()).format('YYYY-MM-DD');
 			$scope.birthdayDateStart = moment($scope.birthdayDateEnd).subtract(100, 'years').format('YYYY-MM-DD');
 
-
 			$scope.alert = {};
 
 			$scope.fetchCities = function(query) {
@@ -29,6 +28,7 @@
 				return Cities.search(data).$promise.then(function (res) {
 					return res.results;
 				});
+
 			};
 
 			$scope.renderSelectedCity = function(city) {
@@ -40,8 +40,10 @@
 
 				$scope.disableCreateAlertButton = true;
 
+
 				// TODO: validate fields
 
+		
 				var data = $scope.alert;
 				data = Utils.prepareDateFields(data, ['dob']);
 				data.place_city_id = data.place_city ? data.place_city.id : null;
@@ -59,6 +61,8 @@
 						$scope.disableCreateAlertButton = false;
 						return;
 					}
+
+
 
 					ngToast.success('Alerta registrado com sucesso!');
 

@@ -15,6 +15,7 @@
             function addMarkerToGroup(group, coordinate, html) {
                 var marker = new H.map.Marker(coordinate);
                 // add custom data to the marker
+                
                 marker.setData(html);
                 group.addObject(marker);
 

@@ -13,7 +13,6 @@ var SnippetManager = function() {
     this.snippetMap = {};
     this.snippetNameMap = {};
 };
-
 (function() {
     oop.implement(this, EventEmitter);
     

@@ -188,7 +188,9 @@
           id="fld-co-dob"
           required
           ng-model="admins.operational.dob"
-          placeholder="dd/mm/yyyy"
+          min="{{birthdayDateStart}}"
+          max="{{birthdayDateEnd}}"
+          placeholder="dd/mm/yy"
         />
       </div>
 
