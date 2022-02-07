@@ -63,13 +63,12 @@
 						<input type="text" class="form-control" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário...">
 					</div>
 					<div class="col-md-2">
-						<span uib-tooltip="Bairro, CEP, UF, Cidade, Rua">
-						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, UF, Cidade, Rua ...">
+						<input type="text" class="form-control" id="filter-full-address" ng-model="query.location_full" placeholder="Bairro, CEP, Rua ...">
 						</span>
 					</div>
 					<div class="col-md-2">
 						<select name="parent" id="select_parent" style="max-width:185px;" ng-model="query.group_id" class="form-control">
-						
+							<option value="" disabled selected>Grupo...</option>
 							<option ng-repeat="group in groups"
 									value="{{group.value}}">
 									
@@ -77,6 +76,11 @@
 							</option>
 							</select>
 					</div>
+
+
+					<div class="form-group col-md-3">
+						<input type="search" class="form-control" ng-model="query.city_name_full" placeholder="Município, UF" />
+					</div>	
 
 					<div class="col-md-2"></div>
 				</div>
