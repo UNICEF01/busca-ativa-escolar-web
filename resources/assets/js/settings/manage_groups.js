@@ -92,6 +92,8 @@
 					id: id
 				};
 
+				if(!$scope.isGroupPartOfUserGroups(group)) { return; }
+
 				var promiseGroup = Groups.update(group).$promise
 
 				promiseGroup.then(function(res) {
