@@ -7,6 +7,7 @@
 			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
 				find: {method: 'GET', headers: headers},
 				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
+				findUserGroups: {method: 'GET', url: API.getURI('user_groups'), headers: headers},
                 findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
                 findByUf: {method: 'POST', url: API.getURI('groups/uf'), headers: headers},
 				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
