@@ -87,6 +87,18 @@
           if ($scope.step >= $scope.numSteps) return;
 
           if (
+            $scope.step === 2 &&
+            !Utils.isValidBirthDay(
+              $scope.form.mayor,
+              requiredMayorFields,
+              fieldNames,
+              messages.invalid_mayor
+            )
+          )
+            return;
+          
+            
+          if (
             $scope.step === 3 &&
             !Utils.isValid(
               $scope.form.admin,
@@ -127,6 +139,7 @@
           $window.scrollTo(0, 0);
 
           $scope.stepChecks[step] = true;
+          
         };
 
         $scope.prevStep = function () {
@@ -157,8 +170,10 @@
         };
 
         $scope.finish = function (step) {
-          if (!$scope.agreeTOS) return;
 
+
+          if (!$scope.agreeTOS) return;
+          
           if (
             $scope.step === 3 &&
             !Utils.haveEqualsValue('Os CPFs', [
@@ -233,6 +248,7 @@
             );
           });
           $scope.stepChecks[step] = true;
+
         };
       }
     );

@@ -83,19 +83,14 @@
 			};
 
 			$scope.updateGroup = function (newName, id){
-
 				if(!newName) return;
 				if(newName.length < 3) return;
-
 				var group = {
 					name: newName,
 					id: id
 				};
-
 				if(!$scope.isGroupPartOfUserGroups(group)) { return; }
-
 				var promiseGroup = Groups.update(group).$promise
-
 				promiseGroup.then(function(res) {
 					ngToast.success('Grupo editado com sucesso!')
 					$scope.refresh();
@@ -103,7 +98,6 @@
 					ngToast.danger('Ocorreu um erro ao editar o grupo!')
 					$scope.refresh();
 				});
-
 			};
 
 			$scope.removeGroup = function (groupToRemove){

@@ -40,6 +40,7 @@
                 return filtered;
             };
         })
+
         .factory('Utils', function (ngToast) {
 
             function generateRandomID() {
@@ -206,7 +207,27 @@
                     return true;
                 }
             }
+
+
+            function isValidBirthDay (user) {
+
+                const data = new Date(user.dob);
+        
+                const currentdate = new Date();
+                    
+                const maxDate = new Date(currentdate.setDate(currentdate.getDate() + 1));
+                
+                const mindate = new Date(currentdate.setFullYear(currentdate.getFullYear() - 100));
+                
+                if (data < maxDate && data > mindate ){
+                     return true;
+                }
+                else{
+                    alert('Informe uma data válida!')
+                }
+            }
             
+
             function isvalidTerm(value) {
                 if (value)
                     return true;
@@ -273,7 +294,8 @@
                 pluck: pluck,
                 search: search,
                 haveEqualsValue: haveEqualsValue,
-                isvalidTerm: isvalidTerm
+                isvalidTerm: isvalidTerm,
+                isValidBirthDay: isValidBirthDay
             };
         })
         .directive('stringToNumber', function () {
@@ -289,6 +311,7 @@
                 }
             };
         })
+
         .filter('parseDate', function () {
             return function (input) {
                 return new Date(input);
