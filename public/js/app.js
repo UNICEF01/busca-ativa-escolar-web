@@ -403,9 +403,9 @@
             $scope.lastOrder = {
                 date: null
             };
+            
             $scope.identity = Identity;
             
-      
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -433,7 +433,33 @@
                 $scope.reports = Reports.reportsChild();
                 $scope.groups =  [];
                 Groups.findUserGroups(function(res){
-                    console.log(res);
+                    res.data.forEach(function(v){
+                        $scope.groups.push(({value: v.id, displayName: v.name}));
+                        const size = Object.keys(v).length;
+                        if(size > 2){
+                            for(let i  = 0; i < size - 2; ++i){
+                                v[i].name = v[i].name.trim()
+                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
+                                $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
+                                const size1 = Object.keys(v[i]).length;
+                                if(size1 > 2){
+                                    for(let j  = 0; j < size1 - 2; ++j){
+                                        v[i][j].name = v[i][j].name.trim()
+                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
+                                        $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
+                                        const size2 = Object.keys(v[i][j]).length;
+                                        if(size2 > 2){
+                                            for(let l  = 0; l < size2 - 2; ++l){
+                                                v[i][j][l].name = v[i][j][l].name.trim()
+                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
+                                                $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
                 });
             };
 
@@ -3991,6 +4017,224 @@
 
 })();
 
+(function () {
+  identify('config', 'charts.js');
+  angular.module('BuscaAtivaEscolar').run(function (Config) {
+    Highcharts.setOptions({
+      lang: {
+        months: [
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ],
+        shortMonths: [
+          'Jan',
+          'Fev',
+          'Mar',
+          'Abr',
+          'Mai',
+          'Jun',
+          'Jul',
+          'Ago',
+          'Set',
+          'Out',
+          'Nov',
+          'Dez',
+        ],
+        weekdays: [
+          'Domingo',
+          'Segunda',
+          'Terça',
+          'Quarta',
+          'Quinta',
+          'Sexta',
+          'Sábado',
+        ],
+        loading: ['Atualizando o gráfico...'],
+        contextButtonTitle: 'Exportar gráfico',
+        decimalPoint: ',',
+        thousandsSep: '.',
+        downloadJPEG: 'Baixar imagem JPEG',
+        downloadPDF: 'Baixar arquivo PDF',
+        downloadPNG: 'Baixar imagem PNG',
+        downloadSVG: 'Baixar vetor SVG',
+        printChart: 'Imprimir gráfico',
+        rangeSelectorFrom: 'De',
+        rangeSelectorTo: 'Para',
+        rangeSelectorZoom: 'Zoom',
+        resetZoom: 'Voltar zoom',
+        resetZoomTitle: 'Voltar zoom para nível 1:1'
+      }
+    });
+  });
+})();
+
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+// (function () {
+//     identify('config', 'here_api.js');
+//
+//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
+//         HereMapsConfigProvider.setOptions({
+//             app_id: 'IaV356sfi2gAreQwtVsB',
+//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
+//             useHTTPS: true,
+//             apiVersion: '3.0',
+//             useCIT: true,
+//             mapTileConfig: {
+//                 scheme: 'reduced.day',
+//                 size: 256,
+//                 format: 'png8',
+//                 metadataQueryParams: {}
+//             }
+//         });
+//     }]);
+// })();
+//
+
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function () {
+  identify('config', 'on_init.js');
+
+  angular
+    .module('BuscaAtivaEscolar')
+    .run(function (
+      $cookies,
+      $rootScope,
+      $state,
+      Identity,
+      Auth,
+      Config,
+      StaticData
+    ) {
+      $.material.init();
+
+      $rootScope.$on('unauthorized', function () {
+        Auth.logout();
+        $state.go('login');
+      });
+    });
+})();
+
+(function () {
+    identify('config', 'states.js');
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
+
+            $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: true
+                }
+            );
+            $urlRouterProvider.otherwise('/dashboard');
+
+            $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/login.html',
+                    controller: 'LoginCtrl',
+                    unauthenticated: true
+                })
+                .state('dashboard', {
+                    url: '/dashboard',
+                    templateUrl: '/views/dashboard.html',
+                    controller: 'DashboardCtrl'
+                })
+                .state('developer_mode', {
+                    url: '/developer_mode',
+                    templateUrl: '/views/developer/developer_dashboard.html',
+                    controller: 'DeveloperCtrl',
+                    unauthenticated: true
+
+                })
+                .state('settings', {
+                    url: '/settings?step',
+                    templateUrl: '/views/settings/manage_settings.html',
+                    controller: 'SettingsCtrl'
+                })
+                .state('settings.parameterize_group', {
+                    url: '/parameterize_group/{group_id}',
+                    templateUrl: '/views/settings/parameterize_group.html',
+                    controller: 'ParameterizeGroupCtrl'
+                })
+                .state('credits', {
+                    url: '/credits',
+                    templateUrl: '/views/static/credits.html',
+                    controller: 'CreditsCtrl',
+                    unauthenticated: true
+                })
+                .state('tenant_signup', {
+                    url: '/tenant_signup',
+                    templateUrl: '/views/tenant_signup/main.html',
+                    controller: 'TenantSignupCtrl',
+                    unauthenticated: true
+                })
+                .state('state_signup', {
+                    url: '/state_signup',
+                    templateUrl: '/views/state_signup/main.html',
+                    controller: 'StateSignupCtrl',
+                    unauthenticated: true
+                })
+
+        });
+
+})();
+
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
@@ -5039,243 +5283,6 @@ function addErrorDate() {
 
 })();
 (function () {
-  identify('config', 'charts.js');
-  angular.module('BuscaAtivaEscolar').run(function (Config) {
-    Highcharts.setOptions({
-      lang: {
-        months: [
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ],
-        shortMonths: [
-          'Jan',
-          'Fev',
-          'Mar',
-          'Abr',
-          'Mai',
-          'Jun',
-          'Jul',
-          'Ago',
-          'Set',
-          'Out',
-          'Nov',
-          'Dez',
-        ],
-        weekdays: [
-          'Domingo',
-          'Segunda',
-          'Terça',
-          'Quarta',
-          'Quinta',
-          'Sexta',
-          'Sábado',
-        ],
-        loading: ['Atualizando o gráfico...'],
-        contextButtonTitle: 'Exportar gráfico',
-        decimalPoint: ',',
-        thousandsSep: '.',
-        downloadJPEG: 'Baixar imagem JPEG',
-        downloadPDF: 'Baixar arquivo PDF',
-        downloadPNG: 'Baixar imagem PNG',
-        downloadSVG: 'Baixar vetor SVG',
-        printChart: 'Imprimir gráfico',
-        rangeSelectorFrom: 'De',
-        rangeSelectorTo: 'Para',
-        rangeSelectorZoom: 'Zoom',
-        resetZoom: 'Voltar zoom',
-        resetZoomTitle: 'Voltar zoom para nível 1:1'
-      }
-    });
-  });
-})();
-
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-// (function () {
-//     identify('config', 'here_api.js');
-//
-//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
-//         HereMapsConfigProvider.setOptions({
-//             app_id: 'IaV356sfi2gAreQwtVsB',
-//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
-//             useHTTPS: true,
-//             apiVersion: '3.0',
-//             useCIT: true,
-//             mapTileConfig: {
-//                 scheme: 'reduced.day',
-//                 size: 256,
-//                 format: 'png8',
-//                 metadataQueryParams: {}
-//             }
-//         });
-//     }]);
-// })();
-//
-
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function () {
-  identify('config', 'on_init.js');
-
-  angular
-    .module('BuscaAtivaEscolar')
-    .run(function (
-      $cookies,
-      $rootScope,
-      $state,
-      Identity,
-      Auth,
-      Config,
-      StaticData
-    ) {
-      $.material.init();
-
-      $rootScope.$on('unauthorized', function () {
-        Auth.logout();
-        $state.go('login');
-      });
-    });
-})();
-
-(function () {
-    identify('config', 'states.js');
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
-
-            $locationProvider.html5Mode({
-                    enabled: true,
-                    requireBase: true
-                }
-            );
-            $urlRouterProvider.otherwise('/dashboard');
-
-            $stateProvider
-                .state('login', {
-                    url: '/login',
-                    templateUrl: '/views/login.html',
-                    controller: 'LoginCtrl',
-                    unauthenticated: true
-                })
-                .state('dashboard', {
-                    url: '/dashboard',
-                    templateUrl: '/views/dashboard.html',
-                    controller: 'DashboardCtrl'
-                })
-                .state('developer_mode', {
-                    url: '/developer_mode',
-                    templateUrl: '/views/developer/developer_dashboard.html',
-                    controller: 'DeveloperCtrl',
-                    unauthenticated: true
-
-                })
-                .state('settings', {
-                    url: '/settings?step',
-                    templateUrl: '/views/settings/manage_settings.html',
-                    controller: 'SettingsCtrl'
-                })
-                .state('settings.parameterize_group', {
-                    url: '/parameterize_group/{group_id}',
-                    templateUrl: '/views/settings/parameterize_group.html',
-                    controller: 'ParameterizeGroupCtrl'
-                })
-                .state('credits', {
-                    url: '/credits',
-                    templateUrl: '/views/static/credits.html',
-                    controller: 'CreditsCtrl',
-                    unauthenticated: true
-                })
-                .state('tenant_signup', {
-                    url: '/tenant_signup',
-                    templateUrl: '/views/tenant_signup/main.html',
-                    controller: 'TenantSignupCtrl',
-                    unauthenticated: true
-                })
-                .state('state_signup', {
-                    url: '/state_signup',
-                    templateUrl: '/views/state_signup/main.html',
-                    controller: 'StateSignupCtrl',
-                    unauthenticated: true
-                })
-
-        });
-
-})();
-
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' | ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
-(function () {
   angular.module('BuscaAtivaEscolar').factory('AppDependencies', function () {
     return [
       ['Back-end', 'Laravel Framework', '5.3', 'http://laravel.com', 'MIT'],
@@ -6265,6 +6272,25 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
+})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
