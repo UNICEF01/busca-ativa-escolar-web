@@ -19,9 +19,9 @@
             $scope.lastOrder = {
                 date: null
             };
+            
             $scope.identity = Identity;
             
-      
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
@@ -48,28 +48,35 @@
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
                 $scope.groups =  [];
-                Groups.findGroupedGroups(function(res){
+                Groups.findUserGroups(function(res){
                     res.data.forEach(function(v){
-                        $scope.groups.push({value: v.id, displayName: v.name});
-                        v.children.forEach(function(v2){ 
-                            v2.name = v2.name.trim()
-                            v2.name = Array(3).fill('\xa0').join('') + v2.name
-                            $scope.groups.push({value: v2.id, displayName: v2.name});
-                            v2.children.forEach(function(v3){
-                                v3.name = v3.name.trim()
-                                v3.name = Array(6).fill('\xa0').join('') + v3.name
-                                $scope.groups.push({value: v3.id, displayName: v3.name});
-                                v3.children.forEach(function(v4){ 
-                                    v4.name = v4.name.trim()
-                                    v4.name = Array(9).fill('\xa0').join('') + v4.name
-                                    $scope.groups.push({value: v4.id, displayName: v4.name});
-                                  
-                                });
-                            });
-                        });
-                       
+                        $scope.groups.push(({value: v.id, displayName: v.name}));
+                        const size = Object.keys(v).length;
+                        if(size > 2){
+                            for(let i  = 0; i < size - 2; ++i){
+                                v[i].name = v[i].name.trim()
+                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
+                                $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
+                                const size1 = Object.keys(v[i]).length;
+                                if(size1 > 2){
+                                    for(let j  = 0; j < size1 - 2; ++j){
+                                        v[i][j].name = v[i][j].name.trim()
+                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
+                                        $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
+                                        const size2 = Object.keys(v[i][j]).length;
+                                        if(size2 > 2){
+                                            for(let l  = 0; l < size2 - 2; ++l){
+                                                v[i][j][l].name = v[i][j][l].name.trim()
+                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
+                                                $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     });
-                })
+                });
             };
 
             
