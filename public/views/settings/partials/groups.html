@@ -126,7 +126,7 @@
 							placeholder="Novo subgrupo para {{group.name}}"
 							ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
 							style="margin-left: 30px;"
-							ng-show="$parent.isGroupPartOfUserGroups(group)"/>
+							ng-show="$parent.returnGroupOfUser() === group.id"/>
 
 				</td>
 
