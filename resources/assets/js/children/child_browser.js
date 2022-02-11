@@ -11,7 +11,7 @@
 
         })
 
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -48,6 +48,9 @@
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
                 $scope.groups =  [];
+                $scope.causes = [];
+                $scope.data = StaticData.getCaseCauses()
+                Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.slug, displayName: val.label})));
                 Groups.findUserGroups(function(res){
                     res.data.forEach(function(v){
                         $scope.groups.push(({value: v.id, displayName: v.name}));
@@ -77,7 +80,10 @@
                         }
                     });
                 });
+                
             };
+
+            
 
             
             $scope.resetQuery = function () {
