@@ -41,7 +41,6 @@
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.operators = [];
             $scope.search = {};
 
             $scope.refresh = function () {
@@ -82,9 +81,6 @@
                 });
                 
             };
-
-            
-
             
             $scope.resetQuery = function () {
                 $scope.query = angular.merge({}, $scope.defaultQuery);

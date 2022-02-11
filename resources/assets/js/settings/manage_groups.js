@@ -210,6 +210,10 @@
 				});
 				return groupedGroupsOfUser;
 			}
+			
+			$scope.returnGroupOfUser = function (){
+				return Identity.getCurrentUser().group.id;
+			}
 
 		});
 })();
