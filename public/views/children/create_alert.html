@@ -5,6 +5,8 @@
 		</div>
 		<div class="panel-body">
 
+		
+
 			<div class="panel panel-default">
 				<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
 				<div class="panel-body">
@@ -22,7 +24,7 @@
 					</div>
 					<div class="form-group col-md-4">
 						<label class="control-label" for="fld-dob">Data de nascimento</label>
-						<input type="date" class="form-control" id="fld-dob" ng-model="alert.dob" placeholder="dd/mm/yyyy">
+						<input type="date" class="form-control" id="fld-dob" ng-model="alert.dob" min="{{birthdayDateStart}}" max="{{birthdayDateEnd}}" placeholder="dd/mm/yyyy">
 					</div>
 					<div class="form-group col-md-3">
 						<label class="control-label" for="fld-rg">RG</label>
@@ -108,8 +110,27 @@
 						<label class="control-label" for="fld-neighborhood">Bairro*</label>
 						<input type="text" class="form-control" id="fld-neighborhood" required ng-model="alert.place_neighborhood">
 					</div>
+				
+					<div class="form-group col-md-12">
+						<div class="block">
+							<label class="control-label">Grupo</label>
+						
+							<ui-select ng-model="$parent.selectedGroup">
+								<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
+								<ui-select-choices repeat="group in allGroupsOfTenant | filter: $select.search track by group.id">
+									<div>										
+										<div style="margin-left:{{group.margin}}px">
+											<i class="fa fa-users"></i>
+											<span ng-bind-html="group.name | highlight: $select.search"></span>
+										</div>
+									</div>
+								</ui-select-choices>
+							</ui-select>
+						</div>
+					</div>
 
 
+					
 				</div>
 			</div>
 
