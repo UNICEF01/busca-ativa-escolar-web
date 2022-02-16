@@ -44,6 +44,11 @@
 
 				if(!$scope.isCreating) {
 
+
+					if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+					}
+
 					if( Identity.getType() === 'coordenador_operacional' ||
 						Identity.getType() === 'gestor_politico' ||
 						Identity.getType() === 'supervisor_institucional'){
@@ -162,21 +167,19 @@
 					$scope.user.group_id = $scope.user.group.id;
 				}
 
+				if( $scope.user.type === "perfil_visitante" ){
+					$scope.user.type = getFinalTypeUser();
+				}
 
+				var data = Object.assign({}, $scope.user);
+				data = Utils.prepareDateFields(data, dateOnlyFields);
+				data = Utils.prepareCityFields(data, ['work_city']);
 
-				// if( $scope.user.type === "perfil_visitante" ){
-				// 	$scope.user.type = getFinalTypeUser();
-				// }
-				//
-				// var data = Object.assign({}, $scope.user);
-				// data = Utils.prepareDateFields(data, dateOnlyFields);
-				// data = Utils.prepareCityFields(data, ['work_city']);
-				//
-				// if($scope.isCreating) {
-				// 	return Users.create(data).$promise.then(onSaved)
-				// }
-				//
-				// Users.update(data).$promise.then(onSaved);
+				if($scope.isCreating) {
+					return Users.create(data).$promise.then(onSaved)
+				}
+
+				Users.update(data).$promise.then(onSaved);
 
 			};
 
@@ -200,6 +203,8 @@
 					$scope.user.type == 'agente_comunitario' ||
 					$scope.user.type == 'tecnico_verificador'){
 
+					$scope.user.group = null;
+
 				}else{
 					$scope.user.group = null;
 					$scope.user.group_id = null;
@@ -211,9 +216,7 @@
 
                 if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
 
-                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
-						alert();
-					}
+                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){ }
 
                 	//perfil de visitante
                 	if( user.type.includes("visitante_") ){
