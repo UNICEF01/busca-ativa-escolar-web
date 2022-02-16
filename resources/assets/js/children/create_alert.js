@@ -42,6 +42,7 @@
 			};
 
 
+			
 			$scope.createAlert = function() {
 
 				$scope.disableCreateAlertButton = true;
