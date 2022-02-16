@@ -5,9 +5,7 @@
 		</div>
 		<div class="panel-body">
 
-{{allGroupsOfTenant}}
-
-			
+		
 
 			<div class="panel panel-default">
 				<div class="panel-heading"><i class="material-icons">person</i> Informações da criança ou adolescente</div>
@@ -112,10 +110,11 @@
 						<label class="control-label" for="fld-neighborhood">Bairro*</label>
 						<input type="text" class="form-control" id="fld-neighborhood" required ng-model="alert.place_neighborhood">
 					</div>
-					{{getGroupOfCurrentUser()}}
+				
 					<div class="form-group col-md-12">
 						<div class="block">
 							<label class="control-label">Grupo</label>
+						
 							<ui-select ng-model="$parent.selectedGroup">
 								<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
 								<ui-select-choices repeat="group in allGroupsOfTenant | filter: $select.search track by group.id">

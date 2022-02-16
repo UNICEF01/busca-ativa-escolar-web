@@ -45,14 +45,16 @@
 			$scope.createAlert = function() {
 
 				$scope.disableCreateAlertButton = true;
-alert($scope.selectedGroup.id)
+
 				// TODO: validate fields
 				var data = $scope.alert;
 				data = Utils.prepareDateFields(data, ['dob']);
 				data.place_city_id = data.place_city ? data.place_city.id : null;
 				data.place_city_name = data.place_city ? data.place_city.name : null;
-				data.group_id = $scope.selectedGroup.id ? data.group_id : null;
+				data.group_id = $scope.selectedGroup.id;
 
+//document.write(JSON.stringify(data))
+			
 				Children.spawnFromAlert(data).$promise.then(function (res) {
 					if(res.messages) {
 						console.warn("[create_alert] Failed validation: ", res.messages);
@@ -105,6 +107,7 @@ alert($scope.selectedGroup.id)
 				Groups.findGroupedGroups(function(res) {
 					$scope.groups = res.data;
 					$scope.allGroupsOfTenant = $scope.getGroupsToMove();
+					$scope.selectedGroup = $scope.getGroupOfCurrentUser();
 				});
 			});
 
