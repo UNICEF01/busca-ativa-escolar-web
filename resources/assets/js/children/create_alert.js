@@ -47,6 +47,7 @@
 
 				$scope.disableCreateAlertButton = true;
 
+				
 				// TODO: validate fields
 				var data = $scope.alert;
 				data = Utils.prepareDateFields(data, ['dob']);
