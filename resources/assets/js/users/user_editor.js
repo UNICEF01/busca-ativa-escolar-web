@@ -20,7 +20,10 @@
 			$scope.static = StaticData;
 			$scope.showInputKey = false;
 
-			$scope.groups = {};
+			$scope.groupedGroups = [];
+			$scope.groupsToMove = [];
+			$scope.groupsOfUser = [];
+
 			$scope.tenants = Tenants.find();
 			$scope.quickAdd = ($stateParams.quick_add === 'true');
 
@@ -34,20 +37,62 @@
 			$scope.permissionsVisitantes = ['relatorios'];
 
 			Platform.whenReady(function() {
+
 				permissions = StaticData.getPermissions();
 				userTypeVisitantes = StaticData.getUserTypeVisitantes();
 				permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
-			});
 
-			if(!$scope.isCreating) {
-				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
-			}else{
-				if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
+				if(!$scope.isCreating) {
+
+
+					if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+					}
+
+					if( Identity.getType() === 'coordenador_operacional' ||
+						Identity.getType() === 'gestor_politico' ||
+						Identity.getType() === 'supervisor_institucional'){
+
+						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+
+						Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
+							$scope.groupedGroups = res;
+							$scope.groupsToMove = $scope.getGroupsToMove();
+							$scope.groupsOfUser = $scope.getGroupsOfUser();
+						});
+					}
+
 				}else{
-					$scope.groups = Groups.find();
+
+					if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
+						$scope.groupedGroups = [];
+						$scope.groupsToMove = [];
+						$scope.groupsOfUser = [];
+					}
+
+					if( Identity.getType() === 'coordenador_operacional' ||
+						Identity.getType() === 'gestor_politico' ||
+						Identity.getType() === 'supervisor_institucional'){
+						Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
+							$scope.groupedGroups = res;
+							$scope.groupsToMove = $scope.getGroupsToMove();
+							$scope.groupsOfUser = $scope.getGroupsOfUser();
+						});
+					}
+
+					if( Identity.getType() === 'gestor_estadual' ||
+						Identity.getType() === 'coordenador_estadual' ||
+						Identity.getType() === 'supervisor_estadual'){
+
+					}
+
+					if( Identity.getType() === 'comite_nacional' ||
+						Identity.getType() === 'comite_estadual' ||
+						Identity.getType() === 'perfil_visitante'){
+						alert();
+					}
 				}
-			}
+			});
 
 			$scope.isSuperAdmin = function() {
 				return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
@@ -106,6 +151,22 @@
 
 			$scope.save = function() {
 
+				//validate group
+				if( !$scope.user.hasOwnProperty('group') && $scope.isTargetUserTenantBound() ){
+					ngToast.danger("Informe o grupo do usuário");
+					return ;
+				}
+
+				if( $scope.isTargetUserTenantBound() && $scope.user.group == null ){
+					ngToast.danger("Informe o grupo do usuário");
+					return ;
+				}
+
+				//se tiver grupo - set group
+				if( $scope.user.hasOwnProperty('group') ){
+					$scope.user.group_id = $scope.user.group.id;
+				}
+
 				if( $scope.user.type === "perfil_visitante" ){
 					$scope.user.type = getFinalTypeUser();
 				}
@@ -119,35 +180,43 @@
 				}
 
 				Users.update(data).$promise.then(onSaved);
-
+				
 			};
 
             $scope.onSelectTenant = function(){
-                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
-			}
+				Groups.findGroupedByTenant({tenant_id: $scope.user.tenant_id}, function (res){
+					$scope.groupedGroups = res;
+					$scope.groupsOfUser = $scope.getGroupsToMove();
+				});
+			};
 
             $scope.onSelectUf = function(){
-                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
-            }
+
+            };
 
             $scope.onSelectFunction = function(){
-                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
-                    $scope.user.uf = null;
-                    $scope.user.tenant_id = null;
-                    $scope.perfilVisitante.name = '';
-                }
-			}
+
+				//limpa o grupo se não for do municipio
+				if( $scope.user.type == 'coordenador_operacional' ||
+					$scope.user.type == 'gestor_politico' ||
+					$scope.user.type == 'supervisor_institucional' ||
+					$scope.user.type == 'agente_comunitario' ||
+					$scope.user.type == 'tecnico_verificador'){
+
+					$scope.user.group = null;
+
+				}else{
+					$scope.user.group = null;
+					$scope.user.group_id = null;
+					$scope.user.tenant_id = null;
+				}
+			};
 
 			function prepareUserModel(user) {
 
                 if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
 
-                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
-                        $scope.groups = Groups.findByUf({'uf': user.uf});
-					}else {
-                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
-                    }
+                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){ }
 
                 	//perfil de visitante
                 	if( user.type.includes("visitante_") ){
@@ -162,16 +231,15 @@
 					}
 
                 }else{
-                    $scope.groups = Groups.find();
 				}
 
                 return Utils.unpackDateFields(user, dateOnlyFields)
-			}
+			};
 
 			$scope.showPassowrd = function () {
                 var field_password = document.getElementById("fld-password");
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
+            };
 
 			function onSaved(res) {
 				if(res.status === "ok") {
@@ -186,7 +254,7 @@
 				if(res.messages) return Utils.displayValidationErrors(res);
 
 				ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
-			}
+			};
 
 			function getFinalTypeUser() {
             	var finalType = "";
@@ -196,7 +264,7 @@
 					}
 				}
 				return finalType;
-			}
+			};
 
 			function arraysEqual(_arr1, _arr2) {
 				if (!Array.isArray(_arr1) || ! Array.isArray(_arr2) || _arr1.length !== _arr2.length)
@@ -208,7 +276,60 @@
 						return false;
 				}
 				return true;
-			}
+			};
+
+			$scope.getGroupsToMove = function() {
+				var groupsToMove = [];
+				$scope.groupedGroups.data.forEach(function(v, k){
+					groupsToMove.push({id: v.id, name: v.name});
+					v.children.forEach(function(v2, k2){
+						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+						v2.children.forEach(function(v3, k3){
+							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+							v3.children.forEach(function(v4, k4){
+								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+							});
+						});
+					});
+				});
+				return groupsToMove;
+			};
+
+			$scope.getGroupsOfUser = function (){
+				var groupsToMove = [];
+				groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
+				$scope.getGroupOfCurrentUser().children.forEach(function(v, k){
+					groupsToMove.push({id: v.id, name: v.name, margin: 10});
+					v.children.forEach(function(v2, k2){
+						groupsToMove.push({id: v2.id, name: v2.name, margin: 30});
+						v2.children.forEach(function(v3, k3){
+							groupsToMove.push({id: v3.id, name: v3.name, margin: 30});
+							v3.children.forEach(function(v4, k4){
+								groupsToMove.push({id: v4.id, name: v4.name, margin: 40});
+							});
+						});
+					});
+				});
+				return groupsToMove;
+			};
+
+			$scope.getGroupOfCurrentUser = function (){
+				var groupedGroupsOfUser = [];
+				var userId = Identity.getCurrentUser().group.id;
+				$scope.groupedGroups.data.forEach(function(v, k){
+					if (v.id == userId) { groupedGroupsOfUser = v; }
+					v.children.forEach(function(v2, k2){
+						if (v2.id == userId) { groupedGroupsOfUser = v2; }
+						v2.children.forEach(function(v3, k3){
+							if (v3.id == userId) { groupedGroupsOfUser = v3; }
+							v3.children.forEach(function(v4, k4){
+								if (v4.id == userId) { groupedGroupsOfUser = v4; }
+							});
+						});
+					});
+				});
+				return groupedGroupsOfUser;
+			};
 
 		});
 

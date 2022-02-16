@@ -14,7 +14,8 @@
 				create: {method: 'POST', headers: headers},
 				delete: {method: 'DELETE', headers: headers},
 				update: {method: 'PUT', headers: headers},
-				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers}
+				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers},
+				findGroupedByTenant: {method: 'POST', url: API.getURI('groups/grouped/tenant'), headers: headers}
 			});
 
 		});
