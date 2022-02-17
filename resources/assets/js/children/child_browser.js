@@ -10,7 +10,6 @@
             });
 
         })
-
         .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
 
             $scope.Decorators = Decorators;
@@ -37,8 +36,7 @@
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
-                group_id: null,
-                case_cause_ids: 200
+                group_id: null
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
@@ -48,9 +46,13 @@
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
                 $scope.groups =  [];
+                
                 $scope.causes = [];
                 $scope.data = StaticData.getCaseCauses()
                 Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+                $scope.causes.push(({value: '601', displayName: 'Caso ainda sem motivo informado'}))
+                $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
+                
                 Groups.findUserGroups(function(res){
                     res.data.forEach(function(v){
                         $scope.groups.push(({value: v.id, displayName: v.name}));
@@ -149,7 +151,6 @@
             //Configura a linguagem na diretiva dt-column-defs=""
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
-            ];
-            
+            ]; 
         });
 })();
