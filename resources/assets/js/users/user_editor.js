@@ -203,8 +203,6 @@
 					$scope.user.type == 'agente_comunitario' ||
 					$scope.user.type == 'tecnico_verificador'){
 
-					$scope.user.group = null;
-
 				}else{
 					$scope.user.group = null;
 					$scope.user.group_id = null;
