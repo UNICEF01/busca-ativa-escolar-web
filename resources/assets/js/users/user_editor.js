@@ -202,7 +202,7 @@
 					$scope.user.type == 'supervisor_institucional' ||
 					$scope.user.type == 'agente_comunitario' ||
 					$scope.user.type == 'tecnico_verificador'){
-
+					
 				}else{
 					$scope.user.group = null;
 					$scope.user.group_id = null;

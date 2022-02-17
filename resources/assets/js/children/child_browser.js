@@ -37,7 +37,8 @@
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
-                group_id: null
+                group_id: null,
+                case_cause_ids: 200
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
@@ -49,7 +50,7 @@
                 $scope.groups =  [];
                 $scope.causes = [];
                 $scope.data = StaticData.getCaseCauses()
-                Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.slug, displayName: val.label})));
+                Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
                 Groups.findUserGroups(function(res){
                     res.data.forEach(function(v){
                         $scope.groups.push(({value: v.id, displayName: v.name}));
