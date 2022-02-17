@@ -421,7 +421,8 @@
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
-                group_id: null
+                group_id: null,
+                case_cause_ids: 200
             };
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
