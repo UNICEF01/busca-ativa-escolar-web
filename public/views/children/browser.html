@@ -30,7 +30,7 @@
 					</div>
 					<div class="col-md-2">
 						<select name="parent" id="select_parent" style="max-width:185px;" ng-model="query.group_id" class="form-control">
-							<option value="" disabled selected>Grupo...</option>
+							<option value="" disabled selected style="text-indent: 0px">Grupo...</option>
 							<option ng-repeat="group in groups"
 									value="{{group.value}}">
 									
@@ -218,18 +218,6 @@
 		</div>
 	</div>
 </div>
-<script>
-
-$(function() {
-    $('#select_parent').bind("change", function() {
-        var space_offset =7;
-        var matches = $('#select_parent option:selected').text().search(/\S/);
-		var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75 : 0; 
-        $(this).css('text-indent', -(number));
-    });
-});
-</script>
-
 <style>
 select {
     font-family: monospace;

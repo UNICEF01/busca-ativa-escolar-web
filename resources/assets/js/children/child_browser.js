@@ -39,20 +39,8 @@
                 group_id: null
             };
 
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
-
-            $scope.refresh = function () {
-                $scope.search = Children.search($scope.query);
-                $scope.reports = Reports.reportsChild();
-                $scope.groups =  [];
-                
-                $scope.causes = [];
-                $scope.data = StaticData.getCaseCauses()
-                Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-                $scope.causes.push(({value: '601', displayName: 'Caso ainda sem motivo informado'}))
-                $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
-                
+            $scope.groups =  [];
+            if($scope.groups.length == 0){
                 Groups.findUserGroups(function(res){
                     res.data.forEach(function(v){
                         $scope.groups.push(({value: v.id, displayName: v.name}));
@@ -82,13 +70,36 @@
                         }
                     });
                 });
-                
+            }
+            
+            $scope.causes = [];
+            $scope.data = StaticData.getCaseCauses()
+            Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+            $scope.causes.push(({value: '601', displayName: 'Caso ainda sem motivo informado'}))
+            $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+
+            $scope.refresh = function () {
+                $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsChild();          
             };
             
             $scope.resetQuery = function () {
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.refresh();
+                angular.element('#select_parent').css('text-indent', 0);
             };
+
+            $(function() {
+                $('#select_parent').bind("change", function() {
+                    var space_offset =7;
+                    var matches = $('#select_parent option:selected').text().search(/\S/);
+                    var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75: '';
+                    $(this).css('text-indent', -(number));
+                });
+            });
 
             $scope.exportXLS = function () {
                 Children.export($scope.query, function (res) {
