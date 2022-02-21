@@ -44,7 +44,6 @@
 
 				if(!$scope.isCreating) {
 
-
 					if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
 						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 					}
@@ -54,12 +53,17 @@
 						Identity.getType() === 'supervisor_institucional'){
 
 						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
-
 						Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
 							$scope.groupedGroups = res;
 							$scope.groupsToMove = $scope.getGroupsToMove();
 							$scope.groupsOfUser = $scope.getGroupsOfUser();
 						});
+					}
+
+					if( Identity.getType() === 'gestor_estadual' ||
+						Identity.getType() === 'coordenador_estadual' ||
+						Identity.getType() === 'supervisor_estadual'){
+						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 					}
 
 				}else{
@@ -160,6 +164,14 @@
 				if( $scope.isTargetUserTenantBound() && $scope.user.group == null ){
 					ngToast.danger("Informe o grupo do usuário");
 					return ;
+				}
+
+				//se for algum perfil estadua que faz a edicao do usuario
+				if( Identity.getType() === 'gestor_estadual' ||
+					Identity.getType() === 'coordenador_estadual' ||
+					Identity.getType() === 'supervisor_estadual'){
+					delete $scope.user.group;
+					delete $scope.user.group_id;
 				}
 
 				//se tiver grupo - set group
