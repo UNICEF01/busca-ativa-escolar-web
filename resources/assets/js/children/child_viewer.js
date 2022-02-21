@@ -70,8 +70,18 @@
 			}, function (err) {
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
-		}
-		//console.log("[core] @ChildViewCtrl", $scope.child);
+		};
+
+		$scope.scopeOfCase = function () {
+			if ($scope.child.currentCase.currentStep.assigned_user) {
+				if ($scope.child.currentCase.currentStep.assigned_user.type === "coordenador_estadual"
+					|| $scope.child.currentCase.currentStep.assigned_user.type === "supervisor_estadual") {
+					return "state";
+				} else {
+					return "municipality";
+				}
+			}
+		};
 
 	}
 

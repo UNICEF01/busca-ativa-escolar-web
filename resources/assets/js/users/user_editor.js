@@ -51,7 +51,6 @@
 					if( Identity.getType() === 'coordenador_operacional' ||
 						Identity.getType() === 'gestor_politico' ||
 						Identity.getType() === 'supervisor_institucional'){
-
 						$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
 						Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
 							$scope.groupedGroups = res;
