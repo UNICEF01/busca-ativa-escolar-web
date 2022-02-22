@@ -13,7 +13,7 @@
                     <span class="label label-success"
                           ng-show="child.child_status === 'in_school'">Dentro da Escola</span>
 
-                    <span ng-show="scopeOfCase()==='municipality'">
+                    <span ng-show="child.currentCase.currentStep.assigned_user.type != 'coordenador_estadual' && child.currentCase.currentStep.assigned_user.type != 'supervisor_estadual'">
                         <a ng-show="child.currentCase.group" class="btn btn-xs btn-raised" ng-click="assignGroup()" >
                             <span>
                                 <span ng-show="!child.currentCase.group.deleted_at"><i class="material-icons fa fa-edit"></i> <strong>Grupo:</strong> {{child.currentCase.group.name}}</span>

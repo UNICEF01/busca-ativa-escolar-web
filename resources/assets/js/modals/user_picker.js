@@ -2,7 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, canDismiss, noUsersMessage) {
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, userGroups, canDismiss, noUsersMessage) {
 
 			//console.log("[modal] user_picker", title, message);
 
@@ -13,6 +13,7 @@
 
 			$scope.selectedUser = null;
 			$scope.users = users;
+			$scope.userGroups = userGroups;
 
 			$scope.hasUsers = function() {
 				if(!$scope.users) return false;

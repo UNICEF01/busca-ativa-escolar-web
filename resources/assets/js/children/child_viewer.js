@@ -72,17 +72,6 @@
 			});
 		};
 
-		$scope.scopeOfCase = function () {
-			if ($scope.child.currentCase.currentStep.assigned_user) {
-				if ($scope.child.currentCase.currentStep.assigned_user.type === "coordenador_estadual"
-					|| $scope.child.currentCase.currentStep.assigned_user.type === "supervisor_estadual") {
-					return "state";
-				} else {
-					return "municipality";
-				}
-			}
-		};
-
 	}
 
 })();

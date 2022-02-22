@@ -1,37 +1,41 @@
 <div class="modal-template" id="md-user-picker">
+
 	<div class="modal-header">
 		<h3 class="modal-title">{{title || 'Selecione um usuário:'}}</h3>
 	</div>
+
 	<div class="modal-body" ng-show="hasUsers()">
 		<div ng-show="message">{{message}}</div>
-		<div class="block">
-			<label class="control-label">Usuário</label>
-			<ui-select ng-model="$parent.selectedUser">
-				<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="user in users | filter: $select.search track by user.id">
-					<div>
-						<div>
-							<i class="fa fa-user"></i>
-							<strong ng-bind-html="user.name | highlight: $select.search"></strong>
 
-						</div>
-						<div>
-							<small ng-bind="user.type | lang:'user.type'"></small>
-							<span class="pull-right text-right" ng-show="user.group">
-								<small ng-bind="user.group.name"></small>
-								<i class="fa fa-users"></i>
-							</span>
-						</div>
-					</div>
-				</ui-select-choices>
-			</ui-select>
+		<ui-select ng-model="$parent.selectedUser">
+			<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
+			<ui-select-choices repeat="group in userGroups | filter: $select.search track by group.id">
+				<div style="margin-left: {{group.margin}}px">
+					<i class="fa fa-users"></i>
+					<span ng-bind-html="group.name | highlight: $select.search"></span>
+				</div>
+			</ui-select-choices>
+		</ui-select>
+
+		<div class="form-group">
+
+			<select class="form-control" name="repeatSelect" id="repeatSelect" ng-model="$parent.selectedUser" style="width: 100%;" id="select_user">
+				<optgroup ng-repeat="group in userGroups" label="{{group.name}}" class="option{{group.margin}}">
+					<option style="margin-left: {{group.margin}}px;">Nome</option>
+				</optgroup>
+			</select>
+
 		</div>
+
 	</div>
+
 	<div class="modal-body" ng-show="!hasUsers()">
 		<div class="alert alert-warning"><strong>Nenhum usuário disponível! </strong><span ng-bind="noUsersMessage"></span></div>
 	</div>
+
 	<div class="modal-footer">
 		<button class="btn btn-default" type="button" ng-show="canDismiss || !hasUsers()" ng-click="close()">Cancelar</button>
 		<button class="btn btn-primary btn-raised" type="button" ng-show="hasUsers()" ng-click="onSelect()">Selecionar</button>
 	</div>
+
 </div>
