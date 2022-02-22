@@ -243,6 +243,7 @@
           title,
           message,
           users,
+          userGroups,
           canDismiss,
           noUsersMessage
         ) {
@@ -265,6 +266,9 @@
               },
               canDismiss: function () {
                 return canDismiss;
+              },
+              userGroups: function () {
+                return userGroups;
               },
             },
           };

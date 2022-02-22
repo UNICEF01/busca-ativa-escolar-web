@@ -70,8 +70,7 @@
 			}, function (err) {
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
-		}
-		//console.log("[core] @ChildViewCtrl", $scope.child);
+		};
 
 	}
 

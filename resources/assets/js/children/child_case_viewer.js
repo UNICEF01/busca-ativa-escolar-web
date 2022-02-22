@@ -269,9 +269,20 @@
             })
         };
 
+        $scope.scopeOfCase = function () {
+            if ($scope.step.assigned_user) {
+                if ($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual") {
+                    return "state";
+                } else {
+                    return "municipality";
+                }
+            }
+        }
+
     }
 
-    function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants) {
+    function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Identity, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants, Groups, Platform) {
 
         $scope.Decorators = Decorators;
         $scope.Children = Children;
@@ -298,6 +309,10 @@
         $scope.current_date = {};
 
         $scope.responsible = {};
+
+        $scope.groupedGroups = [];
+        $scope.groupsToMove = [];
+        $scope.groupsOfUser = [];
 
         $scope.addContact = function (id, parent) {
             if (id || (id === undefined)) {
@@ -539,26 +554,25 @@
 
         $scope.assignUser = function () {
 
-            // console.log("[child_viewer.cases.step] Attempting to assign new user for step: ", $scope.step);
-
             CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
                 .then(function (res) {
                     if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, true))
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfUser, true))
                 })
-                .then(function (user) {
+                .then(function (user_id) {
                     return CaseSteps.assignUser({
                         type: $scope.step.step_type,
                         id: $scope.step.id,
-                        user_id: user.id
+                        user_id: user_id
                     }).$promise;
                 }).then(function (res) {
                 ngToast.success("Usuário atribuído!");
-                $state.reload();
+                $state.go('child_browser');
             });
 
-        };
 
+        };
+        
         $scope.isCheckboxChecked = function (field, value) {
             if (!$scope.fields) return false;
             if (!$scope.fields[field]) $scope.fields[field] = [];
@@ -738,6 +752,67 @@
                 return "municipality";
             }
         }
+
+        $scope.getGroupsToMove = function() {
+            var groupsToMove = [];
+            $scope.groupedGroups.data.forEach(function(v, k){
+                groupsToMove.push({id: v.id, name: v.name});
+                v.children.forEach(function(v2, k2){
+                    groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+                    v2.children.forEach(function(v3, k3){
+                        groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+                        v3.children.forEach(function(v4, k4){
+                            groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+                        });
+                    });
+                });
+            });
+            return groupsToMove;
+        };
+
+        $scope.getGroupsOfUser = function (){
+            var groupsToMove = [];
+            groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
+            $scope.getGroupOfCurrentUser().children.forEach(function(v, k){
+                groupsToMove.push({id: v.id, name: v.name, margin: 20});
+                v.children.forEach(function(v2, k2){
+                    groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
+                    v2.children.forEach(function(v3, k3){
+                        groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
+                        v3.children.forEach(function(v4, k4){
+                            groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
+                        });
+                    });
+                });
+            });
+            return groupsToMove;
+        };
+
+        $scope.getGroupOfCurrentUser = function (){
+            var groupedGroupsOfUser = [];
+            var userId = Identity.getCurrentUser().group.id;
+            $scope.groupedGroups.data.forEach(function(v, k){
+                if (v.id == userId) { groupedGroupsOfUser = v; }
+                v.children.forEach(function(v2, k2){
+                    if (v2.id == userId) { groupedGroupsOfUser = v2; }
+                    v2.children.forEach(function(v3, k3){
+                        if (v3.id == userId) { groupedGroupsOfUser = v3; }
+                        v3.children.forEach(function(v4, k4){
+                            if (v4.id == userId) { groupedGroupsOfUser = v4; }
+                        });
+                    });
+                });
+            });
+            return groupedGroupsOfUser;
+        };
+
+        Platform.whenReady(function() {
+            Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
+                $scope.groupedGroups = res;
+                $scope.groupsToMove = $scope.getGroupsToMove();
+                $scope.groupsOfUser = $scope.getGroupsOfUser();
+            });
+        });
 
     }
 
