@@ -572,7 +572,7 @@
 
 
         };
-        
+
         $scope.isCheckboxChecked = function (field, value) {
             if (!$scope.fields) return false;
             if (!$scope.fields[field]) $scope.fields[field] = [];
@@ -771,39 +771,45 @@
         };
 
         $scope.getGroupsOfUser = function (){
-            var groupsToMove = [];
-            groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
-            $scope.getGroupOfCurrentUser().children.forEach(function(v, k){
-                groupsToMove.push({id: v.id, name: v.name, margin: 20});
-                v.children.forEach(function(v2, k2){
-                    groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
-                    v2.children.forEach(function(v3, k3){
-                        groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
-                        v3.children.forEach(function(v4, k4){
-                            groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
+            if(Identity.getCurrentUser().hasOwnProperty('group')) {
+                var groupsToMove = [];
+                groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
+                $scope.getGroupOfCurrentUser().children.forEach(function (v, k) {
+                    groupsToMove.push({id: v.id, name: v.name, margin: 20});
+                    v.children.forEach(function (v2, k2) {
+                        groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
+                        v2.children.forEach(function (v3, k3) {
+                            groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
+                            v3.children.forEach(function (v4, k4) {
+                                groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
+                            });
                         });
                     });
                 });
-            });
-            return groupsToMove;
+                return groupsToMove;
+            };
+            return [];
         };
 
         $scope.getGroupOfCurrentUser = function (){
-            var groupedGroupsOfUser = [];
-            var userId = Identity.getCurrentUser().group.id;
-            $scope.groupedGroups.data.forEach(function(v, k){
-                if (v.id == userId) { groupedGroupsOfUser = v; }
-                v.children.forEach(function(v2, k2){
-                    if (v2.id == userId) { groupedGroupsOfUser = v2; }
-                    v2.children.forEach(function(v3, k3){
-                        if (v3.id == userId) { groupedGroupsOfUser = v3; }
-                        v3.children.forEach(function(v4, k4){
-                            if (v4.id == userId) { groupedGroupsOfUser = v4; }
+            if(Identity.getCurrentUser().hasOwnProperty('group')){
+                var groupedGroupsOfUser = [];
+                var userId = Identity.getCurrentUser().group.id;
+                $scope.groupedGroups.data.forEach(function(v, k){
+                    if (v.id == userId) { groupedGroupsOfUser = v; }
+                    v.children.forEach(function(v2, k2){
+                        if (v2.id == userId) { groupedGroupsOfUser = v2; }
+                        v2.children.forEach(function(v3, k3){
+                            if (v3.id == userId) { groupedGroupsOfUser = v3; }
+                            v3.children.forEach(function(v4, k4){
+                                if (v4.id == userId) { groupedGroupsOfUser = v4; }
+                            });
                         });
                     });
                 });
-            });
-            return groupedGroupsOfUser;
+                return groupedGroupsOfUser;
+            }
+            return [];
         };
 
         Platform.whenReady(function() {

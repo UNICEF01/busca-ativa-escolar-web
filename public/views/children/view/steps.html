@@ -32,7 +32,12 @@
 				</div>
 
 				<div class="col-md-12" ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
-					<a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
+					<div ng-show=" (case.currentStep.assigned_user.type == 'coordenador_estadual' || case.currentStep.assigned_user.type == 'supervisor_estadual') && !identity.getCurrentUser().tenant_id ">
+						<a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
+					</div>
+					<div ng-show=" case.currentStep.assigned_user.type != 'coordenador_estadual' && case.currentStep.assigned_user.type != 'supervisor_estadual' && identity.getCurrentUser().tenant_id ">
+						<a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
+					</div>
 				</div>
 			</div>
 
