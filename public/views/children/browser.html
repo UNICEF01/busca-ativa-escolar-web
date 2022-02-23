@@ -43,16 +43,17 @@
 					</div>
 				</div>
 				<div>
-					<div class="col-md-2">
-						<label>Motivo do Caso</label>
-						<select  data-placeholder="Begin typing a name to filter..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
+					
+						<div><label style="padding-left: 15px;">Motivo do Caso</label><i class="fa fa-info-circle tooltip" style="padding-left: 2px;"><span class="tooltiptext">Para selecionar mais de um opção, segure o botão ctrl no teclado. </span></i></div>
+						<div><select id="edit-rec" style="width: 98%;margin-left: 15px;" data-placeholder="Motivo do caso..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
 							
 							<option ng-repeat="case in causes"
 									value="{{case.value}}">
 							  {{case.displayName}}
 							</option>
 							</select>
-					</div>
+						</div>
+				
 				</div>
 				<div class="row"></div>
 				<div>
@@ -91,6 +92,10 @@
 						<div class="checkbox"><label for="filter-place_kind-rural"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'rural'" name="filter-place_kind_rural" id="filter-place_kind-rural"> Rural</label></div><br/>
 						<div class="checkbox"><label for="filter-place_kind-urban"><input type="checkbox" checklist-model="query.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban"> Urbana</label></div><br/>
 						<div class="checkbox"><label for="filter-place_kind-null"><input type="checkbox" ng-model="query.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>
+					</div>
+					<div class="col-md-2">
+						<label class="control-label" for="filter-case_not_info"><strong>Mostrar apenas: </strong><i class="fa fa-info-circle tooltip"><span class="tooltiptext">Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos.</span></i></label><br/><br/>
+						<div class="checkbox"><label for="filter-case_not_info"><input type="checkbox" id="filter-case_not_info"  checklist-model="query.case_not_info" checklist-value="'yes'" name="filter-case_not_info"> Caso sem motivo informado</label></div><br/>
 					</div>
 					
 				</div>
@@ -159,26 +164,21 @@
 					
 						<td width="10%" style="vertical-align: middle;">
 							{{child.place_city_name}}/{{child.place_uf}}
-						</td>
-
+						</td>						
 						<td width="10%" style="vertical-align: middle;">
 							<div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
 							<div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M</div>
 							<div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B</div>
 						</td>
-
 						<td width="10%" style="vertical-align: middle;">
 							<span ng-show="child.dob" ng-bind="child.dob | amDateFormat:'DD/MM/YYYY'" uib-tooltip-html="child.dob | dateFormat"></span>
 							<span ng-show="!child.dob"><span uib-tooltip="Informação não disponível" class="label label-default">n/d</span></span>
 						</td>
-
 						<td width="10%" style="vertical-align: middle;">
 							<strong>{{child.step_name}}</strong>
 						</td>
 
 						<td width="28%" style="vertical-align: middle;">
-							<div ng-show="child.assigned_uf" class="label label-warning" uib-tooltip="Caso sob a responsabilidade do estado {{child.assigned_uf}}">
-								{{child.assigned_uf}}</div> <br/>
 							<span ng-show="child.assigned_user_name"><i class="fa fa-user"></i> {{child.assigned_user_name}} <br /></span>
 							<small ng-show="child.assigned_group_name" class="pull-right">{{child.assigned_group_name}} <i class="fa fa-group"></i></small>
 							<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
@@ -224,8 +224,6 @@
 	</div>
 </div>
 <style>
-select {
-    font-family: monospace;
-}
+
 </style>
 

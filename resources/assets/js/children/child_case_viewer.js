@@ -33,9 +33,6 @@
         $scope.child.$promise.then(openCurrentCase);
 
         function openCurrentCase(child) {
-
-            //console.log("[child_viewer.cases] Opening current case for child: ", child);
-
             $scope.openedCase = child.cases.find(function (item) {
                 if ($stateParams.case_id) return item.id === $stateParams.case_id;
                 return item.case_status === 'in_progress';
@@ -45,14 +42,10 @@
             if ($stateParams.step_id) return;
             if (!$scope.openedCase) return;
 
-            //console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
-
             var stepToOpen = $scope.openedCase.steps.find(function (step) {
                 return ($scope.openedCase.current_step_id === step.id);
             });
-
-            //console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
-
+            
             $scope.openStep(stepToOpen);
         }
 
