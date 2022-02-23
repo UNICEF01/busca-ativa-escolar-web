@@ -794,15 +794,15 @@
         $scope.getGroupOfCurrentUser = function (){
             if(Identity.getCurrentUser().hasOwnProperty('group')){
                 var groupedGroupsOfUser = [];
-                var userId = Identity.getCurrentUser().group.id;
+                var userGroupId = Identity.getCurrentUser().group.id;
                 $scope.groupedGroups.data.forEach(function(v, k){
-                    if (v.id == userId) { groupedGroupsOfUser = v; }
+                    if (v.id == userGroupId) { groupedGroupsOfUser = v; }
                     v.children.forEach(function(v2, k2){
-                        if (v2.id == userId) { groupedGroupsOfUser = v2; }
+                        if (v2.id == userGroupId) { groupedGroupsOfUser = v2; }
                         v2.children.forEach(function(v3, k3){
-                            if (v3.id == userId) { groupedGroupsOfUser = v3; }
+                            if (v3.id == userGroupId) { groupedGroupsOfUser = v3; }
                             v3.children.forEach(function(v4, k4){
-                                if (v4.id == userId) { groupedGroupsOfUser = v4; }
+                                if (v4.id == userGroupId) { groupedGroupsOfUser = v4; }
                             });
                         });
                     });
