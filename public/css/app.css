@@ -5240,13 +5240,13 @@ select {
   font-family: monospace;
 }
 
-.tooltip {
+.tooltipx {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
 }
 
-.tooltip .tooltiptext {
+.tooltipx .tooltiptextx {
   visibility: hidden;
   width: 120px;
   background-color: black;
@@ -5260,7 +5260,7 @@ select {
   z-index: 1;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltipx:hover .tooltiptextx {
   visibility: visible;
 }
 

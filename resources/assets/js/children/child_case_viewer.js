@@ -49,8 +49,6 @@
             $scope.openStep(stepToOpen);
         }
 
-        //console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
-
         $scope.collapseCase = function (childCase) {
             $scope.openedCase = childCase;
         };
