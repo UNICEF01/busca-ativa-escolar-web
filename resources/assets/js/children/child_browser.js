@@ -36,7 +36,8 @@
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
-                group_id: null
+                group_id: null,
+                case_not_info: null
             };
 
             $scope.groups =  [];
@@ -75,7 +76,6 @@
             $scope.causes = [];
             $scope.data = StaticData.getCaseCauses()
             Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-            $scope.causes.push(({value: '601', displayName: 'Caso ainda sem motivo informado'}))
             $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
@@ -100,7 +100,7 @@
                     $(this).css('text-indent', -(number));
                 });
             });
-
+            
             $scope.exportXLS = function () {
                 Children.export($scope.query, function (res) {
                     Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));

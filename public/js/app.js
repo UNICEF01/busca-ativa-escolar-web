@@ -168,1641 +168,6 @@
 })();
 
 (function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
-      $stateProvider.state('checks', {
-        url: '/checks',
-        templateUrl: '/views/children/checks.html',
-        controller: 'CheckRequestCtrl',
-      });
-    })
-    .controller(
-      'CheckRequestCtrl',
-      function (
-        $scope,
-        StaticData,
-        $anchorScroll,
-        $httpParamSerializer,
-        API,
-        Children,
-        Decorators,
-        ngToast,
-        DTOptionsBuilder,
-        DTColumnDefBuilder,
-        Modals
-      ) {
-        $scope.Decorators = Decorators;
-        $scope.Children = Children;
-
-        $scope.query = angular.merge({}, $scope.defaultQuery);
-        $scope.requests = {};
-
-        $scope.refresh = function () {
-          $scope.requests = Children.requests();
-        };
-
-        $scope.refresh();
-
-        var language = {
-          sEmptyTable: 'Nenhum registro encontrado',
-          sInfo: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
-          sInfoEmpty: 'Mostrando 0 até 0 de 0 registros',
-          sInfoFiltered: '(Filtrados de _MAX_ registros)',
-          sInfoPostFix: '',
-          sInfoThousands: '.',
-          sLengthMenu: '_MENU_ resultados por página',
-          sLoadingRecords: 'Carregando...',
-          sProcessing: 'Processando...',
-          sZeroRecords: 'Nenhum registro encontrado',
-          sSearch: 'Pesquisar',
-          oPaginate: {
-            sNext: 'Próximo',
-            sPrevious: 'Anterior',
-            sFirst: 'Primeiro',
-            sLast: 'Último',
-          },
-          oAria: {
-            sSortAscending: ': Ordenar colunas de forma ascendente',
-            sSortDescending: ': Ordenar colunas de forma descendente',
-          },
-        };
-        //Configura a linguagem na diretiva dt-options=""
-        $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage(language);
-        // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [[0, 'asc']])
-
-        $scope.dtColumnDefs = [
-          DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
-        ];
-
-        $scope.aprove = function (child) {
-          if (child.type_request === 'reopen') {
-            Children.reopenCase({
-              case_id: child.child.current_case_id,
-              reason: 'request',
-            }).$promise.then(function (res) {
-              if (res.status !== 'error') {
-                ngToast.success(res.result);
-                setTimeout(function () {
-                  window.location =
-                    'children/view/' + res.child_id + '/consolidated';
-                }, 4000);
-              } else {
-                ngToast.danger('Erro ao reabrir o caso!');
-              }
-            });
-          }
-          if (child.type_request === 'transfer') {
-            Children.transferCase({
-              case_id: child.child.current_case_id,
-            }).$promise.then(function (res) {
-              if (res.status !== 'error') {
-                ngToast.success(res.result);
-                setTimeout(function () {
-                  window.location =
-                    'children/view/' + res.child_id + '/consolidated';
-                }, 4000);
-              } else {
-                ngToast.danger('Erro ao reabrir o caso!');
-              }
-            });
-          }
-        };
-        $scope.reject = function (child) {
-          Modals.show(Modals.CaseReject($scope.identity.getType()))
-            .then(function (response) {
-              if (!response) return $q.reject();
-
-              if ($scope.identity.getType() === 'coordenador_operacional') {
-                Children.reject({
-                  id: child.id,
-                  reject_reason: response.reason,
-                }).$promise.then(function (res) {
-                  if (res.status !== 'error') {
-                    ngToast.success(res.result);
-                    setTimeout(function () {
-                      window.location = 'checks';
-                    }, 4000);
-                  } else {
-                    ngToast.danger(res.result);
-                  }
-                });
-              } else {
-                ngToast.warning('Você não pode realizar essa ação.');
-              }
-            })
-            .then(function (res) {
-              //console.log(res);
-            });
-        };
-
-      }
-    );
-})();
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ChildActivityLogCtrl', ChildActivityLogCtrl)
-
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('child_viewer.activity_log', {
-					url: '/activity_log',
-					templateUrl: '/views/children/view/activity_log.html',
-					controller: 'ChildActivityLogCtrl'
-				})
-		});
-	
-	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
-
-		$scope.Decorators = Decorators;
-		$scope.Children = Children;
-
-		$scope.entries = {};
-
-		$scope.refresh = function() {
-			$scope.entries = Children.getActivity({id: $stateParams.child_id});
-		};
-
-		$scope.refresh();
-
-		//console.log("[core] @ChildActivityLogCtrl", $scope.$parent.entries);
-	}
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('child_viewer.attachments', {
-				url: '/attachments',
-				templateUrl: '/views/children/view/attachments.html',
-				controller: 'ChildAttachmentsCtrl',
-			})
-		})
-		.controller('ChildAttachmentsCtrl', function ($scope, $state, $window, $stateParams, ngToast, Auth, API, Modals, Children) {
-
-			$scope.Children = Children;
-
-			$scope.attachments = {};
-			$scope.uploadToken = "";
-
-			$scope.refresh = function() {
-				$scope.attachments = Children.getAttachments({id: $stateParams.child_id});
-			};
-
-			$scope.uploadAttachment = function() {
-				Modals.show(Modals.Prompt('Anexando um arquivo ao caso', '', false, 'Qual a descrição do anexo que será enviado?'))
-					.then(function(description) {
-						return Modals.show(Modals.FileUploader(
-							'Anexando um arquivo ao caso',
-							'Selecione abaixo o arquivo que deseja anexar ao caso.',
-							API.getURI('children/' + $stateParams.child_id + '/attachments'),
-							{description: description}
-						))
-					})
-					.then(function (file) {
-						ngToast.success('Arquivo anexado!');
-						$scope.refresh();
-
-						$window.location.reload();
-					})
-			};
-
-			$scope.removeAttachment = function(attachment) {
-				Modals.show(Modals.Confirm("Tem certeza que deseja remover esse arquivo?"))
-					.then(function () {
-						return Children.removeAttachment({id: $stateParams.child_id, attachment_id: attachment.id})
-					})
-					.then(function() {
-						$scope.refresh();
-					});
-			};
-
-			//console.log("[core] @ChildAttachmentsCtrl", $stateParams);
-
-			$scope.refresh();
-
-		});
-
-})();
-(function () {
-    
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
-            $stateProvider.state('child_browser', {
-                url: '/children',
-                templateUrl: '/views/children/browser.html',
-                controller: 'ChildSearchCtrl'
-            });
-
-        })
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
-
-            $scope.Decorators = Decorators;
-            $scope.Children = Children;
-            $scope.reports = {};
-            $scope.lastOrder = {
-                date: null
-            };
-            
-            $scope.identity = Identity;
-            
-            $scope.defaultQuery = {
-                name: '',
-                step_name: '',
-                cause_name: '',
-                assigned_user_name: '',
-                location_full: '',
-                alert_status: ['accepted'],
-                case_status: ['in_progress'],
-                risk_level: ['low', 'medium', 'high'],
-                age_null: true,
-                age: {from: 0, to: 10000},
-                gender: ['male', 'female', 'undefined'],
-                gender_null: true,
-                place_kind: ['rural', 'urban'],
-                place_kind_null: true,
-                group_id: null
-            };
-
-            $scope.groups =  [];
-            if($scope.groups.length == 0){
-                Groups.findUserGroups(function(res){
-                    res.data.forEach(function(v){
-                        $scope.groups.push(({value: v.id, displayName: v.name}));
-                        const size = Object.keys(v).length;
-                        if(size > 2){
-                            for(let i  = 0; i < size - 2; ++i){
-                                v[i].name = v[i].name.trim()
-                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
-                                $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
-                                const size1 = Object.keys(v[i]).length;
-                                if(size1 > 2){
-                                    for(let j  = 0; j < size1 - 2; ++j){
-                                        v[i][j].name = v[i][j].name.trim()
-                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
-                                        $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
-                                        const size2 = Object.keys(v[i][j]).length;
-                                        if(size2 > 2){
-                                            for(let l  = 0; l < size2 - 2; ++l){
-                                                v[i][j][l].name = v[i][j][l].name.trim()
-                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
-                                                $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                });
-            }
-            
-            $scope.causes = [];
-            $scope.data = StaticData.getCaseCauses()
-            Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-            $scope.causes.push(({value: '601', displayName: 'Caso ainda sem motivo informado'}))
-            $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
-
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
-
-            $scope.refresh = function () {
-                $scope.search = Children.search($scope.query);
-                $scope.reports = Reports.reportsChild();          
-            };
-            
-            $scope.resetQuery = function () {
-                $scope.query = angular.merge({}, $scope.defaultQuery);
-                $scope.refresh();
-                angular.element('#select_parent').css('text-indent', 0);
-            };
-
-            $(function() {
-                $('#select_parent').bind("change", function() {
-                    var space_offset =7;
-                    var matches = $('#select_parent option:selected').text().search(/\S/);
-                    var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75: '';
-                    $(this).css('text-indent', -(number));
-                });
-            });
-
-            $scope.exportXLS = function () {
-                Children.export($scope.query, function (res) {
-                    Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
-                });
-            };
-            
-            $scope.exportXLSReport = function(file){
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'reports/child/download?token=' + token + "&file=" + file);
-                });
-            };
-
-            $scope.createXLSReport = function(){
-
-                Reports.createReportChild($scope.query).$promise
-                    .then(function (res) {
-                        $scope.lastOrder.date = res.date;
-                        $scope.reports = {};
-
-                        ngToast.success("Solicitação feita com sucesso. Arquivo estará disponível em breve!");
-
-                        setInterval(function() {
-                            $scope.reports = Reports.reportsChild();
-                            $scope.lastOrder.date = null;
-                        }, 600000);
-                    });
-            };
-
-            $scope.refresh();
-
-            var language = {
-                "sEmptyTable": "Nenhum registro encontrado",
-                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "_MENU_ resultados por página",
-                "sLoadingRecords": "Carregando...",
-                "sProcessing": "Processando...",
-                "sZeroRecords": "Nenhum registro encontrado",
-                "sSearch": "Pesquisar",
-                "oPaginate": {
-                    "sNext": "Próximo",
-                    "sPrevious": "Anterior",
-                    "sFirst": "Primeiro",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Ordenar colunas de forma ascendente",
-                    "sSortDescending": ": Ordenar colunas de forma descendente"
-                }
-            }
-
-            //Configura a linguagem na diretiva dt-options=""
-            $scope.dtOptions = DTOptionsBuilder.newOptions()
-                .withLanguage(language);
-
-            //Configura a linguagem na diretiva dt-column-defs=""
-            $scope.dtColumnDefs = [
-                DTColumnDefBuilder.newColumnDef(8).notSortable()
-            ]; 
-        });
-})();
-(function () {
-    angular.module("BuscaAtivaEscolar")
-        .controller('ChildCasesCtrl', ChildCasesCtrl)
-        .controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
-        .config(function ($stateProvider) {
-            $stateProvider
-                .state('child_viewer.cases', {
-                    url: '/cases',
-                    templateUrl: '/views/children/view/steps.html',
-                    controller: 'ChildCasesCtrl'
-                })
-                .state('child_viewer.cases.view_step', {
-                    url: '/{step_type}/{step_id}',
-                    templateUrl: '/views/children/view/case_info.html',
-                    controller: 'ChildCaseStepCtrl'
-                })
-        });
-
-    function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
-
-        $scope.Decorators = Decorators;
-        $scope.Children = Children;
-        $scope.CaseSteps = CaseSteps;
-
-        $scope.identity = Identity;
-
-        $scope.child_id = $scope.$parent.child_id;
-        $scope.child = $scope.$parent.child;
-
-        $scope.openedCase = {};
-        $scope.openStepID = null;
-
-        $scope.child.$promise.then(openCurrentCase);
-
-        function openCurrentCase(child) {
-
-            //console.log("[child_viewer.cases] Opening current case for child: ", child);
-
-            $scope.openedCase = child.cases.find(function (item) {
-                if ($stateParams.case_id) return item.id === $stateParams.case_id;
-                return item.case_status === 'in_progress';
-            });
-
-            // Don't try to open a step; UI-Router will already open the one in the URL
-            if ($stateParams.step_id) return;
-            if (!$scope.openedCase) return;
-
-            //console.log("[child_viewer.cases] Current case: ", $scope.openedCase, "; finding current step to open");
-
-            var stepToOpen = $scope.openedCase.steps.find(function (step) {
-                return ($scope.openedCase.current_step_id === step.id);
-            });
-
-            //console.log("[child_viewer.cases] Opening current step... ", stepToOpen);
-
-            $scope.openStep(stepToOpen);
-        }
-
-        //console.log("[core] @ChildCasesCtrl", $scope.child, $scope.openedCase);
-
-        $scope.collapseCase = function (childCase) {
-            $scope.openedCase = childCase;
-        };
-
-        $scope.isCaseCollapsed = function (childCase) {
-            if (!$scope.openedCase) return true;
-            return $scope.openedCase.id !== childCase.id;
-        };
-
-        $scope.renderStepStatusClass = function (childCase, step) {
-
-            var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
-
-            if (step.is_completed) return 'step-completed' + toggleClass;
-            if (childCase.current_step_id === step.id) return 'step-current' + toggleClass;
-            return 'step-pending' + toggleClass;
-        };
-
-        $scope.canOpenStep = function (step) {
-            if (step.is_completed || step.id === $scope.openedCase.current_step_id) {
-                return Identity.can('cases.step.' + step.slug)
-            }
-            return false;
-        };
-
-        $scope.canEditStep = function (step) {
-            return !step.is_completed && step.slug !== 'alerta';
-        };
-
-        $scope.openStep = function (selectedStep) {
-
-            if (!$scope.canOpenStep(selectedStep)) return false;
-
-            $scope.openStepID = selectedStep.id;
-
-            //console.log("[child_viewer.cases] Opening step: ", selectedStep);
-
-            $state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
-                .then(function () {
-                    $timeout(refreshGoogleMap, 1000);
-                });
-
-        };
-
-        $scope.canCompleteStep = function (childCase, step) {
-            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
-            if (!Identity.can('cases.step.' + step.slug)) return false;
-            return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
-        };
-
-        $scope.isPendingAssignment = function (step) {
-            return !step.is_completed && step.is_pending_assignment;
-        };
-
-        $scope.hasNextStep = function (step) {
-            if (!step) return false;
-            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
-            return true;
-        };
-
-        $scope.cancelCase = function () {
-
-            Modals.show(Modals.CaseCancel())
-                .then(function (reason) {
-                    if (!reason) return $q.reject();
-                    return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
-                })
-                .then(function (res) {
-                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-                });
-
-        };
-
-        $scope.reopenCase = function () {
-
-            Modals.show(Modals.CaseReopen($scope.identity.getType()))
-
-                .then(function (reason) {
-                    if (!reason) return $q.reject();
-
-                    if ($scope.identity.getType() === 'coordenador_operacional') {
-
-                        Children.reopenCase({
-                            case_id: $scope.openedCase.id,
-                            reason: reason
-                        }).$promise.then(function (res) {
-                            if (res.status === 'success') {
-                                ngToast.success(res.result + '! Redirecionando para o novo caso...');
-                                setTimeout(function () {
-                                    window.location = 'children/view/' + res.child_id + '/consolidated';
-                                }, 4000);
-
-                            } else {
-                                ngToast.danger(res.result);
-                            }
-                        });
-                    }
-
-                    if ($scope.identity.getType() === 'supervisor_institucional') {
-                        Children.requestReopenCase({
-                            case_id: $scope.openedCase.id,
-                            reason: reason
-                        }).$promise.then(function (res) {
-
-                            if (res.status === 'success') {
-                                ngToast.success(res.result);
-                                setTimeout(function () {
-                                    window.location = 'children/view/' + $scope.child_id + '/consolidated';
-                                }, 3000);
-                            }
-
-                            if (res.status === 'error') {
-                                ngToast.danger(res.result);
-                            }
-                        });
-                    }
-                })
-
-                .then(function (res) {
-                    //console.log(res);
-                });
-        };
-
-        $scope.transferCase = function () {
-
-            Modals.show(Modals.CaseTransfer($scope.identity.getType())).then(function (response) {
-                if (!response) return $q.reject();
-
-                if ($scope.identity.getType() === 'coordenador_operacional') {
-                    Children.requestTransferCase({
-                        tenant_id: response.tenant_id,
-                        case_id: $scope.openedCase.id,
-                        reason: response.reason,
-                        city_id: response.city_id
-                    }).$promise.then(function (res) {
-                        if (res.status === 'success') {
-                            ngToast.success(res.result + '! Você será redirecionado.');
-                            setTimeout(function () {
-                                window.location = 'children';
-                            }, 4000);
-
-                        } else {
-                            ngToast.danger(res.result);
-                        }
-                    });
-                } else {
-                    ngToast.warning('Você não pode realizar essa ação.');
-                }
-            }).then(function (res) {
-                //console.log(res);
-            });
-        };
-
-        function refreshGoogleMap() {
-            $timeout(function () {
-                $scope.renderMap = false;
-                $timeout(function () {
-                    $scope.renderMap = true;
-                });
-            });
-        }
-
-        $scope.completeStep = function (step) {
-
-            //console.log("[child_viewer.cases] Attempting to complete step: ", step);
-
-            var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
-            var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
-
-            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
-                question = 'Tem certeza que deseja concluir a Análise Técnica?';
-                explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
-            }
-
-            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
-                question = 'Tem certeza que deseja concluir a última etapa de observação?';
-                explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
-            }
-
-            Modals.show(Modals.Confirm(question, explanation)).then(function () {
-                return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
-            }).then(function (response) {
-
-                if (response.messages) {
-                    ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
-                    Utils.displayValidationErrors(response);
-                    $state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
-                    return;
-                }
-
-                if (response.status !== "ok") {
-                    ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
-                    return;
-                }
-
-                if (!response.hasNext) {
-                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
-                    return;
-                }
-
-                ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
-                $state.go('child_viewer.cases.view_step', {
-                    step_type: response.nextStep.step_type,
-                    step_id: response.nextStep.id
-                }, {reload: true});
-
-            })
-        };
-
-        $scope.scopeOfCase = function () {
-            if ($scope.step.assigned_user) {
-                if ($scope.step.assigned_user.type === "coordenador_estadual"
-                    || $scope.step.assigned_user.type === "supervisor_estadual") {
-                    return "state";
-                } else {
-                    return "municipality";
-                }
-            }
-        }
-
-    }
-
-    function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Identity, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants, Groups, Platform) {
-
-        $scope.Decorators = Decorators;
-        $scope.Children = Children;
-        $scope.CaseSteps = CaseSteps;
-        $scope.static = StaticData;
-
-        $scope.editable = true;
-        $scope.showAll = false;
-        $scope.showTitle = true;
-
-        $scope.child_id = $scope.$parent.child_id;
-        $scope.child = $scope.$parent.child;
-        $scope.identity = $scope.$parent.identity;
-        $scope.checkboxes = {};
-
-        $scope.step = {};
-        $scope.tenantSettings = {};
-
-        $scope.tenantSettingsOfCase = null;
-
-        $scope.isMapReady = false;
-        $scope.defaultMapZoom = 14;
-
-        $scope.current_date = {};
-
-        $scope.responsible = {};
-
-        $scope.groupedGroups = [];
-        $scope.groupsToMove = [];
-        $scope.groupsOfUser = [];
-
-        $scope.addContact = function (id, parent) {
-            if (id || (id === undefined)) {
-                $scope.fields.aux.contatos[parent].push({
-                    name: '',
-                    phone: '',
-                    isResponsible: '',
-                    model: {name: 'name', phone: 'phone'}
-                })
-            } else if (id === false) {
-                $scope.fields.aux.contatos[parent] = []
-            }
-        }
-
-        $scope.removeContact = function (index, parent) {
-            if (index === 0) return;
-            $scope.fields.aux.contatos[parent].splice(index, 1)
-        }
-
-        $scope.insertResponsible = function (parent) {
-            if (parent) {
-                if ($scope.fields.aux.contatos[parent].length > 1) {
-                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
-                } else {
-                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
-                }
-            } else {
-                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
-            }
-        }
-
-        $scope.avisoDivergencia = false;
-
-        $scope.getAdressByCEP = function (cep) {
-            if (!cep) {
-                return
-            }
-            viaCep.get(cep).then(function (response) {
-                // $scope.address = response
-                $scope.fields.school_address = response.logradouro;
-                $scope.fields.school_neighborhood = response.bairro;
-                $scope.fields.school_uf = response.uf;
-                $scope.fetchCities(response.localidade).then(function (value) {
-                    $scope.fields.school_city = value[0];
-                    validateSchoolWithPlace();
-                });
-            }).catch(function (responseCatch) {
-                //console.log(responseCatch);
-                $scope.noCEF = true;
-                setTimeout(function () {
-                    $scope.noCEF = false;
-                }, 1000);
-            });
-        }
-
-        function validateSchoolWithPlace() {
-            if ($scope.fields.school && $scope.fields.school_city) {
-                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
-                    $scope.avisoDivergencia = true;
-                    setTimeout(function () {
-                        $scope.avisoDivergencia = false;
-                    }, 5000);
-                }
-            }
-        }
-
-        $scope.putStateAndCity = function (value) {
-            $scope.fields.school_uf = value.uf;
-            $scope.fetchCities(value.city_name).then(function (value) {
-                $scope.fields.school_city = value[0];
-            });
-        }
-
-        $scope.checkInputParents = function (value, name) {
-            if ('mother' === name) {
-                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
-            }
-            if (!value) {
-                $scope.fields.aux.contatos[name].name = '';
-                $scope.fields.aux.contatos[name].phone = '';
-            }
-        }
-
-        function fetchStepData() {
-
-            $scope.current_date = new Date();
-
-            $scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
-
-            Tenants.getSettings(function (res) {
-                $scope.tenantSettings = res;
-            });
-
-            $scope.step.$promise.then(function (step) {
-                $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
-                $scope.case = step.case;
-                $scope.$parent.openStepID = $scope.step.id;
-                if (!$scope.fields.aux) {
-                    $scope.fields.aux = {};
-                    $scope.fields.aux.contatos = {};
-                    $scope.fields.aux = {
-                        contatos: {
-                            siblings: $scope.fields.aux.contatos.siblings || [],
-                            grandparents: $scope.fields.aux.contatos.grandparents || [],
-                            others: $scope.fields.aux.contatos.others || []
-                        }
-                    }
-                }
-                if (step.fields && step.fields.place_coords) {
-                    step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
-                }
-
-                var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id});
-
-                settingsOfTenantOfCase.$promise.then(function (res_settings) {
-                    $scope.tenantSettingsOfCase = res_settings;
-                });
-
-            });
-        }
-
-        fetchStepData();
-
-        var handicappedCauseIDs = [];
-        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
-
-        //console.log("[core] @ChildCaseStepCtrl", $scope.step);
-
-        $scope.saveAndProceed = function () {
-            //console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
-
-            $scope.save()
-                .then(function () {
-                    return $scope.step.$promise;
-                })
-                .then(function () {
-                    $scope.$parent.completeStep($scope.step);
-                });
-        };
-
-        $scope.areDatesEqual = function (a, b) {
-            if (!a) return false;
-            if (!b) return false;
-            return moment(a).startOf('day').isSame(moment(b).startOf('day'));
-        };
-
-        $scope.isStepOpen = function (stepClassName) {
-            if (!$scope.step) return false;
-            return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
-        };
-
-        $scope.hasNextStep = function () {
-            if (!$scope.step) return false;
-            if ($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
-            return true;
-        };
-
-        $scope.canEditCurrentStep = function (isEditableOnAlerts) {
-            if (!$scope.step) return false;
-            if (!$scope.$parent.openedCase) return false;
-            if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
-            if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
-            return (!$scope.step.is_completed);
-        };
-
-        $scope.canAcceptAlert = function (step, fields) {
-            if (!step) return false;
-            if (!step.requires_address_update) return true;
-            return fields && fields.place_address && (fields.place_address.trim().length > 0);
-        };
-
-        $scope.acceptAlert = function (childID) {
-            var data = {id: childID};
-
-            if ($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
-                data.place_address = $scope.fields.place_address;
-            }
-
-            Alerts.accept(data, function () {
-                $state.reload();
-            })
-        };
-
-        $scope.rejectAlert = function (childID) {
-            Alerts.reject({id: childID}, function () {
-                $state.reload();
-            })
-        };
-
-        // $scope.isHandicapped = function () {
-        //     if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
-        //
-        //     if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
-        //         handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
-        //             return (item.is_handicapped === true);
-        //         });
-        //     }
-        //
-        //     var currentCauses = $scope.step.fields.case_cause_ids;
-        //
-        //     for (var i in currentCauses) {
-        //         if (!currentCauses.hasOwnProperty(i)) continue;
-        //         var cause = currentCauses[i];
-        //         if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
-        //     }
-        //
-        //     return false;
-        // };
-
-        $scope.canCompleteStep = function () {
-            if (!$scope.step) return false;
-            if (!$scope.$parent.openedCase) return false;
-            return ($scope.step.id === $scope.$parent.openedCase.current_step_id && !$scope.step.is_completed && !$scope.step.is_pending_assignment);
-        };
-
-        $scope.isPendingAssignment = function () {
-            if (!$scope.step) return false;
-            return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
-        };
-
-        $scope.fillWithCurrentDate = function (field) {
-            $scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
-        };
-
-        function filterOutEmptyFields(data) {
-            var filtered = {};
-
-            for (var i in data) {
-                if (!data.hasOwnProperty(i)) continue;
-                if (data[i] === null) continue;
-                if (data[i] === 'null') continue;
-                if (data[i] === undefined) continue;
-                if (("" + data[i]).trim().length <= 0) continue;
-                filtered[i] = data[i];
-            }
-
-            return filtered;
-        }
-
-        $scope.assignUser = function () {
-
-            CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
-                .then(function (res) {
-                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfUser, true))
-                })
-                .then(function (user_id) {
-                    return CaseSteps.assignUser({
-                        type: $scope.step.step_type,
-                        id: $scope.step.id,
-                        user_id: user_id
-                    }).$promise;
-                }).then(function (res) {
-                ngToast.success("Usuário atribuído!");
-                $state.go('child_browser');
-            });
-
-
-        };
-
-        $scope.isCheckboxChecked = function (field, value) {
-            if (!$scope.fields) return false;
-            if (!$scope.fields[field]) $scope.fields[field] = [];
-            var value = $scope.fields[field].indexOf(value) !== -1;
-            return value;
-        };
-
-        $scope.toggleCheckbox = function (field, value) {
-
-            if (!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
-            var index = $scope.fields[field].indexOf(value); // Check if in list
-            if (index === -1) return $scope.fields[field].push(value); // Add to list
-            return $scope.fields[field].splice(index, 1); // Remove from list
-        };
-
-        $scope.getCaseCauseIDs = function () {
-            if (!$scope.$parent.openedCase) return [];
-            return $scope.$parent.openedCase.case_cause_ids;
-        };
-
-        $scope.getAlertCauseId = function () {
-            if (!$scope.$parent.openedCase) return [];
-            return $scope.$parent.openedCase.alert_cause_id;
-        };
-
-        $scope.fetchCities = function (query) {
-            var data = {name: query, $hide_loading_feedback: true};
-
-            if ($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
-            if ($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
-
-            // console.log("[create_alert] Looking for cities: ", data);
-
-            return Cities.search(data).$promise.then(function (res) {
-                return res.results;
-            });
-        };
-
-        $scope.fetchSchools = function (query, filter_by_uf, filter_by_city) {
-            var data = {name: query, $hide_loading_feedback: true};
-
-            if (filter_by_uf) data.uf = filter_by_uf;
-            if (filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
-
-            // console.log("[create_alert] Looking for schools: ", data);
-
-            return Schools.search(data).$promise.then(function (res) {
-                return res.results;
-            });
-        };
-
-        $scope.renderSelectedCity = function (city) {
-            if (!city) return '';
-            return city.uf + ' / ' + city.name;
-        };
-
-        $scope.renderSelectedSchool = function (school) {
-            if (!school) return '';
-            return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
-        };
-
-        function clearAuxiliaryFields(fields) {
-            var auxiliaryFields = ['place_map_center', 'place_map_geocoded_address'];
-            var filtered = {};
-
-            for (var i in fields) {
-                if (!fields.hasOwnProperty(i)) continue;
-                if (auxiliaryFields.indexOf(i) !== -1) continue;
-                filtered[i] = fields[i];
-            }
-
-            return filtered;
-        }
-
-        function unpackTypeaheadField(data, name, model) {
-            if (data[name]) {
-                data[name + '_id'] = model.id;
-                data[name + '_name'] = model.name;
-            }
-
-            return data;
-        }
-
-        $scope.save = function () {
-
-            var data = Object.assign({}, $scope.step.fields);
-
-            // console.log(data);
-
-
-            data = Utils.prepareDateFields(data, dateOnlyFields);
-
-            data = unpackTypeaheadField(data, 'place_city', data.place_city);
-            data = unpackTypeaheadField(data, 'school_city', data.school_city);
-            data = unpackTypeaheadField(data, 'school', data.school);
-            data = unpackTypeaheadField(data, 'school_last', data.school_last);
-
-            data = clearAuxiliaryFields(data);
-            data = filterOutEmptyFields(data);
-
-            data.type = $scope.step.step_type;
-            data.id = $scope.step.id;
-
-            // console.info("[child_viewer.step_editor] Saving step data: ", data);
-
-            return CaseSteps.save(data).$promise.then(function (response) {
-                if (response.messages) {
-                    return Utils.displayValidationErrors(response);
-                }
-
-                if (response.status !== "ok") {
-                    ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
-                    return;
-                }
-
-                if (response.updated) {
-                    fetchStepData(); // Updates data
-                }
-
-                ngToast.success("Os campos da etapa foram salvos com sucesso!");
-
-            })
-        }
-
-        $scope.diffDaysBetweenSteps = function (a, b) {
-            const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-            const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
-            return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
-        };
-
-        $scope.canUpdateStepObservation = function (child) {
-            if (!$scope.tenantSettingsOfCase) {
-                return false;
-            }
-            var time_for_next_step = 0;
-            if ($scope.step && $scope.tenantSettings) {
-                if ($scope.step.slug == "1a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                    return permission;
-
-                }
-                if ($scope.step.slug == "2a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                    return permission;
-                }
-                if ($scope.step.slug == "3a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                    return permission;
-                }
-                if ($scope.step.slug == "4a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
-                    return permission;
-                }
-            }
-        };
-
-        $scope.scopeOfCase = function () {
-            if ($scope.step.assigned_user) {
-                if ($scope.step.assigned_user.type === "coordenador_estadual"
-                    || $scope.step.assigned_user.type === "supervisor_estadual") {
-                    return "state";
-                } else {
-                    return "municipality";
-                }
-            }
-        }
-
-        $scope.scopeOfUser = function () {
-            if ($scope.identity.getCurrentUser().type === "coordenador_estadual"
-                || $scope.identity.getCurrentUser().type === "supervisor_estadual") {
-                return "state";
-            } else {
-                return "municipality";
-            }
-        }
-
-        $scope.getGroupsToMove = function() {
-            var groupsToMove = [];
-            $scope.groupedGroups.data.forEach(function(v, k){
-                groupsToMove.push({id: v.id, name: v.name});
-                v.children.forEach(function(v2, k2){
-                    groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
-                    v2.children.forEach(function(v3, k3){
-                        groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-                        v3.children.forEach(function(v4, k4){
-                            groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
-                        });
-                    });
-                });
-            });
-            return groupsToMove;
-        };
-
-        $scope.getGroupsOfUser = function (){
-            if(Identity.getCurrentUser().hasOwnProperty('group')) {
-                var groupsToMove = [];
-                groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
-                $scope.getGroupOfCurrentUser().children.forEach(function (v, k) {
-                    groupsToMove.push({id: v.id, name: v.name, margin: 20});
-                    v.children.forEach(function (v2, k2) {
-                        groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
-                        v2.children.forEach(function (v3, k3) {
-                            groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
-                            v3.children.forEach(function (v4, k4) {
-                                groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
-                            });
-                        });
-                    });
-                });
-                return groupsToMove;
-            };
-            return [];
-        };
-
-        $scope.getGroupOfCurrentUser = function (){
-            if(Identity.getCurrentUser().hasOwnProperty('group')){
-                var groupedGroupsOfUser = [];
-                var userGroupId = Identity.getCurrentUser().group.id;
-                $scope.groupedGroups.data.forEach(function(v, k){
-                    if (v.id == userGroupId) { groupedGroupsOfUser = v; }
-                    v.children.forEach(function(v2, k2){
-                        if (v2.id == userGroupId) { groupedGroupsOfUser = v2; }
-                        v2.children.forEach(function(v3, k3){
-                            if (v3.id == userGroupId) { groupedGroupsOfUser = v3; }
-                            v3.children.forEach(function(v4, k4){
-                                if (v4.id == userGroupId) { groupedGroupsOfUser = v4; }
-                            });
-                        });
-                    });
-                });
-                return groupedGroupsOfUser;
-            }
-            return [];
-        };
-
-        Platform.whenReady(function() {
-            Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
-                $scope.groupedGroups = res;
-                $scope.groupsToMove = $scope.getGroupsToMove();
-                $scope.groupsOfUser = $scope.getGroupsOfUser();
-            });
-        });
-
-    }
-
-})();
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('child_viewer.comments', {
-				url: '/comments',
-				templateUrl: '/views/children/view/comments.html',
-				controller: 'ChildCommentsCtrl'
-			})
-		})
-		.controller('ChildCommentsCtrl', function ($scope, $state, $stateParams, Children) {
-
-			$scope.Children = Children;
-
-			$scope.comments = {};
-			$scope.message = "";
-
-			$scope.refresh = function() {
-				$scope.comments = Children.getComments({id: $stateParams.child_id});
-			};
-
-			$scope.sendMessage = function() {
-
-				Children.postComment({
-					id: $scope.$parent.child.id,
-					message: $scope.message
-				}, function (res) {
-					$scope.refresh();
-				});
-
-				$scope.message = "";
-			};
-
-			//console.log("[core] @ChildCommentsCtrl", $stateParams);
-
-			$scope.refresh();
-
-		});
-
-})();
-(function () {
-
-    angular.module('BuscaAtivaEscolar')
-        .controller('ChildConsolidatedCtrl', ChildConsolidatedCtrl)
-
-        .config(function ($stateProvider) {
-            $stateProvider
-                .state('child_viewer.consolidated', {
-                    url: '/consolidated',
-                    templateUrl: '/views/children/view/consolidated.html',
-                    controller: 'ChildConsolidatedCtrl'
-                })
-        });
-
-    function ChildConsolidatedCtrl($scope, $state, $location, $stateParams, Children, Decorators, Utils, ngToast) {
-        $scope.Decorators = Decorators;
-        $scope.Children = Children;
-        $scope.showAll = true;
-
-        $scope.refreshChildData = function (callback) {
-            return $scope.child = Children.find({id: $scope.child_id, with: 'currentStep,consolidated'}, callback);
-        };
-
-        $scope.fields = {};
-        $scope.child_id = $stateParams.child_id;
-        // $scope.id_case_for_reopen = $location.search().id_request ? $location.search().id_request : '';
-        $scope.child = $scope.refreshChildData(function (data) {
-            var consolidated = Utils.unpackDateFields(data.consolidated, dateOnlyFields)
-            angular.copy(consolidated, $scope.fields);
-        });
-
-        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
-
-        $scope.getConsolidatedFields = function () {
-            return $scope.fields;
-        };
-
-        $scope.isCheckboxChecked = function (field, value) {
-            if (!$scope.fields) return false;
-            if (!$scope.fields[field]) $scope.fields[field] = [];
-            return $scope.fields[field].indexOf(value) !== -1;
-        };
-        // if ($scope.id_case_for_reopen !== '') {
-        //     Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: 'request'}).$promise.then(function (res) {
-        //         if (res.status !== 'error') {
-        //             ngToast.success(res.result);
-        //             setTimeout(function () {
-        //                 window.location = 'children/view/' + res.child_id + '/consolidated';
-        //             }, 4000);
-        //
-        //         } else {
-        //             ngToast.danger("Erro ao reabrir o caso!");
-        //         }
-        //     });
-        // }
-
-
-        // console.log("[core] @ChildConsolidatedCtrl", $scope.child);
-
-    }
-
-})();
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.controller('ChildViewCtrl', ChildViewCtrl)
-
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('child_viewer', {
-					url: '/children/view/{child_id}',
-					templateUrl: '/views/children/view/viewer.html',
-					controller: 'ChildViewCtrl'
-				})
-		});
-
-	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast, Cases) {
-		if ($state.current.name === "child_viewer") $state.go('.consolidated');
-
-		$scope.Decorators = Decorators;
-		$scope.Children = Children;
-		$scope.StaticData = StaticData;
-
-		$scope.groups = [];
-		$scope.getGroupsToMove = function() {
-			var groupsToMove = [];
-			$scope.groups.forEach(function(v, k){
-				groupsToMove.push({id: v.id, name: v.name});
-				v.children.forEach(function(v2, k2){
-					groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
-					v2.children.forEach(function(v3, k3){
-						groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-						v3.children.forEach(function(v4, k4){
-							groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
-						});
-					});
-				});
-			});
-			return groupsToMove;
-		};
-
-		$scope.refreshChildData = function(callback) {
-			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
-		};
-
-		$scope.child_id = $stateParams.child_id;
-		$scope.child = $scope.refreshChildData();
-
-		$scope.assignGroup = function (){
-
-			var promiseGroup = Groups.findGroupedGroups().$promise
-			promiseGroup.then(function(res) {
-
-				$scope.groups = res.data;
-				Modals.show(
-					Modals.GroupPicker(
-						'Atribuir grupo',
-						'Indique grupo ...:',
-						$scope.getGroupsToMove(),
-						true)
-				).then(function (selectedGroup) {
-					var currentCase = {
-						id: $scope.child.currentCase.id,
-						group_id: selectedGroup.id
-					};
-					return Cases.update(currentCase)
-				}).then(function (res) {
-					ngToast.success('Grupo atribuído com sucesso!')
-					$scope.refreshChildData(function (){});
-				});
-
-			}, function (err) {
-				ngToast.danger('Ocorreu um erro ao retornar grupos!')
-			});
-		};
-
-	}
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('child_create_from_alert', {
-				url: '/children/create_alert',
-				templateUrl: '/views/children/create_alert.html',
-				controller: 'CreateAlertCtrl'
-			})
-		})
-		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Utils, Identity, StaticData, Children, Cities, Groups, Platform) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-			$scope.disableCreateAlertButton = false;
-			$scope.groups = [];
-			$scope.allGroupsOfTenant = [];
-			$scope.selectedGroup = null;
-
-
-
-			$scope.birthdayDateEnd = moment(new Date()).format('YYYY-MM-DD');
-			$scope.birthdayDateStart = moment($scope.birthdayDateEnd).subtract(100, 'years').format('YYYY-MM-DD');
-
-			$scope.alert = {};
-
-			$scope.fetchCities = function(query) {
-				var data = {name: query, $hide_loading_feedback: true};
-				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
-
-				//console.log("[create_alert] Looking for cities: ", data);
-
-				return Cities.search(data).$promise.then(function (res) {
-					return res.results;
-				});
-
-			};
-
-			$scope.renderSelectedCity = function(city) {
-				if(!city) return '';
-				return city.uf + ' / ' + city.name;
-			};
-
-
-			
-			$scope.createAlert = function() {
-
-				$scope.disableCreateAlertButton = true;
-
-				
-				// TODO: validate fields
-				var data = $scope.alert;
-				data = Utils.prepareDateFields(data, ['dob']);
-				data.place_city_id = data.place_city ? data.place_city.id : null;
-				data.place_city_name = data.place_city ? data.place_city.name : null;
-				data.group_id = $scope.selectedGroup.id;
-
-//document.write(JSON.stringify(data))
-			
-				Children.spawnFromAlert(data).$promise.then(function (res) {
-					if(res.messages) {
-						console.warn("[create_alert] Failed validation: ", res.messages);
-						$scope.disableCreateAlertButton = false;
-						return Utils.displayValidationErrors(res);
-					}
-
-					if(!res || !res.child_id) {
-						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
-						$scope.disableCreateAlertButton = false;
-						return;
-					}
-
-					ngToast.success('Alerta registrado com sucesso!');
-
-					$scope.disableCreateAlertButton = false;
-
-					if(Identity.getType() === 'agente_comunitario') {
-						$state.go('dashboard');
-						return;
-					}
-
-					$state.go('child_viewer', {child_id: res.child_id});
-				});
-			}
-
-			$scope.getGroupOfCurrentUser = function (){
-				return Identity.getCurrentUser().group;
-			}
-
-			$scope.getGroupsToMove = function() {
-				var groupsToMove = [];
-				$scope.groups.forEach(function(v, k){
-					groupsToMove.push({id: v.id, name: v.name});
-					v.children.forEach(function(v2, k2){
-						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
-						v2.children.forEach(function(v3, k3){
-							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-							v3.children.forEach(function(v4, k4){
-								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
-							});
-						});
-					});
-				});
-
-				return groupsToMove;
-			};
-
-			Platform.whenReady(function () {
-				Groups.findGroupedGroups(function(res) {
-					$scope.groups = res.data;
-					$scope.allGroupsOfTenant = $scope.getGroupsToMove();
-					$scope.selectedGroup = $scope.getGroupOfCurrentUser();
-				});
-			});
-
-		});
-
-})();
-
-
-
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('pending_alerts', {
-				url: '/pending_alerts',
-				templateUrl: '/views/children/pending_alerts.html',
-				controller: 'PendingAlertsCtrlCtrl'
-			})
-		})
-		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, StaticData) {
-
-			$scope.identity = Identity;
-			$scope.sendingAlert = false;
-			$scope.children = {};
-			$scope.child = {};
-			$scope.causes = {};
-
-			$scope.query = {
-                name: null,
-				submitter_name: null,
-                sort: {},
-                max: 16,
-				page: 1,
-				neighborhood: null,
-				city_name: null,
-				alert_cause_id: null,
-				show_suspended: false
-            };
-
-			
-
-            $scope.search = {};
-			
-			$scope.getAlertCauseName = function(id) {
-				if(!$scope.child) return 'err:no_child_open';
-				if(!$scope.child.alert) return 'err:no_alert_data';
-				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
-				var indexAlertCauses = _.findIndex($scope.causes, {id: $scope.child.alert.alert_cause_id});
-				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
-				return $scope.causes[indexAlertCauses].label;
-			};
-
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
-
-			$scope.static = StaticData;
-			
-			$scope.refresh = function() {
-				console.log($scope.query);
-				$scope.child = null;
-				$scope.children = Alerts.getPending($scope.query);
-				$scope.search = $scope.children;
-			};
-
-			$scope.preview = function(child) {
-				$scope.child = child
-				$('#modalChild').modal({
-					keyboard: false,
-				});
-			};
-
-			$scope.canAcceptAlert = function(child) {
-				if(!child) return false;
-				if(!child.requires_address_update) return true;
-				return child.alert
-					&& child.alert.place_address
-					&& (child.alert.place_address.trim().length > 0)
-					&& child.alert.place_neighborhood
-					&& (child.alert.place_neighborhood.trim().length > 0);
-			};
-
-			$scope.accept = function(child) {
-				if(!$scope.canAcceptAlert(child)) {
-					return;
-				}
-
-				$scope.sendingAlert = true;
-
-				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
-					$scope.refresh();
-					$scope. child = {};
-					$('#modalChild').modal('hide');
-					$scope.sendingAlert = false;
-				});
-			};
-
-			$scope.reject = function(child) {
-				Alerts.reject({id: child.id}, function() {
-					$scope.refresh();
-					$scope.child = {};
-					$('#modalChild').modal('hide');
-				});
-			};
-
-			Platform.whenReady(function() {
-				$scope.causes = StaticData.getAlertCauses();
-				$scope.refresh();
-			});
-
-		});
-
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_alerts', {
-				url: '/user_alerts',
-				templateUrl: '/views/children/user_alerts.html',
-				controller: 'UserAlertsCtrlCtrl'
-			})
-		})
-		.controller('UserAlertsCtrlCtrl', function () {
-		});
-
-})();
-(function () {
 
     angular.module('BuscaAtivaEscolar').directive('casesMap', function ($rootScope, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
@@ -4158,6 +2523,1632 @@
 })();
 
 (function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
+      $stateProvider.state('checks', {
+        url: '/checks',
+        templateUrl: '/views/children/checks.html',
+        controller: 'CheckRequestCtrl',
+      });
+    })
+    .controller(
+      'CheckRequestCtrl',
+      function (
+        $scope,
+        StaticData,
+        $anchorScroll,
+        $httpParamSerializer,
+        API,
+        Children,
+        Decorators,
+        ngToast,
+        DTOptionsBuilder,
+        DTColumnDefBuilder,
+        Modals
+      ) {
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+
+        $scope.query = angular.merge({}, $scope.defaultQuery);
+        $scope.requests = {};
+
+        $scope.refresh = function () {
+          $scope.requests = Children.requests();
+        };
+
+        $scope.refresh();
+
+        var language = {
+          sEmptyTable: 'Nenhum registro encontrado',
+          sInfo: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
+          sInfoEmpty: 'Mostrando 0 até 0 de 0 registros',
+          sInfoFiltered: '(Filtrados de _MAX_ registros)',
+          sInfoPostFix: '',
+          sInfoThousands: '.',
+          sLengthMenu: '_MENU_ resultados por página',
+          sLoadingRecords: 'Carregando...',
+          sProcessing: 'Processando...',
+          sZeroRecords: 'Nenhum registro encontrado',
+          sSearch: 'Pesquisar',
+          oPaginate: {
+            sNext: 'Próximo',
+            sPrevious: 'Anterior',
+            sFirst: 'Primeiro',
+            sLast: 'Último',
+          },
+          oAria: {
+            sSortAscending: ': Ordenar colunas de forma ascendente',
+            sSortDescending: ': Ordenar colunas de forma descendente',
+          },
+        };
+        //Configura a linguagem na diretiva dt-options=""
+        $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage(language);
+        // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [[0, 'asc']])
+
+        $scope.dtColumnDefs = [
+          DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
+        ];
+
+        $scope.aprove = function (child) {
+          if (child.type_request === 'reopen') {
+            Children.reopenCase({
+              case_id: child.child.current_case_id,
+              reason: 'request',
+            }).$promise.then(function (res) {
+              if (res.status !== 'error') {
+                ngToast.success(res.result);
+                setTimeout(function () {
+                  window.location =
+                    'children/view/' + res.child_id + '/consolidated';
+                }, 4000);
+              } else {
+                ngToast.danger('Erro ao reabrir o caso!');
+              }
+            });
+          }
+          if (child.type_request === 'transfer') {
+            Children.transferCase({
+              case_id: child.child.current_case_id,
+            }).$promise.then(function (res) {
+              if (res.status !== 'error') {
+                ngToast.success(res.result);
+                setTimeout(function () {
+                  window.location =
+                    'children/view/' + res.child_id + '/consolidated';
+                }, 4000);
+              } else {
+                ngToast.danger('Erro ao reabrir o caso!');
+              }
+            });
+          }
+        };
+        $scope.reject = function (child) {
+          Modals.show(Modals.CaseReject($scope.identity.getType()))
+            .then(function (response) {
+              if (!response) return $q.reject();
+
+              if ($scope.identity.getType() === 'coordenador_operacional') {
+                Children.reject({
+                  id: child.id,
+                  reject_reason: response.reason,
+                }).$promise.then(function (res) {
+                  if (res.status !== 'error') {
+                    ngToast.success(res.result);
+                    setTimeout(function () {
+                      window.location = 'checks';
+                    }, 4000);
+                  } else {
+                    ngToast.danger(res.result);
+                  }
+                });
+              } else {
+                ngToast.warning('Você não pode realizar essa ação.');
+              }
+            })
+            .then(function (res) {
+              //console.log(res);
+            });
+        };
+
+      }
+    );
+})();
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ChildActivityLogCtrl', ChildActivityLogCtrl)
+
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('child_viewer.activity_log', {
+					url: '/activity_log',
+					templateUrl: '/views/children/view/activity_log.html',
+					controller: 'ChildActivityLogCtrl'
+				})
+		});
+	
+	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
+
+		$scope.Decorators = Decorators;
+		$scope.Children = Children;
+
+		$scope.entries = {};
+
+		$scope.refresh = function() {
+			$scope.entries = Children.getActivity({id: $stateParams.child_id});
+		};
+
+		$scope.refresh();
+
+		//console.log("[core] @ChildActivityLogCtrl", $scope.$parent.entries);
+	}
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('child_viewer.attachments', {
+				url: '/attachments',
+				templateUrl: '/views/children/view/attachments.html',
+				controller: 'ChildAttachmentsCtrl',
+			})
+		})
+		.controller('ChildAttachmentsCtrl', function ($scope, $state, $window, $stateParams, ngToast, Auth, API, Modals, Children) {
+
+			$scope.Children = Children;
+
+			$scope.attachments = {};
+			$scope.uploadToken = "";
+
+			$scope.refresh = function() {
+				$scope.attachments = Children.getAttachments({id: $stateParams.child_id});
+			};
+
+			$scope.uploadAttachment = function() {
+				Modals.show(Modals.Prompt('Anexando um arquivo ao caso', '', false, 'Qual a descrição do anexo que será enviado?'))
+					.then(function(description) {
+						return Modals.show(Modals.FileUploader(
+							'Anexando um arquivo ao caso',
+							'Selecione abaixo o arquivo que deseja anexar ao caso.',
+							API.getURI('children/' + $stateParams.child_id + '/attachments'),
+							{description: description}
+						))
+					})
+					.then(function (file) {
+						ngToast.success('Arquivo anexado!');
+						$scope.refresh();
+
+						$window.location.reload();
+					})
+			};
+
+			$scope.removeAttachment = function(attachment) {
+				Modals.show(Modals.Confirm("Tem certeza que deseja remover esse arquivo?"))
+					.then(function () {
+						return Children.removeAttachment({id: $stateParams.child_id, attachment_id: attachment.id})
+					})
+					.then(function() {
+						$scope.refresh();
+					});
+			};
+
+			//console.log("[core] @ChildAttachmentsCtrl", $stateParams);
+
+			$scope.refresh();
+
+		});
+
+})();
+(function () {
+    
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider) {
+            $stateProvider.state('child_browser', {
+                url: '/children',
+                templateUrl: '/views/children/browser.html',
+                controller: 'ChildSearchCtrl'
+            });
+
+        })
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
+
+            $scope.Decorators = Decorators;
+            $scope.Children = Children;
+            $scope.reports = {};
+            $scope.lastOrder = {
+                date: null
+            };
+            
+            $scope.identity = Identity;
+            
+            $scope.defaultQuery = {
+                name: '',
+                step_name: '',
+                cause_name: '',
+                assigned_user_name: '',
+                location_full: '',
+                alert_status: ['accepted'],
+                case_status: ['in_progress'],
+                risk_level: ['low', 'medium', 'high'],
+                age_null: true,
+                age: {from: 0, to: 10000},
+                gender: ['male', 'female', 'undefined'],
+                gender_null: true,
+                place_kind: ['rural', 'urban'],
+                place_kind_null: true,
+                group_id: null,
+                case_not_info: null
+            };
+
+            $scope.groups =  [];
+            if($scope.groups.length == 0){
+                Groups.findUserGroups(function(res){
+                    res.data.forEach(function(v){
+                        $scope.groups.push(({value: v.id, displayName: v.name}));
+                        const size = Object.keys(v).length;
+                        if(size > 2){
+                            for(let i  = 0; i < size - 2; ++i){
+                                v[i].name = v[i].name.trim()
+                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
+                                $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
+                                const size1 = Object.keys(v[i]).length;
+                                if(size1 > 2){
+                                    for(let j  = 0; j < size1 - 2; ++j){
+                                        v[i][j].name = v[i][j].name.trim()
+                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
+                                        $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
+                                        const size2 = Object.keys(v[i][j]).length;
+                                        if(size2 > 2){
+                                            for(let l  = 0; l < size2 - 2; ++l){
+                                                v[i][j][l].name = v[i][j][l].name.trim()
+                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
+                                                $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+            
+            $scope.causes = [];
+            $scope.data = StaticData.getCaseCauses()
+            Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+            $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+
+            $scope.refresh = function () {
+                $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsChild();          
+            };
+            
+            $scope.resetQuery = function () {
+                $scope.query = angular.merge({}, $scope.defaultQuery);
+                $scope.refresh();
+                angular.element('#select_parent').css('text-indent', 0);
+            };
+
+            $(function() {
+                $('#select_parent').bind("change", function() {
+                    var space_offset =7;
+                    var matches = $('#select_parent option:selected').text().search(/\S/);
+                    var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75: '';
+                    $(this).css('text-indent', -(number));
+                });
+            });
+            
+            $scope.exportXLS = function () {
+                Children.export($scope.query, function (res) {
+                    Modals.show(Modals.DownloadLink('Baixar arquivo XLS', 'Clique no link abaixo para baixar os casos exportados:', res.download_url));
+                });
+            };
+            
+            $scope.exportXLSReport = function(file){
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'reports/child/download?token=' + token + "&file=" + file);
+                });
+            };
+
+            $scope.createXLSReport = function(){
+
+                Reports.createReportChild($scope.query).$promise
+                    .then(function (res) {
+                        $scope.lastOrder.date = res.date;
+                        $scope.reports = {};
+
+                        ngToast.success("Solicitação feita com sucesso. Arquivo estará disponível em breve!");
+
+                        setInterval(function() {
+                            $scope.reports = Reports.reportsChild();
+                            $scope.lastOrder.date = null;
+                        }, 600000);
+                    });
+            };
+
+            $scope.refresh();
+
+            var language = {
+                "sEmptyTable": "Nenhum registro encontrado",
+                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sInfoThousands": ".",
+                "sLengthMenu": "_MENU_ resultados por página",
+                "sLoadingRecords": "Carregando...",
+                "sProcessing": "Processando...",
+                "sZeroRecords": "Nenhum registro encontrado",
+                "sSearch": "Pesquisar",
+                "oPaginate": {
+                    "sNext": "Próximo",
+                    "sPrevious": "Anterior",
+                    "sFirst": "Primeiro",
+                    "sLast": "Último"
+                },
+                "oAria": {
+                    "sSortAscending": ": Ordenar colunas de forma ascendente",
+                    "sSortDescending": ": Ordenar colunas de forma descendente"
+                }
+            }
+
+            //Configura a linguagem na diretiva dt-options=""
+            $scope.dtOptions = DTOptionsBuilder.newOptions()
+                .withLanguage(language);
+
+            //Configura a linguagem na diretiva dt-column-defs=""
+            $scope.dtColumnDefs = [
+                DTColumnDefBuilder.newColumnDef(8).notSortable()
+            ]; 
+        });
+})();
+(function () {
+    angular.module("BuscaAtivaEscolar")
+        .controller('ChildCasesCtrl', ChildCasesCtrl)
+        .controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
+        .config(function ($stateProvider) {
+            $stateProvider
+                .state('child_viewer.cases', {
+                    url: '/cases',
+                    templateUrl: '/views/children/view/steps.html',
+                    controller: 'ChildCasesCtrl'
+                })
+                .state('child_viewer.cases.view_step', {
+                    url: '/{step_type}/{step_id}',
+                    templateUrl: '/views/children/view/case_info.html',
+                    controller: 'ChildCaseStepCtrl'
+                })
+        });
+
+    function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Alerts, Modals, Children, CaseSteps, Decorators) {
+
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+        $scope.CaseSteps = CaseSteps;
+
+        $scope.identity = Identity;
+
+        $scope.child_id = $scope.$parent.child_id;
+        $scope.child = $scope.$parent.child;
+
+        $scope.openedCase = {};
+        $scope.openStepID = null;
+
+        $scope.child.$promise.then(openCurrentCase);
+
+        function openCurrentCase(child) {
+            $scope.openedCase = child.cases.find(function (item) {
+                if ($stateParams.case_id) return item.id === $stateParams.case_id;
+                return item.case_status === 'in_progress';
+            });
+
+            // Don't try to open a step; UI-Router will already open the one in the URL
+            if ($stateParams.step_id) return;
+            if (!$scope.openedCase) return;
+
+            var stepToOpen = $scope.openedCase.steps.find(function (step) {
+                return ($scope.openedCase.current_step_id === step.id);
+            });
+            
+            $scope.openStep(stepToOpen);
+        }
+
+        $scope.collapseCase = function (childCase) {
+            $scope.openedCase = childCase;
+        };
+
+        $scope.isCaseCollapsed = function (childCase) {
+            if (!$scope.openedCase) return true;
+            return $scope.openedCase.id !== childCase.id;
+        };
+
+        $scope.renderStepStatusClass = function (childCase, step) {
+
+            var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
+
+            if (step.is_completed) return 'step-completed' + toggleClass;
+            if (childCase.current_step_id === step.id) return 'step-current' + toggleClass;
+            return 'step-pending' + toggleClass;
+        };
+
+        $scope.canOpenStep = function (step) {
+            if (step.is_completed || step.id === $scope.openedCase.current_step_id) {
+                return Identity.can('cases.step.' + step.slug)
+            }
+            return false;
+        };
+
+        $scope.canEditStep = function (step) {
+            return !step.is_completed && step.slug !== 'alerta';
+        };
+
+        $scope.openStep = function (selectedStep) {
+
+            if (!$scope.canOpenStep(selectedStep)) return false;
+
+            $scope.openStepID = selectedStep.id;
+
+            //console.log("[child_viewer.cases] Opening step: ", selectedStep);
+
+            $state.go('child_viewer.cases.view_step', {step_type: selectedStep.step_type, step_id: selectedStep.id})
+                .then(function () {
+                    $timeout(refreshGoogleMap, 1000);
+                });
+
+        };
+
+        $scope.canCompleteStep = function (childCase, step) {
+            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
+            if (!Identity.can('cases.step.' + step.slug)) return false;
+            return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
+        };
+
+        $scope.isPendingAssignment = function (step) {
+            return !step.is_completed && step.is_pending_assignment;
+        };
+
+        $scope.hasNextStep = function (step) {
+            if (!step) return false;
+            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
+            return true;
+        };
+
+        $scope.cancelCase = function () {
+
+            Modals.show(Modals.CaseCancel())
+                .then(function (reason) {
+                    if (!reason) return $q.reject();
+                    return Children.cancelCase({case_id: $scope.openedCase.id, reason: reason})
+                })
+                .then(function (res) {
+                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+                });
+
+        };
+
+        $scope.reopenCase = function () {
+
+            Modals.show(Modals.CaseReopen($scope.identity.getType()))
+
+                .then(function (reason) {
+                    if (!reason) return $q.reject();
+
+                    if ($scope.identity.getType() === 'coordenador_operacional') {
+
+                        Children.reopenCase({
+                            case_id: $scope.openedCase.id,
+                            reason: reason
+                        }).$promise.then(function (res) {
+                            if (res.status === 'success') {
+                                ngToast.success(res.result + '! Redirecionando para o novo caso...');
+                                setTimeout(function () {
+                                    window.location = 'children/view/' + res.child_id + '/consolidated';
+                                }, 4000);
+
+                            } else {
+                                ngToast.danger(res.result);
+                            }
+                        });
+                    }
+
+                    if ($scope.identity.getType() === 'supervisor_institucional') {
+                        Children.requestReopenCase({
+                            case_id: $scope.openedCase.id,
+                            reason: reason
+                        }).$promise.then(function (res) {
+
+                            if (res.status === 'success') {
+                                ngToast.success(res.result);
+                                setTimeout(function () {
+                                    window.location = 'children/view/' + $scope.child_id + '/consolidated';
+                                }, 3000);
+                            }
+
+                            if (res.status === 'error') {
+                                ngToast.danger(res.result);
+                            }
+                        });
+                    }
+                })
+
+                .then(function (res) {
+                    //console.log(res);
+                });
+        };
+
+        $scope.transferCase = function () {
+
+            Modals.show(Modals.CaseTransfer($scope.identity.getType())).then(function (response) {
+                if (!response) return $q.reject();
+
+                if ($scope.identity.getType() === 'coordenador_operacional') {
+                    Children.requestTransferCase({
+                        tenant_id: response.tenant_id,
+                        case_id: $scope.openedCase.id,
+                        reason: response.reason,
+                        city_id: response.city_id
+                    }).$promise.then(function (res) {
+                        if (res.status === 'success') {
+                            ngToast.success(res.result + '! Você será redirecionado.');
+                            setTimeout(function () {
+                                window.location = 'children';
+                            }, 4000);
+
+                        } else {
+                            ngToast.danger(res.result);
+                        }
+                    });
+                } else {
+                    ngToast.warning('Você não pode realizar essa ação.');
+                }
+            }).then(function (res) {
+                //console.log(res);
+            });
+        };
+
+        function refreshGoogleMap() {
+            $timeout(function () {
+                $scope.renderMap = false;
+                $timeout(function () {
+                    $scope.renderMap = true;
+                });
+            });
+        }
+
+        $scope.completeStep = function (step) {
+
+            //console.log("[child_viewer.cases] Attempting to complete step: ", step);
+
+            var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
+            var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
+
+            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
+                question = 'Tem certeza que deseja concluir a Análise Técnica?';
+                explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
+            }
+
+            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
+                question = 'Tem certeza que deseja concluir a última etapa de observação?';
+                explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
+            }
+
+            Modals.show(Modals.Confirm(question, explanation)).then(function () {
+                return CaseSteps.complete({type: step.step_type, id: step.id}).$promise;
+            }).then(function (response) {
+
+                if (response.messages) {
+                    ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
+                    Utils.displayValidationErrors(response);
+                    $state.go('child_viewer.cases.view_step', {step_type: step.step_type, step_id: step.id});
+                    return;
+                }
+
+                if (response.status !== "ok") {
+                    ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
+                    return;
+                }
+
+                if (!response.hasNext) {
+                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
+                    $state.go('child_viewer.cases', {child_id: $scope.child.id}, {reload: true});
+                    return;
+                }
+
+                ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
+                $state.go('child_viewer.cases.view_step', {
+                    step_type: response.nextStep.step_type,
+                    step_id: response.nextStep.id
+                }, {reload: true});
+
+            })
+        };
+
+        $scope.scopeOfCase = function () {
+            if ($scope.step.assigned_user) {
+                if ($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual") {
+                    return "state";
+                } else {
+                    return "municipality";
+                }
+            }
+        }
+
+    }
+
+    function ChildCaseStepCtrl($scope, $state, $stateParams, $timeout, ngToast, Identity, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants, Groups, Platform) {
+
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+        $scope.CaseSteps = CaseSteps;
+        $scope.static = StaticData;
+
+        $scope.editable = true;
+        $scope.showAll = false;
+        $scope.showTitle = true;
+
+        $scope.child_id = $scope.$parent.child_id;
+        $scope.child = $scope.$parent.child;
+        $scope.identity = $scope.$parent.identity;
+        $scope.checkboxes = {};
+
+        $scope.step = {};
+        $scope.tenantSettings = {};
+
+        $scope.tenantSettingsOfCase = null;
+
+        $scope.isMapReady = false;
+        $scope.defaultMapZoom = 14;
+
+        $scope.current_date = {};
+
+        $scope.responsible = {};
+
+        $scope.groupedGroups = [];
+        $scope.groupsToMove = [];
+        $scope.groupsOfUser = [];
+
+        $scope.addContact = function (id, parent) {
+            if (id || (id === undefined)) {
+                $scope.fields.aux.contatos[parent].push({
+                    name: '',
+                    phone: '',
+                    isResponsible: '',
+                    model: {name: 'name', phone: 'phone'}
+                })
+            } else if (id === false) {
+                $scope.fields.aux.contatos[parent] = []
+            }
+        }
+
+        $scope.removeContact = function (index, parent) {
+            if (index === 0) return;
+            $scope.fields.aux.contatos[parent].splice(index, 1)
+        }
+
+        $scope.insertResponsible = function (parent) {
+            if (parent) {
+                if ($scope.fields.aux.contatos[parent].length > 1) {
+                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+                } else {
+                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+                }
+            } else {
+                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+            }
+        }
+
+        $scope.avisoDivergencia = false;
+
+        $scope.getAdressByCEP = function (cep) {
+            if (!cep) {
+                return
+            }
+            viaCep.get(cep).then(function (response) {
+                // $scope.address = response
+                $scope.fields.school_address = response.logradouro;
+                $scope.fields.school_neighborhood = response.bairro;
+                $scope.fields.school_uf = response.uf;
+                $scope.fetchCities(response.localidade).then(function (value) {
+                    $scope.fields.school_city = value[0];
+                    validateSchoolWithPlace();
+                });
+            }).catch(function (responseCatch) {
+                //console.log(responseCatch);
+                $scope.noCEF = true;
+                setTimeout(function () {
+                    $scope.noCEF = false;
+                }, 1000);
+            });
+        }
+
+        function validateSchoolWithPlace() {
+            if ($scope.fields.school && $scope.fields.school_city) {
+                if ($scope.fields.school.city_name !== $scope.fields.school_city.name) {
+                    $scope.avisoDivergencia = true;
+                    setTimeout(function () {
+                        $scope.avisoDivergencia = false;
+                    }, 5000);
+                }
+            }
+        }
+
+        $scope.putStateAndCity = function (value) {
+            $scope.fields.school_uf = value.uf;
+            $scope.fetchCities(value.city_name).then(function (value) {
+                $scope.fields.school_city = value[0];
+            });
+        }
+
+        $scope.checkInputParents = function (value, name) {
+            if ('mother' === name) {
+                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
+            }
+            if (!value) {
+                $scope.fields.aux.contatos[name].name = '';
+                $scope.fields.aux.contatos[name].phone = '';
+            }
+        }
+
+        function fetchStepData() {
+
+            $scope.current_date = new Date();
+
+            $scope.step = CaseSteps.find({type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case'});
+
+            Tenants.getSettings(function (res) {
+                $scope.tenantSettings = res;
+            });
+
+            $scope.step.$promise.then(function (step) {
+                $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
+                $scope.case = step.case;
+                $scope.$parent.openStepID = $scope.step.id;
+                if (!$scope.fields.aux) {
+                    $scope.fields.aux = {};
+                    $scope.fields.aux.contatos = {};
+                    $scope.fields.aux = {
+                        contatos: {
+                            siblings: $scope.fields.aux.contatos.siblings || [],
+                            grandparents: $scope.fields.aux.contatos.grandparents || [],
+                            others: $scope.fields.aux.contatos.others || []
+                        }
+                    }
+                }
+                if (step.fields && step.fields.place_coords) {
+                    step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
+                }
+
+                var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({id: $scope.step.case.tenant_id});
+
+                settingsOfTenantOfCase.$promise.then(function (res_settings) {
+                    $scope.tenantSettingsOfCase = res_settings;
+                });
+
+            });
+        }
+
+        fetchStepData();
+
+        var handicappedCauseIDs = [];
+        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
+
+        //console.log("[core] @ChildCaseStepCtrl", $scope.step);
+
+        $scope.saveAndProceed = function () {
+            //console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
+
+            $scope.save()
+                .then(function () {
+                    return $scope.step.$promise;
+                })
+                .then(function () {
+                    $scope.$parent.completeStep($scope.step);
+                });
+        };
+
+        $scope.areDatesEqual = function (a, b) {
+            if (!a) return false;
+            if (!b) return false;
+            return moment(a).startOf('day').isSame(moment(b).startOf('day'));
+        };
+
+        $scope.isStepOpen = function (stepClassName) {
+            if (!$scope.step) return false;
+            return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+        };
+
+        $scope.hasNextStep = function () {
+            if (!$scope.step) return false;
+            if ($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
+            return true;
+        };
+
+        $scope.canEditCurrentStep = function (isEditableOnAlerts) {
+            if (!$scope.step) return false;
+            if (!$scope.$parent.openedCase) return false;
+            if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
+            if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
+            return (!$scope.step.is_completed);
+        };
+
+        $scope.canAcceptAlert = function (step, fields) {
+            if (!step) return false;
+            if (!step.requires_address_update) return true;
+            return fields && fields.place_address && (fields.place_address.trim().length > 0);
+        };
+
+        $scope.acceptAlert = function (childID) {
+            var data = {id: childID};
+
+            if ($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
+                data.place_address = $scope.fields.place_address;
+            }
+
+            Alerts.accept(data, function () {
+                $state.reload();
+            })
+        };
+
+        $scope.rejectAlert = function (childID) {
+            Alerts.reject({id: childID}, function () {
+                $state.reload();
+            })
+        };
+
+        // $scope.isHandicapped = function () {
+        //     if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
+        //
+        //     if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
+        //         handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
+        //             return (item.is_handicapped === true);
+        //         });
+        //     }
+        //
+        //     var currentCauses = $scope.step.fields.case_cause_ids;
+        //
+        //     for (var i in currentCauses) {
+        //         if (!currentCauses.hasOwnProperty(i)) continue;
+        //         var cause = currentCauses[i];
+        //         if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
+        //     }
+        //
+        //     return false;
+        // };
+
+        $scope.canCompleteStep = function () {
+            if (!$scope.step) return false;
+            if (!$scope.$parent.openedCase) return false;
+            return ($scope.step.id === $scope.$parent.openedCase.current_step_id && !$scope.step.is_completed && !$scope.step.is_pending_assignment);
+        };
+
+        $scope.isPendingAssignment = function () {
+            if (!$scope.step) return false;
+            return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
+        };
+
+        $scope.fillWithCurrentDate = function (field) {
+            $scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
+        };
+
+        function filterOutEmptyFields(data) {
+            var filtered = {};
+
+            for (var i in data) {
+                if (!data.hasOwnProperty(i)) continue;
+                if (data[i] === null) continue;
+                if (data[i] === 'null') continue;
+                if (data[i] === undefined) continue;
+                if (("" + data[i]).trim().length <= 0) continue;
+                filtered[i] = data[i];
+            }
+
+            return filtered;
+        }
+
+        $scope.assignUser = function () {
+
+            CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
+                .then(function (res) {
+                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfUser, true))
+                })
+                .then(function (user_id) {
+                    return CaseSteps.assignUser({
+                        type: $scope.step.step_type,
+                        id: $scope.step.id,
+                        user_id: user_id
+                    }).$promise;
+                }).then(function (res) {
+                ngToast.success("Usuário atribuído!");
+                $state.go('child_browser');
+            });
+
+
+        };
+
+        $scope.isCheckboxChecked = function (field, value) {
+            if (!$scope.fields) return false;
+            if (!$scope.fields[field]) $scope.fields[field] = [];
+            var value = $scope.fields[field].indexOf(value) !== -1;
+            return value;
+        };
+
+        $scope.toggleCheckbox = function (field, value) {
+
+            if (!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
+            var index = $scope.fields[field].indexOf(value); // Check if in list
+            if (index === -1) return $scope.fields[field].push(value); // Add to list
+            return $scope.fields[field].splice(index, 1); // Remove from list
+        };
+
+        $scope.getCaseCauseIDs = function () {
+            if (!$scope.$parent.openedCase) return [];
+            return $scope.$parent.openedCase.case_cause_ids;
+        };
+
+        $scope.getAlertCauseId = function () {
+            if (!$scope.$parent.openedCase) return [];
+            return $scope.$parent.openedCase.alert_cause_id;
+        };
+
+        $scope.fetchCities = function (query) {
+            var data = {name: query, $hide_loading_feedback: true};
+
+            if ($scope.fields.place_uf) data.uf = $scope.fields.place_uf;
+            if ($scope.fields.school_uf) data.uf = $scope.fields.school_uf;
+
+            // console.log("[create_alert] Looking for cities: ", data);
+
+            return Cities.search(data).$promise.then(function (res) {
+                return res.results;
+            });
+        };
+
+        $scope.fetchSchools = function (query, filter_by_uf, filter_by_city) {
+            var data = {name: query, $hide_loading_feedback: true};
+
+            if (filter_by_uf) data.uf = filter_by_uf;
+            if (filter_by_city && filter_by_city.id) data.city_id = filter_by_city.id;
+
+            // console.log("[create_alert] Looking for schools: ", data);
+
+            return Schools.search(data).$promise.then(function (res) {
+                return res.results;
+            });
+        };
+
+        $scope.renderSelectedCity = function (city) {
+            if (!city) return '';
+            return city.uf + ' / ' + city.name;
+        };
+
+        $scope.renderSelectedSchool = function (school) {
+            if (!school) return '';
+            return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
+        };
+
+        function clearAuxiliaryFields(fields) {
+            var auxiliaryFields = ['place_map_center', 'place_map_geocoded_address'];
+            var filtered = {};
+
+            for (var i in fields) {
+                if (!fields.hasOwnProperty(i)) continue;
+                if (auxiliaryFields.indexOf(i) !== -1) continue;
+                filtered[i] = fields[i];
+            }
+
+            return filtered;
+        }
+
+        function unpackTypeaheadField(data, name, model) {
+            if (data[name]) {
+                data[name + '_id'] = model.id;
+                data[name + '_name'] = model.name;
+            }
+
+            return data;
+        }
+
+        $scope.save = function () {
+
+            var data = Object.assign({}, $scope.step.fields);
+
+            // console.log(data);
+
+
+            data = Utils.prepareDateFields(data, dateOnlyFields);
+
+            data = unpackTypeaheadField(data, 'place_city', data.place_city);
+            data = unpackTypeaheadField(data, 'school_city', data.school_city);
+            data = unpackTypeaheadField(data, 'school', data.school);
+            data = unpackTypeaheadField(data, 'school_last', data.school_last);
+
+            data = clearAuxiliaryFields(data);
+            data = filterOutEmptyFields(data);
+
+            data.type = $scope.step.step_type;
+            data.id = $scope.step.id;
+
+            // console.info("[child_viewer.step_editor] Saving step data: ", data);
+
+            return CaseSteps.save(data).$promise.then(function (response) {
+                if (response.messages) {
+                    return Utils.displayValidationErrors(response);
+                }
+
+                if (response.status !== "ok") {
+                    ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
+                    return;
+                }
+
+                if (response.updated) {
+                    fetchStepData(); // Updates data
+                }
+
+                ngToast.success("Os campos da etapa foram salvos com sucesso!");
+
+            })
+        }
+
+        $scope.diffDaysBetweenSteps = function (a, b) {
+            const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+            const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+            return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
+        };
+
+        $scope.canUpdateStepObservation = function (child) {
+            if (!$scope.tenantSettingsOfCase) {
+                return false;
+            }
+            var time_for_next_step = 0;
+            if ($scope.step && $scope.tenantSettings) {
+                if ($scope.step.slug == "1a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+
+                }
+                if ($scope.step.slug == "2a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "3a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+                if ($scope.step.slug == "4a_observacao") {
+                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
+                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    return permission;
+                }
+            }
+        };
+
+        $scope.scopeOfCase = function () {
+            if ($scope.step.assigned_user) {
+                if ($scope.step.assigned_user.type === "coordenador_estadual"
+                    || $scope.step.assigned_user.type === "supervisor_estadual") {
+                    return "state";
+                } else {
+                    return "municipality";
+                }
+            }
+        }
+
+        $scope.scopeOfUser = function () {
+            if ($scope.identity.getCurrentUser().type === "coordenador_estadual"
+                || $scope.identity.getCurrentUser().type === "supervisor_estadual") {
+                return "state";
+            } else {
+                return "municipality";
+            }
+        }
+
+        $scope.getGroupsToMove = function() {
+            var groupsToMove = [];
+            $scope.groupedGroups.data.forEach(function(v, k){
+                groupsToMove.push({id: v.id, name: v.name});
+                v.children.forEach(function(v2, k2){
+                    groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+                    v2.children.forEach(function(v3, k3){
+                        groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+                        v3.children.forEach(function(v4, k4){
+                            groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+                        });
+                    });
+                });
+            });
+            return groupsToMove;
+        };
+
+        $scope.getGroupsOfUser = function (){
+            if(Identity.getCurrentUser().hasOwnProperty('group')) {
+                var groupsToMove = [];
+                groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
+                $scope.getGroupOfCurrentUser().children.forEach(function (v, k) {
+                    groupsToMove.push({id: v.id, name: v.name, margin: 20});
+                    v.children.forEach(function (v2, k2) {
+                        groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
+                        v2.children.forEach(function (v3, k3) {
+                            groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
+                            v3.children.forEach(function (v4, k4) {
+                                groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
+                            });
+                        });
+                    });
+                });
+                return groupsToMove;
+            };
+            return [];
+        };
+
+        $scope.getGroupOfCurrentUser = function (){
+            if(Identity.getCurrentUser().hasOwnProperty('group')){
+                var groupedGroupsOfUser = [];
+                var userGroupId = Identity.getCurrentUser().group.id;
+                $scope.groupedGroups.data.forEach(function(v, k){
+                    if (v.id == userGroupId) { groupedGroupsOfUser = v; }
+                    v.children.forEach(function(v2, k2){
+                        if (v2.id == userGroupId) { groupedGroupsOfUser = v2; }
+                        v2.children.forEach(function(v3, k3){
+                            if (v3.id == userGroupId) { groupedGroupsOfUser = v3; }
+                            v3.children.forEach(function(v4, k4){
+                                if (v4.id == userGroupId) { groupedGroupsOfUser = v4; }
+                            });
+                        });
+                    });
+                });
+                return groupedGroupsOfUser;
+            }
+            return [];
+        };
+
+        Platform.whenReady(function() {
+            Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
+                $scope.groupedGroups = res;
+                $scope.groupsToMove = $scope.getGroupsToMove();
+                $scope.groupsOfUser = $scope.getGroupsOfUser();
+            });
+        });
+
+    }
+
+})();
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('child_viewer.comments', {
+				url: '/comments',
+				templateUrl: '/views/children/view/comments.html',
+				controller: 'ChildCommentsCtrl'
+			})
+		})
+		.controller('ChildCommentsCtrl', function ($scope, $state, $stateParams, Children) {
+
+			$scope.Children = Children;
+
+			$scope.comments = {};
+			$scope.message = "";
+
+			$scope.refresh = function() {
+				$scope.comments = Children.getComments({id: $stateParams.child_id});
+			};
+
+			$scope.sendMessage = function() {
+
+				Children.postComment({
+					id: $scope.$parent.child.id,
+					message: $scope.message
+				}, function (res) {
+					$scope.refresh();
+				});
+
+				$scope.message = "";
+			};
+
+			//console.log("[core] @ChildCommentsCtrl", $stateParams);
+
+			$scope.refresh();
+
+		});
+
+})();
+(function () {
+
+    angular.module('BuscaAtivaEscolar')
+        .controller('ChildConsolidatedCtrl', ChildConsolidatedCtrl)
+
+        .config(function ($stateProvider) {
+            $stateProvider
+                .state('child_viewer.consolidated', {
+                    url: '/consolidated',
+                    templateUrl: '/views/children/view/consolidated.html',
+                    controller: 'ChildConsolidatedCtrl'
+                })
+        });
+
+    function ChildConsolidatedCtrl($scope, $state, $location, $stateParams, Children, Decorators, Utils, ngToast) {
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
+        $scope.showAll = true;
+
+        $scope.refreshChildData = function (callback) {
+            return $scope.child = Children.find({id: $scope.child_id, with: 'currentStep,consolidated'}, callback);
+        };
+
+        $scope.fields = {};
+        $scope.child_id = $stateParams.child_id;
+        // $scope.id_case_for_reopen = $location.search().id_request ? $location.search().id_request : '';
+        $scope.child = $scope.refreshChildData(function (data) {
+            var consolidated = Utils.unpackDateFields(data.consolidated, dateOnlyFields)
+            angular.copy(consolidated, $scope.fields);
+        });
+
+        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
+
+        $scope.getConsolidatedFields = function () {
+            return $scope.fields;
+        };
+
+        $scope.isCheckboxChecked = function (field, value) {
+            if (!$scope.fields) return false;
+            if (!$scope.fields[field]) $scope.fields[field] = [];
+            return $scope.fields[field].indexOf(value) !== -1;
+        };
+        // if ($scope.id_case_for_reopen !== '') {
+        //     Children.reopenCase({case_id: $scope.id_case_for_reopen, reason: 'request'}).$promise.then(function (res) {
+        //         if (res.status !== 'error') {
+        //             ngToast.success(res.result);
+        //             setTimeout(function () {
+        //                 window.location = 'children/view/' + res.child_id + '/consolidated';
+        //             }, 4000);
+        //
+        //         } else {
+        //             ngToast.danger("Erro ao reabrir o caso!");
+        //         }
+        //     });
+        // }
+
+
+        // console.log("[core] @ChildConsolidatedCtrl", $scope.child);
+
+    }
+
+})();
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.controller('ChildViewCtrl', ChildViewCtrl)
+
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('child_viewer', {
+					url: '/children/view/{child_id}',
+					templateUrl: '/views/children/view/viewer.html',
+					controller: 'ChildViewCtrl'
+				})
+		});
+
+	function ChildViewCtrl($scope, $state, $stateParams, Children, Decorators, StaticData, Modals, Groups, ngToast, Cases) {
+		if ($state.current.name === "child_viewer") $state.go('.consolidated');
+
+		$scope.Decorators = Decorators;
+		$scope.Children = Children;
+		$scope.StaticData = StaticData;
+
+		$scope.groups = [];
+		$scope.getGroupsToMove = function() {
+			var groupsToMove = [];
+			$scope.groups.forEach(function(v, k){
+				groupsToMove.push({id: v.id, name: v.name});
+				v.children.forEach(function(v2, k2){
+					groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+					v2.children.forEach(function(v3, k3){
+						groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+						v3.children.forEach(function(v4, k4){
+							groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+						});
+					});
+				});
+			});
+			return groupsToMove;
+		};
+
+		$scope.refreshChildData = function(callback) {
+			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
+		};
+
+		$scope.child_id = $stateParams.child_id;
+		$scope.child = $scope.refreshChildData();
+
+		$scope.assignGroup = function (){
+
+			var promiseGroup = Groups.findGroupedGroups().$promise
+			promiseGroup.then(function(res) {
+
+				$scope.groups = res.data;
+				Modals.show(
+					Modals.GroupPicker(
+						'Atribuir grupo',
+						'Indique grupo ...:',
+						$scope.getGroupsToMove(),
+						true)
+				).then(function (selectedGroup) {
+					var currentCase = {
+						id: $scope.child.currentCase.id,
+						group_id: selectedGroup.id
+					};
+					return Cases.update(currentCase)
+				}).then(function (res) {
+					ngToast.success('Grupo atribuído com sucesso!')
+					$scope.refreshChildData(function (){});
+				});
+
+			}, function (err) {
+				ngToast.danger('Ocorreu um erro ao retornar grupos!')
+			});
+		};
+
+	}
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('child_create_from_alert', {
+				url: '/children/create_alert',
+				templateUrl: '/views/children/create_alert.html',
+				controller: 'CreateAlertCtrl'
+			})
+		})
+		.controller('CreateAlertCtrl', function ($scope, $state, ngToast, Utils, Identity, StaticData, Children, Cities, Groups, Platform) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+			$scope.disableCreateAlertButton = false;
+			$scope.groups = [];
+			$scope.allGroupsOfTenant = [];
+			$scope.selectedGroup = null;
+
+
+
+			$scope.birthdayDateEnd = moment(new Date()).format('YYYY-MM-DD');
+			$scope.birthdayDateStart = moment($scope.birthdayDateEnd).subtract(100, 'years').format('YYYY-MM-DD');
+
+			$scope.alert = {};
+
+			$scope.fetchCities = function(query) {
+				var data = {name: query, $hide_loading_feedback: true};
+				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
+
+				//console.log("[create_alert] Looking for cities: ", data);
+
+				return Cities.search(data).$promise.then(function (res) {
+					return res.results;
+				});
+
+			};
+
+			$scope.renderSelectedCity = function(city) {
+				if(!city) return '';
+				return city.uf + ' / ' + city.name;
+			};
+
+
+			
+			$scope.createAlert = function() {
+
+				$scope.disableCreateAlertButton = true;
+
+				
+				// TODO: validate fields
+				var data = $scope.alert;
+				data = Utils.prepareDateFields(data, ['dob']);
+				data.place_city_id = data.place_city ? data.place_city.id : null;
+				data.place_city_name = data.place_city ? data.place_city.name : null;
+				data.group_id = $scope.selectedGroup.id;
+
+//document.write(JSON.stringify(data))
+			
+				Children.spawnFromAlert(data).$promise.then(function (res) {
+					if(res.messages) {
+						console.warn("[create_alert] Failed validation: ", res.messages);
+						$scope.disableCreateAlertButton = false;
+						return Utils.displayValidationErrors(res);
+					}
+
+					if(!res || !res.child_id) {
+						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
+						$scope.disableCreateAlertButton = false;
+						return;
+					}
+
+					ngToast.success('Alerta registrado com sucesso!');
+
+					$scope.disableCreateAlertButton = false;
+
+					if(Identity.getType() === 'agente_comunitario') {
+						$state.go('dashboard');
+						return;
+					}
+
+					$state.go('child_viewer', {child_id: res.child_id});
+				});
+			}
+
+			$scope.getGroupOfCurrentUser = function (){
+				return Identity.getCurrentUser().group;
+			}
+
+			$scope.getGroupsToMove = function() {
+				var groupsToMove = [];
+				$scope.groups.forEach(function(v, k){
+					groupsToMove.push({id: v.id, name: v.name});
+					v.children.forEach(function(v2, k2){
+						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
+						v2.children.forEach(function(v3, k3){
+							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
+							v3.children.forEach(function(v4, k4){
+								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
+							});
+						});
+					});
+				});
+
+				return groupsToMove;
+			};
+
+			Platform.whenReady(function () {
+				Groups.findGroupedGroups(function(res) {
+					$scope.groups = res.data;
+					$scope.allGroupsOfTenant = $scope.getGroupsToMove();
+					$scope.selectedGroup = $scope.getGroupOfCurrentUser();
+				});
+			});
+
+		});
+
+})();
+
+
+
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('pending_alerts', {
+				url: '/pending_alerts',
+				templateUrl: '/views/children/pending_alerts.html',
+				controller: 'PendingAlertsCtrlCtrl'
+			})
+		})
+		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, StaticData) {
+
+			$scope.identity = Identity;
+			$scope.sendingAlert = false;
+			$scope.children = {};
+			$scope.child = {};
+			$scope.causes = {};
+
+			$scope.query = {
+                name: null,
+				submitter_name: null,
+                sort: {},
+                max: 16,
+				page: 1,
+				neighborhood: null,
+				city_name: null,
+				alert_cause_id: null,
+				show_suspended: false
+            };
+
+			
+
+            $scope.search = {};
+			
+			$scope.getAlertCauseName = function(id) {
+				if(!$scope.child) return 'err:no_child_open';
+				if(!$scope.child.alert) return 'err:no_alert_data';
+				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
+				var indexAlertCauses = _.findIndex($scope.causes, {id: $scope.child.alert.alert_cause_id});
+				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
+				return $scope.causes[indexAlertCauses].label;
+			};
+
+            $scope.setMaxResults = function(max) {
+                $scope.query.max = max;
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+			$scope.static = StaticData;
+			
+			$scope.refresh = function() {
+				console.log($scope.query);
+				$scope.child = null;
+				$scope.children = Alerts.getPending($scope.query);
+				$scope.search = $scope.children;
+			};
+
+			$scope.preview = function(child) {
+				$scope.child = child
+				$('#modalChild').modal({
+					keyboard: false,
+				});
+			};
+
+			$scope.canAcceptAlert = function(child) {
+				if(!child) return false;
+				if(!child.requires_address_update) return true;
+				return child.alert
+					&& child.alert.place_address
+					&& (child.alert.place_address.trim().length > 0)
+					&& child.alert.place_neighborhood
+					&& (child.alert.place_neighborhood.trim().length > 0);
+			};
+
+			$scope.accept = function(child) {
+				if(!$scope.canAcceptAlert(child)) {
+					return;
+				}
+
+				$scope.sendingAlert = true;
+
+				Alerts.accept({id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood}, function() {
+					$scope.refresh();
+					$scope. child = {};
+					$('#modalChild').modal('hide');
+					$scope.sendingAlert = false;
+				});
+			};
+
+			$scope.reject = function(child) {
+				Alerts.reject({id: child.id}, function() {
+					$scope.refresh();
+					$scope.child = {};
+					$('#modalChild').modal('hide');
+				});
+			};
+
+			Platform.whenReady(function() {
+				$scope.causes = StaticData.getAlertCauses();
+				$scope.refresh();
+			});
+
+		});
+
+})();
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('user_alerts', {
+				url: '/user_alerts',
+				templateUrl: '/views/children/user_alerts.html',
+				controller: 'UserAlertsCtrlCtrl'
+			})
+		})
+		.controller('UserAlertsCtrlCtrl', function () {
+		});
+
+})();
+(function () {
   identify('config', 'charts.js');
   angular.module('BuscaAtivaEscolar').run(function (Config) {
     Highcharts.setOptions({
@@ -4375,6 +4366,996 @@
 	});
 
 })();
+(function () {
+  angular.module('BuscaAtivaEscolar').factory('AppDependencies', function () {
+    return [
+      ['Back-end', 'Laravel Framework', '5.3', 'http://laravel.com', 'MIT'],
+      ['Back-end', 'PHP', '7.1', 'http://php.net', 'PHP License 3.01'],
+      ['Back-end', 'MariaDB', '10.0.20', 'http://mariadb.org', 'GPLv2'],
+      ['Back-end', 'memcached', '1.4.31', 'http://memcached.org', 'BSD'],
+      ['Back-end', 'ElasticSearch', '', 'http://elastic.co', 'Apache'],
+      [
+        'Back-end',
+        'Laravel Excel',
+        '',
+        'https://github.com/maatwebsite/laravel-excel',
+        'LGPL',
+      ],
+      ['Back-end', 'PHP-JWT', '', 'https://github.com/firebase/php-jwt', 'BSD'],
+      [
+        'Back-end',
+        'JWT-Auth',
+        '',
+        'https://github.com/tymondesigns/jwt-auth',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        'Intervention Image',
+        '',
+        'http://image.intervention.io/',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        'Laravel-UUID',
+        '',
+        'https://github.com/webpatser/laravel-uuid',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        "Barryvdh's Laravel CORS",
+        '',
+        'https://github.com/barryvdh/laravel-cors',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        "Barryvdh's Debugbar",
+        '',
+        'https://github.com/barryvdh/laravel-debugbar',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        "Barryvdh's IDE Helper",
+        '',
+        'https://github.com/barryvdh/laravel-ide-helper',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        'Fractal',
+        '',
+        'http://fractal.thephpleague.com/transformers/',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        'Spatie/Laravel-Fractal',
+        '',
+        'https://github.com/spatie/laravel-fractal',
+        'MIT',
+      ],
+      [
+        'Back-end',
+        'Spatie/Laravel-Sluggable',
+        '',
+        'https://github.com/spatie/laravel-sluggable',
+        'MIT',
+      ],
+      ['Back-end', 'Ixudra/Curl', '', 'https://github.com/ixudra/curl', 'MIT'],
+      ['Back-end', 'Whoops', '', 'https://github.com/filp/whoops', 'MIT'],
+      ['Front-end', 'AngularJS', '1.5.5', 'http://angularjs.org', 'MIT'],
+      ['Front-end', 'jQuery', '3.1.0', 'http://jquery.org', 'MIT'],
+      [
+        'Front-end',
+        'Twitter Bootstrap',
+        '3.0.0',
+        'http://getbootstra.com',
+        'MIT',
+      ],
+      [
+        'Front-end',
+        'Bootstrap Material Design',
+        '',
+        'http://fezvrasta.github.io/bootstrap-material-design/',
+        'MIT',
+      ],
+      ['Front-end', 'TinyMCE', '4.4.3', 'http://www.tinymce.com', 'LGPL'],
+      [
+        'Front-end',
+        'Highcharts',
+        '',
+        'http://highcharts.com',
+        'Creative Commons BY-NC 3.0',
+      ],
+      [
+        'Front-end',
+        'ngFileUpload',
+        '',
+        'https://github.com/danialfarid/ng-file-upload',
+        'MIT',
+      ],
+      [
+        'Front-end',
+        'ngToast',
+        '',
+        'https://github.com/tameraydin/ngToast',
+        'MIT',
+      ],
+      [
+        'Front-end',
+        'ArriveJS',
+        '',
+        'https://github.com/uzairfarooq/arrive',
+        'MIT',
+      ],
+      ['Front-end', 'AngularUI', '', 'https://angular-ui.github.io/', 'MIT'],
+      [
+        'Front-end',
+        'Angular Bootstrap Lightbox',
+        '',
+        'https://github.com/compact/angular-bootstrap-lightbox',
+        'MIT',
+      ],
+      [
+        'Aplicativo',
+        'Apache Cordova',
+        '6.x',
+        'https://cordova.apache.org/',
+        'Apache',
+      ],
+      [
+        'Aplicativo',
+        'Ionic Framework',
+        '',
+        'http://ionicframework.com/',
+        'MIT',
+      ],
+      [
+        'Aplicativo',
+        'Axios HTTP Library',
+        '',
+        'https://github.com/mzabriskie/axios',
+        'MIT',
+      ],
+    ];
+  });
+})();
+
+Highcharts.maps["countries/br/br-all"] = {
+	"title": "Brazil",
+	"version": "1.1.2",
+	"type": "FeatureCollection",
+	"copyright": "Copyright (c) 2015 Highsoft AS, Based on data from Natural Earth",
+	"copyrightShort": "Natural Earth",
+	"copyrightUrl": "http://www.naturalearthdata.com",
+	"crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG:29101"}},
+	"hc-transform": {
+		"default": {
+			"crs": "+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs",
+			"scale": 0.000161701268187,
+			"jsonres": 15.5,
+			"jsonmarginX": -999,
+			"jsonmarginY": 9851.0,
+			"xoffset": 2791531.40873,
+			"yoffset": 10585904.489
+		}
+	},
+	"features": [{
+		"type": "Feature",
+		"id": "BR.SP",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.43,
+			"hc-middle-y": 0.34,
+			"hc-key": "br-sp",
+			"hc-a2": "SP",
+			"labelrank": "2",
+			"hasc": "BR.SP",
+			"alt-name": null,
+			"woe-id": "2344868",
+			"subregion": null,
+			"fips": "BR32",
+			"postal-code": "SP",
+			"name": "São Paulo",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-48.5206",
+			"woe-name": "São Paulo",
+			"latitude": "-22.2267",
+			"woe-label": "Sao Paulo, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[6776, 1722], [6767, 1687], [6733, 1678], [6718, 1696], [6752, 1736], [6776, 1722]]], [[[4751, 2087], [4803, 2154], [4835, 2165], [4878, 2200], [4919, 2219], [4958, 2253], [4973, 2297], [5015, 2352], [5044, 2372], [5028, 2404], [5091, 2461], [5089, 2509], [5154, 2590], [5158, 2639], [5236, 2731], [5286, 2749], [5324, 2802], [5357, 2831], [5414, 2852], [5440, 2882], [5475, 2885], [5497, 2863], [5617, 2843], [5705, 2842], [5747, 2826], [5776, 2829], [5770, 2774], [5788, 2738], [5806, 2737], [5835, 2778], [5853, 2754], [5852, 2706], [5879, 2704], [5875, 2745], [5887, 2771], [6051, 2780], [6089, 2768], [6112, 2802], [6128, 2777], [6142, 2807], [6185, 2814], [6200, 2798], [6249, 2816], [6256, 2794], [6308, 2744], [6290, 2684], [6326, 2654], [6336, 2624], [6307, 2576], [6303, 2547], [6322, 2527], [6326, 2485], [6343, 2466], [6355, 2408], [6404, 2418], [6482, 2386], [6485, 2368], [6436, 2289], [6446, 2241], [6424, 2219], [6449, 2199], [6421, 2147], [6435, 2122], [6499, 2085], [6475, 2044], [6501, 2024], [6501, 1997], [6556, 1982], [6617, 1998], [6630, 1986], [6660, 2002], [6646, 2030], [6688, 2059], [6717, 2040], [6748, 2039], [6842, 2085], [6901, 2098], [6916, 2092], [6948, 2041], [6972, 2033], [7056, 2036], [7067, 2005], [7037, 1973], [6985, 1968], [6900, 1934], [6895, 1893], [6879, 1874], [6911, 1831], [6869, 1837], [6827, 1815], [6821, 1791], [6801, 1800], [6786, 1777], [6761, 1778], [6725, 1755], [6730, 1711], [6614, 1736], [6541, 1715], [6533, 1677], [6489, 1683], [6423, 1653], [6325, 1599], [6315, 1569], [6267, 1537], [6171, 1483], [6109, 1435], [6082, 1404], [6099, 1444], [6070, 1406], [6082, 1399], [6064, 1360], [6029, 1332], [6043, 1353], [6013, 1356], [5996, 1415], [5950, 1432], [5924, 1398], [5910, 1406], [5919, 1475], [5934, 1492], [5902, 1512], [5860, 1509], [5798, 1529], [5782, 1514], [5730, 1522], [5727, 1560], [5750, 1613], [5706, 1685], [5659, 1748], [5673, 1790], [5649, 1848], [5659, 1875], [5655, 1916], [5633, 1960], [5587, 1980], [5572, 2015], [5490, 2006], [5403, 2017], [5363, 2012], [5339, 2046], [5280, 2062], [5218, 2096], [5168, 2087], [5084, 2109], [5035, 2135], [4996, 2101], [4808, 2123], [4751, 2087]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.MA",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.51,
+			"hc-middle-y": 0.42,
+			"hc-key": "br-ma",
+			"hc-a2": "MA",
+			"labelrank": "2",
+			"hasc": "BR.MA",
+			"alt-name": "São Luíz de Maranhão",
+			"woe-id": "2344854",
+			"subregion": null,
+			"fips": "BR13",
+			"postal-code": "MA",
+			"name": "Maranhão",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-45.389",
+			"woe-name": "Maranhão",
+			"latitude": "-5.01897",
+			"woe-label": "Maranhao, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[7179, 7589], [7184, 7554], [7156, 7523], [7171, 7612], [7179, 7589]]], [[[7924, 7599], [7924, 7523], [7878, 7467], [7818, 7411], [7751, 7399], [7739, 7407], [7689, 7337], [7692, 7312], [7672, 7274], [7600, 7186], [7610, 7143], [7634, 7112], [7609, 7067], [7608, 7034], [7635, 6989], [7647, 6925], [7639, 6882], [7577, 6803], [7562, 6796], [7567, 6674], [7597, 6636], [7629, 6617], [7625, 6552], [7608, 6500], [7590, 6479], [7529, 6477], [7456, 6454], [7397, 6495], [7296, 6479], [7234, 6413], [7220, 6384], [7180, 6374], [7106, 6305], [7077, 6316], [7019, 6281], [6943, 6264], [6894, 6232], [6874, 6178], [6863, 6099], [6817, 6021], [6792, 5947], [6762, 5923], [6746, 5884], [6766, 5813], [6768, 5772], [6794, 5734], [6782, 5714], [6773, 5583], [6746, 5534], [6747, 5495], [6709, 5527], [6638, 5539], [6605, 5586], [6596, 5627], [6552, 5659], [6590, 5712], [6584, 5728], [6531, 5754], [6511, 5783], [6507, 5822], [6481, 5850], [6443, 5860], [6492, 5916], [6500, 5986], [6526, 6026], [6606, 6035], [6595, 6058], [6618, 6127], [6611, 6156], [6589, 6173], [6506, 6160], [6466, 6137], [6429, 6190], [6376, 6246], [6335, 6304], [6332, 6352], [6295, 6345], [6269, 6377], [6297, 6386], [6333, 6428], [6341, 6514], [6364, 6575], [6374, 6643], [6360, 6680], [6364, 6745], [6346, 6781], [6350, 6824], [6331, 6854], [6280, 6879], [6248, 6882], [6241, 6911], [6204, 6924], [6161, 6918], [6110, 6944], [6065, 6939], [6034, 6899], [6002, 6892], [6000, 6897], [6260, 7101], [6301, 7098], [6322, 7114], [6357, 7172], [6378, 7190], [6404, 7244], [6467, 7310], [6479, 7378], [6501, 7434], [6535, 7453], [6579, 7518], [6586, 7574], [6605, 7586], [6580, 7617], [6647, 7681], [6652, 7757], [6683, 7774], [6707, 7843], [6707, 7877], [6680, 7898], [6711, 7913], [6712, 7967], [6744, 8044], [6778, 8085], [6768, 8046], [6794, 8054], [6831, 8029], [6846, 8065], [6864, 8026], [6858, 8000], [6895, 8027], [6899, 7986], [6916, 7999], [6910, 7961], [6960, 8011], [6964, 7986], [6944, 7970], [6956, 7893], [6983, 7911], [6990, 7955], [7021, 7972], [7059, 7961], [7083, 7984], [7071, 7948], [7101, 7904], [7179, 7864], [7184, 7812], [7131, 7746], [7148, 7745], [7186, 7779], [7213, 7765], [7223, 7733], [7214, 7707], [7182, 7718], [7181, 7689], [7147, 7625], [7132, 7537], [7149, 7526], [7104, 7485], [7104, 7470], [7143, 7492], [7202, 7554], [7221, 7666], [7304, 7708], [7310, 7664], [7285, 7632], [7229, 7600], [7271, 7607], [7267, 7576], [7290, 7607], [7306, 7601], [7320, 7641], [7345, 7666], [7389, 7671], [7376, 7692], [7396, 7703], [7412, 7745], [7434, 7747], [7427, 7718], [7476, 7663], [7488, 7690], [7476, 7723], [7516, 7721], [7683, 7659], [7754, 7604], [7807, 7602], [7814, 7581], [7857, 7590], [7896, 7579], [7876, 7606], [7851, 7598], [7811, 7608], [7814, 7624], [7850, 7600], [7855, 7624], [7924, 7599]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.PA",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.39,
+			"hc-middle-y": 0.55,
+			"hc-key": "br-pa",
+			"hc-a2": "PA",
+			"labelrank": "2",
+			"hasc": "BR.PA",
+			"alt-name": null,
+			"woe-id": "2344857",
+			"subregion": null,
+			"fips": "BR16",
+			"postal-code": "PA",
+			"name": "Pará",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-52.6491",
+			"woe-name": "Pará",
+			"latitude": "-4.44313",
+			"woe-label": "Para, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[6148, 8097], [6123, 8117], [6156, 8154], [6165, 8126], [6148, 8097]]], [[[5421, 8221], [5417, 8184], [5347, 8153], [5355, 8195], [5421, 8221]]], [[[5311, 8228], [5331, 8206], [5293, 8096], [5281, 8102], [5252, 8053], [5154, 7980], [5124, 7971], [5107, 7988], [5130, 8038], [5187, 8089], [5185, 8148], [5232, 8214], [5287, 8239], [5311, 8228]]], [[[5269, 8255], [5300, 8322], [5327, 8344], [5332, 8309], [5317, 8287], [5269, 8255]]], [[[5403, 8298], [5363, 8317], [5388, 8379], [5439, 8395], [5477, 8359], [5403, 8298]]], [[[5796, 8402], [5834, 8380], [5809, 8349], [5732, 8342], [5699, 8354], [5756, 8399], [5796, 8402]]], [[[5530, 8383], [5496, 8382], [5475, 8402], [5482, 8434], [5528, 8418], [5530, 8383]]], [[[5592, 8456], [5622, 8444], [5642, 8466], [5674, 8464], [5750, 8490], [5775, 8490], [5784, 8466], [5738, 8440], [5700, 8386], [5651, 8368], [5633, 8387], [5556, 8396], [5550, 8442], [5592, 8456]]], [[[5556, 8529], [5562, 8477], [5533, 8429], [5508, 8441], [5538, 8499], [5532, 8535], [5550, 8555], [5556, 8529]]], [[[5644, 8545], [5640, 8524], [5574, 8482], [5568, 8530], [5585, 8547], [5634, 8562], [5644, 8545]]], [[[5784, 7914], [5744, 7890], [5701, 7878], [5651, 7898], [5645, 7921], [5609, 7888], [5589, 7900], [5586, 7932], [5569, 7882], [5539, 7874], [5483, 7893], [5488, 7915], [5428, 7987], [5431, 8081], [5496, 8054], [5431, 8100], [5435, 8199], [5470, 8309], [5490, 8329], [5538, 8337], [5550, 8353], [5626, 8346], [5749, 8316], [5803, 8321], [5871, 8343], [5965, 8337], [5962, 8323], [6036, 8320], [6091, 8310], [6106, 8279], [6083, 8247], [6060, 8134], [6025, 8103], [6031, 8081], [5975, 8045], [5989, 8026], [5978, 7989], [5947, 8022], [5936, 8012], [5976, 7981], [5913, 7956], [5889, 7993], [5878, 7935], [5849, 7933], [5821, 7958], [5827, 7925], [5790, 7942], [5784, 7914]]], [[[6744, 8044], [6712, 7967], [6711, 7913], [6680, 7898], [6707, 7877], [6707, 7843], [6683, 7774], [6652, 7757], [6647, 7681], [6580, 7617], [6605, 7586], [6586, 7574], [6579, 7518], [6535, 7453], [6501, 7434], [6479, 7378], [6467, 7310], [6404, 7244], [6378, 7190], [6357, 7172], [6322, 7114], [6301, 7098], [6260, 7101], [6000, 6897], [6002, 6892], [6049, 6876], [6101, 6878], [6163, 6810], [6122, 6787], [6140, 6735], [6109, 6718], [6122, 6684], [6082, 6664], [6092, 6611], [6061, 6614], [6032, 6591], [6010, 6528], [5919, 6496], [5866, 6463], [5860, 6446], [5869, 6373], [5816, 6297], [5811, 6270], [5833, 6238], [5873, 6212], [5863, 6141], [5831, 6052], [5811, 6037], [5759, 5933], [5706, 5903], [5623, 5794], [5595, 5688], [5571, 5648], [5279, 5666], [4236, 5731], [3859, 5756], [3799, 5781], [3774, 5775], [3755, 5809], [3698, 5821], [3681, 5870], [3627, 5896], [3576, 5941], [3549, 5951], [3520, 6040], [3531, 6097], [3492, 6148], [3460, 6246], [3413, 6323], [3392, 6343], [3369, 6407], [3320, 6449], [3299, 6520], [3346, 6577], [3768, 7499], [3870, 7720], [3868, 7752], [3840, 7783], [3802, 7766], [3770, 7779], [3772, 7813], [3698, 7846], [3675, 7880], [3606, 7903], [3517, 7941], [3469, 7982], [3376, 8039], [3312, 8091], [3297, 8143], [3245, 8170], [3211, 8210], [3214, 8263], [3182, 8285], [3177, 8445], [3149, 8748], [3170, 8721], [3205, 8717], [3230, 8739], [3276, 8735], [3277, 8783], [3313, 8797], [3328, 8825], [3379, 8805], [3413, 8804], [3425, 8843], [3479, 8856], [3543, 8857], [3580, 8910], [3605, 8929], [3633, 8923], [3671, 8944], [3697, 8915], [3754, 8902], [3800, 8920], [3876, 8918], [3973, 8891], [4000, 8906], [4002, 8948], [3946, 9030], [3975, 9048], [3982, 9082], [4056, 9047], [4088, 9057], [4146, 9056], [4173, 9081], [4264, 9087], [4291, 9061], [4320, 9064], [4337, 9011], [4315, 8940], [4331, 8874], [4434, 8871], [4489, 8842], [4515, 8800], [4535, 8805], [4567, 8772], [4631, 8776], [4660, 8761], [4665, 8727], [4693, 8732], [4685, 8703], [4699, 8644], [4742, 8599], [4784, 8582], [4780, 8490], [4804, 8451], [4811, 8398], [4839, 8329], [4864, 8333], [4919, 8273], [4918, 8228], [4947, 8203], [4950, 8140], [4983, 8142], [4994, 8086], [5079, 8046], [5121, 8062], [5116, 8015], [5076, 7993], [5040, 8010], [4962, 7971], [4904, 7954], [4897, 7939], [4976, 7948], [5016, 7962], [5025, 7910], [5060, 7934], [5118, 7947], [5186, 7994], [5298, 8044], [5328, 8076], [5364, 8095], [5371, 8123], [5423, 8123], [5420, 8089], [5385, 8069], [5423, 8041], [5424, 7984], [5460, 7935], [5469, 7900], [5421, 7847], [5456, 7853], [5468, 7882], [5528, 7845], [5532, 7810], [5573, 7857], [5607, 7851], [5621, 7869], [5658, 7875], [5687, 7860], [5691, 7814], [5705, 7854], [5748, 7849], [5777, 7885], [5781, 7865], [5836, 7906], [5853, 7891], [5828, 7856], [5806, 7775], [5776, 7712], [5778, 7683], [5738, 7641], [5783, 7652], [5809, 7696], [5811, 7724], [5838, 7770], [5866, 7841], [5896, 7891], [5940, 7938], [5961, 7938], [5939, 7886], [5983, 7931], [6031, 7997], [6061, 7942], [6092, 7925], [6075, 7962], [6119, 7973], [6069, 7979], [6075, 8026], [6115, 8016], [6125, 8052], [6081, 8058], [6093, 8082], [6155, 8096], [6171, 8132], [6167, 8165], [6200, 8198], [6221, 8165], [6219, 8206], [6260, 8197], [6284, 8232], [6323, 8194], [6326, 8221], [6351, 8169], [6383, 8168], [6360, 8217], [6469, 8194], [6468, 8149], [6501, 8184], [6519, 8163], [6540, 8184], [6573, 8137], [6601, 8140], [6599, 8115], [6628, 8136], [6634, 8097], [6678, 8097], [6720, 8125], [6706, 8063], [6742, 8082], [6744, 8044]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.SC",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.73,
+			"hc-middle-y": 0.33,
+			"hc-key": "br-sc",
+			"hc-a2": "SC",
+			"labelrank": "2",
+			"hasc": "BR.SC",
+			"alt-name": "Santa Catharina",
+			"woe-id": "2344867",
+			"subregion": null,
+			"fips": "BR26",
+			"postal-code": "SC",
+			"name": "Santa Catarina",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-51.1586",
+			"woe-name": "Santa Catarina",
+			"latitude": "-27.0392",
+			"woe-label": "Santa Catarina, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[5884, 638], [5879, 659], [5895, 707], [5895, 746], [5918, 756], [5929, 736], [5918, 698], [5884, 638]]], [[[5891, 1027], [5862, 1058], [5902, 1097], [5916, 1077], [5891, 1027]]], [[[5896, 1149], [5894, 1100], [5855, 1083], [5843, 1128], [5848, 1065], [5884, 1023], [5868, 990], [5862, 945], [5887, 928], [5876, 911], [5876, 837], [5899, 831], [5905, 806], [5875, 804], [5886, 770], [5862, 733], [5878, 700], [5860, 686], [5877, 626], [5851, 529], [5817, 454], [5815, 486], [5796, 494], [5799, 458], [5817, 443], [5807, 420], [5776, 411], [5674, 338], [5621, 283], [5580, 230], [5522, 268], [5492, 255], [5497, 224], [5469, 245], [5471, 269], [5495, 297], [5511, 294], [5526, 336], [5526, 379], [5567, 425], [5590, 432], [5578, 468], [5547, 474], [5478, 467], [5465, 477], [5366, 501], [5330, 563], [5308, 572], [5304, 600], [5273, 626], [5257, 658], [5221, 674], [5166, 730], [5142, 730], [5115, 756], [5086, 744], [5056, 752], [5028, 799], [4988, 817], [4975, 803], [4938, 812], [4922, 832], [4859, 817], [4817, 848], [4791, 833], [4772, 866], [4707, 840], [4716, 861], [4693, 874], [4661, 859], [4660, 841], [4617, 852], [4576, 849], [4608, 929], [4600, 979], [4605, 1068], [4621, 1100], [4672, 1092], [4698, 1105], [4756, 1069], [4833, 1077], [4876, 1059], [4986, 1044], [5034, 1007], [5067, 1001], [5160, 1000], [5179, 972], [5226, 996], [5214, 1047], [5224, 1068], [5269, 1099], [5312, 1086], [5354, 1097], [5377, 1142], [5425, 1153], [5460, 1144], [5552, 1153], [5640, 1091], [5716, 1121], [5763, 1151], [5896, 1149]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.BA",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.56,
+			"hc-middle-y": 0.35,
+			"hc-key": "br-ba",
+			"hc-a2": "BA",
+			"labelrank": "2",
+			"hasc": "BR.BA",
+			"alt-name": "Ba¡a",
+			"woe-id": "2344848",
+			"subregion": null,
+			"fips": "BR05",
+			"postal-code": "BA",
+			"name": "Bahia",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-41.8027",
+			"woe-name": "Bahia",
+			"latitude": "-12.3651",
+			"woe-label": "Bahia, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[8631, 4546], [8615, 4470], [8613, 4516], [8597, 4547], [8631, 4546]]], [[[8195, 3262], [8199, 3323], [8130, 3387], [8133, 3413], [8100, 3437], [8115, 3473], [8114, 3509], [8131, 3566], [8147, 3582], [8193, 3576], [8211, 3665], [8242, 3669], [8266, 3710], [8299, 3731], [8323, 3787], [8229, 3877], [8166, 3893], [8150, 3888], [8115, 3913], [8090, 3909], [8042, 3930], [7983, 3903], [7938, 3924], [7934, 3987], [7821, 4103], [7783, 4088], [7743, 4087], [7614, 4165], [7601, 4163], [7517, 4241], [7444, 4256], [7371, 4217], [7314, 4234], [7271, 4258], [7268, 4285], [7295, 4345], [7283, 4354], [7154, 4379], [7087, 4354], [7011, 4308], [6998, 4287], [6937, 4255], [6904, 4250], [6877, 4219], [6838, 4197], [6813, 4199], [6768, 4148], [6711, 4149], [6670, 4117], [6699, 4190], [6687, 4223], [6719, 4271], [6707, 4315], [6720, 4366], [6666, 4415], [6633, 4504], [6631, 4564], [6657, 4633], [6682, 4648], [6686, 4675], [6662, 4686], [6670, 4739], [6688, 4769], [6649, 4804], [6671, 4857], [6672, 4885], [6630, 4909], [6626, 4991], [6661, 5026], [6699, 5045], [6678, 5072], [6653, 5070], [6655, 5103], [6694, 5119], [6700, 5137], [6671, 5154], [6607, 5168], [6569, 5220], [6599, 5258], [6626, 5316], [6664, 5339], [6646, 5374], [6706, 5421], [6770, 5452], [6799, 5490], [6841, 5489], [6876, 5444], [6884, 5407], [6917, 5361], [6990, 5326], [7062, 5335], [7071, 5356], [7131, 5397], [7164, 5407], [7219, 5394], [7246, 5405], [7282, 5442], [7304, 5447], [7365, 5556], [7373, 5622], [7362, 5638], [7340, 5728], [7372, 5723], [7398, 5753], [7441, 5761], [7459, 5729], [7513, 5726], [7529, 5738], [7583, 5712], [7604, 5686], [7631, 5693], [7668, 5680], [7680, 5702], [7704, 5697], [7755, 5750], [7799, 5752], [7829, 5776], [7882, 5761], [7915, 5794], [7916, 5837], [7981, 5848], [8019, 5910], [8077, 5909], [8150, 5864], [8147, 5813], [8157, 5780], [8197, 5760], [8200, 5724], [8180, 5693], [8217, 5682], [8278, 5717], [8300, 5718], [8317, 5788], [8361, 5786], [8423, 5821], [8424, 5862], [8481, 5873], [8483, 5909], [8563, 5941], [8595, 5932], [8612, 5898], [8664, 5880], [8680, 5863], [8712, 5868], [8752, 5846], [8764, 5809], [8801, 5850], [8804, 5813], [8831, 5787], [8856, 5799], [8876, 5700], [8885, 5676], [8935, 5655], [8939, 5640], [8924, 5618], [8943, 5540], [8990, 5478], [8986, 5414], [8970, 5381], [8982, 5321], [8929, 5287], [8869, 5301], [8855, 5250], [8887, 5211], [8897, 5170], [8919, 5148], [8910, 5114], [8951, 5088], [8965, 5063], [9001, 5051], [9050, 5060], [9082, 5071], [9062, 5045], [8994, 4910], [8876, 4746], [8798, 4667], [8745, 4645], [8755, 4675], [8751, 4731], [8719, 4738], [8694, 4763], [8676, 4711], [8653, 4701], [8701, 4690], [8725, 4656], [8620, 4583], [8619, 4552], [8596, 4555], [8610, 4466], [8604, 4420], [8569, 4454], [8595, 4408], [8579, 4393], [8597, 4374], [8616, 4401], [8616, 4371], [8594, 4312], [8594, 4284], [8565, 4182], [8574, 4141], [8572, 4021], [8583, 3882], [8596, 3844], [8533, 3679], [8504, 3576], [8505, 3548], [8477, 3475], [8474, 3349], [8484, 3326], [8444, 3275], [8381, 3240], [8344, 3190], [8328, 3154], [8200, 3253], [8195, 3262]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.AP",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.61,
+			"hc-middle-y": 0.58,
+			"hc-key": "br-ap",
+			"hc-a2": "AP",
+			"labelrank": "2",
+			"hasc": "BR.AP",
+			"alt-name": null,
+			"woe-id": "2344846",
+			"subregion": null,
+			"fips": "BR03",
+			"postal-code": "AP",
+			"name": "Amapá",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-51.6842",
+			"woe-name": "Amapá",
+			"latitude": "1.41157",
+			"woe-label": "Amapa, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "MultiPolygon",
+			"coordinates": [[[[5632, 8641], [5624, 8649], [5673, 8680], [5623, 8593], [5575, 8590], [5589, 8621], [5632, 8641]]], [[[5524, 8971], [5522, 8990], [5565, 8923], [5524, 8905], [5506, 8938], [5524, 8971]]], [[[5121, 8062], [5079, 8046], [4994, 8086], [4983, 8142], [4950, 8140], [4947, 8203], [4918, 8228], [4919, 8273], [4864, 8333], [4839, 8329], [4811, 8398], [4804, 8451], [4780, 8490], [4784, 8582], [4742, 8599], [4699, 8644], [4685, 8703], [4693, 8732], [4665, 8727], [4660, 8761], [4631, 8776], [4567, 8772], [4535, 8805], [4515, 8800], [4489, 8842], [4434, 8871], [4331, 8874], [4315, 8940], [4337, 9011], [4320, 9064], [4340, 9061], [4340, 9027], [4379, 9024], [4403, 8996], [4499, 8968], [4583, 9023], [4667, 9005], [4719, 9034], [4750, 9007], [4826, 8986], [4849, 9009], [4897, 9037], [4940, 9096], [4934, 9114], [4995, 9231], [4993, 9251], [5030, 9287], [5090, 9386], [5096, 9410], [5139, 9455], [5153, 9487], [5195, 9511], [5205, 9552], [5233, 9521], [5215, 9591], [5227, 9615], [5263, 9592], [5309, 9538], [5321, 9500], [5323, 9395], [5339, 9467], [5349, 9460], [5346, 9320], [5388, 9166], [5399, 9158], [5444, 9043], [5462, 8985], [5522, 8887], [5601, 8888], [5651, 8869], [5677, 8845], [5687, 8760], [5676, 8736], [5614, 8714], [5674, 8721], [5683, 8706], [5605, 8637], [5565, 8610], [5522, 8562], [5482, 8486], [5432, 8430], [5393, 8426], [5354, 8377], [5285, 8357], [5303, 8347], [5283, 8323], [5249, 8252], [5179, 8175], [5171, 8094], [5121, 8062]]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.MS",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.46,
+			"hc-middle-y": 0.47,
+			"hc-key": "br-ms",
+			"hc-a2": "MS",
+			"labelrank": "2",
+			"hasc": "BR.MS",
+			"alt-name": null,
+			"woe-id": "2344853",
+			"subregion": null,
+			"fips": "BR11",
+			"postal-code": "MS",
+			"name": "Mato Grosso do Sul",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-54.5502",
+			"woe-name": "Mato Grosso do Sul",
+			"latitude": "-20.6756",
+			"woe-label": "Mato Grosso do Sul, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[4517, 1742], [4474, 1713], [4428, 1751], [4373, 1781], [4296, 1735], [4230, 1721], [4180, 1732], [4167, 1799], [4145, 1835], [4148, 1898], [4143, 1939], [4116, 2003], [4109, 2053], [4116, 2106], [4087, 2131], [4082, 2171], [4052, 2192], [3969, 2201], [3938, 2220], [3910, 2257], [3887, 2252], [3848, 2204], [3835, 2217], [3802, 2195], [3706, 2222], [3662, 2214], [3602, 2222], [3591, 2242], [3543, 2230], [3505, 2259], [3520, 2296], [3512, 2311], [3526, 2356], [3514, 2374], [3515, 2422], [3534, 2456], [3533, 2538], [3541, 2561], [3516, 2574], [3530, 2590], [3508, 2605], [3529, 2620], [3497, 2633], [3493, 2705], [3468, 2720], [3447, 2778], [3524, 2831], [3453, 2899], [3537, 3088], [3556, 3092], [3538, 3129], [3595, 3332], [3545, 3425], [3546, 3456], [3579, 3434], [3628, 3422], [3704, 3445], [3744, 3481], [3747, 3504], [3777, 3530], [3802, 3576], [3916, 3587], [3937, 3606], [3976, 3615], [4060, 3570], [4108, 3559], [4128, 3529], [4222, 3479], [4297, 3489], [4351, 3526], [4396, 3527], [4424, 3509], [4432, 3483], [4498, 3496], [4549, 3543], [4584, 3585], [4621, 3599], [4603, 3492], [4574, 3479], [4539, 3420], [4609, 3390], [4720, 3393], [4787, 3387], [4786, 3311], [4804, 3284], [4825, 3296], [4859, 3283], [4829, 3215], [4835, 3203], [4902, 3191], [4934, 3195], [4974, 3164], [4993, 3165], [5049, 3128], [5158, 3075], [5220, 3063], [5245, 3039], [5290, 3030], [5336, 2977], [5317, 2899], [5324, 2802], [5286, 2749], [5236, 2731], [5158, 2639], [5154, 2590], [5089, 2509], [5091, 2461], [5028, 2404], [5044, 2372], [5015, 2352], [4973, 2297], [4958, 2253], [4919, 2219], [4878, 2200], [4835, 2165], [4803, 2154], [4751, 2087], [4670, 2052], [4640, 2027], [4628, 1976], [4607, 1923], [4550, 1887], [4519, 1778], [4517, 1742]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.MG",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.60,
+			"hc-middle-y": 0.45,
+			"hc-key": "br-mg",
+			"hc-a2": "MG",
+			"labelrank": "2",
+			"hasc": "BR.MG",
+			"alt-name": "Minas|Minas Geraes",
+			"woe-id": "2344856",
+			"subregion": null,
+			"fips": "BR15",
+			"postal-code": "MG",
+			"name": "Minas Gerais",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-44.4808",
+			"woe-name": "Minas Gerais",
+			"latitude": "-18.5895",
+			"woe-label": "Minas Gerais, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[5324, 2802], [5317, 2899], [5336, 2977], [5361, 2973], [5368, 3026], [5419, 3076], [5447, 3076], [5460, 3125], [5508, 3184], [5596, 3210], [5648, 3207], [5730, 3239], [5763, 3203], [5825, 3262], [5874, 3283], [6068, 3268], [6091, 3254], [6151, 3241], [6218, 3274], [6246, 3305], [6320, 3343], [6303, 3394], [6326, 3452], [6322, 3486], [6258, 3515], [6268, 3549], [6364, 3644], [6336, 3733], [6288, 3782], [6318, 3835], [6332, 3907], [6332, 3907], [6332, 3907], [6333, 3907], [6332, 3907], [6352, 3909], [6380, 3939], [6394, 3934], [6460, 3958], [6453, 4029], [6436, 4074], [6459, 4103], [6440, 4130], [6452, 4180], [6494, 4187], [6520, 4172], [6544, 4180], [6538, 4248], [6556, 4271], [6590, 4253], [6613, 4214], [6672, 4208], [6687, 4223], [6699, 4190], [6670, 4117], [6711, 4149], [6768, 4148], [6813, 4199], [6838, 4197], [6877, 4219], [6904, 4250], [6937, 4255], [6998, 4287], [7011, 4308], [7087, 4354], [7154, 4379], [7283, 4354], [7295, 4345], [7268, 4285], [7271, 4258], [7314, 4234], [7371, 4217], [7444, 4256], [7517, 4241], [7601, 4163], [7614, 4165], [7743, 4087], [7783, 4088], [7821, 4103], [7934, 3987], [7938, 3924], [7983, 3903], [8042, 3930], [8090, 3909], [8115, 3913], [8150, 3888], [8166, 3893], [8229, 3877], [8323, 3787], [8299, 3731], [8266, 3710], [8242, 3669], [8211, 3665], [8193, 3576], [8147, 3582], [8131, 3566], [8114, 3509], [8115, 3473], [8100, 3437], [8133, 3413], [8130, 3387], [8199, 3323], [8195, 3262], [8138, 3291], [8073, 3278], [8008, 3278], [8041, 3241], [8005, 3241], [7965, 3222], [7941, 3190], [7975, 3143], [7964, 3091], [7990, 3074], [7986, 3042], [7905, 3034], [7939, 3022], [7950, 2980], [7976, 2946], [7977, 2903], [7965, 2854], [7909, 2805], [7897, 2747], [7864, 2725], [7843, 2660], [7832, 2653], [7751, 2661], [7712, 2618], [7726, 2601], [7717, 2539], [7700, 2503], [7672, 2468], [7637, 2467], [7596, 2352], [7575, 2334], [7551, 2271], [7573, 2247], [7371, 2174], [7292, 2186], [7260, 2173], [7170, 2177], [7095, 2151], [7062, 2132], [7004, 2134], [6945, 2106], [6901, 2098], [6842, 2085], [6748, 2039], [6717, 2040], [6688, 2059], [6646, 2030], [6660, 2002], [6630, 1986], [6617, 1998], [6556, 1982], [6501, 1997], [6501, 2024], [6475, 2044], [6499, 2085], [6435, 2122], [6421, 2147], [6449, 2199], [6424, 2219], [6446, 2241], [6436, 2289], [6485, 2368], [6482, 2386], [6404, 2418], [6355, 2408], [6343, 2466], [6326, 2485], [6322, 2527], [6303, 2547], [6307, 2576], [6336, 2624], [6326, 2654], [6290, 2684], [6308, 2744], [6256, 2794], [6249, 2816], [6200, 2798], [6185, 2814], [6142, 2807], [6128, 2777], [6112, 2802], [6089, 2768], [6051, 2780], [5887, 2771], [5875, 2745], [5879, 2704], [5852, 2706], [5853, 2754], [5835, 2778], [5806, 2737], [5788, 2738], [5770, 2774], [5776, 2829], [5747, 2826], [5705, 2842], [5617, 2843], [5497, 2863], [5475, 2885], [5440, 2882], [5414, 2852], [5357, 2831], [5324, 2802]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.GO",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.51,
+			"hc-middle-y": 0.54,
+			"hc-key": "br-go",
+			"hc-a2": "GO",
+			"labelrank": "2",
+			"hasc": "BR.GO",
+			"alt-name": "Goiáz|Goyáz",
+			"woe-id": "2344852",
+			"subregion": null,
+			"fips": "BR29",
+			"postal-code": "GO",
+			"name": "Goiás",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-49.5786",
+			"woe-name": "Goiás",
+			"latitude": "-15.863",
+			"woe-label": "Goias, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[6318, 3835], [6288, 3782], [6336, 3733], [6364, 3644], [6268, 3549], [6258, 3515], [6322, 3486], [6326, 3452], [6303, 3394], [6320, 3343], [6246, 3305], [6218, 3274], [6151, 3241], [6091, 3254], [6068, 3268], [5874, 3283], [5825, 3262], [5763, 3203], [5730, 3239], [5648, 3207], [5596, 3210], [5508, 3184], [5460, 3125], [5447, 3076], [5419, 3076], [5368, 3026], [5361, 2973], [5336, 2977], [5290, 3030], [5245, 3039], [5220, 3063], [5158, 3075], [5049, 3128], [4993, 3165], [4974, 3164], [4934, 3195], [4902, 3191], [4835, 3203], [4829, 3215], [4859, 3283], [4825, 3296], [4804, 3284], [4786, 3311], [4787, 3387], [4738, 3513], [4749, 3591], [4791, 3653], [4798, 3706], [4855, 3740], [4902, 3799], [4907, 3828], [4893, 3865], [4929, 3883], [4928, 3899], [4985, 3935], [5006, 3969], [5105, 3999], [5161, 4116], [5167, 4163], [5206, 4203], [5259, 4232], [5298, 4226], [5318, 4251], [5355, 4353], [5348, 4386], [5369, 4463], [5387, 4468], [5387, 4576], [5405, 4586], [5416, 4623], [5442, 4656], [5468, 4709], [5464, 4751], [5489, 4786], [5493, 4816], [5504, 4856], [5530, 4899], [5586, 4938], [5589, 4916], [5550, 4831], [5559, 4790], [5709, 4720], [5790, 4699], [5815, 4767], [5860, 4840], [5893, 4862], [5898, 4836], [5944, 4800], [5958, 4738], [5955, 4667], [5980, 4670], [5988, 4714], [6067, 4710], [6129, 4740], [6121, 4711], [6252, 4659], [6242, 4716], [6265, 4726], [6291, 4674], [6414, 4727], [6486, 4732], [6536, 4771], [6649, 4804], [6688, 4769], [6670, 4739], [6662, 4686], [6686, 4675], [6682, 4648], [6657, 4633], [6631, 4564], [6633, 4504], [6666, 4415], [6720, 4366], [6707, 4315], [6719, 4271], [6687, 4223], [6672, 4208], [6613, 4214], [6590, 4253], [6556, 4271], [6538, 4248], [6544, 4180], [6520, 4172], [6494, 4187], [6452, 4180], [6440, 4130], [6459, 4103], [6436, 4074], [6453, 4029], [6460, 3958], [6394, 3934], [6380, 3939], [6352, 3909], [6332, 3907], [6318, 3923], [6335, 4033], [6305, 4059], [6102, 4067], [6084, 4011], [6093, 3999], [6072, 3971], [6097, 3914], [6332, 3907], [6332, 3907], [6332, 3907], [6318, 3835]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.RS",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.52,
+			"hc-middle-y": 0.36,
+			"hc-key": "br-rs",
+			"hc-a2": "RS",
+			"labelrank": "2",
+			"hasc": "BR.RS",
+			"alt-name": null,
+			"woe-id": "2344864",
+			"subregion": null,
+			"fips": "BR23",
+			"postal-code": "RS",
+			"name": "Rio Grande do Sul",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-53.656",
+			"woe-name": "Rio Grande do Sul",
+			"latitude": "-29.7277",
+			"woe-label": "Rio Grande do Sul, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[5580, 230], [5555, 198], [5494, 96], [5423, -82], [5321, -241], [5215, -359], [5115, -439], [5043, -481], [4989, -539], [5007, -485], [4990, -459], [4999, -445], [5029, -463], [5081, -443], [5152, -368], [5193, -354], [5209, -325], [5217, -244], [5252, -246], [5265, -205], [5320, -170], [5334, -129], [5334, -49], [5353, -86], [5371, -41], [5356, -5], [5339, -31], [5284, -35], [5279, -70], [5251, -53], [5256, -26], [5204, 4], [5193, 51], [5181, -9], [5214, -47], [5187, -120], [5165, -129], [5169, -191], [5146, -193], [5138, -227], [5148, -246], [5104, -260], [5100, -294], [5032, -307], [5013, -340], [5010, -401], [5003, -379], [4989, -413], [4963, -422], [4955, -465], [4975, -473], [4954, -489], [4959, -522], [4991, -508], [4988, -545], [4949, -576], [4919, -636], [4895, -720], [4859, -803], [4812, -864], [4707, -961], [4681, -979], [4643, -953], [4666, -918], [4662, -838], [4695, -790], [4710, -800], [4733, -762], [4742, -718], [4772, -725], [4799, -752], [4833, -735], [4868, -658], [4868, -634], [4841, -588], [4854, -546], [4837, -551], [4813, -593], [4825, -603], [4775, -634], [4771, -657], [4731, -679], [4674, -652], [4619, -589], [4614, -558], [4590, -508], [4520, -461], [4504, -469], [4426, -404], [4421, -379], [4395, -348], [4341, -338], [4291, -293], [4277, -309], [4235, -282], [4212, -234], [4155, -177], [4090, -242], [4055, -244], [4054, -165], [3999, -101], [3965, -80], [3901, -15], [3852, 24], [3793, 22], [3762, -30], [3684, -28], [3665, -3], [3690, 8], [3732, 55], [3739, 101], [3786, 120], [3885, 244], [3898, 287], [3947, 319], [3952, 346], [3974, 366], [3977, 395], [4002, 405], [4041, 450], [4043, 475], [4070, 485], [4084, 517], [4117, 501], [4127, 523], [4100, 549], [4141, 582], [4181, 593], [4212, 639], [4246, 656], [4283, 660], [4269, 677], [4311, 689], [4314, 720], [4404, 759], [4450, 785], [4465, 775], [4492, 827], [4514, 815], [4545, 852], [4576, 849], [4617, 852], [4660, 841], [4661, 859], [4693, 874], [4716, 861], [4707, 840], [4772, 866], [4791, 833], [4817, 848], [4859, 817], [4922, 832], [4938, 812], [4975, 803], [4988, 817], [5028, 799], [5056, 752], [5086, 744], [5115, 756], [5142, 730], [5166, 730], [5221, 674], [5257, 658], [5273, 626], [5304, 600], [5308, 572], [5330, 563], [5366, 501], [5465, 477], [5478, 467], [5547, 474], [5578, 468], [5590, 432], [5567, 425], [5526, 379], [5526, 336], [5511, 294], [5495, 297], [5471, 269], [5469, 245], [5497, 224], [5492, 255], [5522, 268], [5580, 230]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.TO",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.47,
+			"hc-middle-y": 0.58,
+			"hc-key": "br-to",
+			"hc-a2": "TO",
+			"labelrank": "2",
+			"hasc": "BR.TO",
+			"alt-name": null,
+			"woe-id": "2344870",
+			"subregion": null,
+			"fips": "BR31",
+			"postal-code": "TO",
+			"name": "Tocantins",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-48.2502",
+			"woe-name": "Tocantins",
+			"latitude": "-10.223",
+			"woe-label": "Tocantins, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[6747, 5495], [6780, 5490], [6799, 5490], [6770, 5452], [6706, 5421], [6646, 5374], [6664, 5339], [6626, 5316], [6599, 5258], [6569, 5220], [6607, 5168], [6671, 5154], [6700, 5137], [6694, 5119], [6655, 5103], [6653, 5070], [6678, 5072], [6699, 5045], [6661, 5026], [6626, 4991], [6630, 4909], [6672, 4885], [6671, 4857], [6649, 4804], [6536, 4771], [6486, 4732], [6414, 4727], [6291, 4674], [6265, 4726], [6242, 4716], [6252, 4659], [6121, 4711], [6129, 4740], [6067, 4710], [5988, 4714], [5980, 4670], [5955, 4667], [5958, 4738], [5944, 4800], [5898, 4836], [5893, 4862], [5860, 4840], [5815, 4767], [5790, 4699], [5709, 4720], [5559, 4790], [5550, 4831], [5589, 4916], [5586, 4938], [5530, 4899], [5504, 4856], [5493, 4816], [5463, 4826], [5444, 4876], [5460, 4931], [5444, 4998], [5442, 5051], [5451, 5085], [5436, 5131], [5452, 5160], [5427, 5190], [5464, 5320], [5458, 5346], [5469, 5424], [5491, 5451], [5517, 5511], [5531, 5576], [5552, 5599], [5571, 5648], [5595, 5688], [5623, 5794], [5706, 5903], [5759, 5933], [5811, 6037], [5831, 6052], [5863, 6141], [5873, 6212], [5833, 6238], [5811, 6270], [5816, 6297], [5869, 6373], [5860, 6446], [5866, 6463], [5919, 6496], [6010, 6528], [6032, 6591], [6061, 6614], [6092, 6611], [6082, 6664], [6122, 6684], [6109, 6718], [6140, 6735], [6122, 6787], [6163, 6810], [6101, 6878], [6049, 6876], [6002, 6892], [6034, 6899], [6065, 6939], [6110, 6944], [6161, 6918], [6204, 6924], [6241, 6911], [6248, 6882], [6280, 6879], [6331, 6854], [6350, 6824], [6346, 6781], [6364, 6745], [6360, 6680], [6374, 6643], [6364, 6575], [6341, 6514], [6333, 6428], [6297, 6386], [6269, 6377], [6295, 6345], [6332, 6352], [6335, 6304], [6376, 6246], [6429, 6190], [6466, 6137], [6506, 6160], [6589, 6173], [6611, 6156], [6618, 6127], [6595, 6058], [6606, 6035], [6526, 6026], [6500, 5986], [6492, 5916], [6443, 5860], [6481, 5850], [6507, 5822], [6511, 5783], [6531, 5754], [6584, 5728], [6590, 5712], [6552, 5659], [6596, 5627], [6605, 5586], [6638, 5539], [6709, 5527], [6747, 5495]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.PI",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.51,
+			"hc-middle-y": 0.66,
+			"hc-key": "br-pi",
+			"hc-a2": "PI",
+			"labelrank": "2",
+			"hasc": "BR.PI",
+			"alt-name": "Piauhy",
+			"woe-id": "2344861",
+			"subregion": null,
+			"fips": "BR20",
+			"postal-code": "PI",
+			"name": "Piauí",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-43.1974",
+			"woe-name": "Piauí",
+			"latitude": "-8.086980000000001",
+			"woe-label": "Piaui, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[6799, 5490], [6780, 5490], [6747, 5495], [6746, 5534], [6773, 5583], [6782, 5714], [6794, 5734], [6768, 5772], [6766, 5813], [6746, 5884], [6762, 5923], [6792, 5947], [6817, 6021], [6863, 6099], [6874, 6178], [6894, 6232], [6943, 6264], [7019, 6281], [7077, 6316], [7106, 6305], [7180, 6374], [7220, 6384], [7234, 6413], [7296, 6479], [7397, 6495], [7456, 6454], [7529, 6477], [7590, 6479], [7608, 6500], [7625, 6552], [7629, 6617], [7597, 6636], [7567, 6674], [7562, 6796], [7577, 6803], [7639, 6882], [7647, 6925], [7635, 6989], [7608, 7034], [7609, 7067], [7634, 7112], [7610, 7143], [7600, 7186], [7672, 7274], [7692, 7312], [7689, 7337], [7739, 7407], [7751, 7399], [7818, 7411], [7878, 7467], [7924, 7523], [7924, 7599], [7934, 7605], [7971, 7566], [8063, 7553], [8089, 7527], [8087, 7509], [8039, 7440], [8032, 7407], [8057, 7330], [8076, 7301], [8090, 7234], [8120, 7196], [8133, 7153], [8086, 7094], [8098, 6986], [8132, 6914], [8128, 6874], [8161, 6842], [8174, 6673], [8196, 6603], [8203, 6535], [8219, 6487], [8283, 6464], [8299, 6442], [8251, 6334], [8261, 6278], [8218, 6268], [8236, 6208], [8224, 6174], [8255, 6152], [8253, 6096], [8240, 6070], [8195, 6037], [8145, 5985], [8119, 5989], [8064, 5930], [8019, 5910], [7981, 5848], [7916, 5837], [7915, 5794], [7882, 5761], [7829, 5776], [7799, 5752], [7755, 5750], [7704, 5697], [7680, 5702], [7668, 5680], [7631, 5693], [7604, 5686], [7583, 5712], [7529, 5738], [7513, 5726], [7459, 5729], [7441, 5761], [7398, 5753], [7372, 5723], [7340, 5728], [7362, 5638], [7373, 5622], [7365, 5556], [7304, 5447], [7282, 5442], [7246, 5405], [7219, 5394], [7164, 5407], [7131, 5397], [7071, 5356], [7062, 5335], [6990, 5326], [6917, 5361], [6884, 5407], [6876, 5444], [6841, 5489], [6799, 5490]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.AL",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.62,
+			"hc-middle-y": 0.61,
+			"hc-key": "br-al",
+			"hc-a2": "AL",
+			"labelrank": "2",
+			"hasc": "BR.AL",
+			"alt-name": null,
+			"woe-id": "2344845",
+			"subregion": null,
+			"fips": "BR02",
+			"postal-code": "AL",
+			"name": "Alagoas",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-36.6917",
+			"woe-name": "Alagoas",
+			"latitude": "-9.773910000000001",
+			"woe-label": "Alagoas, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[9731, 5780], [9683, 5700], [9638, 5658], [9569, 5567], [9542, 5594], [9538, 5551], [9469, 5458], [9407, 5408], [9361, 5337], [9347, 5365], [9319, 5366], [9306, 5412], [9288, 5407], [9251, 5426], [9222, 5460], [9221, 5486], [9148, 5523], [9127, 5551], [9054, 5577], [8939, 5640], [8935, 5655], [8885, 5676], [8876, 5700], [8917, 5740], [8951, 5750], [8996, 5796], [9015, 5829], [9032, 5794], [9078, 5802], [9167, 5712], [9232, 5676], [9263, 5701], [9332, 5689], [9397, 5713], [9461, 5764], [9493, 5797], [9552, 5801], [9573, 5786], [9643, 5807], [9664, 5792], [9731, 5780]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.PB",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.73,
+			"hc-middle-y": 0.46,
+			"hc-key": "br-pb",
+			"hc-a2": "PB",
+			"labelrank": "2",
+			"hasc": "BR.PB",
+			"alt-name": "Parahyba",
+			"woe-id": "2344858",
+			"subregion": null,
+			"fips": "BR17",
+			"postal-code": "PB",
+			"name": "Paraíba",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-36.2726",
+			"woe-name": "Paraíba",
+			"latitude": "-7.34234",
+			"woe-label": "Paraiba, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[9813, 6481], [9809, 6448], [9825, 6368], [9837, 6360], [9819, 6297], [9842, 6337], [9851, 6288], [9841, 6176], [9820, 6176], [9774, 6218], [9718, 6228], [9688, 6207], [9654, 6209], [9635, 6152], [9551, 6125], [9547, 6111], [9393, 6112], [9386, 6088], [9352, 6085], [9326, 6061], [9334, 6040], [9290, 6002], [9239, 5986], [9195, 6022], [9191, 6076], [9138, 6072], [9189, 6139], [9183, 6194], [9234, 6211], [9234, 6241], [9170, 6282], [9119, 6262], [9086, 6225], [9042, 6206], [8965, 6145], [8917, 6147], [8887, 6125], [8862, 6169], [8814, 6152], [8768, 6196], [8817, 6288], [8778, 6328], [8766, 6405], [8798, 6442], [8790, 6461], [8827, 6550], [8893, 6512], [8935, 6506], [8956, 6527], [9016, 6555], [9041, 6602], [9180, 6642], [9203, 6614], [9140, 6537], [9129, 6501], [9107, 6491], [9104, 6455], [9153, 6448], [9184, 6410], [9250, 6442], [9304, 6422], [9307, 6375], [9323, 6361], [9362, 6374], [9384, 6415], [9376, 6458], [9401, 6461], [9383, 6503], [9390, 6533], [9421, 6553], [9446, 6552], [9456, 6520], [9546, 6502], [9618, 6511], [9674, 6497], [9717, 6477], [9789, 6472], [9813, 6481]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.CE",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.42,
+			"hc-middle-y": 0.43,
+			"hc-key": "br-ce",
+			"hc-a2": "CE",
+			"labelrank": "2",
+			"hasc": "BR.CE",
+			"alt-name": null,
+			"woe-id": "2344849",
+			"subregion": null,
+			"fips": "BR06",
+			"postal-code": "CE",
+			"name": "Ceará",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-39.3429",
+			"woe-name": "Ceará",
+			"latitude": "-5.37602",
+			"woe-label": "Ceara, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[8827, 6550], [8790, 6461], [8798, 6442], [8766, 6405], [8778, 6328], [8817, 6288], [8768, 6196], [8734, 6184], [8690, 6133], [8661, 6132], [8652, 6162], [8615, 6184], [8588, 6223], [8537, 6245], [8505, 6275], [8452, 6284], [8392, 6269], [8261, 6278], [8251, 6334], [8299, 6442], [8283, 6464], [8219, 6487], [8203, 6535], [8196, 6603], [8174, 6673], [8161, 6842], [8128, 6874], [8132, 6914], [8098, 6986], [8086, 7094], [8133, 7153], [8120, 7196], [8090, 7234], [8076, 7301], [8057, 7330], [8032, 7407], [8039, 7440], [8087, 7509], [8089, 7527], [8083, 7565], [8120, 7563], [8276, 7577], [8299, 7589], [8442, 7569], [8519, 7514], [8543, 7514], [8580, 7483], [8615, 7471], [8692, 7415], [8718, 7409], [8737, 7377], [8767, 7365], [8807, 7327], [8858, 7320], [8885, 7270], [8920, 7243], [8959, 7186], [9028, 7122], [9051, 7115], [9067, 7080], [9095, 7053], [9173, 7026], [9197, 6987], [9111, 6960], [9060, 6923], [9003, 6809], [8965, 6766], [8941, 6691], [8892, 6636], [8860, 6641], [8812, 6584], [8804, 6546], [8827, 6550]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.SE",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.60,
+			"hc-middle-y": 0.73,
+			"hc-key": "br-se",
+			"hc-a2": "SE",
+			"labelrank": "2",
+			"hasc": "BR.SE",
+			"alt-name": null,
+			"woe-id": "2344869",
+			"subregion": null,
+			"fips": "BR28",
+			"postal-code": "SE",
+			"name": "Sergipe",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-37.3836",
+			"woe-name": "Sergipe",
+			"latitude": "-10.5918",
+			"woe-label": "Sergipe, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[9361, 5337], [9314, 5325], [9221, 5266], [9180, 5217], [9145, 5150], [9114, 5126], [9097, 5090], [9066, 5092], [9050, 5060], [9001, 5051], [8965, 5063], [8951, 5088], [8910, 5114], [8919, 5148], [8897, 5170], [8887, 5211], [8855, 5250], [8869, 5301], [8929, 5287], [8982, 5321], [8970, 5381], [8986, 5414], [8990, 5478], [8943, 5540], [8924, 5618], [8939, 5640], [9054, 5577], [9127, 5551], [9148, 5523], [9221, 5486], [9222, 5460], [9251, 5426], [9288, 5407], [9306, 5412], [9319, 5366], [9347, 5365], [9361, 5337]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.RR",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.59,
+			"hc-middle-y": 0.51,
+			"hc-key": "br-rr",
+			"hc-a2": "RR",
+			"labelrank": "2",
+			"hasc": "BR.RR",
+			"alt-name": "Rio Branco",
+			"woe-id": "2344866",
+			"subregion": null,
+			"fips": "BR25",
+			"postal-code": "RR",
+			"name": "Roraima",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-61.3325",
+			"woe-name": "Roraima",
+			"latitude": "1.93803",
+			"woe-label": "Roraima, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[1919, 9011], [1920, 9063], [1796, 9066], [1736, 9078], [1750, 9144], [1720, 9212], [1688, 9262], [1683, 9345], [1695, 9395], [1662, 9432], [1605, 9469], [1569, 9510], [1528, 9582], [1547, 9592], [1589, 9544], [1652, 9552], [1719, 9533], [1735, 9483], [1754, 9475], [1788, 9494], [1858, 9489], [1889, 9466], [1913, 9497], [1952, 9484], [2031, 9392], [2049, 9382], [2087, 9391], [2100, 9409], [2090, 9476], [2097, 9510], [2154, 9514], [2161, 9539], [2203, 9552], [2256, 9529], [2300, 9547], [2329, 9543], [2389, 9572], [2431, 9570], [2462, 9618], [2508, 9625], [2507, 9647], [2547, 9637], [2586, 9644], [2617, 9695], [2656, 9710], [2698, 9750], [2702, 9777], [2682, 9837], [2742, 9826], [2810, 9851], [2874, 9800], [2859, 9700], [2826, 9641], [2883, 9638], [2954, 9603], [2943, 9546], [2997, 9477], [2955, 9414], [2911, 9388], [2915, 9320], [2876, 9237], [2864, 9133], [2890, 9068], [2891, 9040], [2936, 9013], [2933, 8898], [2962, 8895], [2952, 8874], [2982, 8864], [3074, 8766], [3149, 8748], [3177, 8445], [2927, 8447], [2855, 8445], [2827, 8419], [2776, 8317], [2753, 8238], [2774, 8210], [2768, 8186], [2732, 8176], [2719, 8151], [2657, 8146], [2635, 8191], [2603, 8228], [2553, 8245], [2455, 8204], [2435, 8179], [2422, 8118], [2427, 8097], [2411, 8026], [2416, 7986], [2372, 8002], [2339, 8000], [2297, 8062], [2247, 8090], [2187, 8151], [2163, 8166], [2171, 8188], [2199, 8182], [2217, 8203], [2201, 8252], [2201, 8287], [2171, 8320], [2143, 8387], [2158, 8409], [2146, 8432], [2156, 8503], [2169, 8534], [2155, 8588], [2180, 8608], [2131, 8779], [2086, 8832], [2106, 8870], [2108, 8929], [2069, 8949], [2026, 8950], [1986, 8994], [1942, 8990], [1919, 9011]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.PE",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.55,
+			"hc-middle-y": 0.52,
+			"hc-key": "br-pe",
+			"hc-a2": "PE",
+			"labelrank": "2",
+			"hasc": "BR.PE",
+			"alt-name": "Pernambouc",
+			"woe-id": "2344860",
+			"subregion": null,
+			"fips": "BR30",
+			"postal-code": "PE",
+			"name": "Pernambuco",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-37.2958",
+			"woe-name": "Pernambuco",
+			"latitude": "-8.47283",
+			"woe-label": "Pernambuco, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[9731, 5780], [9664, 5792], [9643, 5807], [9573, 5786], [9552, 5801], [9493, 5797], [9461, 5764], [9397, 5713], [9332, 5689], [9263, 5701], [9232, 5676], [9167, 5712], [9078, 5802], [9032, 5794], [9015, 5829], [8996, 5796], [8951, 5750], [8917, 5740], [8876, 5700], [8856, 5799], [8831, 5787], [8804, 5813], [8801, 5850], [8764, 5809], [8752, 5846], [8712, 5868], [8680, 5863], [8664, 5880], [8612, 5898], [8595, 5932], [8563, 5941], [8483, 5909], [8481, 5873], [8424, 5862], [8423, 5821], [8361, 5786], [8317, 5788], [8300, 5718], [8278, 5717], [8217, 5682], [8180, 5693], [8200, 5724], [8197, 5760], [8157, 5780], [8147, 5813], [8150, 5864], [8077, 5909], [8019, 5910], [8064, 5930], [8119, 5989], [8145, 5985], [8195, 6037], [8240, 6070], [8253, 6096], [8255, 6152], [8224, 6174], [8236, 6208], [8218, 6268], [8261, 6278], [8392, 6269], [8452, 6284], [8505, 6275], [8537, 6245], [8588, 6223], [8615, 6184], [8652, 6162], [8661, 6132], [8690, 6133], [8734, 6184], [8768, 6196], [8814, 6152], [8862, 6169], [8887, 6125], [8917, 6147], [8965, 6145], [9042, 6206], [9086, 6225], [9119, 6262], [9170, 6282], [9234, 6241], [9234, 6211], [9183, 6194], [9189, 6139], [9138, 6072], [9191, 6076], [9195, 6022], [9239, 5986], [9290, 6002], [9334, 6040], [9326, 6061], [9352, 6085], [9386, 6088], [9393, 6112], [9547, 6111], [9551, 6125], [9635, 6152], [9654, 6209], [9688, 6207], [9718, 6228], [9774, 6218], [9820, 6176], [9843, 6152], [9829, 6094], [9838, 6069], [9800, 5973], [9796, 5941], [9738, 5811], [9731, 5780]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.PR",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.45,
+			"hc-middle-y": 0.50,
+			"hc-key": "br-pr",
+			"hc-a2": "PR",
+			"labelrank": "2",
+			"hasc": "BR.PR",
+			"alt-name": null,
+			"woe-id": "2344859",
+			"subregion": null,
+			"fips": "BR18",
+			"postal-code": "PR",
+			"name": "Paraná",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-51.3228",
+			"woe-name": "Paraná",
+			"latitude": "-24.6618",
+			"woe-label": "Parana, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[4621, 1100], [4595, 1164], [4580, 1180], [4577, 1225], [4559, 1275], [4505, 1297], [4509, 1311], [4435, 1286], [4420, 1271], [4385, 1290], [4383, 1330], [4431, 1347], [4422, 1367], [4494, 1386], [4441, 1393], [4440, 1413], [4465, 1435], [4436, 1448], [4442, 1490], [4465, 1474], [4453, 1505], [4467, 1527], [4499, 1528], [4469, 1546], [4465, 1585], [4479, 1646], [4461, 1682], [4474, 1713], [4517, 1742], [4519, 1778], [4550, 1887], [4607, 1923], [4628, 1976], [4640, 2027], [4670, 2052], [4751, 2087], [4808, 2123], [4996, 2101], [5035, 2135], [5084, 2109], [5168, 2087], [5218, 2096], [5280, 2062], [5339, 2046], [5363, 2012], [5403, 2017], [5490, 2006], [5572, 2015], [5587, 1980], [5633, 1960], [5655, 1916], [5659, 1875], [5649, 1848], [5673, 1790], [5659, 1748], [5706, 1685], [5750, 1613], [5727, 1560], [5730, 1522], [5782, 1514], [5798, 1529], [5860, 1509], [5902, 1512], [5934, 1492], [5919, 1475], [5910, 1406], [5924, 1398], [5950, 1432], [5996, 1415], [6013, 1356], [6043, 1353], [6029, 1332], [5996, 1291], [5955, 1274], [5969, 1356], [5958, 1335], [5936, 1352], [5945, 1307], [5932, 1290], [5888, 1299], [5863, 1322], [5892, 1275], [5916, 1279], [5956, 1261], [5937, 1248], [5896, 1149], [5763, 1151], [5716, 1121], [5640, 1091], [5552, 1153], [5460, 1144], [5425, 1153], [5377, 1142], [5354, 1097], [5312, 1086], [5269, 1099], [5224, 1068], [5214, 1047], [5226, 996], [5179, 972], [5160, 1000], [5067, 1001], [5034, 1007], [4986, 1044], [4876, 1059], [4833, 1077], [4756, 1069], [4698, 1105], [4672, 1092], [4621, 1100]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.ES",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.35,
+			"hc-middle-y": 0.81,
+			"hc-key": "br-es",
+			"hc-a2": "ES",
+			"labelrank": "2",
+			"hasc": "BR.ES",
+			"alt-name": "Espiritu Santo",
+			"woe-id": "2344851",
+			"subregion": null,
+			"fips": "BR08",
+			"postal-code": "ES",
+			"name": "Espírito Santo",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-40.5436",
+			"woe-name": "Espírito Santo",
+			"latitude": "-19.6916",
+			"woe-label": "Espirito Santo, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[7700, 2503], [7717, 2539], [7726, 2601], [7712, 2618], [7751, 2661], [7832, 2653], [7843, 2660], [7864, 2725], [7897, 2747], [7909, 2805], [7965, 2854], [7977, 2903], [7976, 2946], [7950, 2980], [7939, 3022], [7905, 3034], [7986, 3042], [7990, 3074], [7964, 3091], [7975, 3143], [7941, 3190], [7965, 3222], [8005, 3241], [8041, 3241], [8008, 3278], [8073, 3278], [8138, 3291], [8195, 3262], [8200, 3253], [8328, 3154], [8301, 3053], [8297, 2991], [8301, 2894], [8294, 2844], [8255, 2778], [8203, 2752], [8156, 2676], [8134, 2611], [8102, 2626], [8101, 2601], [8129, 2599], [8101, 2550], [8021, 2460], [7994, 2461], [7968, 2408], [7923, 2344], [7898, 2363], [7846, 2362], [7802, 2375], [7733, 2406], [7731, 2488], [7700, 2503]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.RJ",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.72,
+			"hc-middle-y": 0.56,
+			"hc-key": "br-rj",
+			"hc-a2": "RJ",
+			"labelrank": "2",
+			"hasc": "BR.RJ",
+			"alt-name": null,
+			"woe-id": "2344862",
+			"subregion": null,
+			"fips": "BR21",
+			"postal-code": "RJ",
+			"name": "Rio de Janeiro",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-43.1152",
+			"woe-name": "Rio de Janeiro",
+			"latitude": "-22.4049",
+			"woe-label": "Rio de Janeiro, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[6911, 1831], [6879, 1874], [6895, 1893], [6900, 1934], [6985, 1968], [7037, 1973], [7067, 2005], [7056, 2036], [6972, 2033], [6948, 2041], [6916, 2092], [6901, 2098], [6945, 2106], [7004, 2134], [7062, 2132], [7095, 2151], [7170, 2177], [7260, 2173], [7292, 2186], [7371, 2174], [7573, 2247], [7551, 2271], [7575, 2334], [7596, 2352], [7637, 2467], [7672, 2468], [7700, 2503], [7731, 2488], [7733, 2406], [7802, 2375], [7846, 2362], [7898, 2363], [7923, 2344], [7921, 2319], [7890, 2276], [7907, 2154], [7898, 2136], [7831, 2104], [7719, 2074], [7636, 2009], [7625, 1963], [7649, 1938], [7623, 1928], [7603, 1893], [7458, 1909], [7439, 1902], [7353, 1907], [7329, 1931], [7356, 1963], [7348, 1995], [7296, 1975], [7321, 1932], [7304, 1905], [7101, 1892], [7205, 1908], [7141, 1941], [7114, 1938], [7044, 1900], [7080, 1871], [7017, 1861], [7007, 1877], [7042, 1902], [7042, 1922], [6992, 1926], [6922, 1899], [6919, 1869], [6968, 1850], [6948, 1828], [6911, 1831]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.RN",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.53,
+			"hc-middle-y": 0.53,
+			"hc-key": "br-rn",
+			"hc-a2": "RN",
+			"labelrank": "2",
+			"hasc": "BR.RN",
+			"alt-name": null,
+			"woe-id": "2344863",
+			"subregion": null,
+			"fips": "BR22",
+			"postal-code": "RN",
+			"name": "Rio Grande do Norte",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-36.5472",
+			"woe-name": "Rio Grande do Norte",
+			"latitude": "-5.66157",
+			"woe-label": "Rio Grande do Norte, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[8827, 6550], [8804, 6546], [8812, 6584], [8860, 6641], [8892, 6636], [8941, 6691], [8965, 6766], [9003, 6809], [9060, 6923], [9111, 6960], [9197, 6987], [9224, 6957], [9290, 6953], [9319, 6919], [9382, 6897], [9421, 6908], [9502, 6902], [9539, 6915], [9674, 6883], [9698, 6862], [9740, 6782], [9767, 6653], [9778, 6631], [9780, 6575], [9795, 6560], [9813, 6481], [9789, 6472], [9717, 6477], [9674, 6497], [9618, 6511], [9546, 6502], [9456, 6520], [9446, 6552], [9421, 6553], [9390, 6533], [9383, 6503], [9401, 6461], [9376, 6458], [9384, 6415], [9362, 6374], [9323, 6361], [9307, 6375], [9304, 6422], [9250, 6442], [9184, 6410], [9153, 6448], [9104, 6455], [9107, 6491], [9129, 6501], [9140, 6537], [9203, 6614], [9180, 6642], [9041, 6602], [9016, 6555], [8956, 6527], [8935, 6506], [8893, 6512], [8827, 6550]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.AM",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.56,
+			"hc-middle-y": 0.56,
+			"hc-key": "br-am",
+			"hc-a2": "AM",
+			"labelrank": "2",
+			"hasc": "BR.AM",
+			"alt-name": "Amazone",
+			"woe-id": "2344847",
+			"subregion": null,
+			"fips": "BR04",
+			"postal-code": "AM",
+			"name": "Amazonas",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-63.7853",
+			"woe-name": "Amazonas",
+			"latitude": "-4.21774",
+			"woe-label": "Amazonas, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[1919, 9011], [1942, 8990], [1986, 8994], [2026, 8950], [2069, 8949], [2108, 8929], [2106, 8870], [2086, 8832], [2131, 8779], [2180, 8608], [2155, 8588], [2169, 8534], [2156, 8503], [2146, 8432], [2158, 8409], [2143, 8387], [2171, 8320], [2201, 8287], [2201, 8252], [2217, 8203], [2199, 8182], [2171, 8188], [2163, 8166], [2187, 8151], [2247, 8090], [2297, 8062], [2339, 8000], [2372, 8002], [2416, 7986], [2411, 8026], [2427, 8097], [2422, 8118], [2435, 8179], [2455, 8204], [2553, 8245], [2603, 8228], [2635, 8191], [2657, 8146], [2719, 8151], [2732, 8176], [2768, 8186], [2774, 8210], [2753, 8238], [2776, 8317], [2827, 8419], [2855, 8445], [2927, 8447], [3177, 8445], [3182, 8285], [3214, 8263], [3211, 8210], [3245, 8170], [3297, 8143], [3312, 8091], [3376, 8039], [3469, 7982], [3517, 7941], [3606, 7903], [3675, 7880], [3698, 7846], [3772, 7813], [3770, 7779], [3802, 7766], [3840, 7783], [3868, 7752], [3870, 7720], [3768, 7499], [3346, 6577], [3299, 6520], [3320, 6449], [3369, 6407], [3392, 6343], [3372, 6321], [3372, 6273], [3326, 6209], [3346, 6127], [3338, 6088], [3312, 6044], [3317, 6008], [3283, 5950], [2438, 5931], [2408, 5953], [2375, 5936], [2365, 5905], [2294, 5928], [2282, 5972], [2245, 5982], [2225, 6034], [2179, 6039], [2126, 6122], [2076, 6136], [1901, 6135], [1887, 6088], [1851, 6080], [1844, 6053], [1798, 6038], [1779, 6008], [1799, 5982], [1779, 5941], [1743, 5938], [1748, 5867], [1650, 5860], [1616, 5839], [1566, 5848], [1527, 5809], [1533, 5783], [1484, 5719], [1446, 5768], [1393, 5729], [1335, 5710], [1299, 5676], [1253, 5717], [1124, 5715], [1124, 5682], [1097, 5649], [1033, 5615], [1010, 5588], [175, 5951], [16, 6030], [-624, 6168], [-946, 6292], [-937, 6356], [-916, 6384], [-831, 6454], [-784, 6467], [-767, 6500], [-799, 6603], [-775, 6663], [-738, 6713], [-733, 6785], [-713, 6842], [-720, 6883], [-640, 6917], [-538, 6997], [-489, 7043], [-407, 7081], [-377, 7074], [-333, 7092], [-293, 7090], [-273, 7113], [-184, 7114], [-147, 7174], [-92, 7193], [-78, 7171], [-36, 7190], [-2, 7180], [-1, 7154], [28, 7131], [41, 7152], [88, 7140], [99, 7173], [241, 8043], [226, 8096], [201, 8118], [176, 8172], [189, 8197], [175, 8237], [88, 8295], [52, 8347], [57, 8552], [179, 8570], [211, 8592], [250, 8567], [313, 8569], [299, 8588], [309, 8632], [271, 8681], [249, 8688], [114, 8688], [114, 8874], [191, 8891], [255, 8877], [586, 8874], [554, 8905], [577, 8956], [604, 8932], [633, 8882], [691, 8900], [746, 8968], [789, 8992], [817, 8978], [878, 8869], [890, 8821], [883, 8739], [892, 8716], [945, 8730], [1075, 8610], [1145, 8590], [1196, 8611], [1260, 8658], [1305, 8659], [1323, 8627], [1304, 8592], [1311, 8568], [1342, 8578], [1376, 8640], [1411, 8644], [1430, 8701], [1462, 8704], [1513, 8741], [1543, 8734], [1593, 8783], [1633, 8807], [1637, 8775], [1711, 8827], [1725, 8846], [1733, 8916], [1749, 8934], [1814, 8941], [1855, 8973], [1912, 8986], [1919, 9011]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.MT",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.49,
+			"hc-middle-y": 0.55,
+			"hc-key": "br-mt",
+			"hc-a2": "MT",
+			"labelrank": "2",
+			"hasc": "BR.MT",
+			"alt-name": "Matto Grosso",
+			"woe-id": "2344855",
+			"subregion": null,
+			"fips": "BR14",
+			"postal-code": "MT",
+			"name": "Mato Grosso",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-55.9235",
+			"woe-name": "Mato Grosso",
+			"latitude": "-13.3926",
+			"woe-label": "Mato Grosso, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[3392, 6343], [3413, 6323], [3460, 6246], [3492, 6148], [3531, 6097], [3520, 6040], [3549, 5951], [3576, 5941], [3627, 5896], [3681, 5870], [3698, 5821], [3755, 5809], [3774, 5775], [3799, 5781], [3859, 5756], [4236, 5731], [5279, 5666], [5571, 5648], [5552, 5599], [5531, 5576], [5517, 5511], [5491, 5451], [5469, 5424], [5458, 5346], [5464, 5320], [5427, 5190], [5452, 5160], [5436, 5131], [5451, 5085], [5442, 5051], [5444, 4998], [5460, 4931], [5444, 4876], [5463, 4826], [5493, 4816], [5489, 4786], [5464, 4751], [5468, 4709], [5442, 4656], [5416, 4623], [5405, 4586], [5387, 4576], [5387, 4468], [5369, 4463], [5348, 4386], [5355, 4353], [5318, 4251], [5298, 4226], [5259, 4232], [5206, 4203], [5167, 4163], [5161, 4116], [5105, 3999], [5006, 3969], [4985, 3935], [4928, 3899], [4929, 3883], [4893, 3865], [4907, 3828], [4902, 3799], [4855, 3740], [4798, 3706], [4791, 3653], [4749, 3591], [4738, 3513], [4787, 3387], [4720, 3393], [4609, 3390], [4539, 3420], [4574, 3479], [4603, 3492], [4621, 3599], [4584, 3585], [4549, 3543], [4498, 3496], [4432, 3483], [4424, 3509], [4396, 3527], [4351, 3526], [4297, 3489], [4222, 3479], [4128, 3529], [4108, 3559], [4060, 3570], [3976, 3615], [3937, 3606], [3916, 3587], [3802, 3576], [3777, 3530], [3747, 3504], [3744, 3481], [3704, 3445], [3628, 3422], [3579, 3434], [3546, 3456], [3528, 3506], [3469, 3521], [3409, 3566], [3369, 3582], [3344, 3688], [3339, 3744], [3371, 3793], [3374, 3855], [3341, 3842], [2894, 3847], [2881, 3861], [2859, 4061], [2763, 4171], [2846, 4174], [2838, 4304], [2788, 4400], [2786, 4449], [2807, 4482], [2782, 4534], [2713, 4570], [2804, 4640], [2832, 4739], [2852, 4766], [2882, 4779], [2903, 4835], [2927, 4867], [2949, 4932], [2930, 4971], [2930, 5003], [2903, 5062], [2882, 5065], [2869, 5150], [2919, 5211], [2893, 5277], [2817, 5293], [2789, 5287], [2772, 5314], [2490, 5309], [2476, 5321], [2486, 5466], [2460, 5514], [2457, 5570], [2469, 5626], [2456, 5663], [2478, 5689], [2441, 5777], [2462, 5804], [2455, 5830], [2473, 5891], [2438, 5931], [3283, 5950], [3317, 6008], [3312, 6044], [3338, 6088], [3346, 6127], [3326, 6209], [3372, 6273], [3372, 6321], [3392, 6343]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.DF",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.89,
+			"hc-middle-y": 0.52,
+			"hc-key": "br-df",
+			"hc-a2": "DF",
+			"labelrank": "7",
+			"hasc": "BR.DF",
+			"alt-name": null,
+			"woe-id": "2344850",
+			"subregion": null,
+			"fips": "BR07",
+			"postal-code": "DF",
+			"name": "Distrito Federal",
+			"country": "Brazil",
+			"type-en": "Federal District",
+			"region": null,
+			"longitude": "-47.7902",
+			"woe-name": "Distrito Federal",
+			"latitude": "-15.7665",
+			"woe-label": "Distrito Federal, BR, Brazil",
+			"type": "Distrito Federal"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[6332, 3907], [6332, 3907], [6332, 3907], [6097, 3914], [6072, 3971], [6093, 3999], [6084, 4011], [6102, 4067], [6305, 4059], [6335, 4033], [6318, 3923], [6332, 3907], [6332, 3907], [6332, 3907]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.AC",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.49,
+			"hc-middle-y": 0.52,
+			"hc-key": "br-ac",
+			"hc-a2": "AC",
+			"labelrank": "2",
+			"hasc": "BR.",
+			"alt-name": null,
+			"woe-id": "2344844",
+			"subregion": null,
+			"fips": "BR01",
+			"postal-code": "AC",
+			"name": "Acre",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-70.2976",
+			"woe-name": "Acre",
+			"latitude": "-8.9285",
+			"woe-label": "Acre, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[1060, 5568], [993, 5515], [950, 5467], [913, 5445], [876, 5444], [836, 5403], [810, 5391], [775, 5332], [736, 5343], [672, 5329], [622, 5247], [536, 5204], [489, 5198], [496, 5231], [320, 5244], [232, 5231], [167, 5241], [78, 5194], [37, 5200], [9, 5227], [-19, 5204], [-36, 5538], [-12, 5576], [-36, 5621], [-11, 5661], [-104, 5590], [-140, 5543], [-179, 5524], [-188, 5505], [-240, 5483], [-461, 5471], [-453, 5506], [-484, 5541], [-499, 5605], [-534, 5620], [-640, 5635], [-750, 5630], [-685, 5728], [-691, 5757], [-750, 5831], [-800, 5865], [-803, 5899], [-852, 5928], [-896, 6032], [-927, 6048], [-933, 6071], [-911, 6097], [-947, 6115], [-999, 6165], [-969, 6216], [-918, 6239], [-946, 6292], [-624, 6168], [16, 6030], [175, 5951], [1010, 5588], [1060, 5568]]]
+		}
+	}, {
+		"type": "Feature",
+		"id": "BR.RO",
+		"properties": {
+			"hc-group": "admin1",
+			"hc-middle-x": 0.59,
+			"hc-middle-y": 0.58,
+			"hc-key": "br-ro",
+			"hc-a2": "RO",
+			"labelrank": "2",
+			"hasc": "BR.",
+			"alt-name": "Guaporé",
+			"woe-id": "2344865",
+			"subregion": "Guaporé",
+			"fips": "BR24",
+			"postal-code": "RO",
+			"name": "Rondônia",
+			"country": "Brazil",
+			"type-en": "State",
+			"region": null,
+			"longitude": "-63.1439",
+			"woe-name": "Rondônia",
+			"latitude": "-10.9712",
+			"woe-label": "Rondonia, BR, Brazil",
+			"type": "Estado"
+		},
+		"geometry": {
+			"type": "Polygon",
+			"coordinates": [[[2713, 4570], [2666, 4599], [2631, 4603], [2624, 4623], [2597, 4607], [2543, 4612], [2513, 4598], [2478, 4607], [2407, 4598], [2364, 4644], [2316, 4711], [2246, 4706], [2238, 4719], [2187, 4731], [2175, 4749], [2142, 4741], [2108, 4780], [2095, 4777], [2066, 4833], [2023, 4818], [1979, 4826], [1950, 4856], [1906, 4877], [1866, 4881], [1835, 4855], [1773, 4859], [1754, 4872], [1704, 4874], [1678, 4897], [1682, 4929], [1614, 4958], [1592, 4990], [1535, 4998], [1514, 5065], [1478, 5067], [1469, 5130], [1449, 5133], [1418, 5231], [1441, 5278], [1435, 5313], [1413, 5327], [1416, 5360], [1401, 5380], [1406, 5430], [1437, 5497], [1422, 5578], [1429, 5607], [1410, 5639], [1387, 5646], [1352, 5601], [1317, 5623], [1185, 5605], [1114, 5578], [1060, 5568], [1010, 5588], [1033, 5615], [1097, 5649], [1124, 5682], [1124, 5715], [1253, 5717], [1299, 5676], [1335, 5710], [1393, 5729], [1446, 5768], [1484, 5719], [1533, 5783], [1527, 5809], [1566, 5848], [1616, 5839], [1650, 5860], [1748, 5867], [1743, 5938], [1779, 5941], [1799, 5982], [1779, 6008], [1798, 6038], [1844, 6053], [1851, 6080], [1887, 6088], [1901, 6135], [2076, 6136], [2126, 6122], [2179, 6039], [2225, 6034], [2245, 5982], [2282, 5972], [2294, 5928], [2365, 5905], [2375, 5936], [2408, 5953], [2438, 5931], [2473, 5891], [2455, 5830], [2462, 5804], [2441, 5777], [2478, 5689], [2456, 5663], [2469, 5626], [2457, 5570], [2460, 5514], [2486, 5466], [2476, 5321], [2490, 5309], [2772, 5314], [2789, 5287], [2817, 5293], [2893, 5277], [2919, 5211], [2869, 5150], [2882, 5065], [2903, 5062], [2930, 5003], [2930, 4971], [2949, 4932], [2927, 4867], [2903, 4835], [2882, 4779], [2852, 4766], [2832, 4739], [2804, 4640], [2713, 4570]]]
+		}
+	}]
+};
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
@@ -5422,996 +6403,6 @@ function addErrorDate() {
 	});
 
 })();
-(function () {
-  angular.module('BuscaAtivaEscolar').factory('AppDependencies', function () {
-    return [
-      ['Back-end', 'Laravel Framework', '5.3', 'http://laravel.com', 'MIT'],
-      ['Back-end', 'PHP', '7.1', 'http://php.net', 'PHP License 3.01'],
-      ['Back-end', 'MariaDB', '10.0.20', 'http://mariadb.org', 'GPLv2'],
-      ['Back-end', 'memcached', '1.4.31', 'http://memcached.org', 'BSD'],
-      ['Back-end', 'ElasticSearch', '', 'http://elastic.co', 'Apache'],
-      [
-        'Back-end',
-        'Laravel Excel',
-        '',
-        'https://github.com/maatwebsite/laravel-excel',
-        'LGPL',
-      ],
-      ['Back-end', 'PHP-JWT', '', 'https://github.com/firebase/php-jwt', 'BSD'],
-      [
-        'Back-end',
-        'JWT-Auth',
-        '',
-        'https://github.com/tymondesigns/jwt-auth',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        'Intervention Image',
-        '',
-        'http://image.intervention.io/',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        'Laravel-UUID',
-        '',
-        'https://github.com/webpatser/laravel-uuid',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        "Barryvdh's Laravel CORS",
-        '',
-        'https://github.com/barryvdh/laravel-cors',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        "Barryvdh's Debugbar",
-        '',
-        'https://github.com/barryvdh/laravel-debugbar',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        "Barryvdh's IDE Helper",
-        '',
-        'https://github.com/barryvdh/laravel-ide-helper',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        'Fractal',
-        '',
-        'http://fractal.thephpleague.com/transformers/',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        'Spatie/Laravel-Fractal',
-        '',
-        'https://github.com/spatie/laravel-fractal',
-        'MIT',
-      ],
-      [
-        'Back-end',
-        'Spatie/Laravel-Sluggable',
-        '',
-        'https://github.com/spatie/laravel-sluggable',
-        'MIT',
-      ],
-      ['Back-end', 'Ixudra/Curl', '', 'https://github.com/ixudra/curl', 'MIT'],
-      ['Back-end', 'Whoops', '', 'https://github.com/filp/whoops', 'MIT'],
-      ['Front-end', 'AngularJS', '1.5.5', 'http://angularjs.org', 'MIT'],
-      ['Front-end', 'jQuery', '3.1.0', 'http://jquery.org', 'MIT'],
-      [
-        'Front-end',
-        'Twitter Bootstrap',
-        '3.0.0',
-        'http://getbootstra.com',
-        'MIT',
-      ],
-      [
-        'Front-end',
-        'Bootstrap Material Design',
-        '',
-        'http://fezvrasta.github.io/bootstrap-material-design/',
-        'MIT',
-      ],
-      ['Front-end', 'TinyMCE', '4.4.3', 'http://www.tinymce.com', 'LGPL'],
-      [
-        'Front-end',
-        'Highcharts',
-        '',
-        'http://highcharts.com',
-        'Creative Commons BY-NC 3.0',
-      ],
-      [
-        'Front-end',
-        'ngFileUpload',
-        '',
-        'https://github.com/danialfarid/ng-file-upload',
-        'MIT',
-      ],
-      [
-        'Front-end',
-        'ngToast',
-        '',
-        'https://github.com/tameraydin/ngToast',
-        'MIT',
-      ],
-      [
-        'Front-end',
-        'ArriveJS',
-        '',
-        'https://github.com/uzairfarooq/arrive',
-        'MIT',
-      ],
-      ['Front-end', 'AngularUI', '', 'https://angular-ui.github.io/', 'MIT'],
-      [
-        'Front-end',
-        'Angular Bootstrap Lightbox',
-        '',
-        'https://github.com/compact/angular-bootstrap-lightbox',
-        'MIT',
-      ],
-      [
-        'Aplicativo',
-        'Apache Cordova',
-        '6.x',
-        'https://cordova.apache.org/',
-        'Apache',
-      ],
-      [
-        'Aplicativo',
-        'Ionic Framework',
-        '',
-        'http://ionicframework.com/',
-        'MIT',
-      ],
-      [
-        'Aplicativo',
-        'Axios HTTP Library',
-        '',
-        'https://github.com/mzabriskie/axios',
-        'MIT',
-      ],
-    ];
-  });
-})();
-
-Highcharts.maps["countries/br/br-all"] = {
-	"title": "Brazil",
-	"version": "1.1.2",
-	"type": "FeatureCollection",
-	"copyright": "Copyright (c) 2015 Highsoft AS, Based on data from Natural Earth",
-	"copyrightShort": "Natural Earth",
-	"copyrightUrl": "http://www.naturalearthdata.com",
-	"crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG:29101"}},
-	"hc-transform": {
-		"default": {
-			"crs": "+proj=poly +lat_0=0 +lon_0=-54 +x_0=5000000 +y_0=10000000 +ellps=aust_SA +towgs84=-57,1,-41,0,0,0,0 +units=m +no_defs",
-			"scale": 0.000161701268187,
-			"jsonres": 15.5,
-			"jsonmarginX": -999,
-			"jsonmarginY": 9851.0,
-			"xoffset": 2791531.40873,
-			"yoffset": 10585904.489
-		}
-	},
-	"features": [{
-		"type": "Feature",
-		"id": "BR.SP",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.43,
-			"hc-middle-y": 0.34,
-			"hc-key": "br-sp",
-			"hc-a2": "SP",
-			"labelrank": "2",
-			"hasc": "BR.SP",
-			"alt-name": null,
-			"woe-id": "2344868",
-			"subregion": null,
-			"fips": "BR32",
-			"postal-code": "SP",
-			"name": "São Paulo",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-48.5206",
-			"woe-name": "São Paulo",
-			"latitude": "-22.2267",
-			"woe-label": "Sao Paulo, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[6776, 1722], [6767, 1687], [6733, 1678], [6718, 1696], [6752, 1736], [6776, 1722]]], [[[4751, 2087], [4803, 2154], [4835, 2165], [4878, 2200], [4919, 2219], [4958, 2253], [4973, 2297], [5015, 2352], [5044, 2372], [5028, 2404], [5091, 2461], [5089, 2509], [5154, 2590], [5158, 2639], [5236, 2731], [5286, 2749], [5324, 2802], [5357, 2831], [5414, 2852], [5440, 2882], [5475, 2885], [5497, 2863], [5617, 2843], [5705, 2842], [5747, 2826], [5776, 2829], [5770, 2774], [5788, 2738], [5806, 2737], [5835, 2778], [5853, 2754], [5852, 2706], [5879, 2704], [5875, 2745], [5887, 2771], [6051, 2780], [6089, 2768], [6112, 2802], [6128, 2777], [6142, 2807], [6185, 2814], [6200, 2798], [6249, 2816], [6256, 2794], [6308, 2744], [6290, 2684], [6326, 2654], [6336, 2624], [6307, 2576], [6303, 2547], [6322, 2527], [6326, 2485], [6343, 2466], [6355, 2408], [6404, 2418], [6482, 2386], [6485, 2368], [6436, 2289], [6446, 2241], [6424, 2219], [6449, 2199], [6421, 2147], [6435, 2122], [6499, 2085], [6475, 2044], [6501, 2024], [6501, 1997], [6556, 1982], [6617, 1998], [6630, 1986], [6660, 2002], [6646, 2030], [6688, 2059], [6717, 2040], [6748, 2039], [6842, 2085], [6901, 2098], [6916, 2092], [6948, 2041], [6972, 2033], [7056, 2036], [7067, 2005], [7037, 1973], [6985, 1968], [6900, 1934], [6895, 1893], [6879, 1874], [6911, 1831], [6869, 1837], [6827, 1815], [6821, 1791], [6801, 1800], [6786, 1777], [6761, 1778], [6725, 1755], [6730, 1711], [6614, 1736], [6541, 1715], [6533, 1677], [6489, 1683], [6423, 1653], [6325, 1599], [6315, 1569], [6267, 1537], [6171, 1483], [6109, 1435], [6082, 1404], [6099, 1444], [6070, 1406], [6082, 1399], [6064, 1360], [6029, 1332], [6043, 1353], [6013, 1356], [5996, 1415], [5950, 1432], [5924, 1398], [5910, 1406], [5919, 1475], [5934, 1492], [5902, 1512], [5860, 1509], [5798, 1529], [5782, 1514], [5730, 1522], [5727, 1560], [5750, 1613], [5706, 1685], [5659, 1748], [5673, 1790], [5649, 1848], [5659, 1875], [5655, 1916], [5633, 1960], [5587, 1980], [5572, 2015], [5490, 2006], [5403, 2017], [5363, 2012], [5339, 2046], [5280, 2062], [5218, 2096], [5168, 2087], [5084, 2109], [5035, 2135], [4996, 2101], [4808, 2123], [4751, 2087]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.MA",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.51,
-			"hc-middle-y": 0.42,
-			"hc-key": "br-ma",
-			"hc-a2": "MA",
-			"labelrank": "2",
-			"hasc": "BR.MA",
-			"alt-name": "São Luíz de Maranhão",
-			"woe-id": "2344854",
-			"subregion": null,
-			"fips": "BR13",
-			"postal-code": "MA",
-			"name": "Maranhão",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-45.389",
-			"woe-name": "Maranhão",
-			"latitude": "-5.01897",
-			"woe-label": "Maranhao, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[7179, 7589], [7184, 7554], [7156, 7523], [7171, 7612], [7179, 7589]]], [[[7924, 7599], [7924, 7523], [7878, 7467], [7818, 7411], [7751, 7399], [7739, 7407], [7689, 7337], [7692, 7312], [7672, 7274], [7600, 7186], [7610, 7143], [7634, 7112], [7609, 7067], [7608, 7034], [7635, 6989], [7647, 6925], [7639, 6882], [7577, 6803], [7562, 6796], [7567, 6674], [7597, 6636], [7629, 6617], [7625, 6552], [7608, 6500], [7590, 6479], [7529, 6477], [7456, 6454], [7397, 6495], [7296, 6479], [7234, 6413], [7220, 6384], [7180, 6374], [7106, 6305], [7077, 6316], [7019, 6281], [6943, 6264], [6894, 6232], [6874, 6178], [6863, 6099], [6817, 6021], [6792, 5947], [6762, 5923], [6746, 5884], [6766, 5813], [6768, 5772], [6794, 5734], [6782, 5714], [6773, 5583], [6746, 5534], [6747, 5495], [6709, 5527], [6638, 5539], [6605, 5586], [6596, 5627], [6552, 5659], [6590, 5712], [6584, 5728], [6531, 5754], [6511, 5783], [6507, 5822], [6481, 5850], [6443, 5860], [6492, 5916], [6500, 5986], [6526, 6026], [6606, 6035], [6595, 6058], [6618, 6127], [6611, 6156], [6589, 6173], [6506, 6160], [6466, 6137], [6429, 6190], [6376, 6246], [6335, 6304], [6332, 6352], [6295, 6345], [6269, 6377], [6297, 6386], [6333, 6428], [6341, 6514], [6364, 6575], [6374, 6643], [6360, 6680], [6364, 6745], [6346, 6781], [6350, 6824], [6331, 6854], [6280, 6879], [6248, 6882], [6241, 6911], [6204, 6924], [6161, 6918], [6110, 6944], [6065, 6939], [6034, 6899], [6002, 6892], [6000, 6897], [6260, 7101], [6301, 7098], [6322, 7114], [6357, 7172], [6378, 7190], [6404, 7244], [6467, 7310], [6479, 7378], [6501, 7434], [6535, 7453], [6579, 7518], [6586, 7574], [6605, 7586], [6580, 7617], [6647, 7681], [6652, 7757], [6683, 7774], [6707, 7843], [6707, 7877], [6680, 7898], [6711, 7913], [6712, 7967], [6744, 8044], [6778, 8085], [6768, 8046], [6794, 8054], [6831, 8029], [6846, 8065], [6864, 8026], [6858, 8000], [6895, 8027], [6899, 7986], [6916, 7999], [6910, 7961], [6960, 8011], [6964, 7986], [6944, 7970], [6956, 7893], [6983, 7911], [6990, 7955], [7021, 7972], [7059, 7961], [7083, 7984], [7071, 7948], [7101, 7904], [7179, 7864], [7184, 7812], [7131, 7746], [7148, 7745], [7186, 7779], [7213, 7765], [7223, 7733], [7214, 7707], [7182, 7718], [7181, 7689], [7147, 7625], [7132, 7537], [7149, 7526], [7104, 7485], [7104, 7470], [7143, 7492], [7202, 7554], [7221, 7666], [7304, 7708], [7310, 7664], [7285, 7632], [7229, 7600], [7271, 7607], [7267, 7576], [7290, 7607], [7306, 7601], [7320, 7641], [7345, 7666], [7389, 7671], [7376, 7692], [7396, 7703], [7412, 7745], [7434, 7747], [7427, 7718], [7476, 7663], [7488, 7690], [7476, 7723], [7516, 7721], [7683, 7659], [7754, 7604], [7807, 7602], [7814, 7581], [7857, 7590], [7896, 7579], [7876, 7606], [7851, 7598], [7811, 7608], [7814, 7624], [7850, 7600], [7855, 7624], [7924, 7599]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.PA",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.39,
-			"hc-middle-y": 0.55,
-			"hc-key": "br-pa",
-			"hc-a2": "PA",
-			"labelrank": "2",
-			"hasc": "BR.PA",
-			"alt-name": null,
-			"woe-id": "2344857",
-			"subregion": null,
-			"fips": "BR16",
-			"postal-code": "PA",
-			"name": "Pará",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-52.6491",
-			"woe-name": "Pará",
-			"latitude": "-4.44313",
-			"woe-label": "Para, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[6148, 8097], [6123, 8117], [6156, 8154], [6165, 8126], [6148, 8097]]], [[[5421, 8221], [5417, 8184], [5347, 8153], [5355, 8195], [5421, 8221]]], [[[5311, 8228], [5331, 8206], [5293, 8096], [5281, 8102], [5252, 8053], [5154, 7980], [5124, 7971], [5107, 7988], [5130, 8038], [5187, 8089], [5185, 8148], [5232, 8214], [5287, 8239], [5311, 8228]]], [[[5269, 8255], [5300, 8322], [5327, 8344], [5332, 8309], [5317, 8287], [5269, 8255]]], [[[5403, 8298], [5363, 8317], [5388, 8379], [5439, 8395], [5477, 8359], [5403, 8298]]], [[[5796, 8402], [5834, 8380], [5809, 8349], [5732, 8342], [5699, 8354], [5756, 8399], [5796, 8402]]], [[[5530, 8383], [5496, 8382], [5475, 8402], [5482, 8434], [5528, 8418], [5530, 8383]]], [[[5592, 8456], [5622, 8444], [5642, 8466], [5674, 8464], [5750, 8490], [5775, 8490], [5784, 8466], [5738, 8440], [5700, 8386], [5651, 8368], [5633, 8387], [5556, 8396], [5550, 8442], [5592, 8456]]], [[[5556, 8529], [5562, 8477], [5533, 8429], [5508, 8441], [5538, 8499], [5532, 8535], [5550, 8555], [5556, 8529]]], [[[5644, 8545], [5640, 8524], [5574, 8482], [5568, 8530], [5585, 8547], [5634, 8562], [5644, 8545]]], [[[5784, 7914], [5744, 7890], [5701, 7878], [5651, 7898], [5645, 7921], [5609, 7888], [5589, 7900], [5586, 7932], [5569, 7882], [5539, 7874], [5483, 7893], [5488, 7915], [5428, 7987], [5431, 8081], [5496, 8054], [5431, 8100], [5435, 8199], [5470, 8309], [5490, 8329], [5538, 8337], [5550, 8353], [5626, 8346], [5749, 8316], [5803, 8321], [5871, 8343], [5965, 8337], [5962, 8323], [6036, 8320], [6091, 8310], [6106, 8279], [6083, 8247], [6060, 8134], [6025, 8103], [6031, 8081], [5975, 8045], [5989, 8026], [5978, 7989], [5947, 8022], [5936, 8012], [5976, 7981], [5913, 7956], [5889, 7993], [5878, 7935], [5849, 7933], [5821, 7958], [5827, 7925], [5790, 7942], [5784, 7914]]], [[[6744, 8044], [6712, 7967], [6711, 7913], [6680, 7898], [6707, 7877], [6707, 7843], [6683, 7774], [6652, 7757], [6647, 7681], [6580, 7617], [6605, 7586], [6586, 7574], [6579, 7518], [6535, 7453], [6501, 7434], [6479, 7378], [6467, 7310], [6404, 7244], [6378, 7190], [6357, 7172], [6322, 7114], [6301, 7098], [6260, 7101], [6000, 6897], [6002, 6892], [6049, 6876], [6101, 6878], [6163, 6810], [6122, 6787], [6140, 6735], [6109, 6718], [6122, 6684], [6082, 6664], [6092, 6611], [6061, 6614], [6032, 6591], [6010, 6528], [5919, 6496], [5866, 6463], [5860, 6446], [5869, 6373], [5816, 6297], [5811, 6270], [5833, 6238], [5873, 6212], [5863, 6141], [5831, 6052], [5811, 6037], [5759, 5933], [5706, 5903], [5623, 5794], [5595, 5688], [5571, 5648], [5279, 5666], [4236, 5731], [3859, 5756], [3799, 5781], [3774, 5775], [3755, 5809], [3698, 5821], [3681, 5870], [3627, 5896], [3576, 5941], [3549, 5951], [3520, 6040], [3531, 6097], [3492, 6148], [3460, 6246], [3413, 6323], [3392, 6343], [3369, 6407], [3320, 6449], [3299, 6520], [3346, 6577], [3768, 7499], [3870, 7720], [3868, 7752], [3840, 7783], [3802, 7766], [3770, 7779], [3772, 7813], [3698, 7846], [3675, 7880], [3606, 7903], [3517, 7941], [3469, 7982], [3376, 8039], [3312, 8091], [3297, 8143], [3245, 8170], [3211, 8210], [3214, 8263], [3182, 8285], [3177, 8445], [3149, 8748], [3170, 8721], [3205, 8717], [3230, 8739], [3276, 8735], [3277, 8783], [3313, 8797], [3328, 8825], [3379, 8805], [3413, 8804], [3425, 8843], [3479, 8856], [3543, 8857], [3580, 8910], [3605, 8929], [3633, 8923], [3671, 8944], [3697, 8915], [3754, 8902], [3800, 8920], [3876, 8918], [3973, 8891], [4000, 8906], [4002, 8948], [3946, 9030], [3975, 9048], [3982, 9082], [4056, 9047], [4088, 9057], [4146, 9056], [4173, 9081], [4264, 9087], [4291, 9061], [4320, 9064], [4337, 9011], [4315, 8940], [4331, 8874], [4434, 8871], [4489, 8842], [4515, 8800], [4535, 8805], [4567, 8772], [4631, 8776], [4660, 8761], [4665, 8727], [4693, 8732], [4685, 8703], [4699, 8644], [4742, 8599], [4784, 8582], [4780, 8490], [4804, 8451], [4811, 8398], [4839, 8329], [4864, 8333], [4919, 8273], [4918, 8228], [4947, 8203], [4950, 8140], [4983, 8142], [4994, 8086], [5079, 8046], [5121, 8062], [5116, 8015], [5076, 7993], [5040, 8010], [4962, 7971], [4904, 7954], [4897, 7939], [4976, 7948], [5016, 7962], [5025, 7910], [5060, 7934], [5118, 7947], [5186, 7994], [5298, 8044], [5328, 8076], [5364, 8095], [5371, 8123], [5423, 8123], [5420, 8089], [5385, 8069], [5423, 8041], [5424, 7984], [5460, 7935], [5469, 7900], [5421, 7847], [5456, 7853], [5468, 7882], [5528, 7845], [5532, 7810], [5573, 7857], [5607, 7851], [5621, 7869], [5658, 7875], [5687, 7860], [5691, 7814], [5705, 7854], [5748, 7849], [5777, 7885], [5781, 7865], [5836, 7906], [5853, 7891], [5828, 7856], [5806, 7775], [5776, 7712], [5778, 7683], [5738, 7641], [5783, 7652], [5809, 7696], [5811, 7724], [5838, 7770], [5866, 7841], [5896, 7891], [5940, 7938], [5961, 7938], [5939, 7886], [5983, 7931], [6031, 7997], [6061, 7942], [6092, 7925], [6075, 7962], [6119, 7973], [6069, 7979], [6075, 8026], [6115, 8016], [6125, 8052], [6081, 8058], [6093, 8082], [6155, 8096], [6171, 8132], [6167, 8165], [6200, 8198], [6221, 8165], [6219, 8206], [6260, 8197], [6284, 8232], [6323, 8194], [6326, 8221], [6351, 8169], [6383, 8168], [6360, 8217], [6469, 8194], [6468, 8149], [6501, 8184], [6519, 8163], [6540, 8184], [6573, 8137], [6601, 8140], [6599, 8115], [6628, 8136], [6634, 8097], [6678, 8097], [6720, 8125], [6706, 8063], [6742, 8082], [6744, 8044]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.SC",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.73,
-			"hc-middle-y": 0.33,
-			"hc-key": "br-sc",
-			"hc-a2": "SC",
-			"labelrank": "2",
-			"hasc": "BR.SC",
-			"alt-name": "Santa Catharina",
-			"woe-id": "2344867",
-			"subregion": null,
-			"fips": "BR26",
-			"postal-code": "SC",
-			"name": "Santa Catarina",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-51.1586",
-			"woe-name": "Santa Catarina",
-			"latitude": "-27.0392",
-			"woe-label": "Santa Catarina, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[5884, 638], [5879, 659], [5895, 707], [5895, 746], [5918, 756], [5929, 736], [5918, 698], [5884, 638]]], [[[5891, 1027], [5862, 1058], [5902, 1097], [5916, 1077], [5891, 1027]]], [[[5896, 1149], [5894, 1100], [5855, 1083], [5843, 1128], [5848, 1065], [5884, 1023], [5868, 990], [5862, 945], [5887, 928], [5876, 911], [5876, 837], [5899, 831], [5905, 806], [5875, 804], [5886, 770], [5862, 733], [5878, 700], [5860, 686], [5877, 626], [5851, 529], [5817, 454], [5815, 486], [5796, 494], [5799, 458], [5817, 443], [5807, 420], [5776, 411], [5674, 338], [5621, 283], [5580, 230], [5522, 268], [5492, 255], [5497, 224], [5469, 245], [5471, 269], [5495, 297], [5511, 294], [5526, 336], [5526, 379], [5567, 425], [5590, 432], [5578, 468], [5547, 474], [5478, 467], [5465, 477], [5366, 501], [5330, 563], [5308, 572], [5304, 600], [5273, 626], [5257, 658], [5221, 674], [5166, 730], [5142, 730], [5115, 756], [5086, 744], [5056, 752], [5028, 799], [4988, 817], [4975, 803], [4938, 812], [4922, 832], [4859, 817], [4817, 848], [4791, 833], [4772, 866], [4707, 840], [4716, 861], [4693, 874], [4661, 859], [4660, 841], [4617, 852], [4576, 849], [4608, 929], [4600, 979], [4605, 1068], [4621, 1100], [4672, 1092], [4698, 1105], [4756, 1069], [4833, 1077], [4876, 1059], [4986, 1044], [5034, 1007], [5067, 1001], [5160, 1000], [5179, 972], [5226, 996], [5214, 1047], [5224, 1068], [5269, 1099], [5312, 1086], [5354, 1097], [5377, 1142], [5425, 1153], [5460, 1144], [5552, 1153], [5640, 1091], [5716, 1121], [5763, 1151], [5896, 1149]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.BA",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.56,
-			"hc-middle-y": 0.35,
-			"hc-key": "br-ba",
-			"hc-a2": "BA",
-			"labelrank": "2",
-			"hasc": "BR.BA",
-			"alt-name": "Ba¡a",
-			"woe-id": "2344848",
-			"subregion": null,
-			"fips": "BR05",
-			"postal-code": "BA",
-			"name": "Bahia",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-41.8027",
-			"woe-name": "Bahia",
-			"latitude": "-12.3651",
-			"woe-label": "Bahia, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[8631, 4546], [8615, 4470], [8613, 4516], [8597, 4547], [8631, 4546]]], [[[8195, 3262], [8199, 3323], [8130, 3387], [8133, 3413], [8100, 3437], [8115, 3473], [8114, 3509], [8131, 3566], [8147, 3582], [8193, 3576], [8211, 3665], [8242, 3669], [8266, 3710], [8299, 3731], [8323, 3787], [8229, 3877], [8166, 3893], [8150, 3888], [8115, 3913], [8090, 3909], [8042, 3930], [7983, 3903], [7938, 3924], [7934, 3987], [7821, 4103], [7783, 4088], [7743, 4087], [7614, 4165], [7601, 4163], [7517, 4241], [7444, 4256], [7371, 4217], [7314, 4234], [7271, 4258], [7268, 4285], [7295, 4345], [7283, 4354], [7154, 4379], [7087, 4354], [7011, 4308], [6998, 4287], [6937, 4255], [6904, 4250], [6877, 4219], [6838, 4197], [6813, 4199], [6768, 4148], [6711, 4149], [6670, 4117], [6699, 4190], [6687, 4223], [6719, 4271], [6707, 4315], [6720, 4366], [6666, 4415], [6633, 4504], [6631, 4564], [6657, 4633], [6682, 4648], [6686, 4675], [6662, 4686], [6670, 4739], [6688, 4769], [6649, 4804], [6671, 4857], [6672, 4885], [6630, 4909], [6626, 4991], [6661, 5026], [6699, 5045], [6678, 5072], [6653, 5070], [6655, 5103], [6694, 5119], [6700, 5137], [6671, 5154], [6607, 5168], [6569, 5220], [6599, 5258], [6626, 5316], [6664, 5339], [6646, 5374], [6706, 5421], [6770, 5452], [6799, 5490], [6841, 5489], [6876, 5444], [6884, 5407], [6917, 5361], [6990, 5326], [7062, 5335], [7071, 5356], [7131, 5397], [7164, 5407], [7219, 5394], [7246, 5405], [7282, 5442], [7304, 5447], [7365, 5556], [7373, 5622], [7362, 5638], [7340, 5728], [7372, 5723], [7398, 5753], [7441, 5761], [7459, 5729], [7513, 5726], [7529, 5738], [7583, 5712], [7604, 5686], [7631, 5693], [7668, 5680], [7680, 5702], [7704, 5697], [7755, 5750], [7799, 5752], [7829, 5776], [7882, 5761], [7915, 5794], [7916, 5837], [7981, 5848], [8019, 5910], [8077, 5909], [8150, 5864], [8147, 5813], [8157, 5780], [8197, 5760], [8200, 5724], [8180, 5693], [8217, 5682], [8278, 5717], [8300, 5718], [8317, 5788], [8361, 5786], [8423, 5821], [8424, 5862], [8481, 5873], [8483, 5909], [8563, 5941], [8595, 5932], [8612, 5898], [8664, 5880], [8680, 5863], [8712, 5868], [8752, 5846], [8764, 5809], [8801, 5850], [8804, 5813], [8831, 5787], [8856, 5799], [8876, 5700], [8885, 5676], [8935, 5655], [8939, 5640], [8924, 5618], [8943, 5540], [8990, 5478], [8986, 5414], [8970, 5381], [8982, 5321], [8929, 5287], [8869, 5301], [8855, 5250], [8887, 5211], [8897, 5170], [8919, 5148], [8910, 5114], [8951, 5088], [8965, 5063], [9001, 5051], [9050, 5060], [9082, 5071], [9062, 5045], [8994, 4910], [8876, 4746], [8798, 4667], [8745, 4645], [8755, 4675], [8751, 4731], [8719, 4738], [8694, 4763], [8676, 4711], [8653, 4701], [8701, 4690], [8725, 4656], [8620, 4583], [8619, 4552], [8596, 4555], [8610, 4466], [8604, 4420], [8569, 4454], [8595, 4408], [8579, 4393], [8597, 4374], [8616, 4401], [8616, 4371], [8594, 4312], [8594, 4284], [8565, 4182], [8574, 4141], [8572, 4021], [8583, 3882], [8596, 3844], [8533, 3679], [8504, 3576], [8505, 3548], [8477, 3475], [8474, 3349], [8484, 3326], [8444, 3275], [8381, 3240], [8344, 3190], [8328, 3154], [8200, 3253], [8195, 3262]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.AP",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.61,
-			"hc-middle-y": 0.58,
-			"hc-key": "br-ap",
-			"hc-a2": "AP",
-			"labelrank": "2",
-			"hasc": "BR.AP",
-			"alt-name": null,
-			"woe-id": "2344846",
-			"subregion": null,
-			"fips": "BR03",
-			"postal-code": "AP",
-			"name": "Amapá",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-51.6842",
-			"woe-name": "Amapá",
-			"latitude": "1.41157",
-			"woe-label": "Amapa, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "MultiPolygon",
-			"coordinates": [[[[5632, 8641], [5624, 8649], [5673, 8680], [5623, 8593], [5575, 8590], [5589, 8621], [5632, 8641]]], [[[5524, 8971], [5522, 8990], [5565, 8923], [5524, 8905], [5506, 8938], [5524, 8971]]], [[[5121, 8062], [5079, 8046], [4994, 8086], [4983, 8142], [4950, 8140], [4947, 8203], [4918, 8228], [4919, 8273], [4864, 8333], [4839, 8329], [4811, 8398], [4804, 8451], [4780, 8490], [4784, 8582], [4742, 8599], [4699, 8644], [4685, 8703], [4693, 8732], [4665, 8727], [4660, 8761], [4631, 8776], [4567, 8772], [4535, 8805], [4515, 8800], [4489, 8842], [4434, 8871], [4331, 8874], [4315, 8940], [4337, 9011], [4320, 9064], [4340, 9061], [4340, 9027], [4379, 9024], [4403, 8996], [4499, 8968], [4583, 9023], [4667, 9005], [4719, 9034], [4750, 9007], [4826, 8986], [4849, 9009], [4897, 9037], [4940, 9096], [4934, 9114], [4995, 9231], [4993, 9251], [5030, 9287], [5090, 9386], [5096, 9410], [5139, 9455], [5153, 9487], [5195, 9511], [5205, 9552], [5233, 9521], [5215, 9591], [5227, 9615], [5263, 9592], [5309, 9538], [5321, 9500], [5323, 9395], [5339, 9467], [5349, 9460], [5346, 9320], [5388, 9166], [5399, 9158], [5444, 9043], [5462, 8985], [5522, 8887], [5601, 8888], [5651, 8869], [5677, 8845], [5687, 8760], [5676, 8736], [5614, 8714], [5674, 8721], [5683, 8706], [5605, 8637], [5565, 8610], [5522, 8562], [5482, 8486], [5432, 8430], [5393, 8426], [5354, 8377], [5285, 8357], [5303, 8347], [5283, 8323], [5249, 8252], [5179, 8175], [5171, 8094], [5121, 8062]]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.MS",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.46,
-			"hc-middle-y": 0.47,
-			"hc-key": "br-ms",
-			"hc-a2": "MS",
-			"labelrank": "2",
-			"hasc": "BR.MS",
-			"alt-name": null,
-			"woe-id": "2344853",
-			"subregion": null,
-			"fips": "BR11",
-			"postal-code": "MS",
-			"name": "Mato Grosso do Sul",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-54.5502",
-			"woe-name": "Mato Grosso do Sul",
-			"latitude": "-20.6756",
-			"woe-label": "Mato Grosso do Sul, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[4517, 1742], [4474, 1713], [4428, 1751], [4373, 1781], [4296, 1735], [4230, 1721], [4180, 1732], [4167, 1799], [4145, 1835], [4148, 1898], [4143, 1939], [4116, 2003], [4109, 2053], [4116, 2106], [4087, 2131], [4082, 2171], [4052, 2192], [3969, 2201], [3938, 2220], [3910, 2257], [3887, 2252], [3848, 2204], [3835, 2217], [3802, 2195], [3706, 2222], [3662, 2214], [3602, 2222], [3591, 2242], [3543, 2230], [3505, 2259], [3520, 2296], [3512, 2311], [3526, 2356], [3514, 2374], [3515, 2422], [3534, 2456], [3533, 2538], [3541, 2561], [3516, 2574], [3530, 2590], [3508, 2605], [3529, 2620], [3497, 2633], [3493, 2705], [3468, 2720], [3447, 2778], [3524, 2831], [3453, 2899], [3537, 3088], [3556, 3092], [3538, 3129], [3595, 3332], [3545, 3425], [3546, 3456], [3579, 3434], [3628, 3422], [3704, 3445], [3744, 3481], [3747, 3504], [3777, 3530], [3802, 3576], [3916, 3587], [3937, 3606], [3976, 3615], [4060, 3570], [4108, 3559], [4128, 3529], [4222, 3479], [4297, 3489], [4351, 3526], [4396, 3527], [4424, 3509], [4432, 3483], [4498, 3496], [4549, 3543], [4584, 3585], [4621, 3599], [4603, 3492], [4574, 3479], [4539, 3420], [4609, 3390], [4720, 3393], [4787, 3387], [4786, 3311], [4804, 3284], [4825, 3296], [4859, 3283], [4829, 3215], [4835, 3203], [4902, 3191], [4934, 3195], [4974, 3164], [4993, 3165], [5049, 3128], [5158, 3075], [5220, 3063], [5245, 3039], [5290, 3030], [5336, 2977], [5317, 2899], [5324, 2802], [5286, 2749], [5236, 2731], [5158, 2639], [5154, 2590], [5089, 2509], [5091, 2461], [5028, 2404], [5044, 2372], [5015, 2352], [4973, 2297], [4958, 2253], [4919, 2219], [4878, 2200], [4835, 2165], [4803, 2154], [4751, 2087], [4670, 2052], [4640, 2027], [4628, 1976], [4607, 1923], [4550, 1887], [4519, 1778], [4517, 1742]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.MG",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.60,
-			"hc-middle-y": 0.45,
-			"hc-key": "br-mg",
-			"hc-a2": "MG",
-			"labelrank": "2",
-			"hasc": "BR.MG",
-			"alt-name": "Minas|Minas Geraes",
-			"woe-id": "2344856",
-			"subregion": null,
-			"fips": "BR15",
-			"postal-code": "MG",
-			"name": "Minas Gerais",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-44.4808",
-			"woe-name": "Minas Gerais",
-			"latitude": "-18.5895",
-			"woe-label": "Minas Gerais, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[5324, 2802], [5317, 2899], [5336, 2977], [5361, 2973], [5368, 3026], [5419, 3076], [5447, 3076], [5460, 3125], [5508, 3184], [5596, 3210], [5648, 3207], [5730, 3239], [5763, 3203], [5825, 3262], [5874, 3283], [6068, 3268], [6091, 3254], [6151, 3241], [6218, 3274], [6246, 3305], [6320, 3343], [6303, 3394], [6326, 3452], [6322, 3486], [6258, 3515], [6268, 3549], [6364, 3644], [6336, 3733], [6288, 3782], [6318, 3835], [6332, 3907], [6332, 3907], [6332, 3907], [6333, 3907], [6332, 3907], [6352, 3909], [6380, 3939], [6394, 3934], [6460, 3958], [6453, 4029], [6436, 4074], [6459, 4103], [6440, 4130], [6452, 4180], [6494, 4187], [6520, 4172], [6544, 4180], [6538, 4248], [6556, 4271], [6590, 4253], [6613, 4214], [6672, 4208], [6687, 4223], [6699, 4190], [6670, 4117], [6711, 4149], [6768, 4148], [6813, 4199], [6838, 4197], [6877, 4219], [6904, 4250], [6937, 4255], [6998, 4287], [7011, 4308], [7087, 4354], [7154, 4379], [7283, 4354], [7295, 4345], [7268, 4285], [7271, 4258], [7314, 4234], [7371, 4217], [7444, 4256], [7517, 4241], [7601, 4163], [7614, 4165], [7743, 4087], [7783, 4088], [7821, 4103], [7934, 3987], [7938, 3924], [7983, 3903], [8042, 3930], [8090, 3909], [8115, 3913], [8150, 3888], [8166, 3893], [8229, 3877], [8323, 3787], [8299, 3731], [8266, 3710], [8242, 3669], [8211, 3665], [8193, 3576], [8147, 3582], [8131, 3566], [8114, 3509], [8115, 3473], [8100, 3437], [8133, 3413], [8130, 3387], [8199, 3323], [8195, 3262], [8138, 3291], [8073, 3278], [8008, 3278], [8041, 3241], [8005, 3241], [7965, 3222], [7941, 3190], [7975, 3143], [7964, 3091], [7990, 3074], [7986, 3042], [7905, 3034], [7939, 3022], [7950, 2980], [7976, 2946], [7977, 2903], [7965, 2854], [7909, 2805], [7897, 2747], [7864, 2725], [7843, 2660], [7832, 2653], [7751, 2661], [7712, 2618], [7726, 2601], [7717, 2539], [7700, 2503], [7672, 2468], [7637, 2467], [7596, 2352], [7575, 2334], [7551, 2271], [7573, 2247], [7371, 2174], [7292, 2186], [7260, 2173], [7170, 2177], [7095, 2151], [7062, 2132], [7004, 2134], [6945, 2106], [6901, 2098], [6842, 2085], [6748, 2039], [6717, 2040], [6688, 2059], [6646, 2030], [6660, 2002], [6630, 1986], [6617, 1998], [6556, 1982], [6501, 1997], [6501, 2024], [6475, 2044], [6499, 2085], [6435, 2122], [6421, 2147], [6449, 2199], [6424, 2219], [6446, 2241], [6436, 2289], [6485, 2368], [6482, 2386], [6404, 2418], [6355, 2408], [6343, 2466], [6326, 2485], [6322, 2527], [6303, 2547], [6307, 2576], [6336, 2624], [6326, 2654], [6290, 2684], [6308, 2744], [6256, 2794], [6249, 2816], [6200, 2798], [6185, 2814], [6142, 2807], [6128, 2777], [6112, 2802], [6089, 2768], [6051, 2780], [5887, 2771], [5875, 2745], [5879, 2704], [5852, 2706], [5853, 2754], [5835, 2778], [5806, 2737], [5788, 2738], [5770, 2774], [5776, 2829], [5747, 2826], [5705, 2842], [5617, 2843], [5497, 2863], [5475, 2885], [5440, 2882], [5414, 2852], [5357, 2831], [5324, 2802]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.GO",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.51,
-			"hc-middle-y": 0.54,
-			"hc-key": "br-go",
-			"hc-a2": "GO",
-			"labelrank": "2",
-			"hasc": "BR.GO",
-			"alt-name": "Goiáz|Goyáz",
-			"woe-id": "2344852",
-			"subregion": null,
-			"fips": "BR29",
-			"postal-code": "GO",
-			"name": "Goiás",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-49.5786",
-			"woe-name": "Goiás",
-			"latitude": "-15.863",
-			"woe-label": "Goias, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[6318, 3835], [6288, 3782], [6336, 3733], [6364, 3644], [6268, 3549], [6258, 3515], [6322, 3486], [6326, 3452], [6303, 3394], [6320, 3343], [6246, 3305], [6218, 3274], [6151, 3241], [6091, 3254], [6068, 3268], [5874, 3283], [5825, 3262], [5763, 3203], [5730, 3239], [5648, 3207], [5596, 3210], [5508, 3184], [5460, 3125], [5447, 3076], [5419, 3076], [5368, 3026], [5361, 2973], [5336, 2977], [5290, 3030], [5245, 3039], [5220, 3063], [5158, 3075], [5049, 3128], [4993, 3165], [4974, 3164], [4934, 3195], [4902, 3191], [4835, 3203], [4829, 3215], [4859, 3283], [4825, 3296], [4804, 3284], [4786, 3311], [4787, 3387], [4738, 3513], [4749, 3591], [4791, 3653], [4798, 3706], [4855, 3740], [4902, 3799], [4907, 3828], [4893, 3865], [4929, 3883], [4928, 3899], [4985, 3935], [5006, 3969], [5105, 3999], [5161, 4116], [5167, 4163], [5206, 4203], [5259, 4232], [5298, 4226], [5318, 4251], [5355, 4353], [5348, 4386], [5369, 4463], [5387, 4468], [5387, 4576], [5405, 4586], [5416, 4623], [5442, 4656], [5468, 4709], [5464, 4751], [5489, 4786], [5493, 4816], [5504, 4856], [5530, 4899], [5586, 4938], [5589, 4916], [5550, 4831], [5559, 4790], [5709, 4720], [5790, 4699], [5815, 4767], [5860, 4840], [5893, 4862], [5898, 4836], [5944, 4800], [5958, 4738], [5955, 4667], [5980, 4670], [5988, 4714], [6067, 4710], [6129, 4740], [6121, 4711], [6252, 4659], [6242, 4716], [6265, 4726], [6291, 4674], [6414, 4727], [6486, 4732], [6536, 4771], [6649, 4804], [6688, 4769], [6670, 4739], [6662, 4686], [6686, 4675], [6682, 4648], [6657, 4633], [6631, 4564], [6633, 4504], [6666, 4415], [6720, 4366], [6707, 4315], [6719, 4271], [6687, 4223], [6672, 4208], [6613, 4214], [6590, 4253], [6556, 4271], [6538, 4248], [6544, 4180], [6520, 4172], [6494, 4187], [6452, 4180], [6440, 4130], [6459, 4103], [6436, 4074], [6453, 4029], [6460, 3958], [6394, 3934], [6380, 3939], [6352, 3909], [6332, 3907], [6318, 3923], [6335, 4033], [6305, 4059], [6102, 4067], [6084, 4011], [6093, 3999], [6072, 3971], [6097, 3914], [6332, 3907], [6332, 3907], [6332, 3907], [6318, 3835]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.RS",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.52,
-			"hc-middle-y": 0.36,
-			"hc-key": "br-rs",
-			"hc-a2": "RS",
-			"labelrank": "2",
-			"hasc": "BR.RS",
-			"alt-name": null,
-			"woe-id": "2344864",
-			"subregion": null,
-			"fips": "BR23",
-			"postal-code": "RS",
-			"name": "Rio Grande do Sul",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-53.656",
-			"woe-name": "Rio Grande do Sul",
-			"latitude": "-29.7277",
-			"woe-label": "Rio Grande do Sul, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[5580, 230], [5555, 198], [5494, 96], [5423, -82], [5321, -241], [5215, -359], [5115, -439], [5043, -481], [4989, -539], [5007, -485], [4990, -459], [4999, -445], [5029, -463], [5081, -443], [5152, -368], [5193, -354], [5209, -325], [5217, -244], [5252, -246], [5265, -205], [5320, -170], [5334, -129], [5334, -49], [5353, -86], [5371, -41], [5356, -5], [5339, -31], [5284, -35], [5279, -70], [5251, -53], [5256, -26], [5204, 4], [5193, 51], [5181, -9], [5214, -47], [5187, -120], [5165, -129], [5169, -191], [5146, -193], [5138, -227], [5148, -246], [5104, -260], [5100, -294], [5032, -307], [5013, -340], [5010, -401], [5003, -379], [4989, -413], [4963, -422], [4955, -465], [4975, -473], [4954, -489], [4959, -522], [4991, -508], [4988, -545], [4949, -576], [4919, -636], [4895, -720], [4859, -803], [4812, -864], [4707, -961], [4681, -979], [4643, -953], [4666, -918], [4662, -838], [4695, -790], [4710, -800], [4733, -762], [4742, -718], [4772, -725], [4799, -752], [4833, -735], [4868, -658], [4868, -634], [4841, -588], [4854, -546], [4837, -551], [4813, -593], [4825, -603], [4775, -634], [4771, -657], [4731, -679], [4674, -652], [4619, -589], [4614, -558], [4590, -508], [4520, -461], [4504, -469], [4426, -404], [4421, -379], [4395, -348], [4341, -338], [4291, -293], [4277, -309], [4235, -282], [4212, -234], [4155, -177], [4090, -242], [4055, -244], [4054, -165], [3999, -101], [3965, -80], [3901, -15], [3852, 24], [3793, 22], [3762, -30], [3684, -28], [3665, -3], [3690, 8], [3732, 55], [3739, 101], [3786, 120], [3885, 244], [3898, 287], [3947, 319], [3952, 346], [3974, 366], [3977, 395], [4002, 405], [4041, 450], [4043, 475], [4070, 485], [4084, 517], [4117, 501], [4127, 523], [4100, 549], [4141, 582], [4181, 593], [4212, 639], [4246, 656], [4283, 660], [4269, 677], [4311, 689], [4314, 720], [4404, 759], [4450, 785], [4465, 775], [4492, 827], [4514, 815], [4545, 852], [4576, 849], [4617, 852], [4660, 841], [4661, 859], [4693, 874], [4716, 861], [4707, 840], [4772, 866], [4791, 833], [4817, 848], [4859, 817], [4922, 832], [4938, 812], [4975, 803], [4988, 817], [5028, 799], [5056, 752], [5086, 744], [5115, 756], [5142, 730], [5166, 730], [5221, 674], [5257, 658], [5273, 626], [5304, 600], [5308, 572], [5330, 563], [5366, 501], [5465, 477], [5478, 467], [5547, 474], [5578, 468], [5590, 432], [5567, 425], [5526, 379], [5526, 336], [5511, 294], [5495, 297], [5471, 269], [5469, 245], [5497, 224], [5492, 255], [5522, 268], [5580, 230]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.TO",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.47,
-			"hc-middle-y": 0.58,
-			"hc-key": "br-to",
-			"hc-a2": "TO",
-			"labelrank": "2",
-			"hasc": "BR.TO",
-			"alt-name": null,
-			"woe-id": "2344870",
-			"subregion": null,
-			"fips": "BR31",
-			"postal-code": "TO",
-			"name": "Tocantins",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-48.2502",
-			"woe-name": "Tocantins",
-			"latitude": "-10.223",
-			"woe-label": "Tocantins, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[6747, 5495], [6780, 5490], [6799, 5490], [6770, 5452], [6706, 5421], [6646, 5374], [6664, 5339], [6626, 5316], [6599, 5258], [6569, 5220], [6607, 5168], [6671, 5154], [6700, 5137], [6694, 5119], [6655, 5103], [6653, 5070], [6678, 5072], [6699, 5045], [6661, 5026], [6626, 4991], [6630, 4909], [6672, 4885], [6671, 4857], [6649, 4804], [6536, 4771], [6486, 4732], [6414, 4727], [6291, 4674], [6265, 4726], [6242, 4716], [6252, 4659], [6121, 4711], [6129, 4740], [6067, 4710], [5988, 4714], [5980, 4670], [5955, 4667], [5958, 4738], [5944, 4800], [5898, 4836], [5893, 4862], [5860, 4840], [5815, 4767], [5790, 4699], [5709, 4720], [5559, 4790], [5550, 4831], [5589, 4916], [5586, 4938], [5530, 4899], [5504, 4856], [5493, 4816], [5463, 4826], [5444, 4876], [5460, 4931], [5444, 4998], [5442, 5051], [5451, 5085], [5436, 5131], [5452, 5160], [5427, 5190], [5464, 5320], [5458, 5346], [5469, 5424], [5491, 5451], [5517, 5511], [5531, 5576], [5552, 5599], [5571, 5648], [5595, 5688], [5623, 5794], [5706, 5903], [5759, 5933], [5811, 6037], [5831, 6052], [5863, 6141], [5873, 6212], [5833, 6238], [5811, 6270], [5816, 6297], [5869, 6373], [5860, 6446], [5866, 6463], [5919, 6496], [6010, 6528], [6032, 6591], [6061, 6614], [6092, 6611], [6082, 6664], [6122, 6684], [6109, 6718], [6140, 6735], [6122, 6787], [6163, 6810], [6101, 6878], [6049, 6876], [6002, 6892], [6034, 6899], [6065, 6939], [6110, 6944], [6161, 6918], [6204, 6924], [6241, 6911], [6248, 6882], [6280, 6879], [6331, 6854], [6350, 6824], [6346, 6781], [6364, 6745], [6360, 6680], [6374, 6643], [6364, 6575], [6341, 6514], [6333, 6428], [6297, 6386], [6269, 6377], [6295, 6345], [6332, 6352], [6335, 6304], [6376, 6246], [6429, 6190], [6466, 6137], [6506, 6160], [6589, 6173], [6611, 6156], [6618, 6127], [6595, 6058], [6606, 6035], [6526, 6026], [6500, 5986], [6492, 5916], [6443, 5860], [6481, 5850], [6507, 5822], [6511, 5783], [6531, 5754], [6584, 5728], [6590, 5712], [6552, 5659], [6596, 5627], [6605, 5586], [6638, 5539], [6709, 5527], [6747, 5495]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.PI",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.51,
-			"hc-middle-y": 0.66,
-			"hc-key": "br-pi",
-			"hc-a2": "PI",
-			"labelrank": "2",
-			"hasc": "BR.PI",
-			"alt-name": "Piauhy",
-			"woe-id": "2344861",
-			"subregion": null,
-			"fips": "BR20",
-			"postal-code": "PI",
-			"name": "Piauí",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-43.1974",
-			"woe-name": "Piauí",
-			"latitude": "-8.086980000000001",
-			"woe-label": "Piaui, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[6799, 5490], [6780, 5490], [6747, 5495], [6746, 5534], [6773, 5583], [6782, 5714], [6794, 5734], [6768, 5772], [6766, 5813], [6746, 5884], [6762, 5923], [6792, 5947], [6817, 6021], [6863, 6099], [6874, 6178], [6894, 6232], [6943, 6264], [7019, 6281], [7077, 6316], [7106, 6305], [7180, 6374], [7220, 6384], [7234, 6413], [7296, 6479], [7397, 6495], [7456, 6454], [7529, 6477], [7590, 6479], [7608, 6500], [7625, 6552], [7629, 6617], [7597, 6636], [7567, 6674], [7562, 6796], [7577, 6803], [7639, 6882], [7647, 6925], [7635, 6989], [7608, 7034], [7609, 7067], [7634, 7112], [7610, 7143], [7600, 7186], [7672, 7274], [7692, 7312], [7689, 7337], [7739, 7407], [7751, 7399], [7818, 7411], [7878, 7467], [7924, 7523], [7924, 7599], [7934, 7605], [7971, 7566], [8063, 7553], [8089, 7527], [8087, 7509], [8039, 7440], [8032, 7407], [8057, 7330], [8076, 7301], [8090, 7234], [8120, 7196], [8133, 7153], [8086, 7094], [8098, 6986], [8132, 6914], [8128, 6874], [8161, 6842], [8174, 6673], [8196, 6603], [8203, 6535], [8219, 6487], [8283, 6464], [8299, 6442], [8251, 6334], [8261, 6278], [8218, 6268], [8236, 6208], [8224, 6174], [8255, 6152], [8253, 6096], [8240, 6070], [8195, 6037], [8145, 5985], [8119, 5989], [8064, 5930], [8019, 5910], [7981, 5848], [7916, 5837], [7915, 5794], [7882, 5761], [7829, 5776], [7799, 5752], [7755, 5750], [7704, 5697], [7680, 5702], [7668, 5680], [7631, 5693], [7604, 5686], [7583, 5712], [7529, 5738], [7513, 5726], [7459, 5729], [7441, 5761], [7398, 5753], [7372, 5723], [7340, 5728], [7362, 5638], [7373, 5622], [7365, 5556], [7304, 5447], [7282, 5442], [7246, 5405], [7219, 5394], [7164, 5407], [7131, 5397], [7071, 5356], [7062, 5335], [6990, 5326], [6917, 5361], [6884, 5407], [6876, 5444], [6841, 5489], [6799, 5490]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.AL",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.62,
-			"hc-middle-y": 0.61,
-			"hc-key": "br-al",
-			"hc-a2": "AL",
-			"labelrank": "2",
-			"hasc": "BR.AL",
-			"alt-name": null,
-			"woe-id": "2344845",
-			"subregion": null,
-			"fips": "BR02",
-			"postal-code": "AL",
-			"name": "Alagoas",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-36.6917",
-			"woe-name": "Alagoas",
-			"latitude": "-9.773910000000001",
-			"woe-label": "Alagoas, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[9731, 5780], [9683, 5700], [9638, 5658], [9569, 5567], [9542, 5594], [9538, 5551], [9469, 5458], [9407, 5408], [9361, 5337], [9347, 5365], [9319, 5366], [9306, 5412], [9288, 5407], [9251, 5426], [9222, 5460], [9221, 5486], [9148, 5523], [9127, 5551], [9054, 5577], [8939, 5640], [8935, 5655], [8885, 5676], [8876, 5700], [8917, 5740], [8951, 5750], [8996, 5796], [9015, 5829], [9032, 5794], [9078, 5802], [9167, 5712], [9232, 5676], [9263, 5701], [9332, 5689], [9397, 5713], [9461, 5764], [9493, 5797], [9552, 5801], [9573, 5786], [9643, 5807], [9664, 5792], [9731, 5780]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.PB",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.73,
-			"hc-middle-y": 0.46,
-			"hc-key": "br-pb",
-			"hc-a2": "PB",
-			"labelrank": "2",
-			"hasc": "BR.PB",
-			"alt-name": "Parahyba",
-			"woe-id": "2344858",
-			"subregion": null,
-			"fips": "BR17",
-			"postal-code": "PB",
-			"name": "Paraíba",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-36.2726",
-			"woe-name": "Paraíba",
-			"latitude": "-7.34234",
-			"woe-label": "Paraiba, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[9813, 6481], [9809, 6448], [9825, 6368], [9837, 6360], [9819, 6297], [9842, 6337], [9851, 6288], [9841, 6176], [9820, 6176], [9774, 6218], [9718, 6228], [9688, 6207], [9654, 6209], [9635, 6152], [9551, 6125], [9547, 6111], [9393, 6112], [9386, 6088], [9352, 6085], [9326, 6061], [9334, 6040], [9290, 6002], [9239, 5986], [9195, 6022], [9191, 6076], [9138, 6072], [9189, 6139], [9183, 6194], [9234, 6211], [9234, 6241], [9170, 6282], [9119, 6262], [9086, 6225], [9042, 6206], [8965, 6145], [8917, 6147], [8887, 6125], [8862, 6169], [8814, 6152], [8768, 6196], [8817, 6288], [8778, 6328], [8766, 6405], [8798, 6442], [8790, 6461], [8827, 6550], [8893, 6512], [8935, 6506], [8956, 6527], [9016, 6555], [9041, 6602], [9180, 6642], [9203, 6614], [9140, 6537], [9129, 6501], [9107, 6491], [9104, 6455], [9153, 6448], [9184, 6410], [9250, 6442], [9304, 6422], [9307, 6375], [9323, 6361], [9362, 6374], [9384, 6415], [9376, 6458], [9401, 6461], [9383, 6503], [9390, 6533], [9421, 6553], [9446, 6552], [9456, 6520], [9546, 6502], [9618, 6511], [9674, 6497], [9717, 6477], [9789, 6472], [9813, 6481]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.CE",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.42,
-			"hc-middle-y": 0.43,
-			"hc-key": "br-ce",
-			"hc-a2": "CE",
-			"labelrank": "2",
-			"hasc": "BR.CE",
-			"alt-name": null,
-			"woe-id": "2344849",
-			"subregion": null,
-			"fips": "BR06",
-			"postal-code": "CE",
-			"name": "Ceará",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-39.3429",
-			"woe-name": "Ceará",
-			"latitude": "-5.37602",
-			"woe-label": "Ceara, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[8827, 6550], [8790, 6461], [8798, 6442], [8766, 6405], [8778, 6328], [8817, 6288], [8768, 6196], [8734, 6184], [8690, 6133], [8661, 6132], [8652, 6162], [8615, 6184], [8588, 6223], [8537, 6245], [8505, 6275], [8452, 6284], [8392, 6269], [8261, 6278], [8251, 6334], [8299, 6442], [8283, 6464], [8219, 6487], [8203, 6535], [8196, 6603], [8174, 6673], [8161, 6842], [8128, 6874], [8132, 6914], [8098, 6986], [8086, 7094], [8133, 7153], [8120, 7196], [8090, 7234], [8076, 7301], [8057, 7330], [8032, 7407], [8039, 7440], [8087, 7509], [8089, 7527], [8083, 7565], [8120, 7563], [8276, 7577], [8299, 7589], [8442, 7569], [8519, 7514], [8543, 7514], [8580, 7483], [8615, 7471], [8692, 7415], [8718, 7409], [8737, 7377], [8767, 7365], [8807, 7327], [8858, 7320], [8885, 7270], [8920, 7243], [8959, 7186], [9028, 7122], [9051, 7115], [9067, 7080], [9095, 7053], [9173, 7026], [9197, 6987], [9111, 6960], [9060, 6923], [9003, 6809], [8965, 6766], [8941, 6691], [8892, 6636], [8860, 6641], [8812, 6584], [8804, 6546], [8827, 6550]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.SE",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.60,
-			"hc-middle-y": 0.73,
-			"hc-key": "br-se",
-			"hc-a2": "SE",
-			"labelrank": "2",
-			"hasc": "BR.SE",
-			"alt-name": null,
-			"woe-id": "2344869",
-			"subregion": null,
-			"fips": "BR28",
-			"postal-code": "SE",
-			"name": "Sergipe",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-37.3836",
-			"woe-name": "Sergipe",
-			"latitude": "-10.5918",
-			"woe-label": "Sergipe, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[9361, 5337], [9314, 5325], [9221, 5266], [9180, 5217], [9145, 5150], [9114, 5126], [9097, 5090], [9066, 5092], [9050, 5060], [9001, 5051], [8965, 5063], [8951, 5088], [8910, 5114], [8919, 5148], [8897, 5170], [8887, 5211], [8855, 5250], [8869, 5301], [8929, 5287], [8982, 5321], [8970, 5381], [8986, 5414], [8990, 5478], [8943, 5540], [8924, 5618], [8939, 5640], [9054, 5577], [9127, 5551], [9148, 5523], [9221, 5486], [9222, 5460], [9251, 5426], [9288, 5407], [9306, 5412], [9319, 5366], [9347, 5365], [9361, 5337]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.RR",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.59,
-			"hc-middle-y": 0.51,
-			"hc-key": "br-rr",
-			"hc-a2": "RR",
-			"labelrank": "2",
-			"hasc": "BR.RR",
-			"alt-name": "Rio Branco",
-			"woe-id": "2344866",
-			"subregion": null,
-			"fips": "BR25",
-			"postal-code": "RR",
-			"name": "Roraima",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-61.3325",
-			"woe-name": "Roraima",
-			"latitude": "1.93803",
-			"woe-label": "Roraima, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[1919, 9011], [1920, 9063], [1796, 9066], [1736, 9078], [1750, 9144], [1720, 9212], [1688, 9262], [1683, 9345], [1695, 9395], [1662, 9432], [1605, 9469], [1569, 9510], [1528, 9582], [1547, 9592], [1589, 9544], [1652, 9552], [1719, 9533], [1735, 9483], [1754, 9475], [1788, 9494], [1858, 9489], [1889, 9466], [1913, 9497], [1952, 9484], [2031, 9392], [2049, 9382], [2087, 9391], [2100, 9409], [2090, 9476], [2097, 9510], [2154, 9514], [2161, 9539], [2203, 9552], [2256, 9529], [2300, 9547], [2329, 9543], [2389, 9572], [2431, 9570], [2462, 9618], [2508, 9625], [2507, 9647], [2547, 9637], [2586, 9644], [2617, 9695], [2656, 9710], [2698, 9750], [2702, 9777], [2682, 9837], [2742, 9826], [2810, 9851], [2874, 9800], [2859, 9700], [2826, 9641], [2883, 9638], [2954, 9603], [2943, 9546], [2997, 9477], [2955, 9414], [2911, 9388], [2915, 9320], [2876, 9237], [2864, 9133], [2890, 9068], [2891, 9040], [2936, 9013], [2933, 8898], [2962, 8895], [2952, 8874], [2982, 8864], [3074, 8766], [3149, 8748], [3177, 8445], [2927, 8447], [2855, 8445], [2827, 8419], [2776, 8317], [2753, 8238], [2774, 8210], [2768, 8186], [2732, 8176], [2719, 8151], [2657, 8146], [2635, 8191], [2603, 8228], [2553, 8245], [2455, 8204], [2435, 8179], [2422, 8118], [2427, 8097], [2411, 8026], [2416, 7986], [2372, 8002], [2339, 8000], [2297, 8062], [2247, 8090], [2187, 8151], [2163, 8166], [2171, 8188], [2199, 8182], [2217, 8203], [2201, 8252], [2201, 8287], [2171, 8320], [2143, 8387], [2158, 8409], [2146, 8432], [2156, 8503], [2169, 8534], [2155, 8588], [2180, 8608], [2131, 8779], [2086, 8832], [2106, 8870], [2108, 8929], [2069, 8949], [2026, 8950], [1986, 8994], [1942, 8990], [1919, 9011]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.PE",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.55,
-			"hc-middle-y": 0.52,
-			"hc-key": "br-pe",
-			"hc-a2": "PE",
-			"labelrank": "2",
-			"hasc": "BR.PE",
-			"alt-name": "Pernambouc",
-			"woe-id": "2344860",
-			"subregion": null,
-			"fips": "BR30",
-			"postal-code": "PE",
-			"name": "Pernambuco",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-37.2958",
-			"woe-name": "Pernambuco",
-			"latitude": "-8.47283",
-			"woe-label": "Pernambuco, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[9731, 5780], [9664, 5792], [9643, 5807], [9573, 5786], [9552, 5801], [9493, 5797], [9461, 5764], [9397, 5713], [9332, 5689], [9263, 5701], [9232, 5676], [9167, 5712], [9078, 5802], [9032, 5794], [9015, 5829], [8996, 5796], [8951, 5750], [8917, 5740], [8876, 5700], [8856, 5799], [8831, 5787], [8804, 5813], [8801, 5850], [8764, 5809], [8752, 5846], [8712, 5868], [8680, 5863], [8664, 5880], [8612, 5898], [8595, 5932], [8563, 5941], [8483, 5909], [8481, 5873], [8424, 5862], [8423, 5821], [8361, 5786], [8317, 5788], [8300, 5718], [8278, 5717], [8217, 5682], [8180, 5693], [8200, 5724], [8197, 5760], [8157, 5780], [8147, 5813], [8150, 5864], [8077, 5909], [8019, 5910], [8064, 5930], [8119, 5989], [8145, 5985], [8195, 6037], [8240, 6070], [8253, 6096], [8255, 6152], [8224, 6174], [8236, 6208], [8218, 6268], [8261, 6278], [8392, 6269], [8452, 6284], [8505, 6275], [8537, 6245], [8588, 6223], [8615, 6184], [8652, 6162], [8661, 6132], [8690, 6133], [8734, 6184], [8768, 6196], [8814, 6152], [8862, 6169], [8887, 6125], [8917, 6147], [8965, 6145], [9042, 6206], [9086, 6225], [9119, 6262], [9170, 6282], [9234, 6241], [9234, 6211], [9183, 6194], [9189, 6139], [9138, 6072], [9191, 6076], [9195, 6022], [9239, 5986], [9290, 6002], [9334, 6040], [9326, 6061], [9352, 6085], [9386, 6088], [9393, 6112], [9547, 6111], [9551, 6125], [9635, 6152], [9654, 6209], [9688, 6207], [9718, 6228], [9774, 6218], [9820, 6176], [9843, 6152], [9829, 6094], [9838, 6069], [9800, 5973], [9796, 5941], [9738, 5811], [9731, 5780]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.PR",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.45,
-			"hc-middle-y": 0.50,
-			"hc-key": "br-pr",
-			"hc-a2": "PR",
-			"labelrank": "2",
-			"hasc": "BR.PR",
-			"alt-name": null,
-			"woe-id": "2344859",
-			"subregion": null,
-			"fips": "BR18",
-			"postal-code": "PR",
-			"name": "Paraná",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-51.3228",
-			"woe-name": "Paraná",
-			"latitude": "-24.6618",
-			"woe-label": "Parana, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[4621, 1100], [4595, 1164], [4580, 1180], [4577, 1225], [4559, 1275], [4505, 1297], [4509, 1311], [4435, 1286], [4420, 1271], [4385, 1290], [4383, 1330], [4431, 1347], [4422, 1367], [4494, 1386], [4441, 1393], [4440, 1413], [4465, 1435], [4436, 1448], [4442, 1490], [4465, 1474], [4453, 1505], [4467, 1527], [4499, 1528], [4469, 1546], [4465, 1585], [4479, 1646], [4461, 1682], [4474, 1713], [4517, 1742], [4519, 1778], [4550, 1887], [4607, 1923], [4628, 1976], [4640, 2027], [4670, 2052], [4751, 2087], [4808, 2123], [4996, 2101], [5035, 2135], [5084, 2109], [5168, 2087], [5218, 2096], [5280, 2062], [5339, 2046], [5363, 2012], [5403, 2017], [5490, 2006], [5572, 2015], [5587, 1980], [5633, 1960], [5655, 1916], [5659, 1875], [5649, 1848], [5673, 1790], [5659, 1748], [5706, 1685], [5750, 1613], [5727, 1560], [5730, 1522], [5782, 1514], [5798, 1529], [5860, 1509], [5902, 1512], [5934, 1492], [5919, 1475], [5910, 1406], [5924, 1398], [5950, 1432], [5996, 1415], [6013, 1356], [6043, 1353], [6029, 1332], [5996, 1291], [5955, 1274], [5969, 1356], [5958, 1335], [5936, 1352], [5945, 1307], [5932, 1290], [5888, 1299], [5863, 1322], [5892, 1275], [5916, 1279], [5956, 1261], [5937, 1248], [5896, 1149], [5763, 1151], [5716, 1121], [5640, 1091], [5552, 1153], [5460, 1144], [5425, 1153], [5377, 1142], [5354, 1097], [5312, 1086], [5269, 1099], [5224, 1068], [5214, 1047], [5226, 996], [5179, 972], [5160, 1000], [5067, 1001], [5034, 1007], [4986, 1044], [4876, 1059], [4833, 1077], [4756, 1069], [4698, 1105], [4672, 1092], [4621, 1100]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.ES",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.35,
-			"hc-middle-y": 0.81,
-			"hc-key": "br-es",
-			"hc-a2": "ES",
-			"labelrank": "2",
-			"hasc": "BR.ES",
-			"alt-name": "Espiritu Santo",
-			"woe-id": "2344851",
-			"subregion": null,
-			"fips": "BR08",
-			"postal-code": "ES",
-			"name": "Espírito Santo",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-40.5436",
-			"woe-name": "Espírito Santo",
-			"latitude": "-19.6916",
-			"woe-label": "Espirito Santo, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[7700, 2503], [7717, 2539], [7726, 2601], [7712, 2618], [7751, 2661], [7832, 2653], [7843, 2660], [7864, 2725], [7897, 2747], [7909, 2805], [7965, 2854], [7977, 2903], [7976, 2946], [7950, 2980], [7939, 3022], [7905, 3034], [7986, 3042], [7990, 3074], [7964, 3091], [7975, 3143], [7941, 3190], [7965, 3222], [8005, 3241], [8041, 3241], [8008, 3278], [8073, 3278], [8138, 3291], [8195, 3262], [8200, 3253], [8328, 3154], [8301, 3053], [8297, 2991], [8301, 2894], [8294, 2844], [8255, 2778], [8203, 2752], [8156, 2676], [8134, 2611], [8102, 2626], [8101, 2601], [8129, 2599], [8101, 2550], [8021, 2460], [7994, 2461], [7968, 2408], [7923, 2344], [7898, 2363], [7846, 2362], [7802, 2375], [7733, 2406], [7731, 2488], [7700, 2503]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.RJ",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.72,
-			"hc-middle-y": 0.56,
-			"hc-key": "br-rj",
-			"hc-a2": "RJ",
-			"labelrank": "2",
-			"hasc": "BR.RJ",
-			"alt-name": null,
-			"woe-id": "2344862",
-			"subregion": null,
-			"fips": "BR21",
-			"postal-code": "RJ",
-			"name": "Rio de Janeiro",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-43.1152",
-			"woe-name": "Rio de Janeiro",
-			"latitude": "-22.4049",
-			"woe-label": "Rio de Janeiro, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[6911, 1831], [6879, 1874], [6895, 1893], [6900, 1934], [6985, 1968], [7037, 1973], [7067, 2005], [7056, 2036], [6972, 2033], [6948, 2041], [6916, 2092], [6901, 2098], [6945, 2106], [7004, 2134], [7062, 2132], [7095, 2151], [7170, 2177], [7260, 2173], [7292, 2186], [7371, 2174], [7573, 2247], [7551, 2271], [7575, 2334], [7596, 2352], [7637, 2467], [7672, 2468], [7700, 2503], [7731, 2488], [7733, 2406], [7802, 2375], [7846, 2362], [7898, 2363], [7923, 2344], [7921, 2319], [7890, 2276], [7907, 2154], [7898, 2136], [7831, 2104], [7719, 2074], [7636, 2009], [7625, 1963], [7649, 1938], [7623, 1928], [7603, 1893], [7458, 1909], [7439, 1902], [7353, 1907], [7329, 1931], [7356, 1963], [7348, 1995], [7296, 1975], [7321, 1932], [7304, 1905], [7101, 1892], [7205, 1908], [7141, 1941], [7114, 1938], [7044, 1900], [7080, 1871], [7017, 1861], [7007, 1877], [7042, 1902], [7042, 1922], [6992, 1926], [6922, 1899], [6919, 1869], [6968, 1850], [6948, 1828], [6911, 1831]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.RN",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.53,
-			"hc-middle-y": 0.53,
-			"hc-key": "br-rn",
-			"hc-a2": "RN",
-			"labelrank": "2",
-			"hasc": "BR.RN",
-			"alt-name": null,
-			"woe-id": "2344863",
-			"subregion": null,
-			"fips": "BR22",
-			"postal-code": "RN",
-			"name": "Rio Grande do Norte",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-36.5472",
-			"woe-name": "Rio Grande do Norte",
-			"latitude": "-5.66157",
-			"woe-label": "Rio Grande do Norte, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[8827, 6550], [8804, 6546], [8812, 6584], [8860, 6641], [8892, 6636], [8941, 6691], [8965, 6766], [9003, 6809], [9060, 6923], [9111, 6960], [9197, 6987], [9224, 6957], [9290, 6953], [9319, 6919], [9382, 6897], [9421, 6908], [9502, 6902], [9539, 6915], [9674, 6883], [9698, 6862], [9740, 6782], [9767, 6653], [9778, 6631], [9780, 6575], [9795, 6560], [9813, 6481], [9789, 6472], [9717, 6477], [9674, 6497], [9618, 6511], [9546, 6502], [9456, 6520], [9446, 6552], [9421, 6553], [9390, 6533], [9383, 6503], [9401, 6461], [9376, 6458], [9384, 6415], [9362, 6374], [9323, 6361], [9307, 6375], [9304, 6422], [9250, 6442], [9184, 6410], [9153, 6448], [9104, 6455], [9107, 6491], [9129, 6501], [9140, 6537], [9203, 6614], [9180, 6642], [9041, 6602], [9016, 6555], [8956, 6527], [8935, 6506], [8893, 6512], [8827, 6550]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.AM",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.56,
-			"hc-middle-y": 0.56,
-			"hc-key": "br-am",
-			"hc-a2": "AM",
-			"labelrank": "2",
-			"hasc": "BR.AM",
-			"alt-name": "Amazone",
-			"woe-id": "2344847",
-			"subregion": null,
-			"fips": "BR04",
-			"postal-code": "AM",
-			"name": "Amazonas",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-63.7853",
-			"woe-name": "Amazonas",
-			"latitude": "-4.21774",
-			"woe-label": "Amazonas, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[1919, 9011], [1942, 8990], [1986, 8994], [2026, 8950], [2069, 8949], [2108, 8929], [2106, 8870], [2086, 8832], [2131, 8779], [2180, 8608], [2155, 8588], [2169, 8534], [2156, 8503], [2146, 8432], [2158, 8409], [2143, 8387], [2171, 8320], [2201, 8287], [2201, 8252], [2217, 8203], [2199, 8182], [2171, 8188], [2163, 8166], [2187, 8151], [2247, 8090], [2297, 8062], [2339, 8000], [2372, 8002], [2416, 7986], [2411, 8026], [2427, 8097], [2422, 8118], [2435, 8179], [2455, 8204], [2553, 8245], [2603, 8228], [2635, 8191], [2657, 8146], [2719, 8151], [2732, 8176], [2768, 8186], [2774, 8210], [2753, 8238], [2776, 8317], [2827, 8419], [2855, 8445], [2927, 8447], [3177, 8445], [3182, 8285], [3214, 8263], [3211, 8210], [3245, 8170], [3297, 8143], [3312, 8091], [3376, 8039], [3469, 7982], [3517, 7941], [3606, 7903], [3675, 7880], [3698, 7846], [3772, 7813], [3770, 7779], [3802, 7766], [3840, 7783], [3868, 7752], [3870, 7720], [3768, 7499], [3346, 6577], [3299, 6520], [3320, 6449], [3369, 6407], [3392, 6343], [3372, 6321], [3372, 6273], [3326, 6209], [3346, 6127], [3338, 6088], [3312, 6044], [3317, 6008], [3283, 5950], [2438, 5931], [2408, 5953], [2375, 5936], [2365, 5905], [2294, 5928], [2282, 5972], [2245, 5982], [2225, 6034], [2179, 6039], [2126, 6122], [2076, 6136], [1901, 6135], [1887, 6088], [1851, 6080], [1844, 6053], [1798, 6038], [1779, 6008], [1799, 5982], [1779, 5941], [1743, 5938], [1748, 5867], [1650, 5860], [1616, 5839], [1566, 5848], [1527, 5809], [1533, 5783], [1484, 5719], [1446, 5768], [1393, 5729], [1335, 5710], [1299, 5676], [1253, 5717], [1124, 5715], [1124, 5682], [1097, 5649], [1033, 5615], [1010, 5588], [175, 5951], [16, 6030], [-624, 6168], [-946, 6292], [-937, 6356], [-916, 6384], [-831, 6454], [-784, 6467], [-767, 6500], [-799, 6603], [-775, 6663], [-738, 6713], [-733, 6785], [-713, 6842], [-720, 6883], [-640, 6917], [-538, 6997], [-489, 7043], [-407, 7081], [-377, 7074], [-333, 7092], [-293, 7090], [-273, 7113], [-184, 7114], [-147, 7174], [-92, 7193], [-78, 7171], [-36, 7190], [-2, 7180], [-1, 7154], [28, 7131], [41, 7152], [88, 7140], [99, 7173], [241, 8043], [226, 8096], [201, 8118], [176, 8172], [189, 8197], [175, 8237], [88, 8295], [52, 8347], [57, 8552], [179, 8570], [211, 8592], [250, 8567], [313, 8569], [299, 8588], [309, 8632], [271, 8681], [249, 8688], [114, 8688], [114, 8874], [191, 8891], [255, 8877], [586, 8874], [554, 8905], [577, 8956], [604, 8932], [633, 8882], [691, 8900], [746, 8968], [789, 8992], [817, 8978], [878, 8869], [890, 8821], [883, 8739], [892, 8716], [945, 8730], [1075, 8610], [1145, 8590], [1196, 8611], [1260, 8658], [1305, 8659], [1323, 8627], [1304, 8592], [1311, 8568], [1342, 8578], [1376, 8640], [1411, 8644], [1430, 8701], [1462, 8704], [1513, 8741], [1543, 8734], [1593, 8783], [1633, 8807], [1637, 8775], [1711, 8827], [1725, 8846], [1733, 8916], [1749, 8934], [1814, 8941], [1855, 8973], [1912, 8986], [1919, 9011]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.MT",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.49,
-			"hc-middle-y": 0.55,
-			"hc-key": "br-mt",
-			"hc-a2": "MT",
-			"labelrank": "2",
-			"hasc": "BR.MT",
-			"alt-name": "Matto Grosso",
-			"woe-id": "2344855",
-			"subregion": null,
-			"fips": "BR14",
-			"postal-code": "MT",
-			"name": "Mato Grosso",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-55.9235",
-			"woe-name": "Mato Grosso",
-			"latitude": "-13.3926",
-			"woe-label": "Mato Grosso, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[3392, 6343], [3413, 6323], [3460, 6246], [3492, 6148], [3531, 6097], [3520, 6040], [3549, 5951], [3576, 5941], [3627, 5896], [3681, 5870], [3698, 5821], [3755, 5809], [3774, 5775], [3799, 5781], [3859, 5756], [4236, 5731], [5279, 5666], [5571, 5648], [5552, 5599], [5531, 5576], [5517, 5511], [5491, 5451], [5469, 5424], [5458, 5346], [5464, 5320], [5427, 5190], [5452, 5160], [5436, 5131], [5451, 5085], [5442, 5051], [5444, 4998], [5460, 4931], [5444, 4876], [5463, 4826], [5493, 4816], [5489, 4786], [5464, 4751], [5468, 4709], [5442, 4656], [5416, 4623], [5405, 4586], [5387, 4576], [5387, 4468], [5369, 4463], [5348, 4386], [5355, 4353], [5318, 4251], [5298, 4226], [5259, 4232], [5206, 4203], [5167, 4163], [5161, 4116], [5105, 3999], [5006, 3969], [4985, 3935], [4928, 3899], [4929, 3883], [4893, 3865], [4907, 3828], [4902, 3799], [4855, 3740], [4798, 3706], [4791, 3653], [4749, 3591], [4738, 3513], [4787, 3387], [4720, 3393], [4609, 3390], [4539, 3420], [4574, 3479], [4603, 3492], [4621, 3599], [4584, 3585], [4549, 3543], [4498, 3496], [4432, 3483], [4424, 3509], [4396, 3527], [4351, 3526], [4297, 3489], [4222, 3479], [4128, 3529], [4108, 3559], [4060, 3570], [3976, 3615], [3937, 3606], [3916, 3587], [3802, 3576], [3777, 3530], [3747, 3504], [3744, 3481], [3704, 3445], [3628, 3422], [3579, 3434], [3546, 3456], [3528, 3506], [3469, 3521], [3409, 3566], [3369, 3582], [3344, 3688], [3339, 3744], [3371, 3793], [3374, 3855], [3341, 3842], [2894, 3847], [2881, 3861], [2859, 4061], [2763, 4171], [2846, 4174], [2838, 4304], [2788, 4400], [2786, 4449], [2807, 4482], [2782, 4534], [2713, 4570], [2804, 4640], [2832, 4739], [2852, 4766], [2882, 4779], [2903, 4835], [2927, 4867], [2949, 4932], [2930, 4971], [2930, 5003], [2903, 5062], [2882, 5065], [2869, 5150], [2919, 5211], [2893, 5277], [2817, 5293], [2789, 5287], [2772, 5314], [2490, 5309], [2476, 5321], [2486, 5466], [2460, 5514], [2457, 5570], [2469, 5626], [2456, 5663], [2478, 5689], [2441, 5777], [2462, 5804], [2455, 5830], [2473, 5891], [2438, 5931], [3283, 5950], [3317, 6008], [3312, 6044], [3338, 6088], [3346, 6127], [3326, 6209], [3372, 6273], [3372, 6321], [3392, 6343]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.DF",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.89,
-			"hc-middle-y": 0.52,
-			"hc-key": "br-df",
-			"hc-a2": "DF",
-			"labelrank": "7",
-			"hasc": "BR.DF",
-			"alt-name": null,
-			"woe-id": "2344850",
-			"subregion": null,
-			"fips": "BR07",
-			"postal-code": "DF",
-			"name": "Distrito Federal",
-			"country": "Brazil",
-			"type-en": "Federal District",
-			"region": null,
-			"longitude": "-47.7902",
-			"woe-name": "Distrito Federal",
-			"latitude": "-15.7665",
-			"woe-label": "Distrito Federal, BR, Brazil",
-			"type": "Distrito Federal"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[6332, 3907], [6332, 3907], [6332, 3907], [6097, 3914], [6072, 3971], [6093, 3999], [6084, 4011], [6102, 4067], [6305, 4059], [6335, 4033], [6318, 3923], [6332, 3907], [6332, 3907], [6332, 3907]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.AC",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.49,
-			"hc-middle-y": 0.52,
-			"hc-key": "br-ac",
-			"hc-a2": "AC",
-			"labelrank": "2",
-			"hasc": "BR.",
-			"alt-name": null,
-			"woe-id": "2344844",
-			"subregion": null,
-			"fips": "BR01",
-			"postal-code": "AC",
-			"name": "Acre",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-70.2976",
-			"woe-name": "Acre",
-			"latitude": "-8.9285",
-			"woe-label": "Acre, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[1060, 5568], [993, 5515], [950, 5467], [913, 5445], [876, 5444], [836, 5403], [810, 5391], [775, 5332], [736, 5343], [672, 5329], [622, 5247], [536, 5204], [489, 5198], [496, 5231], [320, 5244], [232, 5231], [167, 5241], [78, 5194], [37, 5200], [9, 5227], [-19, 5204], [-36, 5538], [-12, 5576], [-36, 5621], [-11, 5661], [-104, 5590], [-140, 5543], [-179, 5524], [-188, 5505], [-240, 5483], [-461, 5471], [-453, 5506], [-484, 5541], [-499, 5605], [-534, 5620], [-640, 5635], [-750, 5630], [-685, 5728], [-691, 5757], [-750, 5831], [-800, 5865], [-803, 5899], [-852, 5928], [-896, 6032], [-927, 6048], [-933, 6071], [-911, 6097], [-947, 6115], [-999, 6165], [-969, 6216], [-918, 6239], [-946, 6292], [-624, 6168], [16, 6030], [175, 5951], [1010, 5588], [1060, 5568]]]
-		}
-	}, {
-		"type": "Feature",
-		"id": "BR.RO",
-		"properties": {
-			"hc-group": "admin1",
-			"hc-middle-x": 0.59,
-			"hc-middle-y": 0.58,
-			"hc-key": "br-ro",
-			"hc-a2": "RO",
-			"labelrank": "2",
-			"hasc": "BR.",
-			"alt-name": "Guaporé",
-			"woe-id": "2344865",
-			"subregion": "Guaporé",
-			"fips": "BR24",
-			"postal-code": "RO",
-			"name": "Rondônia",
-			"country": "Brazil",
-			"type-en": "State",
-			"region": null,
-			"longitude": "-63.1439",
-			"woe-name": "Rondônia",
-			"latitude": "-10.9712",
-			"woe-label": "Rondonia, BR, Brazil",
-			"type": "Estado"
-		},
-		"geometry": {
-			"type": "Polygon",
-			"coordinates": [[[2713, 4570], [2666, 4599], [2631, 4603], [2624, 4623], [2597, 4607], [2543, 4612], [2513, 4598], [2478, 4607], [2407, 4598], [2364, 4644], [2316, 4711], [2246, 4706], [2238, 4719], [2187, 4731], [2175, 4749], [2142, 4741], [2108, 4780], [2095, 4777], [2066, 4833], [2023, 4818], [1979, 4826], [1950, 4856], [1906, 4877], [1866, 4881], [1835, 4855], [1773, 4859], [1754, 4872], [1704, 4874], [1678, 4897], [1682, 4929], [1614, 4958], [1592, 4990], [1535, 4998], [1514, 5065], [1478, 5067], [1469, 5130], [1449, 5133], [1418, 5231], [1441, 5278], [1435, 5313], [1413, 5327], [1416, 5360], [1401, 5380], [1406, 5430], [1437, 5497], [1422, 5578], [1429, 5607], [1410, 5639], [1387, 5646], [1352, 5601], [1317, 5623], [1185, 5605], [1114, 5578], [1060, 5568], [1010, 5588], [1033, 5615], [1097, 5649], [1124, 5682], [1124, 5715], [1253, 5717], [1299, 5676], [1335, 5710], [1393, 5729], [1446, 5768], [1484, 5719], [1533, 5783], [1527, 5809], [1566, 5848], [1616, 5839], [1650, 5860], [1748, 5867], [1743, 5938], [1779, 5941], [1799, 5982], [1779, 6008], [1798, 6038], [1844, 6053], [1851, 6080], [1887, 6088], [1901, 6135], [2076, 6136], [2126, 6122], [2179, 6039], [2225, 6034], [2245, 5982], [2282, 5972], [2294, 5928], [2365, 5905], [2375, 5936], [2408, 5953], [2438, 5931], [2473, 5891], [2455, 5830], [2462, 5804], [2441, 5777], [2478, 5689], [2456, 5663], [2469, 5626], [2457, 5570], [2460, 5514], [2486, 5466], [2476, 5321], [2490, 5309], [2772, 5314], [2789, 5287], [2817, 5293], [2893, 5277], [2919, 5211], [2869, 5150], [2882, 5065], [2903, 5062], [2930, 5003], [2930, 4971], [2949, 4932], [2927, 4867], [2903, 4835], [2882, 4779], [2852, 4766], [2832, 4739], [2804, 4640], [2713, 4570]]]
-		}
-	}]
-};
 (function() {
 	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
 		var Child = {
@@ -7305,724 +7296,6 @@ Highcharts.maps["countries/br/br-all"] = {
 				$scope.refresh();
 			}
 		);
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
-
-            $scope.message = message;
-            $scope.subtitle = subtitle;
-            $scope.clazz = clazz;
-            $scope.canDismiss = canDismiss;
-            $scope.period = period; //periodicidade
-            $scope.can_forward = true;
-
-            $scope.addFrequency = function(){
-                var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
-                $scope.clazz.frequencies.unshift({
-                    created_at: splitDate,
-                    qty_enrollment: 0,
-                    qty_presence: 0,
-                    classes_id: $scope.clazz.id,
-                    periodicidade: $scope.period
-                });
-            };
-
-            $scope.getPreviousDate = function(){
-                var newDate = null;
-                switch ( $scope.period ) {
-                    case 'Diaria':
-                        newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
-                        break;
-                    case 'Semanal':
-                        newDate = $scope.subtractAWeekOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                    case 'Quinzenal':
-                        newDate = $scope.subtractFortnightOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                    case 'Mensal':
-                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                }
-                return newDate;
-            };
-
-            $scope.getlabelNewPeriod = function(){
-                var label = '';
-                switch ( $scope.period ) {
-                    case 'Diaria':
-                        label = 'dia';
-                        break;
-                    case 'Semanal':
-                        label = 'semana';
-                        break;
-                    case 'Quinzenal':
-                        label = 'quinzena';
-                        break;
-                    case 'Mensal':
-                        label = 'mês';
-                        break;
-                }
-                return label;
-            };
-
-            $scope.getPeriodLabelForNewFrequency = function(date, periodicidade){
-                date = new Date(date);
-                if(periodicidade == 'Diaria'){
-                    var splitDate = date.toISOString().substr(0, 10).split('-');
-                    return splitDate[2]+"/"+splitDate[1];
-                }
-
-                if(periodicidade == 'Semanal'){
-                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
-                }
-
-                if(periodicidade == 'Quinzenal'){
-                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
-                }
-
-                if(periodicidade == 'Mensal'){
-                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
-                }
-            };
-
-            //subtrair um dia considerando finais de semana
-            $scope.subtractDaysOfDayInstance = function(date, days) {
-                var copy = new Date(Number(date));
-                copy.setDate(date.getDate() - days);
-                if( copy.getUTCDay() == 0 ) //domingo
-                { copy.setDate(copy.getDate() - 2); }
-                if( copy.getUTCDay() == 6 ) //sabado
-                { copy.setDate(copy.getDate() - 1); }
-                return copy;
-            };
-
-            //pega a ultima sexta-feira para periodicidade semanal
-            $scope.subtractAWeekOfDayInstance = function(date){
-                var lastFriday = new Date(Number(date));
-                if(date.getDay() == 5){
-                    lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
-                }
-                while (lastFriday.getDay() != 5){
-                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
-                }
-                return lastFriday;
-            };
-
-            //pega o ultimo dia 15 ou dia 1o
-            $scope.subtractFortnightOfDayInstance = function(date){
-                var date2 = new Date(Number(date));
-                if(date.getUTCDate() > 15){
-                    date2.setUTCDate(15);
-                }else{ //se é de 1 a 15 pega ultima data do mes anterior
-                    date2 = new Date(date.getFullYear(), date.getMonth(), 0);
-                }
-                return date2;
-            };
-
-            //menos um mês completo- ultimo dia do mês anterior
-            $scope.subtractMonthOfDayInstance = function(date) {
-               return new Date(date.getFullYear(), date.getMonth(), 0);
-            };
-
-            $scope.agree = function() {
-                $scope.can_forward = false;
-                Classes.updateFrequencies($scope.clazz.frequencies).$promise
-                    .then(function (res) {
-                        $scope.can_forward = true;
-                        $uibModalInstance.close(true);
-                    });
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
-
-			$scope.message = message;
-			$scope.details = details;
-
-			$scope.dismiss = function() {
-				$uibModalInstance.dismiss();
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
-
-			// TODO: receive case ID, fetch details and show
-
-			//console.log("[modal] case_activity_log_entry");
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
-
-			//console.log("[modal] case_cancel");
-
-			$scope.static = StaticData;
-			$scope.lang = Language;
-			$scope.reason = null;
-
-			$scope.cancelCase = function() {
-				if(!$scope.reason) return;
-				$uibModalInstance.close({response: $scope.reason});
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-		});
-
-})();
-(function () {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
-
-            $scope.reject_reason = "";
-            $scope.ok = function () {
-                if (!$scope.reason) return;
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                reason: $scope.reason,
-                            }
-                    });
-            };
-
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser) {
-
-			//console.log("[modal] case_restart");
-
-			$scope.step = 1;
-			$scope.reason = "";
-			$scope.typeUser = $typeUser;
-
-			$scope.ok = function() {
-				if(!$scope.reason) return;
-				$uibModalInstance.close({response: $scope.reason});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function () {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
-
-            $scope.step = 1;
-            $scope.reason = "";
-            $scope.typeUser = $typeUser;
-            $scope.tenants = [];
-
-            $scope.defaultQuery = {
-                name: '',
-                step_name: '',
-                cause_name: '',
-                assigned_user_name: '',
-                location_full: '',
-                alert_status: ['accepted'],
-                case_status: ['in_progress'],
-                risk_level: ['low', 'medium', 'high'],
-                age_null: true,
-                age: {from: 0, to: 10000},
-                gender: ['male', 'female', 'undefined'],
-                gender_null: true,
-                place_kind: ['rural', 'urban'],
-                place_kind_null: true,
-            };
-
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
-// Todo Criar um serviço para reaproveitar isso
-            $scope.getUFs = function () {
-                return StaticData.getUFs();
-            };
-
-            $scope.refresh = function () {
-                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
-            };
-
-            $scope.getTenants = function () {
-                if (!$scope.tenants || !$scope.tenants.data) return [];
-                return $scope.tenants.data;
-            };
-
-            $scope.ok = function () {
-                if (!$scope.reason) return;
-                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                tenant_id: $scope.query.tenant_id,
-                                reason: $scope.reason,
-                                city: city
-                            }
-                    });
-            };
-
-            $scope.cancel = function () {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
-
-			//console.log("[modal] confirm_modal", message, details, canDismiss);
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $q, $uibModalInstance, message, details, schools, canDismiss) {
-
-			$scope.message = message;
-			$scope.details = details;
-			$scope.schools = schools;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('ConfirmLargeModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
-
-            $scope.message = message;
-            $scope.details = details;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, title, message, href) {
-
-			//console.log("[modal] download_link ", title, message, href);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.href = href;
-
-			$scope.back = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
-
-			//console.log("[modal] file_uploader", uploadUrl, uploadParameters, title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
-
-			$scope.file = null;
-			$scope.progress = 0;
-			$scope.isUploading = false;
-
-
-			$scope.upload = function(file) {
-				if(!uploadParameters) uploadParameters = {};
-				uploadParameters.file = file;
-
-				$scope.isUploading = true;
-
-				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH}).then(onSuccess, onError, onProgress);
-
-			};
-
-			function onSuccess(res) {
-				if(!res.data) return onError(res);
-
-				//console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
-				$uibModalInstance.close({response: res.data});
-				$scope.isUploading = false;
-			}
-
-			function onError(res) {
-				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
-				$scope.isUploading = false;
-			}
-
-			function onProgress(ev) {
-				$scope.progress = (ev.loaded / ev.total);
-			}
-
-			$scope.calculateProgressWidth = function() {
-				return parseInt(100.0 * $scope.progress) + "%";
-			};
-
-			$scope.close = function() {
-				$scope.isUploading = false;
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('FileUploaderTituloModalCtrl', function FileUploaderTituloModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
-
-			console.log("[modal] file_uploader titulo", uploadUrl, uploadParameters, title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
-
-			$scope.file = null;
-			$scope.progress = 0;
-			$scope.isUploading = false;
-
-
-			$scope.upload = function(file) {
-
-				if(!uploadParameters) uploadParameters = {};
-				uploadParameters.file = file;
-				$scope.isUploading = true;
-				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.OPTIONAL_AUTH}).then(onSuccess, onError, onProgress);
-			};
-
-			function onSuccess(res) {
-				if(!res.data) return onError(res);
-
-				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
-				$uibModalInstance.close({response: res.data});
-				$scope.isUploading = false;
-			}
-
-			function onError(res) {
-				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
-				$scope.isUploading = false;
-			}
-
-			function onProgress(ev) {
-				$scope.progress = (ev.loaded / ev.total);
-			}
-
-			$scope.calculateProgressWidth = function() {
-				return parseInt(100.0 * $scope.progress) + "%";
-			};
-
-			$scope.close = function() {
-				$scope.isUploading = false;
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $q, $uibModalInstance, message, canDismiss) {
-
-            $scope.message = message;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, groups, canDismiss, noGroupsMessage) {
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.canDismiss = canDismiss;
-			$scope.noGroupsMessage = noGroupsMessage;
-
-			$scope.selectedGroup = null;
-			$scope.groups = groups;
-
-			$scope.hasGroups = function() {
-				if(!$scope.groups) return false;
-				return ($scope.groups.length > 0);
-			};
-
-			$scope.onSelect = function() {
-				if(!$scope.selectedGroup) {
-					ngToast.danger('Você não selecionou nenhum grupo!');
-					return;
-				}
-
-				$uibModalInstance.close({response: $scope.selectedGroup});
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
-
-			//console.log("[modal] login", reason, canDismiss);
-
-			$scope.email = '';
-			$scope.password = '';
-
-			$scope.reason = reason;
-			$scope.canDismiss = canDismiss;
-
-            $scope.showPassowrd = function () {
-                var field_password = document.getElementById("fld-password");
-                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
-            }
-
-			function onLoggedIn(session) {
-				$uibModalInstance.close({response: Identity.getCurrentUser()});
-			}
-
-			function onError() {
-				Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
-			}
-
-			$scope.login = function() {
-				Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			}
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
-
-			//console.log("[modal] new_support_ticket_modal");
-
-			$scope.isLoading = false;
-
-			$scope.ticket = {
-				name: '',
-				city_name: '',
-				phone: '',
-				email: '',
-				message: ''
-			};
-
-			$scope.submitTicket = function() {
-				$scope.isLoading = true;
-
-				SupportTicket.submit($scope.ticket, function(res) {
-					$scope.isLoading = false;
-
-					ngToast.success('Solicitação de suporte enviada com sucesso!');
-					$uibModalInstance.close({response: $scope.answer});
-				});
-				
-				return false;
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss, answerPlaceholder) {
-
-			//console.log("[modal] prompt_modal", question, canDismiss);
-
-			$scope.question = question;
-			$scope.answer = defaultAnswer;
-			$scope.placeholder = answerPlaceholder;
-
-			$scope.ok = function() {
-				$uibModalInstance.close({response: $scope.answer});
-			};
-
-			$scope.cancel = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, userGroups, canDismiss, noUsersMessage) {
-
-			//console.log("[modal] user_picker", title, message);
-
-			$scope.title = title;
-			$scope.message = message;
-			$scope.canDismiss = canDismiss;
-			$scope.noUsersMessage = noUsersMessage;
-
-			$scope.selectedUser = { id: null };
-			$scope.users = users;
-			$scope.userGroups = userGroups;
-
-			$scope.hasUsers = function() {
-				if(!$scope.users) return false;
-				return ($scope.users.length > 0);
-			};
-
-			$scope.onSelect = function() {
-				if(!$scope.selectedUser.id) {
-					ngToast.danger('Você não selecionou nenhum usuário!');
-					return;
-				}
-				$uibModalInstance.close({response: $scope.selectedUser.id});
-			};
-
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-			$scope.getGroupWithUsers = function (){
-				var groups = [];
-				$scope.userGroups.forEach(function(group, i) {
-					group.users = $scope.getUsersOfGroup(group);
-					groups.push(group);
-				});
-				return groups;
-			};
-
-			$scope.getUsersOfGroup = function (group){
-				var finalGroup = [];
-				$scope.users.forEach(function (user, i){
-					if (user.group.id == group.id) {
-						finalGroup.push(user);
-					}
-				});
-				return finalGroup;
-			};
-
-		});
-
 })();
 (function() {
 
@@ -9281,6 +8554,724 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
+
+            $scope.message = message;
+            $scope.subtitle = subtitle;
+            $scope.clazz = clazz;
+            $scope.canDismiss = canDismiss;
+            $scope.period = period; //periodicidade
+            $scope.can_forward = true;
+
+            $scope.addFrequency = function(){
+                var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
+                $scope.clazz.frequencies.unshift({
+                    created_at: splitDate,
+                    qty_enrollment: 0,
+                    qty_presence: 0,
+                    classes_id: $scope.clazz.id,
+                    periodicidade: $scope.period
+                });
+            };
+
+            $scope.getPreviousDate = function(){
+                var newDate = null;
+                switch ( $scope.period ) {
+                    case 'Diaria':
+                        newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
+                        break;
+                    case 'Semanal':
+                        newDate = $scope.subtractAWeekOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                    case 'Quinzenal':
+                        newDate = $scope.subtractFortnightOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                    case 'Mensal':
+                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                }
+                return newDate;
+            };
+
+            $scope.getlabelNewPeriod = function(){
+                var label = '';
+                switch ( $scope.period ) {
+                    case 'Diaria':
+                        label = 'dia';
+                        break;
+                    case 'Semanal':
+                        label = 'semana';
+                        break;
+                    case 'Quinzenal':
+                        label = 'quinzena';
+                        break;
+                    case 'Mensal':
+                        label = 'mês';
+                        break;
+                }
+                return label;
+            };
+
+            $scope.getPeriodLabelForNewFrequency = function(date, periodicidade){
+                date = new Date(date);
+                if(periodicidade == 'Diaria'){
+                    var splitDate = date.toISOString().substr(0, 10).split('-');
+                    return splitDate[2]+"/"+splitDate[1];
+                }
+
+                if(periodicidade == 'Semanal'){
+                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Quinzenal'){
+                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+
+                if(periodicidade == 'Mensal'){
+                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                }
+            };
+
+            //subtrair um dia considerando finais de semana
+            $scope.subtractDaysOfDayInstance = function(date, days) {
+                var copy = new Date(Number(date));
+                copy.setDate(date.getDate() - days);
+                if( copy.getUTCDay() == 0 ) //domingo
+                { copy.setDate(copy.getDate() - 2); }
+                if( copy.getUTCDay() == 6 ) //sabado
+                { copy.setDate(copy.getDate() - 1); }
+                return copy;
+            };
+
+            //pega a ultima sexta-feira para periodicidade semanal
+            $scope.subtractAWeekOfDayInstance = function(date){
+                var lastFriday = new Date(Number(date));
+                if(date.getDay() == 5){
+                    lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
+                }
+                while (lastFriday.getDay() != 5){
+                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
+                }
+                return lastFriday;
+            };
+
+            //pega o ultimo dia 15 ou dia 1o
+            $scope.subtractFortnightOfDayInstance = function(date){
+                var date2 = new Date(Number(date));
+                if(date.getUTCDate() > 15){
+                    date2.setUTCDate(15);
+                }else{ //se é de 1 a 15 pega ultima data do mes anterior
+                    date2 = new Date(date.getFullYear(), date.getMonth(), 0);
+                }
+                return date2;
+            };
+
+            //menos um mês completo- ultimo dia do mês anterior
+            $scope.subtractMonthOfDayInstance = function(date) {
+               return new Date(date.getFullYear(), date.getMonth(), 0);
+            };
+
+            $scope.agree = function() {
+                $scope.can_forward = false;
+                Classes.updateFrequencies($scope.clazz.frequencies).$promise
+                    .then(function (res) {
+                        $scope.can_forward = true;
+                        $uibModalInstance.close(true);
+                    });
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('AlertModalCtrl', function AlertModalCtrl($scope, $q, $uibModalInstance, message, details) {
+
+			$scope.message = message;
+			$scope.details = details;
+
+			$scope.dismiss = function() {
+				$uibModalInstance.dismiss();
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
+
+			// TODO: receive case ID, fetch details and show
+
+			//console.log("[modal] case_activity_log_entry");
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
+
+			//console.log("[modal] case_cancel");
+
+			$scope.static = StaticData;
+			$scope.lang = Language;
+			$scope.reason = null;
+
+			$scope.cancelCase = function() {
+				if(!$scope.reason) return;
+				$uibModalInstance.close({response: $scope.reason});
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+		});
+
+})();
+(function () {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
+
+            $scope.reject_reason = "";
+            $scope.ok = function () {
+                if (!$scope.reason) return;
+                $uibModalInstance.close(
+                    {
+                        response:
+                            {
+                                reason: $scope.reason,
+                            }
+                    });
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser) {
+
+			//console.log("[modal] case_restart");
+
+			$scope.step = 1;
+			$scope.reason = "";
+			$scope.typeUser = $typeUser;
+
+			$scope.ok = function() {
+				if(!$scope.reason) return;
+				$uibModalInstance.close({response: $scope.reason});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function () {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
+
+            $scope.step = 1;
+            $scope.reason = "";
+            $scope.typeUser = $typeUser;
+            $scope.tenants = [];
+
+            $scope.defaultQuery = {
+                name: '',
+                step_name: '',
+                cause_name: '',
+                assigned_user_name: '',
+                location_full: '',
+                alert_status: ['accepted'],
+                case_status: ['in_progress'],
+                risk_level: ['low', 'medium', 'high'],
+                age_null: true,
+                age: {from: 0, to: 10000},
+                gender: ['male', 'female', 'undefined'],
+                gender_null: true,
+                place_kind: ['rural', 'urban'],
+                place_kind_null: true,
+            };
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+// Todo Criar um serviço para reaproveitar isso
+            $scope.getUFs = function () {
+                return StaticData.getUFs();
+            };
+
+            $scope.refresh = function () {
+                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
+            };
+
+            $scope.getTenants = function () {
+                if (!$scope.tenants || !$scope.tenants.data) return [];
+                return $scope.tenants.data;
+            };
+
+            $scope.ok = function () {
+                if (!$scope.reason) return;
+                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
+                $uibModalInstance.close(
+                    {
+                        response:
+                            {
+                                tenant_id: $scope.query.tenant_id,
+                                reason: $scope.reason,
+                                city: city
+                            }
+                    });
+            };
+
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+
+			//console.log("[modal] confirm_modal", message, details, canDismiss);
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $q, $uibModalInstance, message, details, schools, canDismiss) {
+
+			$scope.message = message;
+			$scope.details = details;
+			$scope.schools = schools;
+			$scope.canDismiss = canDismiss;
+
+			$scope.agree = function() {
+				$uibModalInstance.close(true);
+			};
+
+			$scope.disagree = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('ConfirmLargeModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+
+            $scope.message = message;
+            $scope.details = details;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, title, message, href) {
+
+			//console.log("[modal] download_link ", title, message, href);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.href = href;
+
+			$scope.back = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+			//console.log("[modal] file_uploader", uploadUrl, uploadParameters, title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+			$scope.file = null;
+			$scope.progress = 0;
+			$scope.isUploading = false;
+
+
+			$scope.upload = function(file) {
+				if(!uploadParameters) uploadParameters = {};
+				uploadParameters.file = file;
+
+				$scope.isUploading = true;
+
+				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH}).then(onSuccess, onError, onProgress);
+
+			};
+
+			function onSuccess(res) {
+				if(!res.data) return onError(res);
+
+				//console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
+				$uibModalInstance.close({response: res.data});
+				$scope.isUploading = false;
+			}
+
+			function onError(res) {
+				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+				$scope.isUploading = false;
+			}
+
+			function onProgress(ev) {
+				$scope.progress = (ev.loaded / ev.total);
+			}
+
+			$scope.calculateProgressWidth = function() {
+				return parseInt(100.0 * $scope.progress) + "%";
+			};
+
+			$scope.close = function() {
+				$scope.isUploading = false;
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('FileUploaderTituloModalCtrl', function FileUploaderTituloModalCtrl($scope, $q, $uibModalInstance, Auth, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+			console.log("[modal] file_uploader titulo", uploadUrl, uploadParameters, title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+			$scope.file = null;
+			$scope.progress = 0;
+			$scope.isUploading = false;
+
+
+			$scope.upload = function(file) {
+
+				if(!uploadParameters) uploadParameters = {};
+				uploadParameters.file = file;
+				$scope.isUploading = true;
+				Upload.upload({url: uploadUrl, data: uploadParameters, headers: API.OPTIONAL_AUTH}).then(onSuccess, onError, onProgress);
+			};
+
+			function onSuccess(res) {
+				if(!res.data) return onError(res);
+
+				console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
+				$uibModalInstance.close({response: res.data});
+				$scope.isUploading = false;
+			}
+
+			function onError(res) {
+				console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+				$scope.isUploading = false;
+			}
+
+			function onProgress(ev) {
+				$scope.progress = (ev.loaded / ev.total);
+			}
+
+			$scope.calculateProgressWidth = function() {
+				return parseInt(100.0 * $scope.progress) + "%";
+			};
+
+			$scope.close = function() {
+				$scope.isUploading = false;
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $q, $uibModalInstance, message, canDismiss) {
+
+            $scope.message = message;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, groups, canDismiss, noGroupsMessage) {
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.canDismiss = canDismiss;
+			$scope.noGroupsMessage = noGroupsMessage;
+
+			$scope.selectedGroup = null;
+			$scope.groups = groups;
+
+			$scope.hasGroups = function() {
+				if(!$scope.groups) return false;
+				return ($scope.groups.length > 0);
+			};
+
+			$scope.onSelect = function() {
+				if(!$scope.selectedGroup) {
+					ngToast.danger('Você não selecionou nenhum grupo!');
+					return;
+				}
+
+				$uibModalInstance.close({response: $scope.selectedGroup});
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
+
+			//console.log("[modal] login", reason, canDismiss);
+
+			$scope.email = '';
+			$scope.password = '';
+
+			$scope.reason = reason;
+			$scope.canDismiss = canDismiss;
+
+            $scope.showPassowrd = function () {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type ="password"
+            }
+
+			function onLoggedIn(session) {
+				$uibModalInstance.close({response: Identity.getCurrentUser()});
+			}
+
+			function onError() {
+				Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
+			}
+
+			$scope.login = function() {
+				Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			}
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, $q, $http, ngToast, Identity, SupportTicket, $uibModalInstance) {
+
+			//console.log("[modal] new_support_ticket_modal");
+
+			$scope.isLoading = false;
+
+			$scope.ticket = {
+				name: '',
+				city_name: '',
+				phone: '',
+				email: '',
+				message: ''
+			};
+
+			$scope.submitTicket = function() {
+				$scope.isLoading = true;
+
+				SupportTicket.submit($scope.ticket, function(res) {
+					$scope.isLoading = false;
+
+					ngToast.success('Solicitação de suporte enviada com sucesso!');
+					$uibModalInstance.close({response: $scope.answer});
+				});
+				
+				return false;
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('PromptModalCtrl', function PromptModalCtrl($scope, $q, $uibModalInstance, question, defaultAnswer, canDismiss, answerPlaceholder) {
+
+			//console.log("[modal] prompt_modal", question, canDismiss);
+
+			$scope.question = question;
+			$scope.answer = defaultAnswer;
+			$scope.placeholder = answerPlaceholder;
+
+			$scope.ok = function() {
+				$uibModalInstance.close({response: $scope.answer});
+			};
+
+			$scope.cancel = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+		});
+
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, $q, ngToast, $uibModalInstance, title, message, users, userGroups, canDismiss, noUsersMessage) {
+
+			//console.log("[modal] user_picker", title, message);
+
+			$scope.title = title;
+			$scope.message = message;
+			$scope.canDismiss = canDismiss;
+			$scope.noUsersMessage = noUsersMessage;
+
+			$scope.selectedUser = { id: null };
+			$scope.users = users;
+			$scope.userGroups = userGroups;
+
+			$scope.hasUsers = function() {
+				if(!$scope.users) return false;
+				return ($scope.users.length > 0);
+			};
+
+			$scope.onSelect = function() {
+				if(!$scope.selectedUser.id) {
+					ngToast.danger('Você não selecionou nenhum usuário!');
+					return;
+				}
+				$uibModalInstance.close({response: $scope.selectedUser.id});
+			};
+
+			$scope.close = function() {
+				$uibModalInstance.dismiss(false);
+			};
+
+			$scope.getGroupWithUsers = function (){
+				var groups = [];
+				$scope.userGroups.forEach(function(group, i) {
+					group.users = $scope.getUsersOfGroup(group);
+					groups.push(group);
+				});
+				return groups;
+			};
+
+			$scope.getUsersOfGroup = function (group){
+				var finalGroup = [];
+				$scope.users.forEach(function (user, i){
+					if (user.group.id == group.id) {
+						finalGroup.push(user);
+					}
+				});
+				return finalGroup;
+			};
+
+		});
+
+})();
 if (!Array.prototype.find) {
 	Object.defineProperty(Array.prototype, 'find', {
 		value: function(predicate) {
@@ -9324,58 +9315,6 @@ if (!Array.prototype.find) {
 		}
 	});
 }
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
-      $stateProvider.state('user_preferences', {
-        url: '/user_preferences',
-        templateUrl: '/views/preferences/manage_user_preferences.html',
-        controller: 'ManageUserPreferencesCtrl',
-      });
-    })
-    .controller(
-      'ManageUserPreferencesCtrl',
-      function (
-        $scope,
-        ngToast,
-        Identity,
-        UserPreferences,
-        PasswordReset,
-        StaticData
-      ) {
-        $scope.static = StaticData;
-        $scope.settings = {};
-
-        $scope.refresh = function () {
-          UserPreferences.get({}, function (res) {
-            $scope.settings = res.settings;
-          });
-        };
-
-        $scope.save = function () {
-          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
-        };
-
-        $scope.resetPassword = function () {
-          $scope.true = false;
-
-          PasswordReset.begin(
-            { email: Identity.getCurrentUser().email },
-            function (res) {
-              $scope.isLoading = false;
-              ngToast.success(
-                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
-              );
-            }
-          );
-        };
-
-        $scope.refresh();
-      }
-    );
-})();
-
 (function () {
   angular
     .module('BuscaAtivaEscolar')
@@ -10105,957 +10044,58 @@ if (!Array.prototype.find) {
         });
 
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Alerts', function Alerts(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
-				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
-				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
-				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
-				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
-			});
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				save: {method: 'POST', headers: headers},
-				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
-				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
-				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
-			});
-
-			repository.where = {
-				idEquals: function(id) {
-					return function(item) { return item.id === id; }
-				},
-
-				caseCurrentStepIdEquals: function(id) {
-					return function(item) { return item.current_step_id === id; }
-				}
-			};
-
-			return repository;
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Cases', function Cases(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				update: {method: 'PUT', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Children', function Children(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			var Children = $resource(API.getURI('children/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers, params: {with: 'reopens'}},
-				update: {method: 'POST', headers: headers},
-				search: {url: API.getURI('children/search'), method: 'POST', isArray: false, headers: headers},
-				export: {url: API.getURI('children/export'), method: 'POST', isArray: false, headers: headers},
-				getComments: {url: API.getURI('children/:id/comments'), isArray: false, method: 'GET', headers: headers},
-				getMap: {url: API.getURI('children/map'), method: 'GET', headers: headers},
-				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
-				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
-				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
-				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
-				spawnFromAlert: {method: 'POST', headers: headers},
-				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				reopenCase: {url: API.getURI('cases/:id/reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requestReopenCase: {url: API.getURI('cases/:id/request-reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requestTransferCase: {url: API.getURI('cases/:id/request-transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				transferCase: {url: API.getURI('cases/:id/transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
-				requests: {url: API.getURI('requests/all'), method: 'GET', isArray: false, headers: headers},
-				reject: {url: API.getURI('requests/:id/reject'), method: 'PUT', headers: headers}
-			});
-			return Children;
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Cities', function Cities(API, Identity, $resource) {
-
-			var headers = {};
-
-			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: headers},
-				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
-				checkIfAvailable: {url: API.getURI('cities/check_availability'), method: 'POST', headers: headers},
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Classes', function Schools(API, $resource) {
-            var Classes = $resource(API.getURI('classes/:id'), {id: '@id'}, {
-                find: {method: 'GET', params: {}},
-                update: {method: 'PUT'},
-                create: {method: 'POST'},
-                deleteClasse: {method: 'DELETE', url: API.getURI('classes/:id')},
-                updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
-                frequencies: {method: 'GET', params: {}, url: API.getURI('frequencies/:id')},
-                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')},
-                updateFrequencies: {method: 'PUT', url: API.getURI('frequencies')}
-            });
-            return Classes;
-        });
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Graph', function Reports(API, Identity, $resource) {
-            return $resource(API.getURI('graph/:entity'), {entity: '@entity'}, {
-                getReinsertEvolution: {method: 'GET', url: API.getURI('graph/reinsertion_evolution?uf=:uf&tenant_id=:tenant_id')},
-            });
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Groups', function Groups(API, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
-				findUserGroups: {method: 'GET', url: API.getURI('user_groups'), headers: headers},
-                findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
-                findByUf: {method: 'POST', url: API.getURI('groups/uf'), headers: headers},
-				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
-				create: {method: 'POST', headers: headers},
-				delete: {method: 'DELETE', headers: headers},
-				update: {method: 'PUT', headers: headers},
-				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers},
-				findGroupedByTenant: {method: 'POST', url: API.getURI('groups/grouped/tenant'), headers: headers}
-			});
-
-		});
-})();
-// (function() {
-// 	angular
-// 		.module('BuscaAtivaEscolar')
-// 		.factory('Alerts', function Alerts(API, Identity, $resource) {
-//
-// 			var headers = API.REQUIRE_AUTH;
-//
-// 			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
-// 				find: {method: 'GET', headers: headers},
-// 				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
-// 				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
-// 				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
-// 				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
-// 			});
-// 		});
-// })();
-'use strict';
-(function () {
-    //these are just references the instance of related lib so we can inject them to the controllers/services in an angular way.
-    angular.module('BuscaAtivaEscolar').factory('H', [
-        '$window',
-        function ($window) {
-    	//console.log($window);
-            return $window.H;
-        }
-    ]);
-
-    // app.factory('Modernizr', [
-    // 	'$window',
-    // 	function ($window) {
-    // 		return $window.Modernizr;
-    // 	}
-    // ]);
-    //
-    // app.factory('Highcharts', [
-    // 	'$window',
-    // 	function ($window) {
-    // 		return $window.Highcharts;
-    // 	}
-    // ]);
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-				all: {url: API.getURI('maintenance/import_jobs'), method: 'GET', headers: authHeaders},
-				upload: {url: API.getURI('maintenace/import_jobs/new'), method: 'POST', headers: authHeaders},
-				process: {url: API.getURI('maintenance/import_jobs/:id/process'), method: 'POST', headers: authHeaders}
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Maintenance', function CaseSteps(API, Identity, $resource) {
-            var headers = API.REQUIRE_AUTH;
-            var repository = $resource(API.getURI('maintenance/:user_id'), {user_id: '@id'}, {
-                assignForAdminUser: {url: API.getURI('maintenance/:user_id'), method: 'POST', headers: headers}
-            });
-            return repository;
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('PasswordReset', function Users(API, $resource) {
-
-			var headers = {};
-
-			return $resource(API.getURI('password_reset/:id'), {id: '@id', with: '@with'}, {
-				begin: {url: API.getURI('password_reset/begin'), method: 'POST', headers: headers},
-				complete: {url: API.getURI('password_reset/complete'), method: 'POST', headers: headers}
-			});
-
-		});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .factory('Report', function Reports(API_PUBLIC, Identity, $resource) {
-            return $resource(API_PUBLIC.getURI('report/:entity'), {entity: '@entity'}, {
-                getStatusCity: {method: 'GET', url: API_PUBLIC.getURI('report/city?city=:city&uf=:uf')},
-                getStatusCityByCountry: {method: 'GET', url: API_PUBLIC.getURI('report/city?ibge_id=:ibge_id&uf=:uf')}
-            });
-        });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Reports', function Reports(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
-				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
-				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
-				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
-				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
-				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
-				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
-				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers},
-				getUfsBySelo: {url: API.getURI('reports/ufs_by_selo'), method: 'GET', headers: headers},
-				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers},
-				getDataMapFusionChart: {method: 'GET', url: API.getURI('reports/data_map_fusion_chart'), headers: headers},
-				reportsChild: {url: API.getURI('reports/child'), method: 'GET', headers: headers},
-				createReportChild: {url: API.getURI('reports/child/create'), method: 'POST', headers: headers}
-			});
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Schools', function Schools(API, Identity, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-		
-			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
-
-				find: {method: 'GET', headers: headers},
-				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers}, 
-				getById: {url: API.getURI('schools/public'), method: 'GET'},
-				all_educacenso: {url: API.getURI('schools/all_educacenso'), method: 'GET', headers: headers},
-				update: {method: 'PUT', headers: headers},
-				send_educacenso_notifications: {url: API.getURI('schools/educacenso/notification'), method: 'POST', headers: headers},
-
-				all_schools: {url: API.getURI('schools/all'), method: 'GET', headers: headers},
-				send_frequency_notifications: {url: API.getURI('schools/frequency/notification'), method: 'POST', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/sms_conversations/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-				all: {url: API.getURI('maintenance/sms_conversations'), method: 'GET', headers: authHeaders},
-			});
-
-		});
-})();
 (function () {
   angular
     .module('BuscaAtivaEscolar')
-    .factory('StateSignups', function StateSignups(API, Identity, $resource) {
-      var authHeaders = API.REQUIRE_AUTH;
-      var headers = {};
+    .config(function ($stateProvider) {
+      $stateProvider.state('user_preferences', {
+        url: '/user_preferences',
+        templateUrl: '/views/preferences/manage_user_preferences.html',
+        controller: 'ManageUserPreferencesCtrl',
+      });
+    })
+    .controller(
+      'ManageUserPreferencesCtrl',
+      function (
+        $scope,
+        ngToast,
+        Identity,
+        UserPreferences,
+        PasswordReset,
+        StaticData
+      ) {
+        $scope.static = StaticData;
+        $scope.settings = {};
 
-      return $resource(
-        API.getURI('signups/state/:id'),
-        { id: '@id' },
-        {
-          find: { method: 'GET', headers: authHeaders },
+        $scope.refresh = function () {
+          UserPreferences.get({}, function (res) {
+            $scope.settings = res.settings;
+          });
+        };
 
-          getPending: {
-            url: API.getURI('signups/state/pending'),
-            method: 'POST',
-            isArray: false,
-            headers: authHeaders,
-          },
-          approve: {
-            url: API.getURI('signups/state/:id/approve'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          accept: {
-            url: API.getURI('signups/state/:id/accept'),
-            method: 'GET',
-          },
-          accepted: {
-            url: API.getURI('signups/state/:id/accepted'),
-            method: 'GET',
-          },
-          reject: {
-            url: API.getURI('signups/state/:id/reject'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          updateRegistrationData: {
-            url: API.getURI('signups/state/:id/update_registration_data'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendNotification: {
-            url: API.getURI('signups/state/:id/resend_notification'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendMail: {
-            url: API.getURI('signups/state/:id/resendmail'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          register: {
-            url: API.getURI('signups/state/register'),
-            method: 'POST',
-            headers: headers,
-          },
-          checkIfAvailable: {
-            url: API.getURI('signups/state/check_if_available'),
-            method: 'POST',
-            headers: headers,
-          },
-        }
-      );
-    });
+        $scope.save = function () {
+          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
+        };
+
+        $scope.resetPassword = function () {
+          $scope.true = false;
+
+          PasswordReset.begin(
+            { email: Identity.getCurrentUser().email },
+            function (res) {
+              $scope.isLoading = false;
+              ngToast.success(
+                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
+              );
+            }
+          );
+        };
+
+        $scope.refresh();
+      }
+    );
 })();
 
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('States', function States(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
-
-			return $resource(API.getURI('states/:id'), {id: '@id'}, {
-				all: {url: API.getURI('states/all'), method: 'POST', headers: authHeaders, params: {'with': 'users'}},
-				cancel: {url: API.getURI('states/:id/cancel'), method: 'POST', headers: authHeaders},
-				find: {method: 'GET', headers: headers}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
-
-			var data = {};
-			var self = this;
-
-			var dataFile = API.getURI('static/static_data?version=latest');
-			var $promise = {};
-
-			// TODO: cache this?
-
-			function fetchLatestVersion() {
-				//console.log("[platform.static_data] Downloading latest static data definitions...");
-				$promise = $http.get(dataFile).then(onFetch);
-			}
-
-			function refresh() {
-				// TODO: validate timestamp?
-				fetchLatestVersion();
-			}
-
-			function onFetch(res) {
-				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
-				data = res.data.data;
-
-				$rootScope.$broadcast('StaticData.ready');
-			}
-
-			function getDataFile() {
-				return dataFile;
-			}
-
-			function getNumChains() {
-				return data.length ? data.length : 0;
-			}
-
-			function isReady() {
-				return getNumChains() > 0;
-			}
-			// Ordena pelo valor do indice do objeto
-			function orderMotives(value) {
-				return _.orderBy(value, ['label'], ['asc']);
-			}
-
-			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
-			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
-			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
-			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
-			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
-			function getGenders() { return (data.Gender) ? data.Gender : []; }
-			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
-			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
-			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
-			function getRaces() { return (data.Race) ? data.Race : []; }
-			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
-			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
-			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
-			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
-			function getUFs() { return (data.UFs) ? data.UFs : []; }
-			function getUFsDropdown() {
-				var dropdown = [];
-
-				angular.forEach(data.UFsByCode, function (uf, key) {
-					dropdown.push(uf);
-				});
-
-				return dropdown;
-			}
-			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
-			function getRegions() { return (data.Regions) ? data.Regions : []; }
-			function getTypesWithGlobalScope() { return (data.UsersWithGlobalScope) ? data.UsersWithGlobalScope : []; }
-			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
-			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
-			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
-			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
-			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
-
-			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
-			
-			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
-
-			function getCurrentUF() {
-				var user = Identity.getCurrentUser();
-				if(!user) return null;
-				if(!user.uf) return null;
-
-				return getUFByCode(user.uf);
-			}
-
-			return {
-				fetchLatestVersion: fetchLatestVersion,
-				refresh: refresh,
-				getUserTypes: getUserTypes,
-				getAlertCauses: getAlertCauses,
-				getVisibleAlertCauses: getVisibleAlertCauses,
-				getCaseCauses: getCaseCauses,
-				getVisibleCaseCauses: getVisibleCaseCauses,
-				getGenders: getGenders,
-				getHandicappedRejectReasons: getHandicappedRejectReasons,
-				getIncomeRanges: getIncomeRanges,
-				getAgeRanges: getAgeRanges,
-				getRaces: getRaces,
-				getSchoolGrades: getSchoolGrades,
-				getSchoolingLevels: getSchoolingLevels,
-				getWorkActivities: getWorkActivities,
-				getCaseStepSlugs: getCaseStepSlugs,
-				getAllowedMimeTypes: getAllowedMimeTypes,
-				getUFs: getUFs,
-				getUFsDropdown: getUFsDropdown,
-				getUFByCode: getUFByCode,
-				getCurrentUF: getCurrentUF,
-				getRegions: getRegions,
-				getTypesWithGlobalScope: getTypesWithGlobalScope,
-				getTypesWithUFScope: getTypesWithUFScope,
-				getAPIEndpoints: getAPIEndpoints,
-				getCaseCancelReasons: getCaseCancelReasons,
-				isReady: isReady,
-				getNumChains: getNumChains,
-				getDataFile: getDataFile,
-				getPermissions: getPermissions,
-				getUserTypeVisitantes: getUserTypeVisitantes,
-				getPermissionsFormForVisitante: getPermissionsFormForVisitante
-			};
-
-		})
-		.run(function (StaticData) {
-			StaticData.refresh();
-		});
-})();
-
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SupportTicket', function SupportTicket(API, Identity, $resource) {
-
-			var authRequiredHeaders = API.REQUIRE_AUTH;
-			var authOptionalHeaders = API.OPTIONAL_AUTH;
-
-			return $resource(API.getURI('support/tickets/:id'), {id: '@id'}, {
-				all: {url: API.getURI('support/tickets/all'), method: 'POST', headers: authRequiredHeaders},
-				submit: {url: API.getURI('support/tickets/submit'), method: 'POST', headers: authOptionalHeaders},
-				find: {method: 'GET', headers: authRequiredHeaders}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('SystemHealth', function SystemHealth(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('maintenance/system_health'), {}, {
-				getStats: {method: 'GET', headers: authHeaders},
-			});
-
-		});
-})();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
-      var authHeaders = API.REQUIRE_AUTH;
-      var headers = {};
-
-      return $resource(
-        API.getURI('signups/tenants/:id'),
-        { id: '@id' },
-        {
-          find: { method: 'GET', headers: authHeaders },
-
-          getPending: {
-            url: API.getURI('signups/tenants/pending'),
-            method: 'POST',
-            isArray: false,
-            headers: authHeaders,
-          },
-          approve: {
-            url: API.getURI('signups/tenants/:id/approve'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          reject: {
-            url: API.getURI('signups/tenants/:id/reject'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-
-          updateRegistrationData: {
-            url: API.getURI('signups/tenants/:id/update_registration_data'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          accepted: {
-            url: API.getURI('signups/tenants/:id/accepted'),
-            method: 'GET',
-          },
-          resendNotification: {
-            url: API.getURI('signups/tenants/:id/resend_notification'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          resendMail: {
-            url: API.getURI('signups/tenants/:id/resendmail'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-          completeSetup: {
-            url: API.getURI('signups/tenants/complete_setup'),
-            method: 'POST',
-            headers: authHeaders,
-          },
-
-          register: {
-            url: API.getURI('signups/tenants/register'),
-            method: 'POST',
-            headers: headers,
-          },
-          getViaToken: {
-            url: API.getURI('signups/tenants/via_token/:id'),
-            method: 'GET',
-            headers: headers,
-          },
-          complete: {
-            url: API.getURI('signups/tenants/:id/complete'),
-            method: 'POST',
-            headers: headers,
-          },
-
-          getMayorByCPF: {
-            url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'),
-            method: 'GET',
-            headers: authHeaders,
-          },
-          getUserViaToken: {
-            url: API.getURI('signups/users/via_token/:id'),
-            method: 'GET',
-            headers: headers,
-          },
-          activeUser: {
-            url: API.getURI('signups/users/:id/confirm'),
-            method: 'POST',
-            headers: headers,
-          },
-        }
-      );
-    });
-})();
-
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Tenants', function Tenants(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-			var headers = {};
-
-			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
-				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
-				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
-				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
-				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
-				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
-				find: {method: 'GET', headers: headers},
-                findByUfPublic: {url: API.getURI('tenants/public/uf'), method: 'GET', headers: authHeaders},
-                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
-				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
-				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
-			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
-			    mayorConfirmation: {url: API.getURI('signups/tenants/:id/accept'), method: 'GET'}
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
-				find: {method: 'GET', headers: authHeaders},
-
-				getUnread: {url: API.getURI('notifications/unread'), method: 'GET', isArray: false, headers: authHeaders},
-				markAsRead: {url: API.getURI('notifications/:id/mark_as_read'), method: 'POST', headers: authHeaders},
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('UserPreferences', function UserPreferences(API, Identity, $resource) {
-
-			var authHeaders = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('user_preferences'), {id: '@id'}, {
-				get: {method: 'GET', isArray: false, headers: authHeaders},
-				update: {method: 'POST', headers: authHeaders},
-			});
-
-		});
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Users', function Users(API, $resource) {
-
-			var headers = API.REQUIRE_AUTH;
-
-			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
-				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
-				find: {method: 'GET', headers: headers},
-				create: {method: 'POST', headers: headers},
-				update: {method: 'PUT', headers: headers, url: API.getURI('users/:id')},
-				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
-				suspend: {method: 'DELETE', headers: headers},
-				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
-				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
-				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
-				
-				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('user/:id/update_yourself')},
-				sendReactivationMail: {url: API.getURI('user/:id/send_reactivation_mail'), method: 'POST', headers: headers},
-
-			});
-
-		});
-})();
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('school_browser', {
-				url: '/schools',
-				templateUrl: '/views/schools/school_browser.html',
-				controller: 'SchoolBrowserCtrl'
-			});
-		})
-		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-                   
-			$scope.check_all_schools = false;
-			$scope.identity = Identity;
-			$scope.schools = {};
-			$scope.msg_success = false;
-			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021];
-			$scope.query = {
-				year_educacenso: new Date().getFullYear(),
-				sort: {},
-				show_suspended: false,
-				max: 5,
-				page: 1
-			};
-			$scope.selected = {
-				schools: []
-			};
-			
-			$scope.onCheckSelectAll = function(){
-				if( $scope.check_all_schools ){
-					$scope.selected.schools = angular.copy($scope.schools.data);
-				}else{
-					$scope.selected.schools = [];
-				}
-			};
-
-            $scope.onModifySchool = function(school){
-				Schools.update(school).$promise.then($scope.onSaved);
-			};
-			
-			$scope.onSaved = function(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
-					return;
-				}else{
-					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
-					$scope.refresh();
-				}
-			};
-
-			$scope.sendnotification = function(){
-
-				//remove objects without email
-				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					if(school.school_email != null && school.school_email != ""){
-						return true;
-					}else{
-						return false;
-					}
-				});
-
-				if(schools_to_send_notification.length > 0){
-					
-					Modals.show(
-						Modals.ConfirmEmail(
-							'Confirma o envio de sms e email para as seguintes escolas?',
-							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-							schools_to_send_notification
-						)).then(function () {
-							return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
-						})
-						.then(function (res) {
-							if(res.status == "error"){
-								ngToast.danger(res.message);
-								$scope.msg_success = false;
-								$scope.msg_error = true;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}else{
-								ngToast.warning(res.message);
-								$scope.msg_success = true;
-								$scope.msg_error = false;
-								$scope.refresh();
-								window.scrollTo(0, 0);
-							}
-						});
-				}else{
-					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-				}
-
-			};
-
-			$scope.onSelectYear = function() {
-				$scope.query.page = 1;
-				$scope.query.max = 5;
-				$scope.refresh();
-			};
-
-			$scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
-					$scope.check_all_schools = false;
-					$scope.selected.schools = [];
-					$scope.schools = angular.copy(res);
-				});
-			};
-
-			$scope.setMaxResults = function(max) {
-				$scope.query.max = max;
-				$scope.query.page = 1;
-				$scope.refresh();
-			};
-			
-			Platform.whenReady(function() {
-                $scope.refresh();
-			});
-
-		});
-
-})();
-(function() {
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
-            $stateProvider.state('school_list_frequency', {
-                url: '/frequency',
-                templateUrl: '/views/schools/school_list_frequency.html',
-                controller: 'SchoolFrequencyBrowserCtrl'
-            });
-        })
-        .controller('SchoolFrequencyBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-
-            $scope.check_all_schools = false;
-            $scope.identity = Identity;
-            $scope.schools = {};
-            $scope.msg_success = false;
-            $scope.msg_error = false;
-            $scope.query = {
-                sort: {},
-                max: 5,
-                page: 1,
-                search: ''
-            };
-            $scope.selected = {
-                schools: []
-            };
-
-            $scope.onCheckSelectAll = function(){
-                if( $scope.check_all_schools ){
-                    $scope.selected.schools = angular.copy($scope.schools.data);
-                }else{
-                    $scope.selected.schools = [];
-                }
-            };
-
-            $scope.onModifySchool = function(school){
-                Schools.update(school).$promise.then($scope.onSaved);
-            };
-
-            $scope.onSaved = function(res) {
-                if(res.status === "ok") {
-                    ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
-                    return;
-                }else{
-                    ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
-                    $scope.refresh();
-                }
-            };
-
-            $scope.sendnotification = function(){
-
-                //remove objects without email
-                var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-                    if(school.school_email != null && school.school_email != ""){
-                        return true;
-                    }else{
-                        return false;
-                    }
-                });
-
-                if(schools_to_send_notification.length > 0){
-
-                    Modals.show(
-                        Modals.ConfirmEmail(
-                            'Confirma o envio de sms e email para as seguintes escolas?',
-                            'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
-                            schools_to_send_notification
-                        )).then(function () {
-                        return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
-                    })
-                        .then(function (res) {
-                            if(res.status == "error"){
-                                ngToast.danger(res.message);
-                                $scope.msg_success = false;
-                                $scope.msg_error = true;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            }else{
-                                ngToast.warning(res.message);
-                                $scope.msg_success = true;
-                                $scope.msg_error = false;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            }
-                        });
-                }else{
-                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-                }
-
-            };
-
-            $scope.refresh = function() {
-                Schools.all_schools($scope.query, function(res) {
-                    $scope.check_all_schools = false;
-                    $scope.selected.schools = [];
-                    $scope.schools = angular.copy(res);
-                });
-            };
-
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
-
-            Platform.whenReady(function() {
-                $scope.refresh();
-            });
-
-        });
-
-})();
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -13474,6 +12514,957 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
     //console.log("[core.load] ", namespace, file);
 }
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider.state('school_browser', {
+				url: '/schools',
+				templateUrl: '/views/schools/school_browser.html',
+				controller: 'SchoolBrowserCtrl'
+			});
+		})
+		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
+                   
+			$scope.check_all_schools = false;
+			$scope.identity = Identity;
+			$scope.schools = {};
+			$scope.msg_success = false;
+			$scope.msg_error = false;
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021];
+			$scope.query = {
+				year_educacenso: new Date().getFullYear(),
+				sort: {},
+				show_suspended: false,
+				max: 5,
+				page: 1
+			};
+			$scope.selected = {
+				schools: []
+			};
+			
+			$scope.onCheckSelectAll = function(){
+				if( $scope.check_all_schools ){
+					$scope.selected.schools = angular.copy($scope.schools.data);
+				}else{
+					$scope.selected.schools = [];
+				}
+			};
+
+            $scope.onModifySchool = function(school){
+				Schools.update(school).$promise.then($scope.onSaved);
+			};
+			
+			$scope.onSaved = function(res) {
+				if(res.status === "ok") {
+					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+					return;
+				}else{
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+					$scope.refresh();
+				}
+			};
+
+			$scope.sendnotification = function(){
+
+				//remove objects without email
+				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
+					if(school.school_email != null && school.school_email != ""){
+						return true;
+					}else{
+						return false;
+					}
+				});
+
+				if(schools_to_send_notification.length > 0){
+					
+					Modals.show(
+						Modals.ConfirmEmail(
+							'Confirma o envio de sms e email para as seguintes escolas?',
+							'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+							schools_to_send_notification
+						)).then(function () {
+							return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
+						})
+						.then(function (res) {
+							if(res.status == "error"){
+								ngToast.danger(res.message);
+								$scope.msg_success = false;
+								$scope.msg_error = true;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}else{
+								ngToast.warning(res.message);
+								$scope.msg_success = true;
+								$scope.msg_error = false;
+								$scope.refresh();
+								window.scrollTo(0, 0);
+							}
+						});
+				}else{
+					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+				}
+
+			};
+
+			$scope.onSelectYear = function() {
+				$scope.query.page = 1;
+				$scope.query.max = 5;
+				$scope.refresh();
+			};
+
+			$scope.refresh = function() {
+                Schools.all_educacenso($scope.query, function(res) {
+					$scope.check_all_schools = false;
+					$scope.selected.schools = [];
+					$scope.schools = angular.copy(res);
+				});
+			};
+
+			$scope.setMaxResults = function(max) {
+				$scope.query.max = max;
+				$scope.query.page = 1;
+				$scope.refresh();
+			};
+			
+			Platform.whenReady(function() {
+                $scope.refresh();
+			});
+
+		});
+
+})();
+(function() {
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider) {
+            $stateProvider.state('school_list_frequency', {
+                url: '/frequency',
+                templateUrl: '/views/schools/school_list_frequency.html',
+                controller: 'SchoolFrequencyBrowserCtrl'
+            });
+        })
+        .controller('SchoolFrequencyBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
+
+            $scope.check_all_schools = false;
+            $scope.identity = Identity;
+            $scope.schools = {};
+            $scope.msg_success = false;
+            $scope.msg_error = false;
+            $scope.query = {
+                sort: {},
+                max: 5,
+                page: 1,
+                search: ''
+            };
+            $scope.selected = {
+                schools: []
+            };
+
+            $scope.onCheckSelectAll = function(){
+                if( $scope.check_all_schools ){
+                    $scope.selected.schools = angular.copy($scope.schools.data);
+                }else{
+                    $scope.selected.schools = [];
+                }
+            };
+
+            $scope.onModifySchool = function(school){
+                Schools.update(school).$promise.then($scope.onSaved);
+            };
+
+            $scope.onSaved = function(res) {
+                if(res.status === "ok") {
+                    ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+                    return;
+                }else{
+                    ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+                    $scope.refresh();
+                }
+            };
+
+            $scope.sendnotification = function(){
+
+                //remove objects without email
+                var schools_to_send_notification = $scope.selected.schools.filter(function(school){
+                    if(school.school_email != null && school.school_email != ""){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+
+                if(schools_to_send_notification.length > 0){
+
+                    Modals.show(
+                        Modals.ConfirmEmail(
+                            'Confirma o envio de sms e email para as seguintes escolas?',
+                            'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
+                            schools_to_send_notification
+                        )).then(function () {
+                        return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
+                    })
+                        .then(function (res) {
+                            if(res.status == "error"){
+                                ngToast.danger(res.message);
+                                $scope.msg_success = false;
+                                $scope.msg_error = true;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            }else{
+                                ngToast.warning(res.message);
+                                $scope.msg_success = true;
+                                $scope.msg_error = false;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            }
+                        });
+                }else{
+                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+                }
+
+            };
+
+            $scope.refresh = function() {
+                Schools.all_schools($scope.query, function(res) {
+                    $scope.check_all_schools = false;
+                    $scope.selected.schools = [];
+                    $scope.schools = angular.copy(res);
+                });
+            };
+
+            $scope.setMaxResults = function(max) {
+                $scope.query.max = max;
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            Platform.whenReady(function() {
+                $scope.refresh();
+            });
+
+        });
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Alerts', function Alerts(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
+				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
+				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
+			});
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('CaseSteps', function CaseSteps(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			var repository = $resource(API.getURI('steps/:type/:id'), {id: '@id', type: '@type', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				save: {method: 'POST', headers: headers},
+				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
+				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
+				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
+			});
+
+			repository.where = {
+				idEquals: function(id) {
+					return function(item) { return item.id === id; }
+				},
+
+				caseCurrentStepIdEquals: function(id) {
+					return function(item) { return item.current_step_id === id; }
+				}
+			};
+
+			return repository;
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Cases', function Cases(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				update: {method: 'PUT', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Children', function Children(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			var Children = $resource(API.getURI('children/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers, params: {with: 'reopens'}},
+				update: {method: 'POST', headers: headers},
+				search: {url: API.getURI('children/search'), method: 'POST', isArray: false, headers: headers},
+				export: {url: API.getURI('children/export'), method: 'POST', isArray: false, headers: headers},
+				getComments: {url: API.getURI('children/:id/comments'), isArray: false, method: 'GET', headers: headers},
+				getMap: {url: API.getURI('children/map'), method: 'GET', headers: headers},
+				getAttachments: {url: API.getURI('children/:id/attachments'), isArray: false, method: 'GET', headers: headers},
+				getActivity: {url: API.getURI('children/:id/activity'), isArray: false, method: 'GET', headers: headers},
+				postComment: {url: API.getURI('children/:id/comments'), method: 'POST', headers: headers},
+				removeAttachment: {url: API.getURI('children/:id/attachments/:attachment_id'), method: 'DELETE', headers: headers, params: {id: '@id', attachment_id: '@attachment_id'}},
+				spawnFromAlert: {method: 'POST', headers: headers},
+				cancelCase: {url: API.getURI('cases/:id/cancel'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				reopenCase: {url: API.getURI('cases/:id/reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requestReopenCase: {url: API.getURI('cases/:id/request-reopen'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requestTransferCase: {url: API.getURI('cases/:id/request-transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				transferCase: {url: API.getURI('cases/:id/transfer'), params: {id: '@case_id'}, method: 'POST', headers: headers},
+				requests: {url: API.getURI('requests/all'), method: 'GET', isArray: false, headers: headers},
+				reject: {url: API.getURI('requests/:id/reject'), method: 'PUT', headers: headers}
+			});
+			return Children;
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Cities', function Cities(API, Identity, $resource) {
+
+			var headers = {};
+
+			return $resource(API.getURI('cities/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('cities/search'), method: 'POST', headers: headers},
+				checkIfAvailable: {url: API.getURI('cities/check_availability'), method: 'POST', headers: headers},
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Classes', function Schools(API, $resource) {
+            var Classes = $resource(API.getURI('classes/:id'), {id: '@id'}, {
+                find: {method: 'GET', params: {}},
+                update: {method: 'PUT'},
+                create: {method: 'POST'},
+                deleteClasse: {method: 'DELETE', url: API.getURI('classes/:id')},
+                updateSettings: {method: 'PUT', url: API.getURI('classes/:id')},
+                frequencies: {method: 'GET', params: {}, url: API.getURI('frequencies/:id')},
+                updateFrequency: {method: 'PUT', url: API.getURI('frequency/:id')},
+                updateFrequencies: {method: 'PUT', url: API.getURI('frequencies')}
+            });
+            return Classes;
+        });
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Graph', function Reports(API, Identity, $resource) {
+            return $resource(API.getURI('graph/:entity'), {entity: '@entity'}, {
+                getReinsertEvolution: {method: 'GET', url: API.getURI('graph/reinsertion_evolution?uf=:uf&tenant_id=:tenant_id')},
+            });
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Groups', function Groups(API, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+			return $resource(API.getURI('groups/:id'), {id: '@id', with: '@with'}, {
+				find: {method: 'GET', headers: headers},
+				findGroupedGroups: {method: 'GET', url: API.getURI('grouped_groups'), headers: headers},
+				findUserGroups: {method: 'GET', url: API.getURI('user_groups'), headers: headers},
+                findByTenant: {method: 'POST', url: API.getURI('groups/tenant'), headers: headers},
+                findByUf: {method: 'POST', url: API.getURI('groups/uf'), headers: headers},
+				updateSettings: {method: 'PUT', url: API.getURI('groups/:id/settings'), headers: headers},
+				create: {method: 'POST', headers: headers},
+				delete: {method: 'DELETE', headers: headers},
+				update: {method: 'PUT', headers: headers},
+				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers},
+				findGroupedByTenant: {method: 'POST', url: API.getURI('groups/grouped/tenant'), headers: headers}
+			});
+
+		});
+})();
+// (function() {
+// 	angular
+// 		.module('BuscaAtivaEscolar')
+// 		.factory('Alerts', function Alerts(API, Identity, $resource) {
+//
+// 			var headers = API.REQUIRE_AUTH;
+//
+// 			return $resource(API.getURI('alerts/:id'), {id: '@id'}, {
+// 				find: {method: 'GET', headers: headers},
+// 				getPending: {url: API.getURI('alerts/pending'), isArray: false, method: 'GET', headers: headers},
+// 				mine: {url: API.getURI('alerts/mine'), isArray: false, method: 'GET', headers: headers},
+// 				accept: {url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers},
+// 				reject: {url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers}
+// 			});
+// 		});
+// })();
+'use strict';
+(function () {
+    //these are just references the instance of related lib so we can inject them to the controllers/services in an angular way.
+    angular.module('BuscaAtivaEscolar').factory('H', [
+        '$window',
+        function ($window) {
+    	//console.log($window);
+            return $window.H;
+        }
+    ]);
+
+    // app.factory('Modernizr', [
+    // 	'$window',
+    // 	function ($window) {
+    // 		return $window.Modernizr;
+    // 	}
+    // ]);
+    //
+    // app.factory('Highcharts', [
+    // 	'$window',
+    // 	function ($window) {
+    // 		return $window.Highcharts;
+    // 	}
+    // ]);
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('ImportJobs', function ImportJobs(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/import_jobs/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/import_jobs'), method: 'GET', headers: authHeaders},
+				upload: {url: API.getURI('maintenace/import_jobs/new'), method: 'POST', headers: authHeaders},
+				process: {url: API.getURI('maintenance/import_jobs/:id/process'), method: 'POST', headers: authHeaders}
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Maintenance', function CaseSteps(API, Identity, $resource) {
+            var headers = API.REQUIRE_AUTH;
+            var repository = $resource(API.getURI('maintenance/:user_id'), {user_id: '@id'}, {
+                assignForAdminUser: {url: API.getURI('maintenance/:user_id'), method: 'POST', headers: headers}
+            });
+            return repository;
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('PasswordReset', function Users(API, $resource) {
+
+			var headers = {};
+
+			return $resource(API.getURI('password_reset/:id'), {id: '@id', with: '@with'}, {
+				begin: {url: API.getURI('password_reset/begin'), method: 'POST', headers: headers},
+				complete: {url: API.getURI('password_reset/complete'), method: 'POST', headers: headers}
+			});
+
+		});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Report', function Reports(API_PUBLIC, Identity, $resource) {
+            return $resource(API_PUBLIC.getURI('report/:entity'), {entity: '@entity'}, {
+                getStatusCity: {method: 'GET', url: API_PUBLIC.getURI('report/city?city=:city&uf=:uf')},
+                getStatusCityByCountry: {method: 'GET', url: API_PUBLIC.getURI('report/city?ibge_id=:ibge_id&uf=:uf')}
+            });
+        });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Reports', function Reports(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('reports/:entity'), {entity: '@entity'}, {
+				query: {url: API.getURI('reports/:entity'), method: 'POST', headers: headers},
+				getCountryStats: {method: 'GET', url: API.getURI('reports/country_stats'), headers: headers},
+				getStateStats: {method: 'GET', url: API.getURI('reports/state_stats'), headers: headers},
+				getStatusBar: {method: 'GET', url: API.getURI('reports/city_bar'), headers: headers},
+				reportsSelo: {url: API.getURI('reports/selo'), method: 'GET', headers: headers},
+				createReportSelo: {url: API.getURI('reports/selo/create'), method: 'POST', headers: headers},
+				getDailyRematricula: {method: 'GET', url: API.getURI('reports/data_rematricula_daily'), headers: headers},
+				getUfsBySelo: {url: API.getURI('reports/ufs_by_selo'), method: 'GET', headers: headers},
+				getTenantsBySelo: {url: API.getURI('reports/tenants_by_selo'), method: 'GET', headers: headers},
+				getDataMapFusionChart: {method: 'GET', url: API.getURI('reports/data_map_fusion_chart'), headers: headers},
+				reportsChild: {url: API.getURI('reports/child'), method: 'GET', headers: headers},
+				createReportChild: {url: API.getURI('reports/child/create'), method: 'POST', headers: headers}
+			});
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Schools', function Schools(API, Identity, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+		
+			return $resource(API.getURI('schools/:id'), {id: '@id'}, {
+
+				find: {method: 'GET', headers: headers},
+				search: {url: API.getURI('schools/search'), method: 'POST', headers: headers}, 
+				getById: {url: API.getURI('schools/public'), method: 'GET'},
+				all_educacenso: {url: API.getURI('schools/all_educacenso'), method: 'GET', headers: headers},
+				update: {method: 'PUT', headers: headers},
+				send_educacenso_notifications: {url: API.getURI('schools/educacenso/notification'), method: 'POST', headers: headers},
+
+				all_schools: {url: API.getURI('schools/all'), method: 'GET', headers: headers},
+				send_frequency_notifications: {url: API.getURI('schools/frequency/notification'), method: 'POST', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SmsConversations', function SmsConversations(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/sms_conversations/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+				all: {url: API.getURI('maintenance/sms_conversations'), method: 'GET', headers: authHeaders},
+			});
+
+		});
+})();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('StateSignups', function StateSignups(API, Identity, $resource) {
+      var authHeaders = API.REQUIRE_AUTH;
+      var headers = {};
+
+      return $resource(
+        API.getURI('signups/state/:id'),
+        { id: '@id' },
+        {
+          find: { method: 'GET', headers: authHeaders },
+
+          getPending: {
+            url: API.getURI('signups/state/pending'),
+            method: 'POST',
+            isArray: false,
+            headers: authHeaders,
+          },
+          approve: {
+            url: API.getURI('signups/state/:id/approve'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          accept: {
+            url: API.getURI('signups/state/:id/accept'),
+            method: 'GET',
+          },
+          accepted: {
+            url: API.getURI('signups/state/:id/accepted'),
+            method: 'GET',
+          },
+          reject: {
+            url: API.getURI('signups/state/:id/reject'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          updateRegistrationData: {
+            url: API.getURI('signups/state/:id/update_registration_data'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendNotification: {
+            url: API.getURI('signups/state/:id/resend_notification'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendMail: {
+            url: API.getURI('signups/state/:id/resendmail'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          register: {
+            url: API.getURI('signups/state/register'),
+            method: 'POST',
+            headers: headers,
+          },
+          checkIfAvailable: {
+            url: API.getURI('signups/state/check_if_available'),
+            method: 'POST',
+            headers: headers,
+          },
+        }
+      );
+    });
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('States', function States(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('states/:id'), {id: '@id'}, {
+				all: {url: API.getURI('states/all'), method: 'POST', headers: authHeaders, params: {'with': 'users'}},
+				cancel: {url: API.getURI('states/:id/cancel'), method: 'POST', headers: authHeaders},
+				find: {method: 'GET', headers: headers}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
+
+			var data = {};
+			var self = this;
+
+			var dataFile = API.getURI('static/static_data?version=latest');
+			var $promise = {};
+
+			// TODO: cache this?
+
+			function fetchLatestVersion() {
+				//console.log("[platform.static_data] Downloading latest static data definitions...");
+				$promise = $http.get(dataFile).then(onFetch);
+			}
+
+			function refresh() {
+				// TODO: validate timestamp?
+				fetchLatestVersion();
+			}
+
+			function onFetch(res) {
+				//console.log("[platform.static_data] Downloaded! Version=", res.data.version, "Timestamp=", res.data.timestamp, "Data=", res.data.data);
+				data = res.data.data;
+
+				$rootScope.$broadcast('StaticData.ready');
+			}
+
+			function getDataFile() {
+				return dataFile;
+			}
+
+			function getNumChains() {
+				return data.length ? data.length : 0;
+			}
+
+			function isReady() {
+				return getNumChains() > 0;
+			}
+			// Ordena pelo valor do indice do objeto
+			function orderMotives(value) {
+				return _.orderBy(value, ['label'], ['asc']);
+			}
+
+			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
+			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
+			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
+			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
+			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
+			function getGenders() { return (data.Gender) ? data.Gender : []; }
+			function getHandicappedRejectReasons() { return (data.HandicappedRejectReason) ? data.HandicappedRejectReason : []; }
+			function getAgeRanges() { return (data.AgeRange) ? data.AgeRange : []; }
+			function getIncomeRanges() { return (data.IncomeRange) ? data.IncomeRange : []; }
+			function getRaces() { return (data.Race) ? data.Race : []; }
+			function getSchoolGrades() { return (data.SchoolGrade) ? data.SchoolGrade : []; }
+			function getSchoolingLevels() { return (data.SchoolingLevel) ? data.SchoolingLevel : []; }
+			function getWorkActivities() { return (data.WorkActivity) ? data.WorkActivity : []; }
+			function getCaseStepSlugs() { return (data.CaseStepSlugs) ? data.CaseStepSlugs : []; }
+			function getUFs() { return (data.UFs) ? data.UFs : []; }
+			function getUFsDropdown() {
+				var dropdown = [];
+
+				angular.forEach(data.UFsByCode, function (uf, key) {
+					dropdown.push(uf);
+				});
+
+				return dropdown;
+			}
+			function getUFByCode(code) { return (data.UFsByCode) ? data.UFsByCode[code] : null; }
+			function getRegions() { return (data.Regions) ? data.Regions : []; }
+			function getTypesWithGlobalScope() { return (data.UsersWithGlobalScope) ? data.UsersWithGlobalScope : []; }
+			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
+			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
+			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
+			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
+
+			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
+			
+			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
+
+			function getCurrentUF() {
+				var user = Identity.getCurrentUser();
+				if(!user) return null;
+				if(!user.uf) return null;
+
+				return getUFByCode(user.uf);
+			}
+
+			return {
+				fetchLatestVersion: fetchLatestVersion,
+				refresh: refresh,
+				getUserTypes: getUserTypes,
+				getAlertCauses: getAlertCauses,
+				getVisibleAlertCauses: getVisibleAlertCauses,
+				getCaseCauses: getCaseCauses,
+				getVisibleCaseCauses: getVisibleCaseCauses,
+				getGenders: getGenders,
+				getHandicappedRejectReasons: getHandicappedRejectReasons,
+				getIncomeRanges: getIncomeRanges,
+				getAgeRanges: getAgeRanges,
+				getRaces: getRaces,
+				getSchoolGrades: getSchoolGrades,
+				getSchoolingLevels: getSchoolingLevels,
+				getWorkActivities: getWorkActivities,
+				getCaseStepSlugs: getCaseStepSlugs,
+				getAllowedMimeTypes: getAllowedMimeTypes,
+				getUFs: getUFs,
+				getUFsDropdown: getUFsDropdown,
+				getUFByCode: getUFByCode,
+				getCurrentUF: getCurrentUF,
+				getRegions: getRegions,
+				getTypesWithGlobalScope: getTypesWithGlobalScope,
+				getTypesWithUFScope: getTypesWithUFScope,
+				getAPIEndpoints: getAPIEndpoints,
+				getCaseCancelReasons: getCaseCancelReasons,
+				isReady: isReady,
+				getNumChains: getNumChains,
+				getDataFile: getDataFile,
+				getPermissions: getPermissions,
+				getUserTypeVisitantes: getUserTypeVisitantes,
+				getPermissionsFormForVisitante: getPermissionsFormForVisitante
+			};
+
+		})
+		.run(function (StaticData) {
+			StaticData.refresh();
+		});
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SupportTicket', function SupportTicket(API, Identity, $resource) {
+
+			var authRequiredHeaders = API.REQUIRE_AUTH;
+			var authOptionalHeaders = API.OPTIONAL_AUTH;
+
+			return $resource(API.getURI('support/tickets/:id'), {id: '@id'}, {
+				all: {url: API.getURI('support/tickets/all'), method: 'POST', headers: authRequiredHeaders},
+				submit: {url: API.getURI('support/tickets/submit'), method: 'POST', headers: authOptionalHeaders},
+				find: {method: 'GET', headers: authRequiredHeaders}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('SystemHealth', function SystemHealth(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('maintenance/system_health'), {}, {
+				getStats: {method: 'GET', headers: authHeaders},
+			});
+
+		});
+})();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .factory('TenantSignups', function TenantSignups(API, Identity, $resource) {
+      var authHeaders = API.REQUIRE_AUTH;
+      var headers = {};
+
+      return $resource(
+        API.getURI('signups/tenants/:id'),
+        { id: '@id' },
+        {
+          find: { method: 'GET', headers: authHeaders },
+
+          getPending: {
+            url: API.getURI('signups/tenants/pending'),
+            method: 'POST',
+            isArray: false,
+            headers: authHeaders,
+          },
+          approve: {
+            url: API.getURI('signups/tenants/:id/approve'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          reject: {
+            url: API.getURI('signups/tenants/:id/reject'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+
+          updateRegistrationData: {
+            url: API.getURI('signups/tenants/:id/update_registration_data'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          accepted: {
+            url: API.getURI('signups/tenants/:id/accepted'),
+            method: 'GET',
+          },
+          resendNotification: {
+            url: API.getURI('signups/tenants/:id/resend_notification'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          resendMail: {
+            url: API.getURI('signups/tenants/:id/resendmail'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+          completeSetup: {
+            url: API.getURI('signups/tenants/complete_setup'),
+            method: 'POST',
+            headers: authHeaders,
+          },
+
+          register: {
+            url: API.getURI('signups/tenants/register'),
+            method: 'POST',
+            headers: headers,
+          },
+          getViaToken: {
+            url: API.getURI('signups/tenants/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          complete: {
+            url: API.getURI('signups/tenants/:id/complete'),
+            method: 'POST',
+            headers: headers,
+          },
+
+          getMayorByCPF: {
+            url: API.getURI('signups/tenants/mayor/by/cpf/:cpf'),
+            method: 'GET',
+            headers: authHeaders,
+          },
+          getUserViaToken: {
+            url: API.getURI('signups/users/via_token/:id'),
+            method: 'GET',
+            headers: headers,
+          },
+          activeUser: {
+            url: API.getURI('signups/users/:id/confirm'),
+            method: 'POST',
+            headers: headers,
+          },
+        }
+      );
+    });
+})();
+
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Tenants', function Tenants(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+			var headers = {};
+
+			return $resource(API.getURI('tenants/:id'), {id: '@id'}, {
+				all: {url: API.getURI('tenants/all'), method: 'POST', headers: authHeaders, params: {'with': 'city,political_admin,operational_admin, users'}},
+				getSettings: {url: API.getURI('settings/tenant'), method: 'GET', headers: authHeaders},
+				updateSettings: {url: API.getURI('settings/tenant'), method: 'PUT', headers: authHeaders},
+				cancel: {url: API.getURI('tenants/:id/cancel'), method: 'POST', headers: authHeaders},
+				getRecentActivity: {url: API.getURI('tenants/recent_activity'), method: 'GET', headers: authHeaders},
+				find: {method: 'GET', headers: headers},
+                findByUfPublic: {url: API.getURI('tenants/public/uf'), method: 'GET', headers: authHeaders},
+                findByUf: {url: API.getURI('tenants/uf'), method: 'GET', headers: authHeaders},
+				getEducacensoJobs: {url: API.getURI('settings/educacenso/jobs'), method: 'GET', headers: authHeaders},
+				getXlsChildrenJobs: {url: API.getURI('settings/import/jobs'), method: 'GET', headers: authHeaders},
+			    getSettingsOftenantOfcase: {url: API.getURI('settingstenantcase/tenant/:id'), method: 'GET', headers: authHeaders},
+			    mayorConfirmation: {url: API.getURI('signups/tenants/:id/accept'), method: 'GET'}
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('UserNotifications', function UserNotifications(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('notifications/:id'), {id: '@id'}, {
+				find: {method: 'GET', headers: authHeaders},
+
+				getUnread: {url: API.getURI('notifications/unread'), method: 'GET', isArray: false, headers: authHeaders},
+				markAsRead: {url: API.getURI('notifications/:id/mark_as_read'), method: 'POST', headers: authHeaders},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('UserPreferences', function UserPreferences(API, Identity, $resource) {
+
+			var authHeaders = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('user_preferences'), {id: '@id'}, {
+				get: {method: 'GET', isArray: false, headers: authHeaders},
+				update: {method: 'POST', headers: authHeaders},
+			});
+
+		});
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.factory('Users', function Users(API, $resource) {
+
+			var headers = API.REQUIRE_AUTH;
+
+			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
+				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
+				find: {method: 'GET', headers: headers},
+				create: {method: 'POST', headers: headers},
+				update: {method: 'PUT', headers: headers, url: API.getURI('users/:id')},
+				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
+				suspend: {method: 'DELETE', headers: headers},
+				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
+				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
+				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
+				
+				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('user/:id/update_yourself')},
+				sendReactivationMail: {url: API.getURI('user/:id/send_reactivation_mail'), method: 'POST', headers: headers},
+
+			});
+
+		});
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
