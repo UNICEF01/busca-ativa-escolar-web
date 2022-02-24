@@ -45,7 +45,7 @@
 				<div>
 					
 						<div><label style="padding-left: 15px;">Motivo do Caso</label><i class="fa fa-info-circle tooltipx" style="padding-left: 2px;"><span class="tooltiptextx">Para selecionar mais de um opção, segure o botão ctrl no teclado. </span></i></div>
-						<div><select id="edit-rec" style="width: 98%;margin-left: 15px;" data-placeholder="Motivo do caso..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
+						<div><select id="edit-rec" style="width: 98%;margin-left: 15px;" size="10" data-placeholder="Motivo do caso..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
 							
 							<option ng-repeat="case in causes"
 									value="{{case.value}}">
