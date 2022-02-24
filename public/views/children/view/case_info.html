@@ -9,12 +9,12 @@
 
                 <div ng-if="step.assigned_user.deleted_at == null">
                     <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
-                    <small>{{step.assigned_user.type | lang:'user.type'}}</small>
+                    <small>{{step.assigned_user.type | lang:'user.type'}} - {{step.assigned_user.group.name}} </small>
                 </div>
 
                 <div ng-if="step.assigned_user.deleted_at != null" class="text-danger">
                     <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
-                    <small>{{step.assigned_user.type | lang:'user.type'}} - DESATIVADO</small>
+                    <small>{{step.assigned_user.type | lang:'user.type'}}  - {{step.assigned_user.group.name}} - DESATIVADO </small>
                 </div>
 
                 <br/>
