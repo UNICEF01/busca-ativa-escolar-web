@@ -73,11 +73,14 @@
 						detach_user: detachUser
 					};
 
-					return Cases.update(currentCase)
+					Cases.update(currentCase).$promise
+						.then(function (res){
+							ngToast.success('Grupo atribuído com sucesso!')
+							$state.go('child_browser');
+						});
 
 				}).then(function (res) {
-					ngToast.success('Grupo atribuído com sucesso!')
-					$state.go('child_browser');
+
 				});
 
 			}, function (err) {
