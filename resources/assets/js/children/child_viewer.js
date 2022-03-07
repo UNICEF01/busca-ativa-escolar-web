@@ -59,25 +59,48 @@
 				).then(function (selectedGroup) {
 
 					var detachUser = false;
+
 					if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
-						if ( $scope.groupBelongsToAnotherGroup($scope.child.currentCase.currentStep.assigned_user.group, selectedGroup) ){
-							detachUser = false;
-						} else {
-							detachUser = true;
-						}
+						//se tem usuário assinado para o caso
+
+						Groups.findById({id: $scope.child.currentCase.currentStep.assigned_user.group.id}).$promise
+							.then(function (group){
+
+								if ( $scope.needsToRemoveUser(group.data[0], selectedGroup) ){
+									detachUser = true;
+								} else {
+									detachUser = false;
+								}
+
+								var currentCase = {
+									id: $scope.child.currentCase.id,
+									group_id: selectedGroup.id,
+									detach_user: detachUser
+								};
+
+								Cases.update(currentCase).$promise
+									.then(function (res){
+										ngToast.success('Grupo atribuído com sucesso!')
+										$state.go('child_browser');
+									});
+
+							});
+
+					} else {
+						//se não tem usuário assinado para o caso
+
+						var currentCase = {
+							id: $scope.child.currentCase.id,
+							group_id: selectedGroup.id,
+							detach_user: detachUser
+						};
+
+						Cases.update(currentCase).$promise
+							.then(function (res){
+								ngToast.success('Grupo atribuído com sucesso!')
+								$state.go('child_browser');
+							});
 					}
-
-					var currentCase = {
-						id: $scope.child.currentCase.id,
-						group_id: selectedGroup.id,
-						detach_user: detachUser
-					};
-
-					Cases.update(currentCase).$promise
-						.then(function (res){
-							ngToast.success('Grupo atribuído com sucesso!')
-							$state.go('child_browser');
-						});
 
 				}).then(function (res) {
 
@@ -88,21 +111,21 @@
 			});
 		};
 
-		//verifica se determinado grupo pertence a hierarquia de outro (grupo do caso, grupo selecionado)
-		$scope.groupBelongsToAnotherGroup = function (groupOne, groupTwo){
+		//verifica se deve remover usuário do caso
+		$scope.needsToRemoveUser = function (groupOne, groupTwo){
 			if (groupTwo.is_primary){ return true; }
-			if (groupTwo.id == groupOne.id){ return true; }
-			var belongsTo = false;
-			groupTwo.children.forEach(function (group){
-				if (group.id == groupOne.id) { belongsTo = true; }
+			if (groupTwo.id == groupOne.id){ return false; }
+			var needsToRemove = true;
+			groupOne.children.forEach(function (group){
+				if (group.id == groupTwo.id) { needsToRemove = false; }
 				group.children.forEach(function (group2){
-					if (group2.id == groupOne.id) { belongsTo = true; }
+					if (group2.id == groupTwo.id) { needsToRemove = false; }
 					group2.children.forEach(function (group3){
-						if (group3.id == groupOne.id) { belongsTo = true; }
+						if (group3.id == groupTwo.id) { needsToRemove = false; }
 					});
 				});
 			});
-			return belongsTo;
+			return needsToRemove;
 		};
 
 	}
