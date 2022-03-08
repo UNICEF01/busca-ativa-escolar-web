@@ -72,7 +72,7 @@
                     });
                 });
             }
-
+            
             $scope.branchGroups = "carregando ...";
             
             $scope.causes = [];
