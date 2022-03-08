@@ -110,18 +110,18 @@
 				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
 		};
-
+		
 		//verifica se deve remover usuário do caso
-		$scope.needsToRemoveUser = function (groupOne, groupTwo){
-			if (groupTwo.is_primary){ return true; }
-			if (groupTwo.id == groupOne.id){ return false; }
+		$scope.needsToRemoveUser = function (groupOfuser, groupOfMunicipality){
+			if (groupOfMunicipality.id == groupOfuser.id){ return false; }
+			if (groupOfMunicipality.is_primary){ return true; }
 			var needsToRemove = true;
-			groupOne.children.forEach(function (group){
-				if (group.id == groupTwo.id) { needsToRemove = false; }
+			groupOfuser.children.forEach(function (group){
+				if (group.id == groupOfMunicipality.id) { needsToRemove = false; }
 				group.children.forEach(function (group2){
-					if (group2.id == groupTwo.id) { needsToRemove = false; }
+					if (group2.id == groupOfMunicipality.id) { needsToRemove = false; }
 					group2.children.forEach(function (group3){
-						if (group3.id == groupTwo.id) { needsToRemove = false; }
+						if (group3.id == groupOfMunicipality.id) { needsToRemove = false; }
 					});
 				});
 			});
