@@ -243,7 +243,7 @@
           title,
           message,
           users,
-          userGroups,
+          caseGroups,
           canDismiss,
           noUsersMessage
         ) {
@@ -267,9 +267,9 @@
               canDismiss: function () {
                 return canDismiss;
               },
-              userGroups: function () {
-                return userGroups;
-              },
+              caseGroups: function () {
+                return caseGroups;
+              }
             },
           };
 
