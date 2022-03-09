@@ -10,7 +10,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -49,19 +49,19 @@
                         if(size > 2){
                             for(let i  = 0; i < size - 2; ++i){
                                 v[i].name = v[i].name.trim()
-                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
+                                v[i].name = Array(6).fill('\xa0').join('') + v[i].name
                                 $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
                                 const size1 = Object.keys(v[i]).length;
                                 if(size1 > 2){
                                     for(let j  = 0; j < size1 - 2; ++j){
                                         v[i][j].name = v[i][j].name.trim()
-                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
+                                        v[i][j].name = Array(12).fill('\xa0').join('') + v[i][j].name
                                         $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
                                         const size2 = Object.keys(v[i][j]).length;
                                         if(size2 > 2){
                                             for(let l  = 0; l < size2 - 2; ++l){
                                                 v[i][j][l].name = v[i][j][l].name.trim()
-                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
+                                                v[i][j][l].name = Array(18).fill('\xa0').join('') + v[i][j][l].name
                                                 $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
                                             }
                                         }
@@ -74,10 +74,7 @@
             }
             
             $scope.causes = [];
-            $scope.data = StaticData.getCaseCauses()
-            Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-            $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
-
+            
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.search = {};
 
@@ -96,7 +93,7 @@
                 $('#select_parent').bind("change", function() {
                     var space_offset =7;
                     var matches = $('#select_parent option:selected').text().search(/\S/);
-                    var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75: '';
+                    var number = matches == 23 ? 23: matches == 29 ? 50 : matches == 35 ? 78: '';
                     $(this).css('text-indent', -(number));
                 });
             });
@@ -114,7 +111,6 @@
             };
 
             $scope.createXLSReport = function(){
-
                 Reports.createReportChild($scope.query).$promise
                     .then(function (res) {
                         $scope.lastOrder.date = res.date;
@@ -163,5 +159,15 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
             ]; 
-        });
+
+            Platform.whenReady(function() {
+                $scope.data = StaticData.getCaseCauses()
+                if($scope.causes.length == 0){
+                    Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+                    $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
+                    $scope.causes =  [...new Set($scope.causes)];
+                }
+                
+            });
+        });     
 })();

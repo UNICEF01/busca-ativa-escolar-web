@@ -308,13 +308,13 @@
 				var groupsToMove = [];
 				groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
 				$scope.getGroupOfCurrentUser().children.forEach(function(v, k){
-					groupsToMove.push({id: v.id, name: v.name, margin: 10});
+					groupsToMove.push({id: v.id, name: v.name, margin: 20});
 					v.children.forEach(function(v2, k2){
-						groupsToMove.push({id: v2.id, name: v2.name, margin: 30});
+						groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
 						v2.children.forEach(function(v3, k3){
-							groupsToMove.push({id: v3.id, name: v3.name, margin: 30});
+							groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
 							v3.children.forEach(function(v4, k4){
-								groupsToMove.push({id: v4.id, name: v4.name, margin: 40});
+								groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
 							});
 						});
 					});

@@ -425,7 +425,9 @@ table.dataTable td {
   clear: both;
   height: 0;
 }
-
+.dataTables_wrapper .popover-content {
+  line-height: 20px;
+}
 @media screen and (max-width: 767px) {
   .dataTables_wrapper .dataTables_info,
   .dataTables_wrapper .dataTables_paginate {

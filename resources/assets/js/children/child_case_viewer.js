@@ -303,7 +303,7 @@
 
         $scope.groupedGroups = [];
         $scope.groupsToMove = [];
-        $scope.groupsOfUser = [];
+        $scope.groupsOfCase = [];
 
         $scope.addContact = function (id, parent) {
             if (id || (id === undefined)) {
@@ -545,10 +545,46 @@
 
         $scope.assignUser = function () {
 
+            var groupOfCase = null;
+
+            if ($scope.step.case.hasOwnProperty('group')){
+
+                if( $scope.step.case.group != null ){
+                    groupOfCase = $scope.step.case.group.id;
+
+                    //retorna grupo do caso com os grupos pais
+                    Groups.findByIdWithParents({id: groupOfCase}, function (res){
+
+                        var groupOfCaseWithParents = res.data[0];
+
+                        var groupsToMove = [];
+                        groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
+                        if ( groupOfCaseWithParents.parent != null) {
+                            groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
+                            if ( groupOfCaseWithParents.parent.parent != null) {
+                                groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
+                                if ( groupOfCaseWithParents.parent.parent.parent != null) {
+                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                                }
+                            }
+                        }
+                        $scope.groupsOfCase = groupsToMove.reverse();
+
+                        $scope.loadModalAssignUser();
+
+                    });
+                }
+
+            }
+
+        };
+
+        $scope.loadModalAssignUser = function (){
+
             CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id}).$promise
                 .then(function (res) {
                     if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfUser, true))
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfCase, true))
                 })
                 .then(function (user_id) {
                     return CaseSteps.assignUser({
@@ -560,8 +596,6 @@
                 ngToast.success("Usuário atribuído!");
                 $state.go('child_browser');
             });
-
-
         };
 
         $scope.isCheckboxChecked = function (field, value) {
@@ -744,6 +778,7 @@
             }
         }
 
+        //Array de grupos disponíveis para atribuicao com identacao
         $scope.getGroupsToMove = function() {
             var groupsToMove = [];
             $scope.groupedGroups.data.forEach(function(v, k){
@@ -761,30 +796,10 @@
             return groupsToMove;
         };
 
-        $scope.getGroupsOfUser = function (){
-            if(Identity.getCurrentUser().hasOwnProperty('group')) {
-                var groupsToMove = [];
-                groupsToMove.push({id: $scope.getGroupOfCurrentUser().id, name: $scope.getGroupOfCurrentUser().name});
-                $scope.getGroupOfCurrentUser().children.forEach(function (v, k) {
-                    groupsToMove.push({id: v.id, name: v.name, margin: 20});
-                    v.children.forEach(function (v2, k2) {
-                        groupsToMove.push({id: v2.id, name: v2.name, margin: 40});
-                        v2.children.forEach(function (v3, k3) {
-                            groupsToMove.push({id: v3.id, name: v3.name, margin: 60});
-                            v3.children.forEach(function (v4, k4) {
-                                groupsToMove.push({id: v4.id, name: v4.name, margin: 80});
-                            });
-                        });
-                    });
-                });
-                return groupsToMove;
-            };
-            return [];
-        };
-
+        //grupo do usuário logado
         $scope.getGroupOfCurrentUser = function (){
             if(Identity.getCurrentUser().hasOwnProperty('group')){
-                var groupedGroupsOfUser = [];
+                var groupedGroupsOfUser = null;
                 var userGroupId = Identity.getCurrentUser().group.id;
                 $scope.groupedGroups.data.forEach(function(v, k){
                     if (v.id == userGroupId) { groupedGroupsOfUser = v; }
@@ -800,14 +815,13 @@
                 });
                 return groupedGroupsOfUser;
             }
-            return [];
+            return {};
         };
-
+        
         Platform.whenReady(function() {
             Groups.findGroupedByTenant({tenant_id: Identity.getCurrentUser().tenant_id}, function (res){
                 $scope.groupedGroups = res;
                 $scope.groupsToMove = $scope.getGroupsToMove();
-                $scope.groupsOfUser = $scope.getGroupsOfUser();
             });
         });
 
