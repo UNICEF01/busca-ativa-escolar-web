@@ -61,6 +61,15 @@
                 });
             }
 
+			$(function() {
+				$('#select_group_alert').bind("change", function() {
+					var space_offset =7;
+					var matches = $('#select_group_alert option:selected').text().search(/\S/);
+					var number = matches == 23 ? 23: matches == 29 ? 50 : matches == 35 ? 78: '';
+					$(this).css('text-indent', -(number));
+				});
+			});
+
             $scope.search = {};
 			
 			$scope.getAlertCauseName = function(id) {

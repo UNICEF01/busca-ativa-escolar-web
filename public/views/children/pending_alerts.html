@@ -291,12 +291,5 @@
 
 </div>
 <script>
-	$(function() {
-        $('#select_group_alert').bind("change", function() {
-            var space_offset =7;
-            var matches = $('#select_group_alert option:selected').text().search(/\S/);
-            var number = matches == 20 ? 12 : matches == 23 ? 25 : matches == 26 ? 38: '';
-            $(this).css('text-indent', -(number));
-        });
-    });
+
 </script>

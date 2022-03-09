@@ -93,7 +93,7 @@
                 $('#select_parent').bind("change", function() {
                     var space_offset =7;
                     var matches = $('#select_parent option:selected').text().search(/\S/);
-                    var number = matches == 23 ? 24 : matches == 26 ? 50 : matches == 29 ? 75: '';
+                    var number = matches == 23 ? 23: matches == 29 ? 50 : matches == 35 ? 78: '';
                     $(this).css('text-indent', -(number));
                 });
             });
