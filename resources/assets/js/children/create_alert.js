@@ -63,7 +63,7 @@
 						$scope.disableCreateAlertButton = false;
 						return Utils.displayValidationErrors(res);
 					}
-
+					
 					if(!res || !res.child_id) {
 						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
 						$scope.disableCreateAlertButton = false;

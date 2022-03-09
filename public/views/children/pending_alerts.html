@@ -59,12 +59,15 @@
 					</div>
 
 					<hr>
+					
+
 
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'agent'">Agente</column-sorter></th>
+								<th><column-sorter on-change="refresh" model="query.sort" field="'agent'">Grupo</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter></th>
 								<th><column-sorter on-change="refresh" model="query.sort" field="'neighborhood'">Bairro</column-sorter></th>
@@ -78,9 +81,12 @@
 									<span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i>
 								</td>
 								<td>
-									<span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
+									<span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>									
 									<div ng-show="child.submitter.group.name" class=""><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
 								</td>
+								<td><span ng-bind="child.group_name" uib-tooltip-html="$parent.getStringOfGroupsOfUser()"></span><br>
+									
+									</td>
 								<td><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
 								<td><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
 								<td><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>

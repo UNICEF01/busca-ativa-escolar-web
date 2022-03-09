@@ -15,6 +15,8 @@
 			$scope.children = {};
 			$scope.child = {};
 			$scope.causes = {};
+			$scope.stringForTooltip = null;
+
 
 			$scope.query = {
                 name: null,
@@ -26,9 +28,7 @@
 				city_name: null,
 				alert_cause_id: null,
 				show_suspended: false
-            };
-
-			
+            };			
 
             $scope.search = {};
 			
@@ -50,7 +50,6 @@
 			$scope.static = StaticData;
 			
 			$scope.refresh = function() {
-				console.log($scope.query);
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
 				$scope.search = $scope.children;
@@ -72,6 +71,32 @@
 					&& child.alert.place_neighborhood
 					&& (child.alert.place_neighborhood.trim().length > 0);
 			};
+
+			$scope.getGroupOfCurrentUser = function (){
+				return Identity.getCurrentUser().group;
+			}
+
+
+	
+			$scope.getStringOfGroupsOfUser = function (){
+				var groupOfuser = $scope.getGroupOfCurrentUser();		
+				var stringForTooltip = "";			
+				stringForTooltip += groupOfuser.name;	
+			
+
+				groupOfuser.children.forEach( function(group){
+					stringForTooltip += " > " + group.name;			
+						/*group.children.forEach( function(group2){										
+							stringForTooltip += " > " + group2.name;							
+							group2.children.forEach( function(group3){
+								stringForTooltip += " > " + group3.name;
+							});
+						});*/
+					
+				});
+				
+				return stringForTooltip;						
+				};
 
 			$scope.accept = function(child) {
 				if(!$scope.canAcceptAlert(child)) {
@@ -97,9 +122,12 @@
 			};
 
 			Platform.whenReady(function() {
-				$scope.causes = StaticData.getAlertCauses();
+				$scope.causes = StaticData.getAlertCauses();	
+				console.log($scope.getGroupOfCurrentUser());
+				//$scope.stringForTooltip = ' > Escola 1';		
 				$scope.refresh();
 			});
+
 
 		});
 
