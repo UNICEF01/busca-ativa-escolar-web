@@ -25,11 +25,11 @@
 			$scope.groups.forEach(function(v, k){
 				groupsToMove.push({id: v.id, name: v.name, children: v.children, is_primary: v.is_primary });
 				v.children.forEach(function(v2, k2){
-					groupsToMove.push({id: v2.id, name: v2.name, margin: 10, children: v2.children, is_primary: v2.is_primary});
+					groupsToMove.push({id: v2.id, name: v2.name, margin: 20, children: v2.children, is_primary: v2.is_primary});
 					v2.children.forEach(function(v3, k3){
-						groupsToMove.push({id: v3.id, name: v3.name, margin: 20, children: v3.children, is_primary: v3.is_primary});
+						groupsToMove.push({id: v3.id, name: v3.name, margin: 40, children: v3.children, is_primary: v3.is_primary});
 						v3.children.forEach(function(v4, k4){
-							groupsToMove.push({id: v4.id, name: v4.name, margin: 30, children: v4.children, is_primary: v4.is_primary});
+							groupsToMove.push({id: v4.id, name: v4.name, margin: 60, children: v4.children, is_primary: v4.is_primary});
 						});
 					});
 				});
