@@ -15,7 +15,9 @@
 				delete: {method: 'DELETE', headers: headers},
 				update: {method: 'PUT', headers: headers},
 				replaceAndDelete: {method: 'PUT', url: API.getURI('groups/:id/replace_delete'), headers: headers},
-				findGroupedByTenant: {method: 'POST', url: API.getURI('groups/grouped/tenant'), headers: headers}
+				findGroupedByTenant: {method: 'POST', url: API.getURI('groups/grouped/tenant'), headers: headers},
+				findById: {method: 'GET', url: API.getURI('groups/:id'), headers: headers},
+				findByIdWithParents: {method: 'GET', url: API.getURI('groups_with_parents/:id'), headers: headers}
 			});
 
 		});

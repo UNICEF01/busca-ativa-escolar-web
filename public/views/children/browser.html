@@ -44,7 +44,9 @@
 				</div>
 				<div>
 					
-						<div><label style="padding-left: 15px;">Motivo do Caso</label><i class="fa fa-info-circle tooltipx" style="padding-left: 2px;"><span class="tooltiptextx">Para selecionar mais de um opção, segure o botão ctrl no teclado. </span></i></div>
+						<div>
+							<label style="padding-left: 15px;" uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado.">Motivo do Caso</label> <i class="fa fa-info-circle" uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado."></i>
+						</div>
 						<div><select id="edit-rec" style="width: 98%;margin-left: 15px;" size="10" data-placeholder="Motivo do caso..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
 							
 							<option ng-repeat="case in causes"
@@ -94,7 +96,13 @@
 						<div class="checkbox"><label for="filter-place_kind-null"><input type="checkbox" ng-model="query.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>
 					</div>
 					<div class="col-md-2">
-						<label class="control-label" for="filter-case_not_info"><strong>Mostrar apenas: </strong><i class="fa fa-info-circle tooltipx"><span class="tooltiptextx">Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos.</span></i></label><br/><br/>
+						<label class="control-label" for="filter-case_not_info">
+							<strong uib-tooltip="Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos.">
+								Mostrar apenas:
+							</strong>
+							<i class="fa fa-info-circle"
+							   uib-tooltip="Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos."></i>
+						</label><br/><br/>
 						<div class="checkbox"><label for="filter-case_not_info"><input type="checkbox" id="filter-case_not_info"  checklist-model="query.case_not_info" checklist-value="'yes'" name="filter-case_not_info"> Caso sem motivo informado</label></div><br/>
 					</div>
 					
@@ -123,6 +131,7 @@
 		<div class="panel-heading">
 			<h3><i class="material-icons">list</i> Casos | {{search.stats.total_results}}</h3>
 		</div>
+
 		<div class="panel-body" ng-if="search.results">
 
 			<div ng-show="identity.can('cases.export.uf')" class="text-right">
@@ -185,12 +194,15 @@
 							<span ng-show="!child.assigned_user_name"><span class="label label-warning" uib-tooltip="Nenhum usuário atribuído">---</span></span>
 						</td>
 
+						<td> {{child.place_neighborhood}} </td>
+
 						<td>
-							{{child.place_neighborhood}}
+							<span uib-popover="{{branchGroups}}"
+								  popover-title="{{child.group_name}}"
+								  popover-trigger="'outsideClick'"
+								  ng-click="clikcInGroup(child.group_id)"> <a href="#">{{child.group_name}}</a> </span>
 						</td>
-						<td>
-							{{child.group_name}}
-						</td>
+
 						<td width="8%" style="vertical-align: middle;" class="text-center">
 							<span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
 							<span class="label label-default" ng-show="child.case_status == 'cancelled'">

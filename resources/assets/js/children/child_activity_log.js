@@ -24,8 +24,6 @@
 		};
 
 		$scope.refresh();
-
-		//console.log("[core] @ChildActivityLogCtrl", $scope.$parent.entries);
 	}
 
 })();
