@@ -73,6 +73,8 @@
                 });
             }
             
+            $scope.branchGroups = "carregando ...";
+
             $scope.causes = [];
             
             $scope.query = angular.merge({}, $scope.defaultQuery);
@@ -159,6 +161,27 @@
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
             ]; 
+
+            $scope.clikcInGroup = function (group_id){
+                $scope.branchGroups = "carregando ...";
+                Groups.findByIdWithParents({id: group_id}, function (res){
+                    var groupOfuserWithParents = res.data[0];
+                    var groupsOfUser = [];
+                    groupsOfUser.push(groupOfuserWithParents.name);
+                    if ( groupOfuserWithParents.parent != null) {
+                        groupsOfUser.push(groupOfuserWithParents.parent.name);
+                        if ( groupOfuserWithParents.parent.parent != null) {
+                            groupsOfUser.push(groupOfuserWithParents.parent.parent.name);
+                            if ( groupOfuserWithParents.parent.parent.parent != null) {
+                                groupsOfUser.push(groupOfuserWithParents.parent.parent.parent.name);
+                            }
+                        }
+                    }
+                    $scope.branchGroups = groupsOfUser.reverse().join(' > ');
+                });
+            };
+
+
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
