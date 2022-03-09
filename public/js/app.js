@@ -444,13 +444,13 @@
                                 if(size1 > 2){
                                     for(let j  = 0; j < size1 - 2; ++j){
                                         v[i][j].name = v[i][j].name.trim()
-                                        v[i][j].name = Array(9).fill('\xa0').join('') + v[i][j].name
+                                        v[i][j].name = Array(12).fill('\xa0').join('') + v[i][j].name
                                         $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
                                         const size2 = Object.keys(v[i][j]).length;
                                         if(size2 > 2){
                                             for(let l  = 0; l < size2 - 2; ++l){
                                                 v[i][j][l].name = v[i][j][l].name.trim()
-                                                v[i][j][l].name = Array(12).fill('\xa0').join('') + v[i][j][l].name
+                                                v[i][j][l].name = Array(18).fill('\xa0').join('') + v[i][j][l].name
                                                 $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
                                             }
                                         }
@@ -1794,13 +1794,13 @@
                                 if(size1 > 2){
                                     for(let j  = 0; j < size1 - 2; ++j){
                                         v[i][j].name = v[i][j].name.trim()
-                                        v[i][j].name = Array(9).fill('\xa0').join('') + v[i][j].name
+                                        v[i][j].name = Array(12).fill('\xa0').join('') + v[i][j].name
                                         $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
                                         const size2 = Object.keys(v[i][j]).length;
                                         if(size2 > 2){
                                             for(let l  = 0; l < size2 - 2; ++l){
                                                 v[i][j][l].name = v[i][j][l].name.trim()
-                                                v[i][j][l].name = Array(12).fill('\xa0').join('') + v[i][j][l].name
+                                                v[i][j][l].name = Array(18).fill('\xa0').join('') + v[i][j][l].name
                                                 $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
                                             }
                                         }
