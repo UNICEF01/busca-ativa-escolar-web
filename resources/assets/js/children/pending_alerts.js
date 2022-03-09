@@ -8,14 +8,13 @@
 				controller: 'PendingAlertsCtrlCtrl'
 			})
 		})
-		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, StaticData) {
+		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, Groups,StaticData) {
 
 			$scope.identity = Identity;
 			$scope.sendingAlert = false;
 			$scope.children = {};
 			$scope.child = {};
-			$scope.causes = {};
-
+			
 			$scope.query = {
                 name: null,
 				submitter_name: null,
@@ -25,10 +24,42 @@
 				neighborhood: null,
 				city_name: null,
 				alert_cause_id: null,
-				show_suspended: false
+				show_suspended: false,
+				group_id: null,
             };
 
-			
+			$scope.groups =  [];
+            if($scope.groups.length == 0){
+                Groups.findUserGroups(function(res){
+                    res.data.forEach(function(v){
+                        $scope.groups.push(({value: v.id, displayName: v.name}));
+                        const size = Object.keys(v).length;
+                        if(size > 2){
+                            for(let i  = 0; i < size - 2; ++i){
+                                v[i].name = v[i].name.trim()
+                                v[i].name = Array(3).fill('\xa0').join('') + v[i].name
+                                $scope.groups.push(({value: v[i].id, displayName: v[i].name}));
+                                const size1 = Object.keys(v[i]).length;
+                                if(size1 > 2){
+                                    for(let j  = 0; j < size1 - 2; ++j){
+                                        v[i][j].name = v[i][j].name.trim()
+                                        v[i][j].name = Array(6).fill('\xa0').join('') + v[i][j].name
+                                        $scope.groups.push(({value: v[i][j].id, displayName: v[i][j].name}));
+                                        const size2 = Object.keys(v[i][j]).length;
+                                        if(size2 > 2){
+                                            for(let l  = 0; l < size2 - 2; ++l){
+                                                v[i][j][l].name = v[i][j][l].name.trim()
+                                                v[i][j][l].name = Array(9).fill('\xa0').join('') + v[i][j][l].name
+                                                $scope.groups.push(({value: v[i][j][l].id, displayName: v[i][j][l].name}));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            }
 
             $scope.search = {};
 			
@@ -47,13 +78,15 @@
                 $scope.refresh();
             };
 
+			$scope.causes = [];
+
 			$scope.static = StaticData;
 			
 			$scope.refresh = function() {
-				console.log($scope.query);
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
 				$scope.search = $scope.children;
+				angular.element('#select_parent').css('text-indent', 0);
 			};
 
 			$scope.preview = function(child) {
@@ -97,7 +130,11 @@
 			};
 
 			Platform.whenReady(function() {
-				$scope.causes = StaticData.getAlertCauses();
+				$scope.data  = StaticData.getAlertCauses();
+				if($scope.causes.length == 0){
+                    Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+                    $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))		
+                }
 				$scope.refresh();
 			});
 

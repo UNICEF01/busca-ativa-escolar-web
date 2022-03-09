@@ -21,31 +21,22 @@
 							<input type="search" class="form-control" ng-model="query.city_name" placeholder="Município..." />
 						</div>
 						<div class="form-group col-md-3">
+							<select name="parent" id="select_group_alert"  ng-model="query.group_id" class="form-control">
+								<option value="" disabled selected style="text-indent: 0px">Grupo...</option>
+								<option ng-repeat="group in groups"
+										value="{{group.value}}">
+								  			   {{group.displayName}}
+								</option>
+								</select>
+						</div>
+						<div class="form-group col-md-3">
 							<select name="cars" class="form-control" ng-model="query.alert_cause_id" >
-								<option value=""  selected >Escolha um motivo...</option>
-								<option value=10>Adolescente em conflito com a lei</option>
-								<option value=20>Criança ou adolescente com deficiência(s)</option>
-								<option value=30>Criança ou adolescente com doença(s) que impeça(m) ou dificulte(m) a frequência à escola</option>
-								<option value=40>Criança ou adolescente em abrigo</option>
-								<option value=50>Criança ou adolescente em situação de rua</option>
-								<option value=60>Criança ou adolescente vítima de abuso / violência sexual</option>
-								<option value=61>Crianças ou adolescentes migrantes estrangeiros</option>
-								<option value=70>Evasão porque sente a escola desinteressante</option>
-								<option value=80>Falta de documentação da criança ou adolescente</option>
-								<option value=90>Falta de infraestrutura escolar</option>
-								<option value=100>Falta de transporte escolar</option>
-								<option value=110>Gravidez na adolescência</option>
-								<option value=111>Infrequência escolar reportada pela gestão escolar ou pela rede de ensino</option>
-								<option value=120>Preconceito ou discriminação racial</option>
-								<option value=130>Trabalho infantil</option>
-								<option value=140>Uso, abuso ou dependência de substâncias psicoativas</option>
-								<option value=150>Violência familiar</option>
-								<option value=160>Violência na escola</option>
-								<option value=170>Mudança de domicílio, viagem ou deslocamentos frequentes</option>
-								<option value=180>Violência no território</option>
-								<option value=500>Evasão reportada pelo Educacenso/INEP</option>
-								<option value=600>Evasão e/ou infrequência reportada pela escola ou município</option>
-							  </select>
+								<option value=""  selected >Motivo do Alerta...</option>
+								<option ng-repeat="case in causes"
+									value="{{case.value}}">
+							  		{{case.displayName}}
+								</option>
+							</select>
 						</div>
 						<div class="form-group col-md-3">
 							<label class="container_check_alert_rejected">Rejeitados
@@ -299,3 +290,13 @@
 	</div>
 
 </div>
+<script>
+	$(function() {
+        $('#select_group_alert').bind("change", function() {
+            var space_offset =7;
+            var matches = $('#select_group_alert option:selected').text().search(/\S/);
+            var number = matches == 20 ? 12 : matches == 23 ? 25 : matches == 26 ? 38: '';
+            $(this).css('text-indent', -(number));
+        });
+    });
+</script>

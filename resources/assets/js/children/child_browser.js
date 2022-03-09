@@ -10,7 +10,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData) {
+        .controller('ChildSearchCtrl', function ($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -73,13 +73,8 @@
                 });
             }
             
-            $scope.branchGroups = "carregando ...";
-            
             $scope.causes = [];
-            $scope.data = StaticData.getCaseCauses()
-            Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-            $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
-
+            
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.search = {};
 
@@ -116,7 +111,6 @@
             };
 
             $scope.createXLSReport = function(){
-
                 Reports.createReportChild($scope.query).$promise
                     .then(function (res) {
                         $scope.lastOrder.date = res.date;
@@ -164,26 +158,16 @@
             //Configura a linguagem na diretiva dt-column-defs=""
             $scope.dtColumnDefs = [
                 DTColumnDefBuilder.newColumnDef(8).notSortable()
-            ];
+            ]; 
 
-            $scope.clikcInGroup = function (group_id){
-                $scope.branchGroups = "carregando ...";
-                Groups.findByIdWithParents({id: group_id}, function (res){
-                    var groupOfuserWithParents = res.data[0];
-                    var groupsOfUser = [];
-                    groupsOfUser.push(groupOfuserWithParents.name);
-                    if ( groupOfuserWithParents.parent != null) {
-                        groupsOfUser.push(groupOfuserWithParents.parent.name);
-                        if ( groupOfuserWithParents.parent.parent != null) {
-                            groupsOfUser.push(groupOfuserWithParents.parent.parent.name);
-                            if ( groupOfuserWithParents.parent.parent.parent != null) {
-                                groupsOfUser.push(groupOfuserWithParents.parent.parent.parent.name);
-                            }
-                        }
-                    }
-                    $scope.branchGroups = groupsOfUser.reverse().join(' > ');
-                });
-            };
-
-        });
+            Platform.whenReady(function() {
+                $scope.data = StaticData.getCaseCauses()
+                if($scope.causes.length == 0){
+                    Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
+                    $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
+                    $scope.causes =  [...new Set($scope.causes)];
+                }
+                
+            });
+        });     
 })();
