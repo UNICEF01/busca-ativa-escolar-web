@@ -14,7 +14,7 @@
 			$scope.sendingAlert = false;
 			$scope.children = {};
 			$scope.child = {};
-			
+					
 			$scope.query = {
                 name: null,
 				submitter_name: null,
@@ -71,6 +71,7 @@
 			});
 
             $scope.search = {};
+			$scope.branchGroups = "carregando ...";
 			
 			$scope.getAlertCauseName = function(id) {
 				if(!$scope.child) return 'err:no_child_open';
@@ -80,6 +81,26 @@
 				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
 				return $scope.causes[indexAlertCauses].label;
 			};
+
+
+			$scope.clikcInGroup = function (group_id){
+                $scope.branchGroups = "carregando ...";
+                Groups.findByIdWithParents({id: group_id}, function (res){
+                    var groupOfuserWithParents = res.data[0];
+                    var groupsOfUser = [];
+                    groupsOfUser.push(groupOfuserWithParents.name);
+                    if ( groupOfuserWithParents.parent != null) {
+                        groupsOfUser.push(groupOfuserWithParents.parent.name);
+                        if ( groupOfuserWithParents.parent.parent != null) {
+                            groupsOfUser.push(groupOfuserWithParents.parent.parent.name);
+                            if ( groupOfuserWithParents.parent.parent.parent != null) {
+                                groupsOfUser.push(groupOfuserWithParents.parent.parent.parent.name);
+                            }
+                        }
+                    }
+                    $scope.branchGroups = groupsOfUser.reverse().join(' > ');
+                });
+            };
 
             $scope.setMaxResults = function(max) {
                 $scope.query.max = max;
