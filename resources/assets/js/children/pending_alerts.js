@@ -69,6 +69,7 @@
 					$(this).css('text-indent', -(number));
 				});
 			});
+			
 
             $scope.search = {};
 			$scope.branchGroups = "carregando ...";
