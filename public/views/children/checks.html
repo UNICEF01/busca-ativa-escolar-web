@@ -11,6 +11,9 @@
 
             <br/>
 
+<pre>{{requests.data | json}}</pre>
+
+
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
                 <tr>
@@ -70,6 +73,8 @@
                         <small ng-if="child.status === 'requested'" class="label label-default">Status: Solicitado</small>
                         <small ng-if="child.status === 'approved'" class="label label-success">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'" class="label label-danger">Status: Rejeitado</small>
+
+                        <small class="label label-default">Etapa:{{child.child.step_name}}</small>
                     </td>
                     <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'" width="25%"
                         style="vertical-align: middle; text-align: center">
