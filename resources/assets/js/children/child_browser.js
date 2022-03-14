@@ -95,7 +95,8 @@
                 $('#select_parent').bind("change", function() {
                     var space_offset =7;
                     var matches = $('#select_parent option:selected').text().search(/\S/);
-                    var number = matches == 23 ? 23: matches == 29 ? 50 : matches == 35 ? 78: '';
+                    console.log(matches)
+                    var number = matches == 26 ? 28: matches == 32 ? 50 : matches == 38 ? 78: '';
                     $(this).css('text-indent', -(number));
                 });
             });
