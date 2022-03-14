@@ -95,7 +95,6 @@
                 $('#select_parent').bind("change", function() {
                     var space_offset =7;
                     var matches = $('#select_parent option:selected').text().search(/\S/);
-                    console.log(matches)
                     var number = matches == 26 ? 28: matches == 32 ? 50 : matches == 38 ? 78: '';
                     $(this).css('text-indent', -(number));
                 });
