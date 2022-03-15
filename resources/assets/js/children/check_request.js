@@ -83,7 +83,9 @@
               }
             });
           }
-          if (child.type_request === 'transfer') {
+
+          
+          if (child.type_request === 'transfer') {      
             Children.transferCase({
               case_id: child.child.current_case_id,
             }).$promise.then(function (res) {

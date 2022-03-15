@@ -11,8 +11,6 @@
 
             <br/>
 
-<pre>{{requests.data | json}}</pre>
-
 
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
@@ -74,7 +72,12 @@
                         <small ng-if="child.status === 'approved'" class="label label-success">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'" class="label label-danger">Status: Rejeitado</small>
 
-                        <small class="label label-default">Etapa:{{child.child.step_name}}</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Pesquisa'" class="label label-default">Etapa: Pesquisa</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica'" class="label label-default">Etapa: Análise Técnica</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\GestaoDoCaso'" class="label label-default">Etapa: Gestão do Caso</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Rematricula'" class="label label-default">Etapa: (Re)matrícula</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao'" class="label label-default">Etapa: Observação</small>
+
                     </td>
                     <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'" width="25%"
                         style="vertical-align: middle; text-align: center">
