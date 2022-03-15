@@ -280,7 +280,6 @@
 
           return params;
         },
-
         GroupPicker: function (
             title,
             message,

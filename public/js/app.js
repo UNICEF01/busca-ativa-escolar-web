@@ -1701,13 +1701,15 @@
 				controller: 'PendingAlertsCtrlCtrl'
 			})
 		})
-		.controller('PendingAlertsCtrlCtrl', function ($scope, Platform, Identity, Alerts, Groups,StaticData) {
+		.controller('PendingAlertsCtrlCtrl', function ($scope, Groups, Platform, Identity, Alerts, StaticData) {
 
 			$scope.identity = Identity;
 			$scope.sendingAlert = false;
 			$scope.children = {};
 			$scope.child = {};
-					
+			$scope.causes = {};
+			$scope.causes_filter = [];
+
 			$scope.query = {
                 name: null,
 				submitter_name: null,
@@ -1715,11 +1717,11 @@
                 max: 16,
 				page: 1,
 				neighborhood: null,
-				city_name: null,
-				alert_cause_id: null,
 				show_suspended: false,
 				group_id: null,
             };
+
+            $scope.search = {};
 
 			$scope.groups =  [];
             if($scope.groups.length == 0){
@@ -1762,20 +1764,8 @@
 					$(this).css('text-indent', -(number));
 				});
 			});
-			
 
-            $scope.search = {};
 			$scope.branchGroups = "carregando ...";
-			
-			$scope.getAlertCauseName = function(id) {
-				if(!$scope.child) return 'err:no_child_open';
-				if(!$scope.child.alert) return 'err:no_alert_data';
-				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
-				var indexAlertCauses = _.findIndex($scope.causes, {id: $scope.child.alert.alert_cause_id});
-				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
-				return $scope.causes[indexAlertCauses].label;
-			};
-
 
 			$scope.clikcInGroup = function (group_id){
                 $scope.branchGroups = "carregando ...";
@@ -1794,7 +1784,16 @@
                     }
                     $scope.branchGroups = groupsOfUser.reverse().join(' > ');
                 });
-            };
+			}
+			
+			$scope.getAlertCauseName = function(id) {
+				if(!$scope.child) return 'err:no_child_open';
+				if(!$scope.child.alert) return 'err:no_alert_data';
+				if(!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
+				var indexAlertCauses = _.findIndex($scope.causes, {id: $scope.child.alert.alert_cause_id});
+				if(!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
+				return $scope.causes[indexAlertCauses].label;
+			};
 
             $scope.setMaxResults = function(max) {
                 $scope.query.max = max;
@@ -1802,15 +1801,12 @@
                 $scope.refresh();
             };
 
-			$scope.causes = [];
-
 			$scope.static = StaticData;
 			
 			$scope.refresh = function() {
 				$scope.child = null;
 				$scope.children = Alerts.getPending($scope.query);
 				$scope.search = $scope.children;
-				angular.element('#select_parent').css('text-indent', 0);
 			};
 
 			$scope.preview = function(child) {
@@ -1830,31 +1826,16 @@
 					&& (child.alert.place_neighborhood.trim().length > 0);
 			};
 
-			$scope.getGroupOfCurrentUser = function (){
-				return Identity.getCurrentUser().group;
-			}
-
-
-	
 			$scope.getStringOfGroupsOfUser = function (){
 				var groupOfuser = $scope.getGroupOfCurrentUser();		
 				var stringForTooltip = "";			
 				stringForTooltip += groupOfuser.name;	
-			
-
 				groupOfuser.children.forEach( function(group){
 					stringForTooltip += " > " + group.name;			
-						/*group.children.forEach( function(group2){										
-							stringForTooltip += " > " + group2.name;							
-							group2.children.forEach( function(group3){
-								stringForTooltip += " > " + group3.name;
-							});
-						});*/
-					
 				});
 				
 				return stringForTooltip;						
-				};
+			};
 
 			$scope.accept = function(child) {
 				if(!$scope.canAcceptAlert(child)) {
@@ -1878,16 +1859,15 @@
 					$('#modalChild').modal('hide');
 				});
 			};
-
+			
 			Platform.whenReady(function() {
-				$scope.data  = StaticData.getAlertCauses();
-				if($scope.causes.length == 0){
-                    Object.values($scope.data).forEach(val => $scope.causes.push(({value: val.id, displayName: val.label})));
-                    $scope.causes.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))		
+				$scope.causes = StaticData.getAlertCauses();
+				if($scope.causes_filter.length == 0){
+                    Object.values($scope.causes).forEach(val => $scope.causes_filter.push(({value: val.id, displayName: val.label})));
+                    $scope.causes_filter.sort((a,b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))		
                 }
 				$scope.refresh();
 			});
-
 
 		});
 
@@ -9376,6 +9356,49 @@ Highcharts.maps["countries/br/br-all"] = {
         scaleHeight: dh
     })
 });
+if (!Array.prototype.find) {
+	Object.defineProperty(Array.prototype, 'find', {
+		value: function(predicate) {
+			// 1. Let O be ? ToObject(this value).
+			if (this == null) {
+				throw new TypeError('"this" is null or not defined');
+			}
+
+			var o = Object(this);
+
+			// 2. Let len be ? ToLength(? Get(O, "length")).
+			var len = o.length >>> 0;
+
+			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+			var thisArg = arguments[1];
+
+			// 5. Let k be 0.
+			var k = 0;
+
+			// 6. Repeat, while k < len
+			while (k < len) {
+				// a. Let Pk be ! ToString(k).
+				// b. Let kValue be ? Get(O, Pk).
+				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+				// d. If testResult is true, return kValue.
+				var kValue = o[k];
+				if (predicate.call(thisArg, kValue, k, o)) {
+					return kValue;
+				}
+				// e. Increase k by 1.
+				k++;
+			}
+
+			// 7. Return undefined.
+			return undefined;
+		}
+	});
+}
 (function () {
   angular
     .module('BuscaAtivaEscolar')
@@ -9428,49 +9451,6 @@ Highcharts.maps["countries/br/br-all"] = {
     );
 })();
 
-if (!Array.prototype.find) {
-	Object.defineProperty(Array.prototype, 'find', {
-		value: function(predicate) {
-			// 1. Let O be ? ToObject(this value).
-			if (this == null) {
-				throw new TypeError('"this" is null or not defined');
-			}
-
-			var o = Object(this);
-
-			// 2. Let len be ? ToLength(? Get(O, "length")).
-			var len = o.length >>> 0;
-
-			// 3. If IsCallable(predicate) is false, throw a TypeError exception.
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			// 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-			var thisArg = arguments[1];
-
-			// 5. Let k be 0.
-			var k = 0;
-
-			// 6. Repeat, while k < len
-			while (k < len) {
-				// a. Let Pk be ! ToString(k).
-				// b. Let kValue be ? Get(O, Pk).
-				// c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-				// d. If testResult is true, return kValue.
-				var kValue = o[k];
-				if (predicate.call(thisArg, kValue, k, o)) {
-					return kValue;
-				}
-				// e. Increase k by 1.
-				k++;
-			}
-
-			// 7. Return undefined.
-			return undefined;
-		}
-	});
-}
 (function () {
   angular
     .module('BuscaAtivaEscolar')
@@ -12773,7 +12753,6 @@ if (!Array.prototype.find) {
 
           return params;
         },
-
         GroupPicker: function (
             title,
             message,
