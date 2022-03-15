@@ -28,23 +28,17 @@
 
 		$scope.assignGroup = function (){
 
-			var promiseGroup = Groups.findGroupedGroups().$promise
-			promiseGroup.then(function(res) {
+			Modals.show(
+				Modals.GroupPicker(
+					'Atribuir grupo',
+					'Indique grupo ...:',
+					true)
+			).then(function (selectedGroup) {
 
-				Modals.show(
-					Modals.GroupPicker(
-						'Atribuir grupo',
-						'Indique grupo ...:',
-						true)
-				).then(function (selectedGroup) {
+			}).then(function (res) {
 
-				}).then(function (res) {
-
-				});
-
-			}, function (err) {
-				ngToast.danger('Ocorreu um erro ao retornar grupos!')
 			});
+
 		};
 
 	}

@@ -238,12 +238,9 @@
 
           return params;
         },
-
         UserPicker: function (
           title,
           message,
-          users,
-          caseGroups,
           canDismiss,
           noUsersMessage
         ) {
@@ -261,14 +258,8 @@
               noUsersMessage: function () {
                 return noUsersMessage;
               },
-              users: function () {
-                return users;
-              },
               canDismiss: function () {
                 return canDismiss;
-              },
-              caseGroups: function () {
-                return caseGroups;
               }
             },
           };
@@ -280,6 +271,7 @@
 
           return params;
         },
+
         GroupPicker: function (
             title,
             message,
