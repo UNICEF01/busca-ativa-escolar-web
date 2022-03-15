@@ -32,7 +32,7 @@
 						<div class="form-group col-md-3">
 							<select name="cars" class="form-control" ng-model="query.alert_cause_id" >
 								<option value=""  selected >Motivo do Alerta...</option>
-								<option ng-repeat="case in causes"
+								<option ng-repeat="case in causes_filter"
 									value="{{case.value}}">
 							  		{{case.displayName}}
 								</option>
