@@ -284,7 +284,6 @@
         GroupPicker: function (
             title,
             message,
-            groups,
             canDismiss,
             noGroupsMessage
         ) {
@@ -301,9 +300,6 @@
               },
               noGroupsMessage: function () {
                 return noGroupsMessage;
-              },
-              groups: function () {
-                return groups;
               },
               canDismiss: function () {
                 return canDismiss;
