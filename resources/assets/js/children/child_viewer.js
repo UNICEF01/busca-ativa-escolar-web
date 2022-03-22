@@ -18,6 +18,8 @@
 		$scope.Decorators = Decorators;
 		$scope.Children = Children;
 		$scope.StaticData = StaticData;
+		$scope.identity = Identity;
+		$scope.canAssignGroup = false;
 
 		$scope.refreshChildData = function(callback) {
 			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
@@ -39,6 +41,12 @@
 
 			});
 
+		};
+
+		$scope.canAssignGroup = function (){
+			//verificar regras aqui
+			//considerar estados
+			return false;
 		};
 
 	}

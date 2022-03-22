@@ -272,10 +272,12 @@
         };
 
         $scope.canTransferCase = function (){
-            if ($scope.identity.getCurrentTenant().id !== $scope.child.tenant_id) { return false; }
+            if (!$scope.identity.getCurrentUser().tenant_id) { return false; }
+            if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
+            if ($scope.openedCase.currentStep.assigned_user){
+                if ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual')  { return false; }
+            }
             if ($scope.identity.can('cases.transfer') &&
-                $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
-                $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
                 $scope.openedCase.case_status === 'in_progress' &&
                 $scope.openedCase.currentStep.slug !== 'alerta') { return true; }
             return false;
@@ -283,17 +285,35 @@
 
         $scope.canCancelCase = function (){
 
-            if ($scope.identity.getCurrentTenant().id !== $scope.child.tenant_id) { return false; }
+            if ( $scope.identity.getCurrentUser().tenant_id ){
+                if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
+            }
 
-            if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') &&
-                !$scope.identity.getCurrentUser().tenant_id ) { return true; };
+            if ($scope.openedCase.currentStep.assigned_user) {
 
-            if ( $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
-                 $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
-                 $scope.identity.getCurrentUser().tenant_id ) { return true; }
+                if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') && !$scope.identity.getCurrentUser().tenant_id) {
+                    return true;
+                }
 
+                if ( $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
+                    $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
+                    $scope.identity.getCurrentUser().tenant_id ) { return true; }
+            }
+
+            if (!$scope.openedCase.currentStep.assigned_user) {
+                return true;
+            }
+
+
+        };
+
+        $scope.showMessageNeedTransfer = function (){
+            if ($scope.identity.getCurrentUser().tenant_id){
+                if($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id){
+                    return true;
+                }
+            }
             return false;
-
         };
 
     }
@@ -485,12 +505,21 @@
         };
 
         $scope.canEditCurrentStep = function (isEditableOnAlerts) {
-            if (!$scope.isCaseOfTenant()) { return false; }
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
             if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
             if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
+            if ($scope.showMessageNeedTransfer()) return false;
             return (!$scope.step.is_completed);
+        };
+
+        $scope.showMessageNeedTransfer = function (){
+            if ($scope.identity.getCurrentUser().tenant_id){
+                if($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id){
+                    return true;
+                }
+            }
+            return false;
         };
 
         $scope.canAcceptAlert = function (step, fields) {
@@ -549,6 +578,12 @@
 
         $scope.assignUser = function () {
             alert("");
+        };
+
+        $scope.canAssignUser = function () {
+            if ($scope.showMessageNeedTransfer()) return false;
+            if ($scope.identity.can('cases.assign')) return true;
+            return false;
         };
 
         $scope.isCheckboxChecked = function (field, value) {
@@ -729,10 +764,6 @@
             } else {
                 return "municipality";
             }
-        };
-
-        $scope.isCaseOfTenant = function (){
-            return $scope.identity.getCurrentUser().tenant_id === $scope.child.tenant_id;
         };
 
         Platform.whenReady(function() {

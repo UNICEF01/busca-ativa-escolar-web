@@ -1,6 +1,6 @@
 <div class="row">
 
-	<div class="alert alert-warning" ng-show="identity.getCurrentUser().tenant.id != child.tenant_id">
+	<div class="alert alert-warning" ng-show="showMessageNeedTransfer()">
 		Este caso ainda pertence a outro município. As solicitações de transferências devem ser autorizadas <a style="text-decoration: underline" href="/checks">aqui</a>.
 	</div>
 
@@ -24,10 +24,6 @@
 					<div ng-repeat="(i, step) in case.steps" class="step {{renderStepStatusClass(case, step)}}" uib-tooltip-html="!identity.can('cases.step.' + step.slug) ? 'Você não tem permissão para acessar essa etapa' : null" ng-click="openStep(step)">
 						<strong>{{step.name}}</strong>
 						<span ng-show="step.is_completed">{{step.updated_at | amTimeAgo}}</span>
-
-						<!--span ng-show="canCompleteStep(case, step) && identity.can('cases.step.' + step.slug)" class="btn btn-xs btn-info btn-raised btn-under btn-complete-step" ng-click="completeStep(step)" >Concluir etapa</span-->
-						<!--span ng-show="isPendingAssignment(step) && identity.can('cases.assign')" class="btn btn-xs btn-success btn-raised btn-under btn-assign-step" ng-click="assignStep(step)">Atribuir responsável</span -->
-
 						<span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
 					</div>
 				</div>
