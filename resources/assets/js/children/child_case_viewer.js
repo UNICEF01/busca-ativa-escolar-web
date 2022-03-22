@@ -45,7 +45,7 @@
             var stepToOpen = $scope.openedCase.steps.find(function (step) {
                 return ($scope.openedCase.current_step_id === step.id);
             });
-            
+
             $scope.openStep(stepToOpen);
         }
 
@@ -269,7 +269,32 @@
                     return "municipality";
                 }
             }
-        }
+        };
+
+        $scope.canTransferCase = function (){
+            if ($scope.identity.getCurrentTenant().id !== $scope.child.tenant_id) { return false; }
+            if ($scope.identity.can('cases.transfer') &&
+                $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
+                $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
+                $scope.openedCase.case_status === 'in_progress' &&
+                $scope.openedCase.currentStep.slug !== 'alerta') { return true; }
+            return false;
+        };
+
+        $scope.canCancelCase = function (){
+
+            if ($scope.identity.getCurrentTenant().id !== $scope.child.tenant_id) { return false; }
+
+            if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') &&
+                !$scope.identity.getCurrentUser().tenant_id ) { return true; };
+
+            if ( $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
+                 $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
+                 $scope.identity.getCurrentUser().tenant_id ) { return true; }
+
+            return false;
+
+        };
 
     }
 
@@ -316,12 +341,12 @@
             } else if (id === false) {
                 $scope.fields.aux.contatos[parent] = []
             }
-        }
+        };
 
         $scope.removeContact = function (index, parent) {
             if (index === 0) return;
             $scope.fields.aux.contatos[parent].splice(index, 1)
-        }
+        };
 
         $scope.insertResponsible = function (parent) {
             if (parent) {
@@ -333,7 +358,7 @@
             } else {
                 $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
             }
-        }
+        };
 
         $scope.avisoDivergencia = false;
 
@@ -357,7 +382,7 @@
                     $scope.noCEF = false;
                 }, 1000);
             });
-        }
+        };
 
         function validateSchoolWithPlace() {
             if ($scope.fields.school && $scope.fields.school_city) {
@@ -368,14 +393,14 @@
                     }, 5000);
                 }
             }
-        }
+        };
 
         $scope.putStateAndCity = function (value) {
             $scope.fields.school_uf = value.uf;
             $scope.fetchCities(value.city_name).then(function (value) {
                 $scope.fields.school_city = value[0];
             });
-        }
+        };
 
         $scope.checkInputParents = function (value, name) {
             if ('mother' === name) {
@@ -385,7 +410,7 @@
                 $scope.fields.aux.contatos[name].name = '';
                 $scope.fields.aux.contatos[name].phone = '';
             }
-        }
+        };
 
         function fetchStepData() {
 
@@ -423,14 +448,12 @@
                 });
 
             });
-        }
+        };
 
         fetchStepData();
 
         var handicappedCauseIDs = [];
         var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
-
-        //console.log("[core] @ChildCaseStepCtrl", $scope.step);
 
         $scope.saveAndProceed = function () {
             //console.log("[child_viewer.cases.step] Attempting to save and complete step: ", $scope.step);
@@ -462,6 +485,7 @@
         };
 
         $scope.canEditCurrentStep = function (isEditableOnAlerts) {
+            if (!$scope.isCaseOfTenant()) { return false; }
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
             if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
@@ -493,26 +517,6 @@
             })
         };
 
-        // $scope.isHandicapped = function () {
-        //     if (!$scope.step || !$scope.step.fields || !$scope.step.fields.case_cause_ids) return false;
-        //
-        //     if (!handicappedCauseIDs || handicappedCauseIDs.length <= 0) {
-        //         handicappedCauseIDs = Utils.extract('id', StaticData.getCaseCauses(), function (item) {
-        //             return (item.is_handicapped === true);
-        //         });
-        //     }
-        //
-        //     var currentCauses = $scope.step.fields.case_cause_ids;
-        //
-        //     for (var i in currentCauses) {
-        //         if (!currentCauses.hasOwnProperty(i)) continue;
-        //         var cause = currentCauses[i];
-        //         if (handicappedCauseIDs.indexOf(cause) !== -1) return true;
-        //     }
-        //
-        //     return false;
-        // };
-
         $scope.canCompleteStep = function () {
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
@@ -541,7 +545,7 @@
             }
 
             return filtered;
-        }
+        };
 
         $scope.assignUser = function () {
             alert("");
@@ -619,7 +623,7 @@
             }
 
             return filtered;
-        }
+        };
 
         function unpackTypeaheadField(data, name, model) {
             if (data[name]) {
@@ -628,7 +632,7 @@
             }
 
             return data;
-        }
+        };
 
         $scope.save = function () {
 
@@ -669,7 +673,7 @@
                 ngToast.success("Os campos da etapa foram salvos com sucesso!");
 
             })
-        }
+        };
 
         $scope.diffDaysBetweenSteps = function (a, b) {
             const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -716,7 +720,7 @@
                     return "municipality";
                 }
             }
-        }
+        };
 
         $scope.scopeOfUser = function () {
             if ($scope.identity.getCurrentUser().type === "coordenador_estadual"
@@ -725,8 +729,12 @@
             } else {
                 return "municipality";
             }
-        }
-        
+        };
+
+        $scope.isCaseOfTenant = function (){
+            return $scope.identity.getCurrentUser().tenant_id === $scope.child.tenant_id;
+        };
+
         Platform.whenReady(function() {
 
         });
