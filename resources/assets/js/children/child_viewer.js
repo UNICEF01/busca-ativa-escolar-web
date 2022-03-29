@@ -43,6 +43,7 @@
 		};
 
 		$scope.canAssignGroup = function (){
+			if($scope.child.currentCase.case_status != "in_progress") return false;
 			if(!$scope.isCaseOfTenantOfUserLogged()){ return false; }
 			return true;
 		};
