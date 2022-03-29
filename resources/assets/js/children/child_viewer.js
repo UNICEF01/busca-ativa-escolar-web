@@ -19,7 +19,6 @@
 		$scope.Children = Children;
 		$scope.StaticData = StaticData;
 		$scope.identity = Identity;
-		$scope.canAssignGroup = false;
 
 		$scope.refreshChildData = function(callback) {
 			return $scope.child = Children.find({id: $scope.child_id, with: 'currentCase'}, callback);
@@ -44,8 +43,18 @@
 		};
 
 		$scope.canAssignGroup = function (){
-			//verificar regras aqui
-			//considerar estados
+			if(!$scope.isCaseOfTenantOfUserLogged()){ return false; }
+			return true;
+		};
+
+		$scope.isCaseOfTenantOfUserLogged = function (){
+			if ($scope.identity.getCurrentUser().tenant_id){
+				if($scope.identity.getCurrentUser().tenant_id == $scope.child.tenant_id){
+					return true;
+				}else{
+					return false;
+				}
+			}
 			return false;
 		};
 

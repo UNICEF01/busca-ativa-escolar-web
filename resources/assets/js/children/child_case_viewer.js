@@ -582,6 +582,7 @@
 
         $scope.canAssignUser = function () {
             if ($scope.showMessageNeedTransfer()) return false;
+            if ($scope.scopeOfCase() == "state") return false;
             if ($scope.identity.can('cases.assign')) return true;
             return false;
         };
