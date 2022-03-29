@@ -870,10 +870,11 @@
 
         $scope.canCancelCase = function (){
 
+            //Se o usuário pertence a um tenant
             if ( $scope.identity.getCurrentUser().tenant_id ){
                 if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
             }
-
+            //Se o caso atual tem alguém responsável
             if ($scope.openedCase.currentStep.assigned_user) {
 
                 if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') && !$scope.identity.getCurrentUser().tenant_id) {
@@ -884,11 +885,10 @@
                     $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
                     $scope.identity.getCurrentUser().tenant_id ) { return true; }
             }
-
+            //Se o caso não tem alguém responsável
             if (!$scope.openedCase.currentStep.assigned_user) {
                 return true;
             }
-
 
         };
 
@@ -7339,6 +7339,155 @@ Highcharts.maps["countries/br/br-all"] = {
 })();
 (function() {
 
+	const app = angular.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('forgot_password', {
+					url: '/forgot_password',
+					templateUrl: '/views/password_reset/begin_password_reset.html',
+					controller: 'ForgotPasswordCtrl',
+					unauthenticated: true
+				})
+				.state('password_reset', {
+					url: '/password_reset?email&token',
+					templateUrl: '/views/password_reset/complete_password_reset.html',
+					controller: 'PasswordResetCtrl',
+					unauthenticated: true
+				})
+		})
+		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			$scope.email = "";
+			$scope.isLoading = false;
+
+			console.info("[password_reset.forgot_password] Begin password reset");
+
+			$scope.requestReset = function() {
+				$scope.isLoading = true;
+
+				PasswordReset.begin({email: $scope.email}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Erro! " + res.reason);
+						return;
+					}
+
+					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
+					$state.go('login');
+				})
+			}
+
+		})
+		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
+
+			var resetEmail = $stateParams.email;
+			var resetToken = $stateParams.token;
+
+			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
+			$scope.email = resetEmail;
+			$scope.newPassword = "";
+			$scope.newPasswordConfirm = "";
+			$scope.isLoading = false;
+
+			$scope.showPassowrd = function () {
+				var field_password1 = document.getElementById("fld_password");
+				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
+			};
+
+			$scope.showPassowrd2 = function () {
+				var field_password2 = document.getElementById("fld_password_confirm");
+				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
+			};
+
+			$scope.resetPassword = function() {
+
+				if($scope.newPassword !== $scope.newPasswordConfirm) {
+					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
+					return;
+				}
+
+				$scope.isLoading = true;
+
+				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
+					$scope.isLoading = false;
+
+					if(res.status !== 'ok') {
+						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
+						return;
+					}
+
+					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
+					$state.go('login');
+				});
+			}
+
+		});
+		app.directive('myDirective', function() {
+			return {
+					require: 'ngModel',
+					link: function(scope, element, attr, mCtrl) {
+							function myValidation(value) {
+									const capital = document.getElementById('capital');
+									const number = document.getElementById('number');
+									const length = document.getElementById('length');
+									const letter = document.getElementById('letter');
+									const symbol = document.getElementById('symbol')
+									const check = function(entrada) {
+											entrada.classList.remove('invalid');
+											entrada.classList.add('valid');
+											//mCtrl.$setValidity('charE', true);
+									}
+									const uncheck = function(entrada) {
+											entrada.classList.remove('valid');
+											entrada.classList.add('invalid');
+									}
+									if(typeof(value) === "string"){
+											var lowerCaseLetters = /[a-z]/g;
+											if (value.match(lowerCaseLetters)) {
+													check(letter)
+											} else {
+													uncheck(letter)
+											}
+											var upperCaseLetters = /[A-Z]/g;
+											if (value.match(upperCaseLetters)) {
+													check(capital)
+											} else {
+													uncheck(capital)
+											}
+											var numbers = /[0-9]/g;
+											if (value.match(numbers)) {
+													check(number)
+											} else {
+													uncheck(number)
+											}
+											var symbols = /[!@#$%&*?]/g;
+											if (value.match(symbols)) {
+													check(symbol)
+											} else {
+													uncheck(symbol)
+											}
+									// Validate length
+											if (value.length >= 8 && value.length <= 16) {
+													check(length);
+											} else {
+													uncheck(length);
+											}
+									}
+									
+									/*else {
+													mCtrl.$setValidity('charE', false);
+											}*/
+									return value;
+							}
+							mCtrl.$parsers.push(myValidation);
+					}
+			};
+	});
+
+})();
+(function() {
+
     angular
         .module('BuscaAtivaEscolar')
         .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $q, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
@@ -8044,155 +8193,6 @@ Highcharts.maps["countries/br/br-all"] = {
 			};
 
 		});
-
-})();
-(function() {
-
-	const app = angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('forgot_password', {
-					url: '/forgot_password',
-					templateUrl: '/views/password_reset/begin_password_reset.html',
-					controller: 'ForgotPasswordCtrl',
-					unauthenticated: true
-				})
-				.state('password_reset', {
-					url: '/password_reset?email&token',
-					templateUrl: '/views/password_reset/complete_password_reset.html',
-					controller: 'PasswordResetCtrl',
-					unauthenticated: true
-				})
-		})
-		.controller('ForgotPasswordCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			$scope.email = "";
-			$scope.isLoading = false;
-
-			console.info("[password_reset.forgot_password] Begin password reset");
-
-			$scope.requestReset = function() {
-				$scope.isLoading = true;
-
-				PasswordReset.begin({email: $scope.email}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Erro! " + res.reason);
-						return;
-					}
-
-					ngToast.success("Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.");
-					$state.go('login');
-				})
-			}
-
-		})
-		.controller('PasswordResetCtrl', function ($scope, $state, $stateParams, ngToast, PasswordReset) {
-
-			var resetEmail = $stateParams.email;
-			var resetToken = $stateParams.token;
-
-			console.info("[password_reset.password_reset] Complete password reset for ", resetEmail, ", token=", resetToken);
-			$scope.email = resetEmail;
-			$scope.newPassword = "";
-			$scope.newPasswordConfirm = "";
-			$scope.isLoading = false;
-
-			$scope.showPassowrd = function () {
-				var field_password1 = document.getElementById("fld_password");
-				field_password1.type === "password" ? field_password1.type = "text" : field_password1.type = "password";
-			};
-
-			$scope.showPassowrd2 = function () {
-				var field_password2 = document.getElementById("fld_password_confirm");
-				field_password2.type === "password" ? field_password2.type = "text" : field_password2.type = "password";
-			};
-
-			$scope.resetPassword = function() {
-
-				if($scope.newPassword !== $scope.newPasswordConfirm) {
-					ngToast.danger("A senha e a confirmação de senha devem ser iguais!");
-					return;
-				}
-
-				$scope.isLoading = true;
-
-				PasswordReset.complete({email: resetEmail, token: resetToken, new_password: $scope.newPassword}, function (res) {
-					$scope.isLoading = false;
-
-					if(res.status !== 'ok') {
-						ngToast.danger("Ocorreu um erro ao trocar a senha: " + res.reason);
-						return;
-					}
-
-					ngToast.success("Sua senha foi trocada com sucesso! Você pode efetuar o login com a nova senha agora.");
-					$state.go('login');
-				});
-			}
-
-		});
-		app.directive('myDirective', function() {
-			return {
-					require: 'ngModel',
-					link: function(scope, element, attr, mCtrl) {
-							function myValidation(value) {
-									const capital = document.getElementById('capital');
-									const number = document.getElementById('number');
-									const length = document.getElementById('length');
-									const letter = document.getElementById('letter');
-									const symbol = document.getElementById('symbol')
-									const check = function(entrada) {
-											entrada.classList.remove('invalid');
-											entrada.classList.add('valid');
-											//mCtrl.$setValidity('charE', true);
-									}
-									const uncheck = function(entrada) {
-											entrada.classList.remove('valid');
-											entrada.classList.add('invalid');
-									}
-									if(typeof(value) === "string"){
-											var lowerCaseLetters = /[a-z]/g;
-											if (value.match(lowerCaseLetters)) {
-													check(letter)
-											} else {
-													uncheck(letter)
-											}
-											var upperCaseLetters = /[A-Z]/g;
-											if (value.match(upperCaseLetters)) {
-													check(capital)
-											} else {
-													uncheck(capital)
-											}
-											var numbers = /[0-9]/g;
-											if (value.match(numbers)) {
-													check(number)
-											} else {
-													uncheck(number)
-											}
-											var symbols = /[!@#$%&*?]/g;
-											if (value.match(symbols)) {
-													check(symbol)
-											} else {
-													uncheck(symbol)
-											}
-									// Validate length
-											if (value.length >= 8 && value.length <= 16) {
-													check(length);
-											} else {
-													uncheck(length);
-											}
-									}
-									
-									/*else {
-													mCtrl.$setValidity('charE', false);
-											}*/
-									return value;
-							}
-							mCtrl.$parsers.push(myValidation);
-					}
-			};
-	});
 
 })();
 /*!
@@ -13694,219 +13694,88 @@ function identify(namespace, file) {
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.controller('ManageGroupsCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
+		.controller('ManageGroupsCtrl', function ($scope, $filter, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
 
-			$scope.groups = [];
-			$scope.newPrincipalGroupName = '';
-			$scope.newSubgroupGroupNames = [];
+			$scope.groupsTwo = [];
+			$scope.groupsThree = [];
+			$scope.groupsFour = [];
 
-			$scope.getGroups = function() {
-				if(!$scope.groups) return [];
-				return $scope.groups;
-			};
+			$scope.mirrorGroupsTwo = [];
+			$scope.mirrorGroupsThree = [];
+			$scope.mirrorGroupsFour =  [];
 
-			$scope.getGroupsToMove = function(groupFromMove) {
-				if(!$scope.groups) return [];
-				var groupsToMove = [];
-
-				$scope.groups.forEach(function(v, k){
-					groupsToMove.push({id: v.id, name: v.name});
-					v.children.forEach(function(v2, k2){
-						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
-						v2.children.forEach(function(v3, k3){
-							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-							v3.children.forEach(function(v4, k4){
-								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
-							});
-						});
-					});
-				});
-
-				return groupsToMove;
-			};
-
-			$scope.addPrincipalGroup = function (){
-
-				if(!$scope.newPrincipalGroupName) return;
-				if($scope.newPrincipalGroupName.length < 3) return;
-
-				var group = {
-					name: $scope.newPrincipalGroupName,
-					is_primary: false,
-					is_creating: true
-				};
-
-				$scope.newPrincipalGroupName = '';
-
-				var promiseGroup = Groups.create(
-					{name: group.name}
-				).$promise
-
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupos alterados com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
-					$scope.refresh();
-				});
-			};
-
-			$scope.addSubGroup = function (newName, parent_id){
-
-				if(!newName) return;
-				if(newName.length < 3) return;
-
-				var group = {
-					name: newName,
-					parent_id: parent_id
-				};
-
-				$scope.newSubgroupGroupNames = [];
-
-				var promiseGroup = Groups.create(group).$promise
-
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupo criado com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao salvar o grupo!')
-					$scope.refresh();
-				});
-
-			};
-
-			$scope.updateGroup = function (newName, id){
-				if(!newName) return;
-				if(newName.length < 3) return;
-				var group = {
-					name: newName,
-					id: id
-				};
-				if(!$scope.isGroupPartOfUserGroups(group)) { return; }
-				var promiseGroup = Groups.update(group).$promise
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupo editado com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao editar o grupo!')
-					$scope.refresh();
-				});
-			};
-
-			$scope.removeGroup = function (groupToRemove){
-
-				Modals.show(
-					Modals.GroupPicker(
-						'Remover grupo '+ groupToRemove.name,
-						'Existem X casos, X alertas e X usuários que pertencem a esse grupo ...',
-						$scope.getGroupsToMove(groupToRemove),
-						true)
-				).then(function (selectedGroup) {
-					var obj = {
-						id: groupToRemove.id,
-						replace: selectedGroup.id
-					}
-					var promissGroup = Groups.replaceAndDelete(obj).$promise
-
-					promissGroup.then(
-						function (res){
-							ngToast.success('Grupo removido com sucesso!')
-							$scope.refresh();
-						},
-						function (err){
-							ngToast.danger('Grupo não pôde ser removido!')
-							$scope.refresh();
-						}
-					)
-
-				}).then(function (res) {
-					console.log(res);
-				});
-
-			};
-
-			$scope.moveGroup = function (groupFromMove){
-				Modals.show(
-					Modals.GroupPicker(
-						'Movimentar '+ groupFromMove.name,
-						'Indique grupo pai para onde deseja movimentar:',
-						$scope.getGroupsToMove(groupFromMove),
-						true)
-				).then(function (parentGroup) {
-
-					var group = {
-						parent_id: parentGroup.id,
-						id: groupFromMove.id
-					};
-
-					var promiseGroup = Groups.update(group).$promise
-
-					promiseGroup.then(
-						function (res){
-							ngToast.success('Grupo movimentado com sucesso!')
-							$scope.refresh();
-						},
-						function (err){
-							ngToast.danger('Grupo não pôde ser movimentado!')
-							$scope.refresh();
-						}
-					);
-
-				}).then(function (res) {
-
-				});
-			};
+			$scope.selectedTabTwo = '';
+			$scope.selectedTabThree = '';
+			$scope.selectedTabFour = '';
 
 			$scope.refresh = function() {
+
 				Groups.findGroupedGroups(function(res) {
 					$scope.groups = res.data;
 					$scope.groupsCopy = angular.copy($scope.groups);
 				});
+
+				//simulate
+				$scope.groupsTwo = [
+					{ name: "Regional 1", id: "0000-hhhh-6666-7777-3333" },
+					{ name: "Regional 2", id: "0000-hhhh-6666-7777-3334" },
+					{ name: "Regional 3", id: "0000-hhhh-6666-7777-3335" },
+					{ name: "Regional 4", id: "0000-hhhh-6666-7777-3336" }
+				];
+
+				$scope.groupsThree = [
+					{ name: "Taguatinga", id: "0000-hhhh-6666-7777-3333" },
+					{ name: "Riacho Fundo", id: "0000-hhhh-6666-7777-3334" },
+					{ name: "Santa Maria", id: "0000-hhhh-6666-7777-3335" },
+					{ name: "Plano Piloto", id: "0000-hhhh-6666-7777-3336" }
+				];
+
+				$scope.groupsFour = [];
+
+				for (var i = 0; i < 100; i++){
+					$scope.groupsThree.push( { name: "Cidade "+i, id: "0000-hhhh-6666-7777-"+i } );
+				}
+
+				for (var i = 0; i < 1000; i++){
+					$scope.groupsFour.push( { name: "Cantinho Feliz "+i, id: "0000-hhhh-6666-7777-4444"+i } );
+				}
+
+				$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+				$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+				$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+			};
+
+			$scope.filterGroups = function(group) {
+				if(group === "two"){
+					$scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
+						$: $scope.searchGroupTwo
+					});
+				}
+				if(group === "three"){
+					$scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
+						$: $scope.searchGroupThree
+					});
+				}
+				if(group === "four"){
+					$scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
+						$: $scope.searchGroupFour
+					});
+				}
+			};
+
+			$scope.editGroup = function (group){
+				console.log(group);
+			};
+
+			$scope.selectGroup = function (number, group){
+				if (number == 2 ){ $scope.selectedTabTwo = group.id; }
+				if (number == 3 ){ $scope.selectedTabThree = group.id; }
+				if (number == 4 ){ $scope.selectedTabFour = group.id; }
 			};
 
 			Platform.whenReady(function() {
 				$scope.refresh();
 			});
-
-			$scope.isGroupPartOfUserGroups = function (group){
-				var groupedGroupsOfUser = $scope.getGroupsOfLoggedUser();
-				var belongsTo = false;
-				groupedGroupsOfUser.forEach(function(v, k){
-					//if(v.id == group.id) { belongsTo = true; }
-					v.children.forEach(function(v2, k2){
-						if(v2.id == group.id) { belongsTo = true; }
-						v2.children.forEach(function(v3, k3){
-							if(v3.id == group.id) { belongsTo = true; }
-							v3.children.forEach(function(v4, k4){
-								if(v4.id == group.id) { belongsTo = true; }
-							});
-						});
-					});
-				});
-				return belongsTo;
-			};
-
-			$scope.getGroupsOfLoggedUser = function (){
-				var groupedGroupsOfUser = [];
-				var userGroupId = Identity.getCurrentUser().group.id;
-				$scope.groups.forEach(function(v, k){
-					if (v.id == userGroupId) { groupedGroupsOfUser = [v]; }
-					v.children.forEach(function(v2, k2){
-						if (v2.id == userGroupId) { groupedGroupsOfUser = [v2]; }
-						v2.children.forEach(function(v3, k3){
-							if (v3.id == userGroupId) { groupedGroupsOfUser = [v3]; }
-							v3.children.forEach(function(v4, k4){
-								if (v4.id == userGroupId) { groupedGroupsOfUser = [v4]; }
-							});
-						});
-					});
-				});
-				return groupedGroupsOfUser;
-			};
-			
-			$scope.returnGroupOfUser = function (){
-				return Identity.getCurrentUser().group.id;
-			}
 
 		});
 })();

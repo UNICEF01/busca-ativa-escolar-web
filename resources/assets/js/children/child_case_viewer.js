@@ -285,10 +285,11 @@
 
         $scope.canCancelCase = function (){
 
+            //Se o usuário pertence a um tenant
             if ( $scope.identity.getCurrentUser().tenant_id ){
                 if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
             }
-
+            //Se o caso atual tem alguém responsável
             if ($scope.openedCase.currentStep.assigned_user) {
 
                 if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') && !$scope.identity.getCurrentUser().tenant_id) {
@@ -299,11 +300,10 @@
                     $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
                     $scope.identity.getCurrentUser().tenant_id ) { return true; }
             }
-
+            //Se o caso não tem alguém responsável
             if (!$scope.openedCase.currentStep.assigned_user) {
                 return true;
             }
-
 
         };
 
