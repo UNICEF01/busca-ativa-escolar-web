@@ -581,6 +581,7 @@
         };
 
         $scope.canAssignUser = function () {
+            if ($scope.child.currentCase.case_status != "in_progress") return false;
             if ($scope.showMessageNeedTransfer()) return false;
             if ($scope.scopeOfCase() == "state") return false;
             if ($scope.identity.can('cases.assign')) return true;
