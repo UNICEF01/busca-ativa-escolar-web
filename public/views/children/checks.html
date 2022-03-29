@@ -40,17 +40,31 @@
                         <b>{{child.created_at | dateFormatBr}}</b>
                     </td>
                     <td width="25%" style="vertical-align: middle;">
-                        <a ui-sref="child_viewer({child_id: child.child.id})">
+
+                        <a ui-sref="child_viewer({child_id: child.child.id})" ng-show="child.status === 'requested'">
                             <strong style="font-size: 15px;">
                                 <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
                                    ng-show="child.child.gender"></i><span
                                     uib-tooltip="Abertura do caso: {{child.child.created_at | dateFormatBr}}">
-								{{child.child.name}}</span>
+                                {{child.child.name}}</span>
                             </strong><br>
                             <small uib-tooltip="Pais ou responsáveis">
                                 {{Decorators.Child.parents(child.child)}}
                             </small>
                         </a>
+
+                        <div ng-show="child.status !== 'requested'">
+                            <strong style="font-size: 15px;">
+                                <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
+                                   ng-show="child.child.gender"></i><span
+                                    uib-tooltip="Abertura do caso: {{child.child.created_at | dateFormatBr}}">
+                                    {{child.child.name}}</span>
+                            </strong><br>
+                            <small uib-tooltip="Pais ou responsáveis">
+                                {{Decorators.Child.parents(child.child)}}
+                            </small>
+                        </div>
+
                     </td>
                     <td width="20%">
                         {{child.requester.name}}
