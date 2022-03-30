@@ -1,7 +1,7 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.controller('ManageGroupsCtrl', function ($scope, $filter, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
+		.controller('ManageGroupsCtrl', function ($scope, $window, $filter, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
 
 			$scope.currentUser = Identity.getCurrentUser();
 
@@ -33,15 +33,28 @@
 			};
 
 			$scope.editGroupTwo = function (group){
-				$scope.groupForEditionTwo = group;
+				$scope.groupForEditionTwo = angular.copy(group);
+				var getelementToFocus = $window.document.getElementById("group_for_edition_two");
+				getelementToFocus.focus();
 			};
 
 			$scope.updateGroupTwo = function (){
-				if($scope.groupForEditionTwo.name){
-					if($scope.groupForEditionTwo.name.length >= 3){
-						$scope.updateGroup($scope.groupForEditionTwo);
+
+				if($scope.groupForEditionTwo.name) {
+					if ($scope.groupForEditionTwo.name.length >= 3) {
+
+						var type_register = 'criação';
+						if($scope.groupForEditionTwo.id) { type_register = 'edição'; }
+
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionTwo.name + '?')) {
+							$scope.updateGroup($scope.groupForEditionTwo);
+						}else{
+							$scope.refresh();
+						}
+
 					}
 				}
+
 			};
 
 			$scope.onSelectGroup = function (number, group){
