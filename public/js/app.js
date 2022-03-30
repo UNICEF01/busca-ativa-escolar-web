@@ -799,8 +799,6 @@
 
         $scope.completeStep = function (step) {
 
-            //console.log("[child_viewer.cases] Attempting to complete step: ", step);
-
             var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
             var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
 
@@ -859,35 +857,36 @@
         $scope.canTransferCase = function (){
             if (!$scope.identity.getCurrentUser().tenant_id) { return false; }
             if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
-            if ($scope.openedCase.currentStep.assigned_user){
-                if ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual')  { return false; }
+            if ($scope.openedCase){
+                if($scope.openedCase.case_status !== 'in_progress') { return false; }
+                if ($scope.openedCase.currentStep.assigned_user){
+                    if ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual')  { return false; }
+                }
+                if ($scope.identity.can('cases.transfer') && $scope.openedCase.currentStep.slug !== 'alerta') { return true; }
             }
-            if ($scope.identity.can('cases.transfer') &&
-                $scope.openedCase.case_status === 'in_progress' &&
-                $scope.openedCase.currentStep.slug !== 'alerta') { return true; }
             return false;
         };
 
         $scope.canCancelCase = function (){
-
-            //Se o usuário pertence a um tenant
             if ( $scope.identity.getCurrentUser().tenant_id ){
                 if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
             }
-            //Se o caso atual tem alguém responsável
-            if ($scope.openedCase.currentStep.assigned_user) {
+            if ($scope.openedCase) {
+                if($scope.openedCase.case_status !== 'in_progress') { return false; }
 
-                if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') && !$scope.identity.getCurrentUser().tenant_id) {
+                if (!$scope.openedCase.currentStep.assigned_user) {
                     return true;
-                }
+                }else{
+                    if ( ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' ||
+                            $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') &&
+                        !$scope.identity.getCurrentUser().tenant_id) {
+                        return true;
+                    }
 
-                if ( $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
-                    $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
-                    $scope.identity.getCurrentUser().tenant_id ) { return true; }
-            }
-            //Se o caso não tem alguém responsável
-            if (!$scope.openedCase.currentStep.assigned_user) {
-                return true;
+                    if ( $scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
+                        $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
+                        $scope.identity.getCurrentUser().tenant_id ) { return true; }
+                }
             }
 
         };
@@ -1166,7 +1165,9 @@
         };
 
         $scope.canAssignUser = function () {
-            if ($scope.child.currentCase.case_status != "in_progress") return false;
+            if($scope.child.currentCase){
+                if ($scope.child.currentCase.case_status != "in_progress") return false;
+            }
             if ($scope.showMessageNeedTransfer()) return false;
             if ($scope.scopeOfCase() == "state") return false;
             if ($scope.identity.can('cases.assign')) return true;
@@ -1509,11 +1510,15 @@
 		};
 
 		$scope.canAssignGroup = function (){
-			if($scope.child.currentCase.case_status != "in_progress") return false;
-			if(!$scope.isCaseOfTenantOfUserLogged()){ return false; }
-			if ( $scope.child.currentCase.currentStep.assigned_user.type === "coordenador_estadual" || $scope.child.currentCase.currentStep.assigned_user.type === "supervisor_estadual") {
-				return false;
+			if($scope.child.currentCase){
+				if($scope.child.currentCase.case_status != "in_progress"){ return false; }
+				if ($scope.child.currentCase.currentStep.assigned_user){
+					if ( $scope.child.currentCase.currentStep.assigned_user.type === "coordenador_estadual" || $scope.child.currentCase.currentStep.assigned_user.type === "supervisor_estadual") {
+						return false;
+					}
+				}
 			}
+			if(!$scope.isCaseOfTenantOfUserLogged()){ return false; }
 			return true;
 		};
 
