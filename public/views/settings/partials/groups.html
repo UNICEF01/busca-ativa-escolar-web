@@ -13,96 +13,146 @@
             Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.
         </p>
 
-        <style>
-            .selectgroup {
-                height: 300px;
-                overflow-y: scroll;
-                overflow-x: hidden;
-                margin-left: 20px;
-                scrollbar-width: thin;
-                scrollbar-color: #666666 transparent;
-            }
-            /* chrome */
-            .selectgroup::-webkit-scrollbar {
-                width: 8px;
-            }
-            .selectgroup::-webkit-scrollbar-track {
-                background: #ffffff;
-            }
-            .selectgroup::-webkit-scrollbar-thumb {
-                background-color: #666666;
-                border-radius: 20px;
-                border: 3px solid #666666;
-            }
+        <table class="table sign-up-groups">
+            <thead>
+            <tr>
+                <th width="90%">Nome</th>
+                <th width="10%">Opções</th>
+            </tr>
+            </thead>
 
-        </style>
+            <tbody>
 
-        <div class="row">
+            <tr ng-repeat="(i, group) in getGroups() track by i">
 
-            <div class="col-md-4">
+                <td>
 
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" type="text" class="form-control" placeholder="Filtrar">
-                </div>
-                <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsTwo track by group.name"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabTwo}"
-                       ng-click="selectGroup(2, group)">
-                        {{group.name}}
-                        <span class="badge label label-primary" ng-click="editGroup(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="editGroup(group)"><i class="fa fa-close"></i></span>
-                    </a>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input type="text" class="form-control" placeholder="Novo">
-                </div>
+                    <input
+                            id="id_{{i}}"
+                            type="text"
+                            ng-model="group.name"
+                            name="group_{{i}}"
+                            class="form-control"
+                            ng-enter="updateGroup(group.name, group.id)"
+                            ng-blur="updateGroup(group.name, group.id)"
+                            ng-disabled="true"/>
 
-            </div>
+                    <div ng-repeat="(j, group2) in group.children track by j" style="margin-left: 30px;">
 
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" type="text" class="form-control" placeholder="Filtrar">
-                </div>
-                <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsThree track by group.name"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabThree}"
-                       ng-click="selectGroup(3, group)">
-                        {{group.name}}</a>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input type="text" class="form-control" placeholder="Novo">
-                </div>
-            </div>
+                        <div class="row">
+                            <div class="col-md-9">
+                                <input
+                                        id="id_{{j}}"
+                                        type="text"
+                                        ng-model="group2.name"
+                                        class="form-control"
+                                        ng-enter="updateGroup(group2.name, group2.id)"
+                                        ng-blur="updateGroup(group2.name, group2.id)"/>
+                            </div>
+                            <div class="col-md-3" ng-show="$parent.isGroupPartOfUserGroups(group2)">
+                                <a ng-if="group2.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group2);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+                                <a class="btn btn-raised btn-info" ng-click="moveGroup(group2);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
+                            </div>
+                        </div>
 
-            <div class="col-md-4">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" type="text" class="form-control" placeholder="Filtrar">
-                </div>
-                <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsFour track by group.name"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabFour}"
-                       ng-click="selectGroup(4, group)">
-                        {{group.name}}</a>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input type="text" class="form-control" placeholder="Novo">
-                </div>
-            </div>
+                        <div ng-repeat="(k, group3) in group2.children track by k" style="margin-left: 30px;">
 
-        </div>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input
+                                            id="id_{{k}}"
+                                            type="text"
+                                            ng-model="group3.name"
+                                            class="form-control"
+                                            ng-enter="updateGroup(group3.name, group3.id)"
+                                            ng-blur="updateGroup(group3.name, group3.id)"/>
+                                </div>
+                                <div class="col-md-3"ng-show="$parent.isGroupPartOfUserGroups(group3)">
+                                    <a ng-if="group3.children.length == 0" class="btn btn-raised btn-danger" ng-click="removeGroup(group3);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+                                    <a class="btn btn-raised btn-info" ng-click="moveGroup(group3);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
+                                </div>
+                            </div>
 
+                            <div ng-repeat="(l, group4) in group3.children track by l" style="margin-left: 30px;">
+
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input
+                                                id="id_{{l}}"
+                                                type="text"
+                                                ng-model="group4.name"
+                                                name="group4_{{l}}"
+                                                class="form-control"
+                                                ng-enter="updateGroup(group4.name, group4.id)"
+                                                ng-blur="updateGroup(group4.name, group4.id)"/>
+                                    </div>
+                                    <div class="col-md-3" ng-show="$parent.isGroupPartOfUserGroups(group4)">
+                                        <a class="btn btn-raised btn-danger" ng-click="removeGroup(group4);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+                                        <a class="btn btn-raised btn-info" ng-click="moveGroup(group4);" uib-tooltip="Mover grupo"><i class="fa fa-arrows"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <input
+                                    type="text"
+                                    ng-model="$parent.newSubgroupGroupNames[i][j][k+1]"
+                                    ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
+                                    class="form-control"
+                                    placeholder="Novo subgrupo para {{group3.name}}"
+                                    ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j][k+1],group3.id)"
+                                    style="margin-left: 30px;"
+                                    ng-show="$parent.isGroupPartOfUserGroups(group3)"/>
+
+                        </div>
+
+                        <input
+                                type="text"
+                                ng-model="$parent.newSubgroupGroupNames[i][j+1][0]"
+                                ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
+                                class="form-control"
+                                placeholder="Novo subgrupo para {{group2.name}}"
+                                ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][j+1][0],group2.id)"
+                                style="margin-left: 30px;"
+                                ng-show="$parent.isGroupPartOfUserGroups(group2)"/>
+
+                    </div>
+
+                    <input
+                            type="text"
+                            ng-model="$parent.newSubgroupGroupNames[i][0][0]"
+                            ng-blur="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
+                            class="form-control"
+                            placeholder="Novo subgrupo para {{group.name}}"
+                            ng-enter="addSubGroup($parent.newSubgroupGroupNames[i][0][0],group.id)"
+                            style="margin-left: 30px;"
+                            ng-show="$parent.returnGroupOfUser() === group.id"/>
+
+                </td>
+
+                <td>
+                    <span class="btn btn-raised btn-default" ng-show="!group.is_deleting && group.is_primary" uib-tooltip="Esse grupo é responsável pelas atividades de (re)matrícula e observação, e não pode ser apagado ou editado.">Obrigatório</span>
+                    <a class="btn btn-raised btn-danger" ng-show="!group.is_deleting && !group.is_primary && group.children.length == 0" ng-click="removeGroup(group);" uib-tooltip="Remover grupo"><i class="fa fa-times"></i></a>
+                </td>
+
+            </tr>
+
+            <!--tr>
+                <td>
+                    <input
+                            type="text"
+                            ng-model="$parent.newPrincipalGroupName"
+                            ng-blur="addPrincipalGroup()"
+                            class="form-control"
+                            placeholder="Novo grupo principal..."
+                            ng-enter="addPrincipalGroup()"/>
+                </td>
+                <td><a class="btn btn-raised btn-success" ng-click="addPrincipalGroup()" uib-tooltip="Adicionar grupo">Salvar</a></td>
+            </tr-->
+
+            </tbody>
+
+        </table>
 
     </form>
 
