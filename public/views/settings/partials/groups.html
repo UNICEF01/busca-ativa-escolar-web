@@ -58,13 +58,20 @@
                        ng-class="{'active': group.id == selectedTabTwo}"
                        ng-click="onSelectGroup(2, group)">
                         {{group.name}}
-                        <span class="badge label label-primary" ng-click="editGroup(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="editGroup(group)"><i class="fa fa-close"></i></span>
+                        <span class="badge label label-primary" ng-click="editGroupTwo(group)"><i class="fa fa-edit"></i></span>
+                        <span class="badge label label-danger" ng-click="removeGroupTwo(group)"><i class="fa fa-close"></i></span>
                     </a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input ng-disabled="mirrorGroupsTwo.length==0 && (!searchGroupTwo || searchGroupTwo.length<1)" type="text" class="form-control" placeholder="Novo">
+                    <input
+                            ng-disabled="mirrorGroupsTwo.length==0 && (!searchGroupTwo || searchGroupTwo.length<1)"
+                            type="text"
+                            class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionTwo.name"
+                            ng-enter="updateGroupTwo()"
+                            ng-blur="updateGroupTwo()">
                 </div>
 
             </div>
