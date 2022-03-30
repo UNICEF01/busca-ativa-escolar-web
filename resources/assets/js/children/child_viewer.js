@@ -45,6 +45,9 @@
 		$scope.canAssignGroup = function (){
 			if($scope.child.currentCase.case_status != "in_progress") return false;
 			if(!$scope.isCaseOfTenantOfUserLogged()){ return false; }
+			if ( $scope.child.currentCase.currentStep.assigned_user.type === "coordenador_estadual" || $scope.child.currentCase.currentStep.assigned_user.type === "supervisor_estadual") {
+				return false;
+			}
 			return true;
 		};
 
