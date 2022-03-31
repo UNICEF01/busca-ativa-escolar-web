@@ -31,10 +31,20 @@
 
 			Modals.show(
 				Modals.GroupPicker(
-					'Atribuir grupo',
-					'Indique grupo ...:',
+					'Atribuir grupo ao caso',
+					'O último grupo selecionado será atrinuído ao caso:',
 					true)
 			).then(function (selectedGroup) {
+
+				var currentCase = {
+					id: $scope.child.currentCase.id,
+					group_id: selectedGroup.id,
+					detach_user: true
+				};
+
+				return Cases.update(currentCase, function (res) {
+					$state.go('child_browser');
+				});
 
 			}).then(function (res) {
 

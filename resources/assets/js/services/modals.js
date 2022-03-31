@@ -281,7 +281,7 @@
           var params = {
             templateUrl: '/views/modals/group_picker.html',
             controller: 'GroupPickerModalCtrl',
-            size: 'md',
+            size: 'lg',
             resolve: {
               title: function () {
                 return title;
