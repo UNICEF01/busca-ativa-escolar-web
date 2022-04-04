@@ -13,34 +13,57 @@
 
 			$scope.selectedGroup = null;
 
+			$scope.groupsOne = [];
 			$scope.groupsTwo = [];
 			$scope.groupsThree = [];
 			$scope.groupsFour = [];
 
+			$scope.mirrorGroupsOne = [];
 			$scope.mirrorGroupsTwo = [];
 			$scope.mirrorGroupsThree = [];
 			$scope.mirrorGroupsFour =  [];
 
+			$scope.selectedTabOne = null;
 			$scope.selectedTabTwo = null;
 			$scope.selectedTabThree = null;
 			$scope.selectedTabFour = null;
 
 			$scope.refresh = function() {
-				Groups.findByParent( { id: $scope.currentUser.tenant.primary_group_id }, function(res) {
-					$scope.groupsTwo = res.data;
-					$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
 
-					$scope.groupsThree = [];
-					$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+				$scope.groupsOne = [
+					{
+						id: $scope.currentUser.tenant.primary_group_id,
+						name: $scope.currentUser.tenant.primary_group_name
+					}
+				];
+				$scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
 
-					$scope.groupsFour = [];
-					$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+				$scope.groupsTwo = [];
+				$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
 
-					$scope.groupForEditionTwo = { id: null, name: null, parent_id: $scope.currentUser.tenant.primary_group_id };
-				});
+				$scope.groupsThree = [];
+				$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+
+				$scope.groupsFour = [];
+				$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+
+				$scope.groupForEditionTwo = { id: null, name: null, parent_id: $scope.currentUser.tenant.primary_group_id };
+
 			};
 
 			$scope.onSelectGroup = function (number, group){
+
+				if (number == 1 ){
+					$scope.selectedTabOne = group.id;
+					Groups.findByParent( { id: group.id }, function(res) {
+						$scope.groupsTwo = res.data;
+						$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+						$scope.groupsThree = [];
+						$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+						$scope.groupsFour = [];
+						$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+					});
+				}
 
 				if (number == 2 ){
 					$scope.selectedTabTwo = group.id;
