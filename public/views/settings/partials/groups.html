@@ -49,23 +49,23 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-disabled="mirrorGroupsTwo.length==0 && (!searchGroupTwo || searchGroupTwo.length<1)" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                    <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
                     <a href="#!"
                        ng-repeat="group in mirrorGroupsTwo track by group.name"
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabTwo}"
-                       ng-click="onSelectGroup(2, group)">
+                       ng-click="onSelectGroup(2, group.id)">
                         {{group.name}}
                         <span class="badge label label-primary" ng-click="editGroupTwo(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="removeGroupTwo(group)"><i class="fa fa-close"></i></span>
+                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
                     </a>
                 </div>
+
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
                     <input
-                            ng-disabled="mirrorGroupsTwo.length==0 && (!searchGroupTwo || searchGroupTwo.length<1)"
                             type="text"
                             class="form-control"
                             placeholder="Novo"
@@ -79,38 +79,57 @@
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="mirrorGroupsThree.length==0 && (!searchGroupThree || searchGroupThree.length<1)" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                    <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
                     <a href="#!"
                        ng-repeat="group in mirrorGroupsThree track by group.name"
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabThree}"
-                       ng-click="onSelectGroup(3, group)">
-                        {{group.name}}</a>
+                       ng-click="onSelectGroup(3, group.id)">
+                        {{group.name}}
+                        <span class="badge label label-primary" ng-click="editGroupThree(group)"><i class="fa fa-edit"></i></span>
+                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span></a>
                 </div>
+
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input ng-disabled="mirrorGroupsThree.length==0  && (!searchGroupThree || searchGroupThree.length<1)" type="text" class="form-control" placeholder="Novo">
+                    <input
+                            ng-disabled="!selectedTabTwo"
+                            type="text"
+                            class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionThree.name"
+                            ng-blur="updateGroupThree()"
+                            id="group_for_edition_three">
                 </div>
             </div>
 
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                    <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="mirrorGroupsFour.length==0 && (!searchGroupFour || searchGroupFour.length<1)" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                    <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
                     <a href="#!"
                        ng-repeat="group in mirrorGroupsFour track by group.name"
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabFour}"
-                       ng-click="onSelectGroup(4, group)">
-                        {{group.name}}</a>
+                       ng-click="onSelectGroup(4, group.id)">
+                        {{group.name}}
+                        <span class="badge label label-primary" ng-click="editGroupFour(group)"><i class="fa fa-edit"></i></span>
+                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span></a></a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input ng-disabled="mirrorGroupsFour.length==0 && (!searchGroupFour || searchGroupFour.length<1)" type="text" class="form-control" placeholder="Novo">
+                    <input
+                            ng-disabled="!selectedTabThree"
+                            type="text"
+                            class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionFour.name"
+                            ng-blur="updateGroupFour()"
+                            id="group_for_edition_four">
                 </div>
             </div>
 

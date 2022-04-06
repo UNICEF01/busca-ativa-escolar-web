@@ -17,7 +17,14 @@
 			$scope.selectedTabThree = null;
 			$scope.selectedTabFour = null;
 
+			$scope.groupForEditionTwo = { id: null, name: null, parent_id: null };
+			$scope.groupForEditionThree = { id: null, name: null, parent_id: null };
+			$scope.groupForEditionFour = { id: null, name: null, parent_id: null };
+
 			$scope.refresh = function() {
+
+				$scope.reloadAllData();
+
 				Groups.findByParent( { id: $scope.currentUser.tenant.primary_group_id }, function(res) {
 					$scope.groupsTwo = res.data;
 					$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
@@ -32,10 +39,11 @@
 				});
 			};
 
+
 			$scope.editGroupTwo = function (group){
 				$scope.groupForEditionTwo = angular.copy(group);
-				var getelementToFocus = $window.document.getElementById("group_for_edition_two");
-				getelementToFocus.focus();
+				var getElementToFocus = $window.document.getElementById("group_for_edition_two");
+				getElementToFocus.focus();
 			};
 
 			$scope.updateGroupTwo = function (){
@@ -47,7 +55,7 @@
 						if($scope.groupForEditionTwo.id) { type_register = 'edição'; }
 
 						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionTwo.name + '?')) {
-							$scope.updateGroup($scope.groupForEditionTwo);
+							$scope.executeUpdateGroupTwo($scope.groupForEditionTwo);
 						}else{
 							$scope.refresh();
 						}
@@ -57,28 +65,143 @@
 
 			};
 
-			$scope.onSelectGroup = function (number, group){
+			$scope.executeUpdateGroupTwo = function (group){
+
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
+					var promiseGroup = Groups.update(group).$promise
+				}
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.refresh();
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.refresh();
+				});
+
+			};
+
+
+			$scope.editGroupThree = function (group){
+				$scope.groupForEditionThree = angular.copy(group);
+				var getElementToFocus = $window.document.getElementById("group_for_edition_three");
+				getElementToFocus.focus();
+			};
+
+			$scope.updateGroupThree = function (){
+
+				if($scope.groupForEditionThree.name) {
+					if ($scope.groupForEditionThree.name.length >= 3) {
+
+						var type_register = 'criação';
+						if($scope.groupForEditionThree.id) { type_register = 'edição'; }
+
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionThree.name + '?')) {
+							$scope.executeUpdateGroupThree($scope.groupForEditionThree);
+						}else{
+							$scope.onSelectGroup(2, group.parent_id);
+						}
+
+					}
+				}
+
+			};
+
+			$scope.executeUpdateGroupThree = function (group){
+
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
+					var promiseGroup = Groups.update(group).$promise
+				}
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.onSelectGroup(2, group.parent_id);
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.onSelectGroup(2, group.parent_id);
+				});
+
+			};
+
+
+			$scope.editGroupFour = function (group){
+				$scope.groupForEditionFour = angular.copy(group);
+				var getElementToFocus = $window.document.getElementById("group_for_edition_four");
+				getElementToFocus.focus();
+			};
+
+			$scope.updateGroupFour = function (){
+
+				if($scope.groupForEditionFour.name) {
+					if ($scope.groupForEditionFour.name.length >= 3) {
+
+						var type_register = 'criação';
+						if($scope.groupForEditionFour.id) { type_register = 'edição'; }
+
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionFour.name + '?')) {
+							$scope.executeUpdateGroupFour($scope.groupForEditionFour);
+						}else{
+							$scope.onSelectGroup(3, group.parent_id);
+						}
+
+					}
+				}
+
+			};
+
+			$scope.executeUpdateGroupFour = function (group){
+
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
+					var promiseGroup = Groups.update(group).$promise
+				}
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.onSelectGroup(3, group.parent_id);
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.onSelectGroup(3, group.parent_id);
+				});
+
+			};
+
+
+			$scope.removeGroup = function (group){
+				alert(group.name);
+			};
+
+			$scope.onSelectGroup = function (number, id){
 
 				if (number == 2 ){
-					$scope.selectedTabTwo = group.id;
-					Groups.findByParent( { id: group.id }, function(res) {
+					$scope.selectedTabTwo = id;
+					Groups.findByParent( { id: id }, function(res) {
 						$scope.groupsThree = res.data;
 						$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
 						$scope.groupsFour = [];
 						$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+						$scope.groupForEditionThree = { id: null, name: null, parent_id: id };
 					});
+
+					$scope.selectedTabThree = null;
+					$scope.selectedTabFour = null;
 				}
 
 				if (number == 3 ){
-					$scope.selectedTabThree = group.id;
-					Groups.findByParent( { id: group.id }, function(res) {
+					$scope.selectedTabThree = id;
+					Groups.findByParent( { id: id }, function(res) {
 						$scope.groupsFour = res.data;
 						$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+						$scope.groupForEditionFour = { id: null, name: null, parent_id: id };
 					});
+
+					$scope.selectedTabFour = null;
 				}
 
 				if (number == 4 ){
-					$scope.selectedTabFour = group.id;
+					$scope.selectedTabFour = id;
 				}
 
 			};
@@ -101,25 +224,22 @@
 				}
 			};
 
-			$scope.updateGroup = function (group){
+			$scope.reloadAllData = function (){
+				$scope.groupsTwo = [];
+				$scope.groupsThree = [];
+				$scope.groupsFour = [];
 
-				if(group.id == null){
-					var promiseGroup = Groups.create(group).$promise
-				}else{
-					var promiseGroup = Groups.update(group).$promise
-				}
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupos alterados com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
-					$scope.refresh();
-				});
+				$scope.mirrorGroupsTwo = [];
+				$scope.mirrorGroupsThree = [];
+				$scope.mirrorGroupsFour =  [];
 
-			};
+				$scope.selectedTabTwo = null;
+				$scope.selectedTabThree = null;
+				$scope.selectedTabFour = null;
 
-			$scope.removeGroupTwo = function (group){
-				alert(group.name);
+				$scope.groupForEditionTwo = { id: null, name: null, parent_id: null };
+				$scope.groupForEditionThree = { id: null, name: null, parent_id: null };
+				$scope.groupForEditionFour = { id: null, name: null, parent_id: null };
 			};
 
 			Platform.whenReady(function() {
