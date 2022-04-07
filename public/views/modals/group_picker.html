@@ -39,7 +39,7 @@
 				</div>
 				<div class="selectgroup">
 					<a href="#!"
-					   ng-repeat="group in mirrorGroupsOne track by group.name"
+					   ng-repeat="group in mirrorGroupsOne track by group.id"
 					   class="list-group-item list-group-item-action"
 					   ng-class="{'active': group.id == selectedTabOne}"
 					   ng-click="onSelectGroup(1, group)">
@@ -57,7 +57,7 @@
 				</div>
 				<div class="selectgroup">
 					<a href="#!"
-					   ng-repeat="group in mirrorGroupsTwo track by group.name"
+					   ng-repeat="group in mirrorGroupsTwo track by group.id"
 					   class="list-group-item list-group-item-action"
 					   ng-class="{'active': group.id == selectedTabTwo}"
 					   ng-click="onSelectGroup(2, group)">
@@ -74,7 +74,7 @@
 				</div>
 				<div class="selectgroup">
 					<a href="#!"
-					   ng-repeat="group in mirrorGroupsThree track by group.name"
+					   ng-repeat="group in mirrorGroupsThree track by group.id"
 					   class="list-group-item list-group-item-action"
 					   ng-class="{'active': group.id == selectedTabThree}"
 					   ng-click="onSelectGroup(3, group)">
@@ -89,7 +89,7 @@
 				</div>
 				<div class="selectgroup">
 					<a href="#!"
-					   ng-repeat="group in mirrorGroupsFour track by group.name"
+					   ng-repeat="group in mirrorGroupsFour track by group.id"
 					   class="list-group-item list-group-item-action"
 					   ng-class="{'active': group.id == selectedTabFour}"
 					   ng-click="onSelectGroup(4, group)">
