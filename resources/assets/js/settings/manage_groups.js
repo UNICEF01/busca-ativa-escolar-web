@@ -1,54 +1,77 @@
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
-		.controller('ManageGroupsCtrl', function ($scope, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
+		.controller('ManageGroupsCtrl', function ($scope, $window, $filter, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
 
-			$scope.groups = [];
-			$scope.newPrincipalGroupName = '';
-			$scope.newSubgroupGroupNames = [];
+			$scope.currentUser = Identity.getCurrentUser();
 
-			$scope.getGroups = function() {
-				if(!$scope.groups) return [];
-				return $scope.groups;
-			};
+			$scope.groupsTwo = [];
+			$scope.groupsThree = [];
+			$scope.groupsFour = [];
 
-			$scope.getGroupsToMove = function(groupFromMove) {
-				if(!$scope.groups) return [];
-				var groupsToMove = [];
+			$scope.mirrorGroupsTwo = [];
+			$scope.mirrorGroupsThree = [];
+			$scope.mirrorGroupsFour =  [];
 
-				$scope.groups.forEach(function(v, k){
-					groupsToMove.push({id: v.id, name: v.name});
-					v.children.forEach(function(v2, k2){
-						groupsToMove.push({id: v2.id, name: v2.name, margin: 10});
-						v2.children.forEach(function(v3, k3){
-							groupsToMove.push({id: v3.id, name: v3.name, margin: 20});
-							v3.children.forEach(function(v4, k4){
-								groupsToMove.push({id: v4.id, name: v4.name, margin: 30});
-							});
-						});
-					});
+			$scope.selectedTabTwo = null;
+			$scope.selectedTabThree = null;
+			$scope.selectedTabFour = null;
+
+			$scope.groupForEditionTwo = { id: null, name: null, parent_id: null };
+			$scope.groupForEditionThree = { id: null, name: null, parent_id: null };
+			$scope.groupForEditionFour = { id: null, name: null, parent_id: null };
+
+			$scope.refresh = function() {
+
+				$scope.reloadAllData();
+
+				Groups.findByParent( { id: $scope.currentUser.tenant.primary_group_id }, function(res) {
+					$scope.groupsTwo = res.data;
+					$scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+
+					$scope.groupsThree = [];
+					$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+
+					$scope.groupsFour = [];
+					$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+
+					$scope.groupForEditionTwo = { id: null, name: null, parent_id: $scope.currentUser.tenant.primary_group_id };
 				});
-
-				return groupsToMove;
 			};
 
-			$scope.addPrincipalGroup = function (){
 
-				if(!$scope.newPrincipalGroupName) return;
-				if($scope.newPrincipalGroupName.length < 3) return;
+			$scope.editGroupTwo = function (group){
+				$scope.groupForEditionTwo = angular.copy(group);
+				var getElementToFocus = $window.document.getElementById("group_for_edition_two");
+				getElementToFocus.focus();
+			};
 
-				var group = {
-					name: $scope.newPrincipalGroupName,
-					is_primary: false,
-					is_creating: true
-				};
+			$scope.updateGroupTwo = function (){
 
-				$scope.newPrincipalGroupName = '';
+				if($scope.groupForEditionTwo.name) {
+					if ($scope.groupForEditionTwo.name.length >= 3) {
 
-				var promiseGroup = Groups.create(
-					{name: group.name}
-				).$promise
+						var type_register = 'criação';
+						if($scope.groupForEditionTwo.id) { type_register = 'edição'; }
 
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionTwo.name + '?')) {
+							$scope.executeUpdateGroupTwo($scope.groupForEditionTwo);
+						}else{
+							$scope.refresh();
+						}
+
+					}
+				}
+
+			};
+
+			$scope.executeUpdateGroupTwo = function (group){
+
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
+					var promiseGroup = Groups.update(group).$promise
+				}
 				promiseGroup.then(function(res) {
 					ngToast.success('Grupos alterados com sucesso!')
 					$scope.refresh();
@@ -56,164 +79,172 @@
 					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
 					$scope.refresh();
 				});
-			};
-
-			$scope.addSubGroup = function (newName, parent_id){
-
-				if(!newName) return;
-				if(newName.length < 3) return;
-
-				var group = {
-					name: newName,
-					parent_id: parent_id
-				};
-
-				$scope.newSubgroupGroupNames = [];
-
-				var promiseGroup = Groups.create(group).$promise
-
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupo criado com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao salvar o grupo!')
-					$scope.refresh();
-				});
 
 			};
 
-			$scope.updateGroup = function (newName, id){
-				if(!newName) return;
-				if(newName.length < 3) return;
-				var group = {
-					name: newName,
-					id: id
-				};
-				if(!$scope.isGroupPartOfUserGroups(group)) { return; }
-				var promiseGroup = Groups.update(group).$promise
-				promiseGroup.then(function(res) {
-					ngToast.success('Grupo editado com sucesso!')
-					$scope.refresh();
-				}, function (err) {
-					ngToast.danger('Ocorreu um erro ao editar o grupo!')
-					$scope.refresh();
-				});
+
+			$scope.editGroupThree = function (group){
+				$scope.groupForEditionThree = angular.copy(group);
+				var getElementToFocus = $window.document.getElementById("group_for_edition_three");
+				getElementToFocus.focus();
 			};
 
-			$scope.removeGroup = function (groupToRemove){
+			$scope.updateGroupThree = function (){
 
-				Modals.show(
-					Modals.GroupPicker(
-						'Remover grupo '+ groupToRemove.name,
-						'Existem X casos, X alertas e X usuários que pertencem a esse grupo ...',
-						$scope.getGroupsToMove(groupToRemove),
-						true)
-				).then(function (selectedGroup) {
-					var obj = {
-						id: groupToRemove.id,
-						replace: selectedGroup.id
+				if($scope.groupForEditionThree.name) {
+					if ($scope.groupForEditionThree.name.length >= 3) {
+
+						var type_register = 'criação';
+						if($scope.groupForEditionThree.id) { type_register = 'edição'; }
+
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionThree.name + '?')) {
+							$scope.executeUpdateGroupThree($scope.groupForEditionThree);
+						}else{
+							$scope.onSelectGroup(2, group.parent_id);
+						}
+
 					}
-					var promissGroup = Groups.replaceAndDelete(obj).$promise
-
-					promissGroup.then(
-						function (res){
-							ngToast.success('Grupo removido com sucesso!')
-							$scope.refresh();
-						},
-						function (err){
-							ngToast.danger('Grupo não pôde ser removido!')
-							$scope.refresh();
-						}
-					)
-
-				}).then(function (res) {
-					console.log(res);
-				});
+				}
 
 			};
 
-			$scope.moveGroup = function (groupFromMove){
-				Modals.show(
-					Modals.GroupPicker(
-						'Movimentar '+ groupFromMove.name,
-						'Indique grupo pai para onde deseja movimentar:',
-						$scope.getGroupsToMove(groupFromMove),
-						true)
-				).then(function (parentGroup) {
+			$scope.executeUpdateGroupThree = function (group){
 
-					var group = {
-						parent_id: parentGroup.id,
-						id: groupFromMove.id
-					};
-
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
 					var promiseGroup = Groups.update(group).$promise
-
-					promiseGroup.then(
-						function (res){
-							ngToast.success('Grupo movimentado com sucesso!')
-							$scope.refresh();
-						},
-						function (err){
-							ngToast.danger('Grupo não pôde ser movimentado!')
-							$scope.refresh();
-						}
-					);
-
-				}).then(function (res) {
-
+				}
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.onSelectGroup(2, group.parent_id);
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.onSelectGroup(2, group.parent_id);
 				});
+
 			};
 
-			$scope.refresh = function() {
-				Groups.findGroupedGroups(function(res) {
-					$scope.groups = res.data;
-					$scope.groupsCopy = angular.copy($scope.groups);
+
+			$scope.editGroupFour = function (group){
+				$scope.groupForEditionFour = angular.copy(group);
+				var getElementToFocus = $window.document.getElementById("group_for_edition_four");
+				getElementToFocus.focus();
+			};
+
+			$scope.updateGroupFour = function (){
+
+				if($scope.groupForEditionFour.name) {
+					if ($scope.groupForEditionFour.name.length >= 3) {
+
+						var type_register = 'criação';
+						if($scope.groupForEditionFour.id) { type_register = 'edição'; }
+
+						if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionFour.name + '?')) {
+							$scope.executeUpdateGroupFour($scope.groupForEditionFour);
+						}else{
+							$scope.onSelectGroup(3, group.parent_id);
+						}
+
+					}
+				}
+
+			};
+
+			$scope.executeUpdateGroupFour = function (group){
+
+				if(group.id == null){
+					var promiseGroup = Groups.create(group).$promise
+				}else{
+					var promiseGroup = Groups.update(group).$promise
+				}
+				promiseGroup.then(function(res) {
+					ngToast.success('Grupos alterados com sucesso!')
+					$scope.onSelectGroup(3, group.parent_id);
+				}, function (err) {
+					ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+					$scope.onSelectGroup(3, group.parent_id);
 				});
+
+			};
+
+
+			$scope.removeGroup = function (group){
+				alert(group.name);
+			};
+
+			$scope.onSelectGroup = function (number, id){
+
+				if (number == 2 ){
+					$scope.selectedTabTwo = id;
+					Groups.findByParent( { id: id }, function(res) {
+						$scope.groupsThree = res.data;
+						$scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+						$scope.groupsFour = [];
+						$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+						$scope.groupForEditionThree = { id: null, name: null, parent_id: id };
+					});
+
+					$scope.selectedTabThree = null;
+					$scope.selectedTabFour = null;
+				}
+
+				if (number == 3 ){
+					$scope.selectedTabThree = id;
+					Groups.findByParent( { id: id }, function(res) {
+						$scope.groupsFour = res.data;
+						$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+						$scope.groupForEditionFour = { id: null, name: null, parent_id: id };
+					});
+
+					$scope.selectedTabFour = null;
+				}
+
+				if (number == 4 ){
+					$scope.selectedTabFour = id;
+				}
+
+			};
+
+			$scope.filterGroups = function(group) {
+				if(group === "two"){
+					$scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
+						$: $scope.searchGroupTwo
+					});
+				}
+				if(group === "three"){
+					$scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
+						$: $scope.searchGroupThree
+					});
+				}
+				if(group === "four"){
+					$scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
+						$: $scope.searchGroupFour
+					});
+				}
+			};
+
+			$scope.reloadAllData = function (){
+				$scope.groupsTwo = [];
+				$scope.groupsThree = [];
+				$scope.groupsFour = [];
+
+				$scope.mirrorGroupsTwo = [];
+				$scope.mirrorGroupsThree = [];
+				$scope.mirrorGroupsFour =  [];
+
+				$scope.selectedTabTwo = null;
+				$scope.selectedTabThree = null;
+				$scope.selectedTabFour = null;
+
+				$scope.groupForEditionTwo = { id: null, name: null, parent_id: null };
+				$scope.groupForEditionThree = { id: null, name: null, parent_id: null };
+				$scope.groupForEditionFour = { id: null, name: null, parent_id: null };
 			};
 
 			Platform.whenReady(function() {
 				$scope.refresh();
 			});
-
-			$scope.isGroupPartOfUserGroups = function (group){
-				var groupedGroupsOfUser = $scope.getGroupsOfLoggedUser();
-				var belongsTo = false;
-				groupedGroupsOfUser.forEach(function(v, k){
-					//if(v.id == group.id) { belongsTo = true; }
-					v.children.forEach(function(v2, k2){
-						if(v2.id == group.id) { belongsTo = true; }
-						v2.children.forEach(function(v3, k3){
-							if(v3.id == group.id) { belongsTo = true; }
-							v3.children.forEach(function(v4, k4){
-								if(v4.id == group.id) { belongsTo = true; }
-							});
-						});
-					});
-				});
-				return belongsTo;
-			};
-
-			$scope.getGroupsOfLoggedUser = function (){
-				var groupedGroupsOfUser = [];
-				var userId = Identity.getCurrentUser().group.id;
-				$scope.groups.forEach(function(v, k){
-					if (v.id == userId) { groupedGroupsOfUser = [v]; }
-					v.children.forEach(function(v2, k2){
-						if (v2.id == userId) { groupedGroupsOfUser = [v2]; }
-						v2.children.forEach(function(v3, k3){
-							if (v3.id == userId) { groupedGroupsOfUser = [v3]; }
-							v3.children.forEach(function(v4, k4){
-								if (v4.id == userId) { groupedGroupsOfUser = [v4]; }
-							});
-						});
-					});
-				});
-				return groupedGroupsOfUser;
-			}
-
-			$scope.returnGroupOfUser = function (){
-				return Identity.getCurrentUser().group.id;
-			}
 
 		});
 })();
