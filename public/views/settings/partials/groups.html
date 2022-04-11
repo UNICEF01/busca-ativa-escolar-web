@@ -57,9 +57,15 @@
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabTwo}"
                        ng-click="onSelectGroup(2, group.id)">
-                        {{group.name}}
-                        <span class="badge label label-primary" ng-click="editGroupTwo(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                        <div class="row">
+                            <div class="col-md-8">
+                                {{group.name}}
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge label label-primary" ng-click="editGroupTwo(group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                            </div>
+                        </div>
                     </a>
                 </div>
 
@@ -87,9 +93,16 @@
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabThree}"
                        ng-click="onSelectGroup(3, group.id)">
-                        {{group.name}}
-                        <span class="badge label label-primary" ng-click="editGroupThree(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span></a>
+                        <div class="row">
+                            <div class="col-md-8">
+                                {{group.name}}
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge label label-primary" ng-click="editGroupThree(group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
 
                 <div class="input-group">
@@ -116,9 +129,16 @@
                        class="list-group-item list-group-item-action"
                        ng-class="{'active': group.id == selectedTabFour}"
                        ng-click="onSelectGroup(4, group.id)">
-                        {{group.name}}
-                        <span class="badge label label-primary" ng-click="editGroupFour(group)"><i class="fa fa-edit"></i></span>
-                        <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span></a></a>
+                        <div class="row">
+                            <div class="col-md-8">
+                                {{group.name}}
+                            </div>
+                            <div class="col-md-4">
+                                <span class="badge label label-primary" ng-click="editGroupFour(group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
