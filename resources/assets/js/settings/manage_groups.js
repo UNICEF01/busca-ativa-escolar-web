@@ -11,6 +11,22 @@
                 document.getElementById("names").style.display = "none";
             };
 
+            $scope.groups2 = []
+            $scope.getName2 = function(index) {
+                document.getElementById('group_for_edition_three').value = $scope.groups2[index - 1].name
+                $scope.groupForEditionThree['name'] = $scope.groups2[index - 1].name
+                $scope.groups2 = []
+                document.getElementById("names2").style.display = "none";
+            };
+
+            $scope.groups3 = []
+            $scope.getName3 = function(index) {
+                document.getElementById('group_for_edition_four').value = $scope.groups3[index - 1].name
+                $scope.groupForEditionFour['name'] = $scope.groups3[index - 1].name
+                $scope.groups3 = []
+                document.getElementById("names3").style.display = "none";
+            };
+
             $scope.currentUser = Identity.getCurrentUser();
 
             $scope.groupsTwo = [];
@@ -114,7 +130,7 @@
                         var type_register = 'criação';
                         if ($scope.groupForEditionThree.id) { type_register = 'edição'; }
 
-                        if (window.confirm('Confirma a ' + type_register + ' do grupo' + $scope.groupForEditionThree.name + '?')) {
+                        if (window.confirm('Confirma a ' + type_register + ' do grupo ' + $scope.groupForEditionThree.name + '?')) {
                             $scope.executeUpdateGroupThree($scope.groupForEditionThree);
                         } else {
                             $scope.onSelectGroup(2, group.parent_id);
@@ -133,8 +149,17 @@
                     var promiseGroup = Groups.update(group).$promise
                 }
                 promiseGroup.then(function(res) {
-                    ngToast.success('Grupo salvo com sucesso!')
-                    $scope.onSelectGroup(2, group.parent_id);
+                    if (!res.group.hasOwnProperty('uf')) {
+                        ngToast.warning('Grupo já existe!')
+                        $scope.groups2 = []
+                        for (let i = 0; i < 5; ++i) {
+                            $scope.groups2.push({ name: res.group[i] })
+                        }
+                        document.getElementById("names2").style.display = "block";
+                    } else {
+                        ngToast.success('Grupo salvo com sucesso!')
+                        $scope.refresh();
+                    }
                 }, function(err) {
                     ngToast.danger('Ocorreu um erro ao salvar os grupos!')
                     $scope.onSelectGroup(2, group.parent_id);
@@ -176,8 +201,17 @@
                     var promiseGroup = Groups.update(group).$promise
                 }
                 promiseGroup.then(function(res) {
-                    ngToast.success('Grupo salvo com sucesso!')
-                    $scope.onSelectGroup(3, group.parent_id);
+                    if (!res.group.hasOwnProperty('uf')) {
+                        ngToast.warning('Grupo já existe!')
+                        $scope.groups3 = []
+                        for (let i = 0; i < 5; ++i) {
+                            $scope.groups3.push({ name: res.group[i] })
+                        }
+                        document.getElementById("names3").style.display = "block";
+                    } else {
+                        ngToast.success('Grupo salvo com sucesso!')
+                        $scope.refresh();
+                    }
                 }, function(err) {
                     ngToast.danger('Ocorreu um erro ao salvar os grupos!')
                     $scope.onSelectGroup(3, group.parent_id);
