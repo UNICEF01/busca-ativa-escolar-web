@@ -112,6 +112,10 @@
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
                     <input ng-disabled="!selectedTabTwo" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three">
                 </div>
+                <span id="names2" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
+                <div ng-repeat="group in groups2">
+                    <button class="buttonx" ng-click="getName2($index + 1)">{{group.name}}</button>
+                </div>
             </div>
 
             <div class="col-md-4">
@@ -135,6 +139,10 @@
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
                     <input ng-disabled="!selectedTabThree" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionFour.name" ng-enter="updateGroupFour()" id="group_for_edition_four">
+                </div>
+                <span id="names3" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
+                <div ng-repeat="group in groups3">
+                    <button class="buttonx" ng-click="getName3($index + 1)">{{group.name}}</button>
                 </div>
             </div>
 
