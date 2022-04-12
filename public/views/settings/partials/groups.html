@@ -7,10 +7,12 @@
     <form name="$parent.$parent.groupsEdit" class="panel-body">
 
         <p ng-if="identity.getCurrentTenant()">
-            Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
+            Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias
+            municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
         </p>
         <p ng-if="!identity.getCurrentTenant()">
-            Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.
+            Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula
+            das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.
         </p>
 
         <div class="row">
@@ -25,25 +27,34 @@
                     scrollbar-color: #666666 transparent;
                 }
                 /* chrome */
+                
                 .selectgroup::-webkit-scrollbar {
                     width: 8px;
                 }
+                
                 .selectgroup::-webkit-scrollbar-track {
                     background: #ffffff;
                 }
+                
                 .selectgroup::-webkit-scrollbar-thumb {
                     background-color: #666666;
                     border-radius: 20px;
                     border: 3px solid #666666;
                 }
-
+                
+                .buttonx {
+                    background: none!important;
+                    border: none;
+                    /*padding: 0!important;*/
+                    padding-left: 10%;
+                    /*optional*/
+                    font-family: arial, sans-serif;
+                    /*input has OS specific font-family*/
+                    color: #069;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
             </style>
-
-<!--            <div class="col-md-12">-->
-<!--                <pre>-->
-<!--                    {{ mirrorGroupsThree | json }}-->
-<!--                </pre>-->
-<!--            <div>-->
 
             <div class="col-md-4">
 
@@ -52,11 +63,7 @@
                     <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsTwo track by group.id"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabTwo}"
-                       ng-click="onSelectGroup(2, group.id)">
+                    <a href="#!" ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group.id)">
                         <div class="row">
                             <div class="col-md-8">
                                 {{group.name}}
@@ -69,15 +76,15 @@
                     </a>
                 </div>
 
+
+
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input
-                            type="text"
-                            class="form-control"
-                            placeholder="Novo"
-                            ng-model="groupForEditionTwo.name"
-                            ng-blur="updateGroupTwo()"
-                            id="group_for_edition_two">
+                    <input type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionTwo.name" ng-enter="updateGroupTwo()" id="group_for_edition_two">
+                </div>
+                <span id="names" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
+                <div ng-repeat="group in groups">
+                    <button class="buttonx" ng-click="getName($index + 1)">{{group.name}}</button>
                 </div>
 
             </div>
@@ -88,11 +95,7 @@
                     <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsThree track by group.id"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabThree}"
-                       ng-click="onSelectGroup(3, group.id)">
+                    <a href="#!" ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group.id)">
                         <div class="row">
                             <div class="col-md-8">
                                 {{group.name}}
@@ -107,14 +110,7 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input
-                            ng-disabled="!selectedTabTwo"
-                            type="text"
-                            class="form-control"
-                            placeholder="Novo"
-                            ng-model="groupForEditionThree.name"
-                            ng-blur="updateGroupThree()"
-                            id="group_for_edition_three">
+                    <input ng-disabled="!selectedTabTwo" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three">
                 </div>
             </div>
 
@@ -124,11 +120,7 @@
                     <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
                 </div>
                 <div class="selectgroup">
-                    <a href="#!"
-                       ng-repeat="group in mirrorGroupsFour track by group.id"
-                       class="list-group-item list-group-item-action"
-                       ng-class="{'active': group.id == selectedTabFour}"
-                       ng-click="onSelectGroup(4, group.id)">
+                    <a href="#!" ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group.id)">
                         <div class="row">
                             <div class="col-md-8">
                                 {{group.name}}
@@ -142,14 +134,7 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input
-                            ng-disabled="!selectedTabThree"
-                            type="text"
-                            class="form-control"
-                            placeholder="Novo"
-                            ng-model="groupForEditionFour.name"
-                            ng-blur="updateGroupFour()"
-                            id="group_for_edition_four">
+                    <input ng-disabled="!selectedTabThree" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionFour.name" ng-enter="updateGroupFour()" id="group_for_edition_four">
                 </div>
             </div>
 
