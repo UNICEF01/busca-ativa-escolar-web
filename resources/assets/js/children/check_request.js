@@ -60,7 +60,7 @@
         };
         //Configura a linguagem na diretiva dt-options=""
         $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage(language);
-        // $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('order', [[0, 'asc']])
+
 
         $scope.dtColumnDefs = [
           DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
