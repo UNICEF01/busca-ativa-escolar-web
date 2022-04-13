@@ -38,6 +38,8 @@
                         true)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
+                    $scope.query.group_id = $scope.selectedGroup.id;
+                    console.log($scope.query.group_id);
                 }).then(function(res) {
 
                 });
@@ -129,6 +131,7 @@
                     $scope.sendingAlert = false;
                 });
             };
+
 
             $scope.reject = function(child) {
                 Alerts.reject({ id: child.id }, function() {
