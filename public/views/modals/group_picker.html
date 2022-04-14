@@ -49,7 +49,7 @@
 
 			</div>
 
-			<div class="col-md-3">
+			<div class="col-md-3" ng-if="mirrorGroupsTwo.length > 0">
 
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-search"></i></span>
@@ -67,7 +67,7 @@
 
 			</div>
 
-			<div class="col-md-3">
+			<div class="col-md-3" ng-if="mirrorGroupsThree.length > 0">
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					<input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
@@ -82,7 +82,7 @@
 				</div>
 			</div>
 
-			<div class="col-md-3">
+			<div class="col-md-3" ng-if="mirrorGroupsFour.length > 0">
 				<div class="input-group">
 					<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					<input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">

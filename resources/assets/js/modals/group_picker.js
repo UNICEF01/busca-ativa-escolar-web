@@ -2,9 +2,7 @@
 
 	angular
 		.module('BuscaAtivaEscolar')
-		.controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, canDismiss, noGroupsMessage) {
-
-			$scope.currentUser = Identity.getCurrentUser();
+		.controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, canDismiss, noGroupsMessage) {
 
 			$scope.title = title;
 			$scope.message = message;
@@ -32,8 +30,8 @@
 
 				$scope.groupsOne = [
 					{
-						id: $scope.currentUser.tenant.primary_group_id,
-						name: $scope.currentUser.tenant.primary_group_name
+						id: initialGroup.id,
+						name: initialGroup.name
 					}
 				];
 				$scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
@@ -46,8 +44,6 @@
 
 				$scope.groupsFour = [];
 				$scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-
-				$scope.groupForEditionTwo = { id: null, name: null, parent_id: $scope.currentUser.tenant.primary_group_id };
 
 			};
 

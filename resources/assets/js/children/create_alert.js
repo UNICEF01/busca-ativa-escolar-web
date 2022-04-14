@@ -71,6 +71,7 @@
 					Modals.GroupPicker(
 						'Atribuir grupo ao alerta',
 						'O último grupo selecionado será atrinuído ao alerta:',
+						{ id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
 						true)
 				).then(function (selectedGroup) {
 					$scope.selectedGroup = selectedGroup;
