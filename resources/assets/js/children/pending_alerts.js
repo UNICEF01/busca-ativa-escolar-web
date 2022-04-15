@@ -33,8 +33,9 @@
             $scope.changeGroup = function() {
                 Modals.show(
                     Modals.GroupPicker(
-                        'Atribuir grupo ao alerta',
-                        'O último grupo selecionado será atrinuído ao alerta:',
+                        'Filtrar alertas que pertencem ao grupo',
+                        '',
+                        '1',
                         Identity.getCurrentUser().group,
                         true)
                 ).then(function(selectedGroup) {

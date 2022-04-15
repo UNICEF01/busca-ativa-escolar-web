@@ -1,111 +1,97 @@
 <div class="modal-template" id="md-user-picker">
-	<div class="modal-header">
-		<h3 class="modal-title">{{title || 'Selecione um grupo:'}}</h3>
-	</div>
+    <div class="modal-header">
+        <h3 class="modal-title">{{title || 'Selecione um grupo:'}}</h3>
+    </div>
 
-	<div class="modal-body" ng-show="mirrorGroupsOne.length>0">
+    <div class="modal-body" ng-show="mirrorGroupsOne.length>0">
 
-		<div class="row">
+        <div class="row">
 
-			<style>
-				.selectgroup {
-					height: 300px;
-					overflow-y: scroll;
-					overflow-x: hidden;
-					margin-left: 20px;
-					scrollbar-width: thin;
-					scrollbar-color: #666666 transparent;
-				}
-				/* chrome */
-				.selectgroup::-webkit-scrollbar {
-					width: 8px;
-				}
-				.selectgroup::-webkit-scrollbar-track {
-					background: #ffffff;
-				}
-				.selectgroup::-webkit-scrollbar-thumb {
-					background-color: #666666;
-					border-radius: 20px;
-					border: 3px solid #666666;
-				}
+            <style>
+                .selectgroup {
+                    height: 300px;
+                    overflow-y: scroll;
+                    overflow-x: hidden;
+                    margin-left: 20px;
+                    scrollbar-width: thin;
+                    scrollbar-color: #666666 transparent;
+                }
+                /* chrome */
+                
+                .selectgroup::-webkit-scrollbar {
+                    width: 8px;
+                }
+                
+                .selectgroup::-webkit-scrollbar-track {
+                    background: #ffffff;
+                }
+                
+                .selectgroup::-webkit-scrollbar-thumb {
+                    background-color: #666666;
+                    border-radius: 20px;
+                    border: 3px solid #666666;
+                }
+            </style>
 
-			</style>
+            <div class="col-md-3">
 
-			<div class="col-md-3">
-
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-search"></i></span>
-					<input ng-model="$parent.searchGroupOne" type="text" class="form-control" placeholder="Grupo principal" disabled>
-				</div>
-				<div class="selectgroup">
-					<a href="#!"
-					   ng-repeat="group in mirrorGroupsOne track by group.id"
-					   class="list-group-item list-group-item-action"
-					   ng-class="{'active': group.id == selectedTabOne}"
-					   ng-click="onSelectGroup(1, group)">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input ng-model="$parent.searchGroupOne" type="text" class="form-control" placeholder="Grupo principal" disabled>
+                </div>
+                <div class="selectgroup">
+                    <a href="#!" ng-repeat="group in mirrorGroupsOne track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabOne}" ng-click="onSelectGroup(1, group)">
 						{{group.name}}
 					</a>
-				</div>
+                </div>
 
-			</div>
+            </div>
 
-			<div class="col-md-3" ng-if="mirrorGroupsTwo.length > 0">
+            <div class="col-md-3" ng-if="mirrorGroupsTwo.length > 0">
 
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-search"></i></span>
-					<input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
-				</div>
-				<div class="selectgroup">
-					<a href="#!"
-					   ng-repeat="group in mirrorGroupsTwo track by group.id"
-					   class="list-group-item list-group-item-action"
-					   ng-class="{'active': group.id == selectedTabTwo}"
-					   ng-click="onSelectGroup(2, group)">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                </div>
+                <div class="selectgroup">
+                    <a href="#!" ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group)">
 						{{group.name}}
 					</a>
-				</div>
+                </div>
 
-			</div>
+            </div>
 
-			<div class="col-md-3" ng-if="mirrorGroupsThree.length > 0">
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-search"></i></span>
-					<input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
-				</div>
-				<div class="selectgroup">
-					<a href="#!"
-					   ng-repeat="group in mirrorGroupsThree track by group.id"
-					   class="list-group-item list-group-item-action"
-					   ng-class="{'active': group.id == selectedTabThree}"
-					   ng-click="onSelectGroup(3, group)">
+            <div class="col-md-3" ng-if="mirrorGroupsThree.length > 0">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                </div>
+                <div class="selectgroup">
+                    <a href="#!" ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group)">
 						{{group.name}}</a>
-				</div>
-			</div>
+                </div>
+            </div>
 
-			<div class="col-md-3" ng-if="mirrorGroupsFour.length > 0">
-				<div class="input-group">
-					<span class="input-group-addon"><i class="fa fa-search"></i></span>
-					<input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
-				</div>
-				<div class="selectgroup">
-					<a href="#!"
-					   ng-repeat="group in mirrorGroupsFour track by group.id"
-					   class="list-group-item list-group-item-action"
-					   ng-class="{'active': group.id == selectedTabFour}"
-					   ng-click="onSelectGroup(4, group)">
+            <div class="col-md-3" ng-if="mirrorGroupsFour.length > 0">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
+                </div>
+                <div class="selectgroup">
+                    <a href="#!" ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group)">
 						{{group.name}}</a>
-				</div>
-			</div>
+                </div>
+            </div>
 
-		</div>
+        </div>
 
-	</div>
-	<div class="modal-body" ng-show="mirrorGroupsOne.length<=0">
-		<div class="alert alert-warning"><strong>Nenhum grupo disponível! </strong><span ng-bind="noGroupsMessage"></span></div>
-	</div>
-	<div class="modal-footer">
-		<a ng-show="selectedGroup" class="btn btn-raised btn-default"><i class="fa fa-group"></i> Atribuindo grupo: {{selectedGroup.name}}</a>
-		<button class="btn btn-raised btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
-		<button class="btn btn-raised btn-success" type="button" ng-show="selectedGroup" ng-click="onSelect()">Confirmar</button>
-	</div>
+    </div>
+    <div class="modal-body" ng-show="mirrorGroupsOne.length<=0">
+        <div class="alert alert-warning"><strong>Nenhum grupo disponível! </strong><span ng-bind="noGroupsMessage"></span></div>
+    </div>
+    <div class="modal-footer">
+        <a ng-show="selectedGroup" class="btn btn-raised btn-default"><i class="fa fa-group"></i> <span ng-if="filter == null">Atribuindo grupo: {{selectedGroup.name}}</span><span ng-if="filter == '1'">Filtrando grupo: {{selectedGroup.name}}</span></a>
+        <button class="btn btn-raised btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
+        <button class="btn btn-raised btn-success" type="button" ng-show="selectedGroup" ng-click="onSelect()">Confirmar</button>
+    </div>
 </div>
