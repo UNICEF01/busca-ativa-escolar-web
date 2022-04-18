@@ -275,10 +275,10 @@
                 GroupPicker: function(
                     title,
                     message,
-                    filter,
                     initialGroup,
-                    canDismiss,
-                    noGroupsMessage
+                    messageButton,
+                    noGroupsMessage,
+                    canDismiss
                 ) {
                     var params = {
                         templateUrl: '/views/modals/group_picker.html',
@@ -291,18 +291,18 @@
                             message: function() {
                                 return message;
                             },
-                            filter: function() {
-                                return filter;
-                            },
                             initialGroup: function() {
                                 return initialGroup;
+                            },
+                            messageButton: function (){
+                                return messageButton;
                             },
                             noGroupsMessage: function() {
                                 return noGroupsMessage;
                             },
                             canDismiss: function() {
                                 return canDismiss;
-                            },
+                            }
                         },
                     };
 

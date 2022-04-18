@@ -5,6 +5,8 @@
 
     <div class="modal-body" ng-show="mirrorGroupsOne.length>0">
 
+        <div ng-if="message">{{message}}</div>
+
         <div class="row">
 
             <style>
@@ -17,15 +19,15 @@
                     scrollbar-color: #666666 transparent;
                 }
                 /* chrome */
-                
+
                 .selectgroup::-webkit-scrollbar {
                     width: 8px;
                 }
-                
+
                 .selectgroup::-webkit-scrollbar-track {
                     background: #ffffff;
                 }
-                
+
                 .selectgroup::-webkit-scrollbar-thumb {
                     background-color: #666666;
                     border-radius: 20px;
@@ -90,7 +92,7 @@
         <div class="alert alert-warning"><strong>Nenhum grupo disponível! </strong><span ng-bind="noGroupsMessage"></span></div>
     </div>
     <div class="modal-footer">
-        <a ng-show="selectedGroup" class="btn btn-raised btn-default"><i class="fa fa-group"></i> <span ng-if="filter == null">Atribuindo grupo: {{selectedGroup.name}}</span><span ng-if="filter == '1'">Filtrando grupo: {{selectedGroup.name}}</span></a>
+        <a ng-show="selectedGroup" class="btn btn-raised btn-default"><i class="fa fa-group"></i> <span>{{messageButton}}: {{selectedGroup.name}}</span> </a>
         <button class="btn btn-raised btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
         <button class="btn btn-raised btn-success" type="button" ng-show="selectedGroup" ng-click="onSelect()">Confirmar</button>
     </div>

@@ -34,9 +34,10 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Filtrar alertas que pertencem ao grupo',
-                        '',
-                        '1',
+                        'Seleione o grupo que deseja filtrar',
                         Identity.getCurrentUser().group,
+                        'Filtrando grupo: ',
+                        'Nenhum grupo selecionado',
                         true)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;

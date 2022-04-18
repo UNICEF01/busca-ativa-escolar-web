@@ -32,8 +32,10 @@
             Modals.show(
                 Modals.GroupPicker(
                     'Atribuir grupo ao caso',
-                    'O último grupo selecionado será atrinuído ao caso:',
-                    null,
+                    'O último grupo selecionado será atrubuído ao caso:',
+                    { id: identity.tenant.primary_group_id, name: identity.tenant.primary_group_name },
+                    'Atribuindo grupo: ',
+                    'Nenhum grupo selecionado',
                     true)
             ).then(function(selectedGroup) {
 

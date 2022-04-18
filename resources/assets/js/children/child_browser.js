@@ -145,8 +145,8 @@
                     Modals.GroupPicker(
                         'Filtrar casos que pertecem ao grupo',
                         '',
-                        '1',
                         Identity.getCurrentUser().group,
+                        'Filtrando grupo: ',
                         true)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;

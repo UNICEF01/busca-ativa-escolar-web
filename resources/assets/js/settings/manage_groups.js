@@ -219,6 +219,31 @@
 
             };
 
+            $scope.canMovGroup = function (level) {
+                var canMovGroup = true;
+                if ($scope.currentUser.tenant.is_state) {
+                    canMovGroup = level == 3 ? true : false;
+                } else {
+                    canMovGroup = (level == 3 || level == 4) ? true : false;
+                }
+                return canMovGroup;
+            };
+
+            $scope.movGroup = function (level, group) {
+                Modals.show(
+                    Modals.GroupPicker(
+                        'Movimentar grupo '+group.name,
+                        'Selecione o grupo para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos',
+                        { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        'Movendo para: ',
+                        'Nenhum grupo selecionado',
+                        true)
+                ).then(function(selectedGroup) {
+                   
+                }).then(function(res) {
+
+                });
+            };
 
             $scope.removeGroup = function(group) {
                 alert(group.name);
