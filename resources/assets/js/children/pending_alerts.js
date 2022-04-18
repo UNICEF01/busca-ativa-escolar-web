@@ -46,6 +46,22 @@
                 });
             };
 
+            $scope.updateGroup = function() {
+                Modals.show(
+                    Modals.GroupPicker(
+                        'Atribuir grupo ao alerta',
+                        'O último grupo selecionado será atrinuído ao alerta:',
+                        null, { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        true)
+                ).then(function(selectedGroup) {
+                    $scope.selectedGroup = selectedGroup;
+                    $scope.child.group_name = $scope.selectedGroup.name
+                    $scope.child.group_id = $scope.selectedGroup.id
+                }).then(function(res) {
+
+                });
+            };
+
             $scope.branchGroups = "carregando ...";
 
             $scope.clikcInGroup = function(group_id) {
@@ -122,10 +138,8 @@
                 if (!$scope.canAcceptAlert(child)) {
                     return;
                 }
-
                 $scope.sendingAlert = true;
-
-                Alerts.accept({ id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood }, function() {
+                Alerts.accept({ id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood, group_id: child.group_id, group_name: child.group_name }, function() {
                     $scope.refresh();
                     $scope.child = {};
                     $('#modalChild').modal('hide');

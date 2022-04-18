@@ -194,7 +194,10 @@
                             <div>
                                 <label class="control-label"><strong>Por que a criança ou adolescente está fora da escola?</strong></label>
                                 <p><span ng-bind="getAlertCauseName()"></span></p>
+
                             </div>
+
+
 
                             <br/>
 
@@ -299,6 +302,8 @@
                                 <strong>Observação</strong>
                                 <p ng-bind="child.alert.observation"></p>
                             </div>
+                            <label class="control-label"><strong>Alerta percente ao grupo: </strong></label>
+                            <p><span ng-bind="child.group_name"></span><button class="btn btn-raised btn-default" style="left: 10px;" type="button" ng-click="updateGroup()">Selecionar grupo</button></p>
 
                         </form>
                     </div>
@@ -317,4 +322,18 @@
 
 </div>
 <script>
+    $(document).ready(function() {
+        $('#openBtn').click(function() {
+            $('#myModal').modal({
+                show: true
+            })
+        });
+        $(document).on('show.bs.modal', '.modal', function(event) {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function() {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
+        });
+    });
 </script>
