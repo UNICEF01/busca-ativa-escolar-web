@@ -1,6 +1,6 @@
 <div class="col-md-12" style="left: -40px;width: 110%">
 
-    <form name="childSearch" ng-submit="refresh()" class="panel panel-default form-inline">
+    <form name="childSearch" ng-submit="refresh()" class="panel panel-default">
         <div class="panel-heading">
             <h3><a href="#" class="children_filter"><i class="material-icons">filter_list</i></a> Filtrar</h3>
         </div>
@@ -8,32 +8,37 @@
         <div class="body_filter">
             <div class="panel-body">
 
-                <section class="containerx rowx">
-                    <div class="itemx" style="padding-left: 20px;"><input class="form-control" type="search" id="filter-name" ng-model="query.name" placeholder="Nome da criança..."></div>
-                    <div class="itemx"> <input class="form-control" type="search" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário..."></div>
-                    <div class="itemx"><input class="form-control" type="search" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso..."></div>
-                    <div class="itemx"><input type="search" id="filter-full-address" class="form-control" ng-model="query.location_full" placeholder="Bairro, CEP, Rua ..."></div>
-                </section>
-                <div>
-                    <input class="form-control" type="text" id="fld-group" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado" style="margin-left: 15px;width: 60%; width: 60vw;">
+                <div class="row">
+                    <div class="col-md-3"><input class="form-control" type="search" id="filter-name" ng-model="query.name" placeholder="Nome da criança..."></div>
+                    <div class="col-md-3"> <input class="form-control" type="search" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário..."></div>
+                    <div class="col-md-3"><input class="form-control" type="search" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso..."></div>
+                    <div class="col-md-3"><input type="search" id="filter-full-address" class="form-control" ng-model="query.location_full" placeholder="Bairro, CEP, Rua ..."></div>
+                </div>
 
-                    <button type="button" class="btn btn-raised btn-default" ng-click="changeGroup()">Selecionar grupo</button>
-                    <input type="text" ng-model="query.group_id" hidden>
+                <div class="row">
+                    <div class="col-md-9">
+                        <input class="form-control" type="text" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-raised btn-default" ng-click="changeGroup()">Selecionar grupo</button>
+                        <input type="text" ng-model="query.group_id" hidden>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado.">Motivo do Caso <i class="fa fa-info-circle"></i> </label>
+                            <select class="form-control" id="edit-rec" multiple class="chosen-select" ng-model="query.case_cause_ids" style="height: 200px;">
+                                <option ng-repeat="case in causes"
+                                        value="{{case.value}}">
+                                  {{case.displayName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-                </div>
-                <div class="row"></div>
-                <div>
-                    <label style="padding-left: 15px;" uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado.">Motivo do Caso</label> <i class="fa fa-info-circle" uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado."></i>
-                </div>
-                <div><select id="edit-rec" style="width: 98%;margin-left: 15px;" size="10" data-placeholder="Motivo do caso..." multiple class="chosen-select" ng-model="query.case_cause_ids" class="form-control">
-						
-						<option ng-repeat="case in causes"
-								value="{{case.value}}">
-						  {{case.displayName}}
-						</option>
-						</select>
-                </div>
-                <div>
+                <div class="row form-inline">
 
                     <div class="col-md-2">
                         <label class="control-label" for="filter-status-in_progress"><strong>Por status do caso</strong></label><br/><br/>
@@ -208,40 +213,3 @@
         </div>
     </div>
 </div>
-<style>
-    .rowx {
-        flex-direction: row;
-    }
-    
-    .row-reversex {
-        flex-direction: row-reverse;
-    }
-    
-    .columnx {
-        flex-direction: column;
-    }
-    
-    .column-reversex {
-        flex-direction: column-reverse;
-    }
-    /* Flex Container */
-    
-    .containerx {
-        margin: 0 auto;
-        display: flex;
-        flex-shrink: 0;
-    }
-    /* Flex Item */
-    
-    .itemx2 {
-        flex: 0.2;
-        text-align: center;
-        font-size: 1.5em;
-        flex: 100%;
-    }
-    
-    .itemx {
-        flex: 1;
-        font-size: 1.5em;
-    }
-</style>
