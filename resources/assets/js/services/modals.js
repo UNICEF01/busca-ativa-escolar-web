@@ -279,6 +279,7 @@
                     messageButton,
                     isMovement,
                     toBeMoved,
+                    levelOfToBeMoved,
                     noGroupsMessage,
                     canDismiss
                 ) {
@@ -304,6 +305,9 @@
                             },
                             toBeMoved: function (){
                                 return toBeMoved;
+                            },
+                            levelOfToBeMoved: function (){
+                              return levelOfToBeMoved;
                             },
                             noGroupsMessage: function() {
                                 return noGroupsMessage;

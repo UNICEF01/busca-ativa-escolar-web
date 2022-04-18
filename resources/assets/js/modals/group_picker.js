@@ -2,7 +2,7 @@
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, messageButton, isMovement, toBeMoved, canDismiss, noGroupsMessage) {
+        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, messageButton, isMovement, toBeMoved, levelOfToBeMoved, canDismiss, noGroupsMessage) {
 
             $scope.title = title;
             $scope.message = message;
@@ -11,6 +11,7 @@
             $scope.messageButton = messageButton;
             $scope.isMovement = isMovement;
             $scope.toBeMoved = toBeMoved;
+            $scope.levelOfToBeMoved = levelOfToBeMoved;
 
             $scope.selectedGroup = null;
 

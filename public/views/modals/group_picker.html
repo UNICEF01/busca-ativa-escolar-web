@@ -3,6 +3,12 @@
         <h3 class="modal-title">{{title || 'Selecione um grupo:'}}</h3>
     </div>
 
+    <pre>
+        {{ isMovement }}
+        {{ toBeMoved }}
+        {{ levelOfToBeMoved }}
+    </pre>
+
     <div class="modal-body" ng-show="mirrorGroupsOne.length>0">
 
         <div ng-if="message">{{message}}</div>

@@ -242,8 +242,11 @@
                         'Selecione o grupo para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Movendo para: ',
-                        'Nenhum grupo selecionado',
-                        true)
+                        true,
+                        group,
+                        level,
+                        true,
+                        'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
                    
                 }).then(function(res) {

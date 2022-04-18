@@ -39,8 +39,9 @@
                         'Filtrando grupo: ',
                         false,
                         null,
-                        'Nenhum grupo selecionado',
-                        true)
+                        null,
+                        true,
+                        'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
@@ -58,8 +59,9 @@
                         'Atribuindo grupo: ',
                         false,
                         null,
-                        'Nenhum grupo selecionado',
-                        true)
+                        null,
+                        true,
+                        'Nenhum grupo selecionado',)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.child.group_name = $scope.selectedGroup.name

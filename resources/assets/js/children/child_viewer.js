@@ -37,8 +37,9 @@
                     'Atribuindo grupo: ',
                     false,
                     null,
-                    'Nenhum grupo selecionado',
-                    true)
+                    null,
+                    true,
+                    'Nenhum grupo selecionado')
             ).then(function(selectedGroup) {
 
                 var currentCase = {
