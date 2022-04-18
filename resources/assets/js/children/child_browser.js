@@ -147,6 +147,7 @@
                         '',
                         Identity.getCurrentUser().group,
                         'Filtrando grupo: ',
+                        'Nenhum grupo selecionado',
                         true)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;

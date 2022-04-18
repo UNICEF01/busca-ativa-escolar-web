@@ -161,7 +161,7 @@
                         document.getElementById("names2").style.display = "block";
                     } else {
                         ngToast.success(msg)
-                        $scope.refresh();
+                        $scope.onSelectGroup(2, group.parent_id);
                     }
                 }, function(err) {
                     ngToast.danger('Ocorreu um erro ao salvar os grupos!')
@@ -215,7 +215,7 @@
                             document.getElementById("names3").style.display = "block";
                         } else {
                             ngToast.success(msg)
-                            $scope.refresh();
+                            $scope.onSelectGroup(3, group.parent_id);
                         }
                     },
                     function(err) {
