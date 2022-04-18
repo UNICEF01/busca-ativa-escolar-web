@@ -70,7 +70,7 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Atribuir grupo ao alerta',
-                        'O último grupo selecionado será atrinuído ao alerta.',
+                        'O último grupo selecionado será atribuído ao alerta.',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo grupo: ',
                         'Nenhum grupo selecionado.',

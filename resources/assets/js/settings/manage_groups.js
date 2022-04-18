@@ -63,7 +63,6 @@
                 });
             };
 
-
             $scope.editGroupTwo = function(group) {
                 $scope.groupForEditionTwo = angular.copy(group);
                 var getElementToFocus = $window.document.getElementById("group_for_edition_two");
@@ -92,8 +91,10 @@
             $scope.executeUpdateGroupTwo = function(group) {
 
                 if (group.id == null) {
+                    var msg = 'Grupo salvo com sucesso!';
                     var promiseGroup = Groups.create(group).$promise
                 } else {
+                    var msg = 'Grupo alterado com sucesso!';
                     var promiseGroup = Groups.update(group).$promise
                 }
                 promiseGroup.then(function(res) {
@@ -105,7 +106,7 @@
                         }
                         document.getElementById("names").style.display = "block";
                     } else {
-                        ngToast.success('Grupo salvo com sucesso!')
+                        ngToast.success(msg)
                         $scope.refresh();
                     }
                 }, function(err) {
@@ -144,8 +145,10 @@
             $scope.executeUpdateGroupThree = function(group) {
 
                 if (group.id == null) {
+                    var msg = 'Grupo salvo com sucesso!';
                     var promiseGroup = Groups.create(group).$promise
                 } else {
+                    var msg = 'Grupo alterado com sucesso!';
                     var promiseGroup = Groups.update(group).$promise
                 }
                 promiseGroup.then(function(res) {
@@ -157,7 +160,7 @@
                         }
                         document.getElementById("names2").style.display = "block";
                     } else {
-                        ngToast.success('Grupo salvo com sucesso!')
+                        ngToast.success(msg)
                         $scope.refresh();
                     }
                 }, function(err) {
@@ -196,26 +199,29 @@
             $scope.executeUpdateGroupFour = function(group) {
 
                 if (group.id == null) {
+                    var msg = 'Grupo salvo com sucesso!';
                     var promiseGroup = Groups.create(group).$promise
                 } else {
+                    var msg = 'Grupo alterado com sucesso!';
                     var promiseGroup = Groups.update(group).$promise
                 }
                 promiseGroup.then(function(res) {
-                    if (!res.group.hasOwnProperty('uf')) {
-                        ngToast.warning('Grupo já existe!')
-                        $scope.groups3 = []
-                        for (let i = 0; i < 5; ++i) {
-                            $scope.groups3.push({ name: res.group[i] })
+                        if (!res.group.hasOwnProperty('uf')) {
+                            ngToast.warning('Grupo já existe!')
+                            $scope.groups3 = []
+                            for (let i = 0; i < 5; ++i) {
+                                $scope.groups3.push({ name: res.group[i] })
+                            }
+                            document.getElementById("names3").style.display = "block";
+                        } else {
+                            ngToast.success(msg)
+                            $scope.refresh();
                         }
-                        document.getElementById("names3").style.display = "block";
-                    } else {
-                        ngToast.success('Grupo salvo com sucesso!')
-                        $scope.refresh();
-                    }
-                }, function(err) {
-                    ngToast.danger('Ocorreu um erro ao salvar os grupos!')
-                    $scope.onSelectGroup(3, group.parent_id);
-                });
+                    },
+                    function(err) {
+                        ngToast.danger('Ocorreu um erro ao salvar os grupos!')
+                        $scope.onSelectGroup(3, group.parent_id);
+                    });
 
             };
 
