@@ -147,6 +147,8 @@
                         '',
                         Identity.getCurrentUser().group,
                         'Filtrando grupo: ',
+                        false,
+                        null,
                         'Nenhum grupo selecionado',
                         true)
                 ).then(function(selectedGroup) {

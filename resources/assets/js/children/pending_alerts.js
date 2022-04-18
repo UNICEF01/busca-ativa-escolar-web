@@ -37,6 +37,8 @@
                         'Seleione o grupo que deseja filtrar',
                         Identity.getCurrentUser().group,
                         'Filtrando grupo: ',
+                        false,
+                        null,
                         'Nenhum grupo selecionado',
                         true)
                 ).then(function(selectedGroup) {
@@ -52,7 +54,11 @@
                     Modals.GroupPicker(
                         'Atribuir grupo ao alerta',
                         'O último grupo selecionado será atrinuído ao alerta:',
-                        null, { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        { id: $scope.identity.tenant.primary_group_id, name: $scope.identity.tenant.primary_group_name },
+                        'Atribuindo grupo: ',
+                        false,
+                        null,
+                        'Nenhum grupo selecionado',
                         true)
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;

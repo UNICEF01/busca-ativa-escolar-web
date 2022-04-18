@@ -277,6 +277,8 @@
                     message,
                     initialGroup,
                     messageButton,
+                    isMovement,
+                    toBeMoved,
                     noGroupsMessage,
                     canDismiss
                 ) {
@@ -296,6 +298,12 @@
                             },
                             messageButton: function (){
                                 return messageButton;
+                            },
+                            isMovement: function (){
+                                return isMovement;
+                            },
+                            toBeMoved: function (){
+                                return toBeMoved;
                             },
                             noGroupsMessage: function() {
                                 return noGroupsMessage;

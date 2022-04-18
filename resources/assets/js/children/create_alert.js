@@ -73,6 +73,8 @@
                         'O último grupo selecionado será atribuído ao alerta.',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo grupo: ',
+                        false,
+                        null,
                         'Nenhum grupo selecionado.',
                         true)
                 ).then(function(selectedGroup) {
