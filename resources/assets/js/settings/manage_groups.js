@@ -251,6 +251,21 @@
                 return canEditGroup;
             };
 
+            $scope.disableNewGroup = function (level){
+                if (level == 2 ){
+                    if ($scope.currentUser.group.is_primary) { return false; }
+                }
+                if (level == 3 ){
+                    if (!$scope.selectedTabTwo ) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id ) { return false; }
+                }
+                if (level == 4 ){
+                    if (!$scope.selectedTabThree ) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id ) { return false; }
+                }
+                return true;
+            };
+
             $scope.movGroup = function (level, group) {
                 Modals.show(
                     Modals.GroupPicker(
@@ -351,6 +366,8 @@
             Platform.whenReady(function() {
                 $scope.refresh();
             });
+
+
 
         });
 })();

@@ -79,7 +79,14 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionTwo.name" ng-enter="updateGroupTwo()" id="group_for_edition_two">
+                    <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionTwo.name"
+                            ng-enter="updateGroupTwo()"
+                            id="group_for_edition_two"
+                            ng-disabled="disableNewGroup(2)">
                 </div>
                 <span id="names" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
                 <div ng-repeat="group in groups">
@@ -110,7 +117,14 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input ng-disabled="!selectedTabTwo" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three">
+                    <input
+                            ng-disabled="disableNewGroup(3)"
+                            type="text"
+                            class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionThree.name"
+                            ng-enter="updateGroupThree()"
+                            id="group_for_edition_three">
                 </div>
                 <span id="names2" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
                 <div ng-repeat="group in groups2">
@@ -140,7 +154,13 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-                    <input ng-disabled="!selectedTabThree" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionFour.name" ng-enter="updateGroupFour()" id="group_for_edition_four">
+                    <input
+                            ng-disabled="disableNewGroup(4)"
+                            type="text" class="form-control"
+                            placeholder="Novo"
+                            ng-model="groupForEditionFour.name"
+                            ng-enter="updateGroupFour()"
+                            id="group_for_edition_four">
                 </div>
                 <span id="names3" style="display: none; padding-left: 20px;">Nomes disponíveis: </span>
                 <div ng-repeat="group in groups3">
