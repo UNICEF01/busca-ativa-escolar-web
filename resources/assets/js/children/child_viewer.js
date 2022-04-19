@@ -19,6 +19,7 @@
         $scope.Children = Children;
         $scope.StaticData = StaticData;
         $scope.identity = Identity;
+        $scope.currentUser = Identity.getCurrentUser();
 
         $scope.refreshChildData = function(callback) {
             return $scope.child = Children.find({ id: $scope.child_id, with: 'currentCase' }, callback);
@@ -33,7 +34,7 @@
                 Modals.GroupPicker(
                     'Atribuir grupo ao caso',
                     'O último grupo selecionado será atrubuído ao caso:',
-                    { id: $scope.identity.tenant.primary_group_id, name: $scope.identity.tenant.primary_group_name },
+                    { id: $scope.identity.getCurrentUser().tenant.primary_group_id, name: $scope.identity.getCurrentUser().tenant.primary_group_name },
                     'Atribuindo grupo: ',
                     false,
                     null,
