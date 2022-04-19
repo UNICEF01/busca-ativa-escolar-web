@@ -11,7 +11,7 @@
             $scope.messageButton = messageButton;
 
             $scope.isMovement = isMovement;
-            $scope.toBeMoved = toBeMoved;
+            $scope.groupToBeMoved = toBeMoved;
             $scope.levelOfToBeMoved = levelOfToBeMoved;
 
             $scope.selectedGroup = null;

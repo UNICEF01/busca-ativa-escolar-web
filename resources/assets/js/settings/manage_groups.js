@@ -239,7 +239,7 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Movimentar grupo '+group.name,
-                        'Selecione o grupo para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos',
+                        'Selecione o grupo para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos. Essa operação não poderá ser desfeita.',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Movendo para: ',
                         true,
@@ -248,9 +248,14 @@
                         true,
                         'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
-                   
+                    var groupToBeEdited = {
+                        parent_id: selectedGroup.id,
+                        id: group.id
+                    };
+                    return Groups.update(groupToBeEdited);
                 }).then(function(res) {
-
+                    ngToast.success('Grupo movimentado com sucesso!')
+                    $scope.refresh();
                 });
             };
 
