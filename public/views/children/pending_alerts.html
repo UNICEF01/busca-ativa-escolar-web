@@ -248,50 +248,52 @@
                                 <div class="row">
                                     <div class="form-group col-md-6" ng-show="child.requires_address_update || child.alert.place_address">
                                         <label class="control-label"><strong>Endereço</strong></label>
-                                        <p><input type="text" class="form-control" required ng-model="child.alert.place_address" placeholder="Indique o endereço do alerta..." /></p>
+                                        <p>
+                                            <input type="text" ng-blur="editAlert(child.alert.place_address, 'place_address', child.id)" class="form-control " required ng-model="child.alert.place_address " placeholder="Indique o endereço do alerta... " /></p>
                                     </div>
-                                    <div class="form-group col-md-6" ng-show="child.requires_address_update || child.alert.place_neighborhood">
-                                        <label class="control-label"><strong>Bairro</strong></label>
-                                        <p><input type="text" class="form-control" required ng-model="child.alert.place_neighborhood" placeholder="Indique o bairro..." /></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div ng-show="child.alert.place_reference">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label class="control-label"><strong>Referência geográfica</strong></label>
-                                        <p><span ng-bind="child.alert.place_reference"></span></p>
+                                    <div class="form-group col-md-6 " ng-show="child.requires_address_update || child.alert.place_neighborhood ">
+                                        <label class="control-label "><strong>Bairro</strong></label>
+                                        <p><input type="text" ng-blur="editAlert(child.alert.place_neighborhood, 'place_neighborhood', child.id)" class="form-control " required ng-model="child.alert.place_neighborhood " placeholder="Indique o bairro... "
+                                            /></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div ng-show="child.requires_address_update || child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name || child.alert.place_cep">
-                                <div class="row">
-                                    <div class="form-group col-md-4" ng-show="child.alert.place_cep">
-                                        <label class="control-label"><strong>CEP</strong></label>
-                                        <p><span ng-bind="child.alert.place_cep | brCep"></span></p>
-                                    </div>
-                                    <div class="form-group col-md-4" ng-show="child.alert.place_uf">
-                                        <label class="control-label"><strong>UF</strong></label>
-                                        <p><span ng-bind="child.alert.place_uf"></span></p>
-                                    </div>
-                                    <div class="form-group col-md-4" ng-show="child.alert.place_city_name">
-                                        <label class="control-label"><strong>Município</strong></label>
-                                        <p><span ng-bind="child.alert.place_city_name"></span></p>
+                            <div ng-show="child.alert.place_reference ">
+                                <div class="row ">
+                                    <div class="form-group col-md-12 ">
+                                        <label class="control-label "><strong>Referência geográfica</strong></label>
+                                        <p><span ng-bind="child.alert.place_reference "></span></p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div ng-show="child.alert.place_phone || child.alert.place_mobile">
-                                <div class="row">
-                                    <div class="form-group col-md-6" ng-show="child.alert.place_phone">
-                                        <label class="control-label"><strong>Telefone residencial</strong></label>
-                                        <p><span ng-bind="child.alert.place_phone | brPhoneNumber"></span></p>
+                            <div ng-show="child.requires_address_update || child.alert.place_neighborhood || child.alert.place_uf || child.alert.place_city_name || child.alert.place_cep ">
+                                <div class="row ">
+                                    <div class="form-group col-md-4 " ng-show="child.alert.place_cep ">
+                                        <label class="control-label "><strong>CEP</strong></label>
+                                        <p><span ng-bind="child.alert.place_cep | brCep "></span></p>
                                     </div>
-                                    <div class="form-group col-md-6" ng-show="child.alert.place_mobile">
-                                        <label class="control-label"><strong>Telefone celular</strong></label>
-                                        <p><span ng-bind="child.alert.place_mobile | brPhoneNumber"></span></p>
+                                    <div class="form-group col-md-4 " ng-show="child.alert.place_uf ">
+                                        <label class="control-label "><strong>UF</strong></label>
+                                        <p><span ng-bind="child.alert.place_uf "></span></p>
+                                    </div>
+                                    <div class="form-group col-md-4 " ng-show="child.alert.place_city_name ">
+                                        <label class="control-label "><strong>Município</strong></label>
+                                        <p><span ng-bind="child.alert.place_city_name "></span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div ng-show="child.alert.place_phone || child.alert.place_mobile ">
+                                <div class="row ">
+                                    <div class="form-group col-md-6 " ng-show="child.alert.place_phone ">
+                                        <label class="control-label "><strong>Telefone residencial</strong></label>
+                                        <p><span ng-bind="child.alert.place_phone | brPhoneNumber "></span></p>
+                                    </div>
+                                    <div class="form-group col-md-6 " ng-show="child.alert.place_mobile ">
+                                        <label class="control-label "><strong>Telefone celular</strong></label>
+                                        <p><span ng-bind="child.alert.place_mobile | brPhoneNumber "></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -300,21 +302,21 @@
 
                             <div>
                                 <strong>Observação</strong>
-                                <p ng-bind="child.alert.observation"></p>
+                                <p ng-bind="child.alert.observation "></p>
                             </div>
-                            <label class="control-label"><strong>Alerta percente ao grupo: </strong></label>
-                            <p><span ng-bind="child.group_name"></span><button class="btn btn-raised btn-default" style="left: 10px;" type="button" ng-click="updateGroup()">Selecionar grupo</button></p>
+                            <label class="control-label "><strong>Alerta percente ao grupo: </strong></label>
+                            <p><span ng-bind="child.group_name "></span><button class="btn btn-raised btn-default " style="left: 10px; " type="button" ng-click="updateGroup() ">Selecionar grupo</button></p>
 
                         </form>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn  no-animate btn-warning" ng-show="!canAcceptAlert(child) && child.alert_status != 'rejected'"><i class="fa fa-warning"></i> Endereço do alerta pendente!</button>
-                    <button class="btn btn-raised" ng-show="sendingAlert"><i class="fa fa-warning"></i> Aguarde ...</button>
-                    <button type="submit" class="btn btn-raised no-animate btn-success" ng-click="accept(child)" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected' && !sendingAlert"><i class="fa fa-check"></i> Aceitar alerta</button>
-                    <button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected' && !sendingAlert"><i class="fa fa-ban"></i> Rejeitar alerta</button>
+                <div class="modal-footer ">
+                    <button type="button " class="btn no-animate btn-warning " ng-show="!canAcceptAlert(child) && child.alert_status !='rejected' "><i class="fa fa-warning "></i> Endereço do alerta pendente!</button>
+                    <button class="btn btn-raised " ng-show="sendingAlert "><i class="fa fa-warning "></i> Aguarde ...</button>
+                    <button type="submit " class="btn btn-raised no-animate btn-success " ng-click="accept(child) " ng-show="canAcceptAlert(child) && child.alert_status !='rejected' && !sendingAlert "><i class="fa fa-check "></i> Aceitar alerta</button>
+                    <button type="button " class="btn btn-raised btn-danger " ng-click="reject(child) " ng-show="child.alert_status !='rejected' && !sendingAlert "><i class="fa fa-ban "></i> Rejeitar alerta</button>
                     <br/><br/>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar janela</button>
+                    <button type="button " class="btn btn-default " data-dismiss="modal ">Fechar janela</button>
                 </div>
             </div>
         </div>

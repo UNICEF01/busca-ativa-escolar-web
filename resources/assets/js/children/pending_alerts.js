@@ -54,18 +54,18 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Atribuir grupo ao alerta',
-                        'O último grupo selecionado será atrinuído ao alerta:',
-                        { id: $scope.identity.tenant.primary_group_id, name: $scope.identity.tenant.primary_group_name },
+                        'O último grupo selecionado será atrinuído ao alerta:', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo grupo: ',
                         false,
                         null,
                         null,
                         true,
-                        'Nenhum grupo selecionado',)
+                        'Nenhum grupo selecionado', )
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.child.group_name = $scope.selectedGroup.name
                     $scope.child.group_id = $scope.selectedGroup.id
+                    $scope.editAlert([$scope.selectedGroup.name, $scope.selectedGroup.id], 'groups', $scope.child.id)
                 }).then(function(res) {
 
                 });
@@ -164,6 +164,11 @@
                     $('#modalChild').modal('hide');
                 });
             };
+
+            $scope.editAlert = function(data, type, id) {
+                console.log($scope.child)
+                Alerts.edit({ id: id, data: data, type: type }, function() {})
+            }
 
             Platform.whenReady(function() {
                 $scope.causes = StaticData.getAlertCauses();
