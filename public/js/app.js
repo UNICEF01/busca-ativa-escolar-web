@@ -9466,6 +9466,58 @@ if (!Array.prototype.find) {
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
+      $stateProvider.state('user_preferences', {
+        url: '/user_preferences',
+        templateUrl: '/views/preferences/manage_user_preferences.html',
+        controller: 'ManageUserPreferencesCtrl',
+      });
+    })
+    .controller(
+      'ManageUserPreferencesCtrl',
+      function (
+        $scope,
+        ngToast,
+        Identity,
+        UserPreferences,
+        PasswordReset,
+        StaticData
+      ) {
+        $scope.static = StaticData;
+        $scope.settings = {};
+
+        $scope.refresh = function () {
+          UserPreferences.get({}, function (res) {
+            $scope.settings = res.settings;
+          });
+        };
+
+        $scope.save = function () {
+          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
+        };
+
+        $scope.resetPassword = function () {
+          $scope.true = false;
+
+          PasswordReset.begin(
+            { email: Identity.getCurrentUser().email },
+            function (res) {
+              $scope.isLoading = false;
+              ngToast.success(
+                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
+              );
+            }
+          );
+        };
+
+        $scope.refresh();
+      }
+    );
+})();
+
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
       $stateProvider.state('reports', {
         url: '/reports',
         templateUrl: '/views/reports/reports.html',
@@ -10191,58 +10243,6 @@ if (!Array.prototype.find) {
         });
 
 })();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
-      $stateProvider.state('user_preferences', {
-        url: '/user_preferences',
-        templateUrl: '/views/preferences/manage_user_preferences.html',
-        controller: 'ManageUserPreferencesCtrl',
-      });
-    })
-    .controller(
-      'ManageUserPreferencesCtrl',
-      function (
-        $scope,
-        ngToast,
-        Identity,
-        UserPreferences,
-        PasswordReset,
-        StaticData
-      ) {
-        $scope.static = StaticData;
-        $scope.settings = {};
-
-        $scope.refresh = function () {
-          UserPreferences.get({}, function (res) {
-            $scope.settings = res.settings;
-          });
-        };
-
-        $scope.save = function () {
-          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
-        };
-
-        $scope.resetPassword = function () {
-          $scope.true = false;
-
-          PasswordReset.begin(
-            { email: Identity.getCurrentUser().email },
-            function (res) {
-              $scope.isLoading = false;
-              ngToast.success(
-                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
-              );
-            }
-          );
-        };
-
-        $scope.refresh();
-      }
-    );
-})();
-
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -14063,6 +14063,22 @@ function identify(namespace, file) {
                     canMovGroup = (level == 3 || level == 4) ? true : false;
                 }
                 return canMovGroup;
+            };
+
+            $scope.canEditGroup = function (level, group) {
+                var canEditGroup = false;
+                if(level==2){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                }
+                if(level==3){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { canEditGroup = true; }
+                }
+                if(level==4){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { canEditGroup = true; }
+                }
+                return canEditGroup;
             };
 
             $scope.movGroup = function (level, group) {

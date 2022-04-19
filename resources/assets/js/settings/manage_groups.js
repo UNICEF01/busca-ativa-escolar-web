@@ -235,6 +235,22 @@
                 return canMovGroup;
             };
 
+            $scope.canEditGroup = function (level, group) {
+                var canEditGroup = false;
+                if(level==2){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                }
+                if(level==3){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { canEditGroup = true; }
+                }
+                if(level==4){
+                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { canEditGroup = true; }
+                }
+                return canEditGroup;
+            };
+
             $scope.movGroup = function (level, group) {
                 Modals.show(
                     Modals.GroupPicker(

@@ -69,15 +69,13 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(2, group)" ng-if="canMovGroup(2)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupTwo(group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="movGroup(2, group)" ng-if="canMovGroup(2) && canEditGroup(2, group)"><i class="fa fa-arrows"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(2, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(2, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
                 </div>
-
-
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
@@ -102,9 +100,9 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupThree(group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3) && canEditGroup(3, group)"><i class="fa fa-arrows"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(3, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(3, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
@@ -132,13 +130,14 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(4, group)" ng-if="canMovGroup(4)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupFour(group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="movGroup(4, group)" ng-if="canMovGroup(4) && canEditGroup(4, group)"><i class="fa fa-arrows"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(4, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(4, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
                 </div>
+
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
                     <input ng-disabled="!selectedTabThree" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionFour.name" ng-enter="updateGroupFour()" id="group_for_edition_four">
