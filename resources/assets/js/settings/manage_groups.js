@@ -63,6 +63,7 @@
                 });
             };
 
+
             $scope.editGroupTwo = function(group) {
                 $scope.groupForEditionTwo = angular.copy(group);
                 var getElementToFocus = $window.document.getElementById("group_for_edition_two");
@@ -225,46 +226,67 @@
 
             };
 
+
             $scope.canMovGroup = function (level) {
-                var canMovGroup = true;
-                if ($scope.currentUser.tenant.is_state) {
-                    canMovGroup = level == 3 ? true : false;
-                } else {
-                    canMovGroup = (level == 3 || level == 4) ? true : false;
-                }
-                return canMovGroup;
+                if (level==3){ return true; }
+                if (level==4){ if(!$scope.currentUser.tenant.is_state){ return true; } }
+                return false;
             };
+
+            $scope.userCanMovGroup = function (level, group) {
+                if(level==2) { return false; }
+                if (level==3){
+                    if($scope.currentUser.group.is_primary) { return true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
+                }
+                if (level==4){
+                    if($scope.currentUser.group.is_primary) { return true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
+                }
+                return false;
+            };
+
 
             $scope.canEditGroup = function (level, group) {
-                var canEditGroup = false;
-                if(level==2){
-                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
-                }
+                if(level==2){ return true; }
                 if(level==3){
-                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { canEditGroup = true; }
+                    if($scope.currentUser.tenant.is_state) { return false; }
+                    if(!$scope.currentUser.tenant.is_state) { return true; }
                 }
-                if(level==4){
-                    if($scope.currentUser.group.is_primary) { canEditGroup = true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { canEditGroup = true; }
-                }
-                return canEditGroup;
+                if(level==4){ return false; }
+                return false;
             };
 
+            $scope.userCanEditGroup = function (level, group) {
+                if($scope.currentUser.group.is_primary) { return true; }
+                if(level==3){
+                    if($scope.currentUser.group.is_primary) { return true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
+                }
+                if(level==4){
+                    if($scope.currentUser.group.is_primary) { return true; }
+                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
+                }
+                return false;
+            };
+
+
             $scope.disableNewGroup = function (level){
-                if (level == 2 ){
-                    if ($scope.currentUser.group.is_primary) { return false; }
+                if(level==2){
+                    if($scope.currentUser.group.is_primary) { return false; }
                 }
-                if (level == 3 ){
-                    if (!$scope.selectedTabTwo ) { return true; }
-                    if ($scope.selectedTabTwo == $scope.currentUser.group.id ) { return false; }
-                }
-                if (level == 4 ){
-                    if (!$scope.selectedTabThree ) { return true; }
-                    if ($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id ) { return false; }
+                if(level==3){
+                    if($scope.selectedTabTwo == null){
+                        return true;
+                    }else{
+                        if($scope.currentUser.tenant.is_state) { return  true; }
+                        if($scope.currentUser.group.is_primary) { return false; }
+                        if($scope.selectedTabTwo == $scope.currentUser.group.id) { return false; }
+                    }
                 }
                 return true;
             };
+
 
             $scope.movGroup = function (level, group) {
                 Modals.show(
@@ -326,6 +348,7 @@
                 }
 
             };
+
 
             $scope.filterGroups = function(group) {
                 if (group === "two") {

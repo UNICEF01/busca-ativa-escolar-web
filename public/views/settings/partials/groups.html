@@ -27,21 +27,21 @@
                     scrollbar-color: #666666 transparent;
                 }
                 /* chrome */
-                
+
                 .selectgroup::-webkit-scrollbar {
                     width: 8px;
                 }
-                
+
                 .selectgroup::-webkit-scrollbar-track {
                     background: #ffffff;
                 }
-                
+
                 .selectgroup::-webkit-scrollbar-thumb {
                     background-color: #666666;
                     border-radius: 20px;
                     border: 3px solid #666666;
                 }
-                
+
                 .buttonx {
                     background: none!important;
                     border: none;
@@ -69,9 +69,8 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(2, group)" ng-if="canMovGroup(2) && canEditGroup(2, group)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(2, group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(2, group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupTwo(group)" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
@@ -79,6 +78,7 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
+
                     <input
                             type="text"
                             class="form-control"
@@ -107,9 +107,9 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3) && canEditGroup(3, group)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(3, group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(3, group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3) && userCanMovGroup(3, group)"><i class="fa fa-arrows"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupThree(group)" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
@@ -144,9 +144,9 @@
                                 {{group.name}}
                             </div>
                             <div class="col-md-5">
-                                <span class="badge label label-primary" ng-click="movGroup(4, group)" ng-if="canMovGroup(4) && canEditGroup(4, group)"><i class="fa fa-arrows"></i></span>
-                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(4, group)"><i class="fa fa-edit"></i></span>
-                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(4, group)"><i class="fa fa-close"></i></span>
+                                <span class="badge label label-primary" ng-click="movGroup(4, group)" ng-if="canMovGroup(4) && userCanMovGroup(4, group)"><i class="fa fa-arrows"></i></span>
+                                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)"><i class="fa fa-edit"></i></span>
+                                <span class="badge label label-danger" ng-click="removeGroup(group)" ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)"><i class="fa fa-close"></i></span>
                             </div>
                         </div>
                     </a>
