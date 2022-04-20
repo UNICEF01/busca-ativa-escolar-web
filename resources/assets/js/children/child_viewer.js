@@ -43,15 +43,27 @@
                     'Nenhum grupo selecionado')
             ).then(function(selectedGroup) {
 
-                var currentCase = {
-                    id: $scope.child.currentCase.id,
-                    group_id: selectedGroup.id,
-                    detach_user: true
-                };
+                var detachUser = false;
 
-                return Cases.update(currentCase, function(res) {
-                    $state.go('child_browser');
-                });
+                if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
+                    //se tem usuário assinado para o caso
+
+
+                } else {
+                    //se não tem usuário assinado para o caso
+
+                    var currentCase = {
+                        id: $scope.child.currentCase.id,
+                        group_id: selectedGroup.id,
+                        detach_user: detachUser
+                    };
+
+                    Cases.update(currentCase).$promise
+                        .then(function (res){
+                            ngToast.success('Grupo atribuído com sucesso!')
+                            $state.go('child_browser');
+                        });
+                }
 
             }).then(function(res) {
 
@@ -82,6 +94,7 @@
             }
             return false;
         };
+
 
     }
 

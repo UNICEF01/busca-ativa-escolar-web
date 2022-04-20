@@ -241,6 +241,8 @@
                 UserPicker: function(
                     title,
                     message,
+                    users,
+                    caseGroups,
                     canDismiss,
                     noUsersMessage
                 ) {
@@ -254,6 +256,12 @@
                             },
                             message: function() {
                                 return message;
+                            },
+                            users: function() {
+                                return users;
+                            },
+                            caseGroups: function() {
+                                return caseGroups;
                             },
                             noUsersMessage: function() {
                                 return noUsersMessage;
