@@ -122,6 +122,10 @@
                 });
             };
 
+            $scope.close = function() {
+                $('#modalChild').modal('hide');
+            }
+
             $scope.canAcceptAlert = function(child) {
                 if (!child) return false;
                 if (!child.requires_address_update) return true;
