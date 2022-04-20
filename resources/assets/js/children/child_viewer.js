@@ -34,7 +34,7 @@
                 Modals.GroupPicker(
                     'Atribuir grupo ao caso',
                     'O último grupo selecionado será atrubuído ao caso:',
-                    { id: $scope.identity.getCurrentUser().tenant.primary_group_id, name: $scope.identity.getCurrentUser().tenant.primary_group_name },
+                    $scope.identity.getCurrentUser().group,
                     'Atribuindo grupo: ',
                     false,
                     null,

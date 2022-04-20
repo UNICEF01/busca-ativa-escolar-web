@@ -603,7 +603,13 @@
                                     }
                                 }
                             }
-                            $scope.groupsOfCase = groupsToMove.reverse();
+
+                            var finalGroupsOfuserToAssign = [];
+                            for (let group of groupsToMove) {
+                                finalGroupsOfuserToAssign.push(group);
+                                if(group.id == $scope.identity.getCurrentUser().group.id) break;
+                            }
+                            $scope.groupsOfCase = finalGroupsOfuserToAssign.reverse();
                             $scope.loadModalAssignUser();
 
                         });

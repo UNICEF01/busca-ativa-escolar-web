@@ -41,11 +41,9 @@
 
 				<div style="padding-left: {{group.margin}}px;">
 					<h5>{{group.name}}</h5>
-
 				</div>
 
 				<div style="padding-left: {{group.margin}}px;" id="users_list">
-
 					<div ng-repeat="user in group.users" class="radio">
 						<label>
 							<input type="radio" id="optionsRadios{{user.id}}" ng-model="selectedUser.id" value="{{user.id}}"> {{user.name}}
@@ -54,6 +52,8 @@
 					</div>
 
 				</div>
+
+				<hr/>
 
 			</div>
 
