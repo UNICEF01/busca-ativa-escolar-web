@@ -62,10 +62,9 @@
                         true,
                         'Nenhum grupo selecionado', )
                 ).then(function(selectedGroup) {
-                    $scope.selectedGroup = selectedGroup;
-                    $scope.child.group_name = $scope.selectedGroup.name
-                    $scope.child.group_id = $scope.selectedGroup.id
-                    $scope.editAlert([$scope.selectedGroup.name, $scope.selectedGroup.id], 'groups', $scope.child.id)
+                    $scope.child.group_name = selectedGroup.name
+                    $scope.child.group_id = selectedGroup.id
+                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id)
                 }).then(function(res) {
 
                 });
