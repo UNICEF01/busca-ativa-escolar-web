@@ -911,6 +911,8 @@
         $scope.groupsToMove = [];
         $scope.groupsOfCase = [];
 
+        $scope.nodesGroup = [];
+
         $scope.addContact = function (id, parent) {
             if (id || (id === undefined)) {
                 $scope.fields.aux.contatos[parent].push({
@@ -1138,7 +1140,63 @@
         };
 
         $scope.assignUser = function () {
-            alert("");
+
+            var groupOfCase = null;
+
+            if ($scope.step.case.hasOwnProperty('group')){
+
+                if( $scope.step.case.group != null ){
+                    groupOfCase = $scope.step.case.group.id;
+
+                    //retorna grupo do caso com os grupos pais
+                    Groups.findByIdWithParents({id: groupOfCase}, function (res){
+
+                        var groupOfCaseWithParents = res.data[0];
+
+                        var groupsToMove = [];
+                        groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
+                        if ( groupOfCaseWithParents.parent != null) {
+                            groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
+                            if ( groupOfCaseWithParents.parent.parent != null) {
+                                groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
+                                if ( groupOfCaseWithParents.parent.parent.parent != null) {
+                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                                }
+                            }
+                        }
+                        $scope.groupsOfCase = groupsToMove.reverse();
+
+                        $scope.loadModalAssignUser();
+
+                    });
+                }
+
+            }
+
+        };
+
+        $scope.loadModalAssignUser = function (){
+
+            var nodes = [];
+            $scope.groupsOfCase.forEach(function(group) {
+                nodes.push(group.id);
+            });
+
+            CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id, nodes_groups: nodes}).$promise
+                .then(function (res) {
+                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfCase, true))
+                })
+                .then(function (user_id) {
+                    return CaseSteps.assignUser({
+                        type: $scope.step.step_type,
+                        id: $scope.step.id,
+                        user_id: user_id
+                    }).$promise;
+                }).then(function (res) {
+                ngToast.success("Usuário atribuído!");
+                $state.go('child_browser');
+            });
         };
 
         $scope.canAssignUser = function () {
@@ -1149,6 +1207,7 @@
             if ($scope.scopeOfCase() == "state") return false;
             if ($scope.identity.can('cases.assign')) return true;
             return false;
+
         };
 
         $scope.isCheckboxChecked = function (field, value) {
@@ -1487,15 +1546,26 @@
                     'Nenhum grupo selecionado')
             ).then(function(selectedGroup) {
 
-                var currentCase = {
-                    id: $scope.child.currentCase.id,
-                    group_id: selectedGroup.id,
-                    detach_user: true
-                };
+                var detachUser = false;
 
-                return Cases.update(currentCase, function(res) {
-                    $state.go('child_browser');
-                });
+                if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
+                    //se tem usuário assinado para o caso
+
+                } else {
+                    //se não tem usuário assinado para o caso
+
+                    var currentCase = {
+                        id: $scope.child.currentCase.id,
+                        group_id: selectedGroup.id,
+                        detach_user: detachUser
+                    };
+
+                    Cases.update(currentCase).$promise
+                        .then(function (res){
+                            ngToast.success('Grupo atribuído com sucesso!')
+                            $state.go('child_browser');
+                        });
+                }
 
             }).then(function(res) {
 
@@ -1526,6 +1596,7 @@
             }
             return false;
         };
+
 
     }
 
@@ -10280,7 +10351,7 @@ if (!Array.prototype.find) {
 				find: {method: 'GET', headers: headers},
 				save: {method: 'POST', headers: headers},
 				complete: {url: API.getURI('steps/:type/:id/complete'), method: 'POST', headers: headers},
-				assignableUsers: {url: API.getURI('steps/:type/:id/assignable_users'), method: 'GET', headers: headers},
+				assignableUsers: {url: API.getURI('steps/:type/:id/:nodes_groups/assignable_users'), method: 'GET', headers: headers},
 				assignUser: {url: API.getURI('steps/:type/:id/assign_user'), method: 'POST', headers: headers}
 			});
 
@@ -12789,6 +12860,8 @@ if (!Array.prototype.find) {
                 UserPicker: function(
                     title,
                     message,
+                    users,
+                    caseGroups,
                     canDismiss,
                     noUsersMessage
                 ) {
@@ -12802,6 +12875,12 @@ if (!Array.prototype.find) {
                             },
                             message: function() {
                                 return message;
+                            },
+                            users: function() {
+                                return users;
+                            },
+                            caseGroups: function() {
+                                return caseGroups;
                             },
                             noUsersMessage: function() {
                                 return noUsersMessage;
@@ -14236,163 +14315,6 @@ function identify(namespace, file) {
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
-      $stateProvider.state('pending_state_signups', {
-        url: '/pending_state_signups',
-        templateUrl: '/views/states/pending_signups.html',
-        controller: 'PendingStateSignupsCtrl',
-      });
-    })
-    .controller(
-      'PendingStateSignupsCtrl',
-      function (
-        $scope,
-        $rootScope,
-        ngToast,
-        Identity,
-        StateSignups,
-        StaticData
-      ) {
-        $scope.identity = Identity;
-        $scope.static = StaticData;
-
-        $scope.signups = {};
-        $scope.signup = {};
-        $scope.query = {
-          sort: { created_at: 'desc' },
-          filter: { status: 'pending' },
-          max: 16,
-          page: 1,
-        };
-
-        $scope.refresh = function () {
-          $scope.signups = StateSignups.getPending($scope.query);
-          return $scope.signups.$promise;
-        };
-
-        $scope.preview = function (signup) {
-          $scope.signup = signup;
-          if (signup.deleted_at === null) {
-            const accepted = StateSignups.accepted({ id: signup.id }).$promise;
-            accepted.then(function (res) {
-              if (res.status === 200) {
-                $scope.signup = signup;
-                if (signup.data.admin.dob.includes('-')) {
-                  let adminDate = signup.data.admin.dob.split('-');
-                  adminDate =
-                    adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
-                  signup.data.admin.dob = adminDate;
-                }
-                if (signup.data.coordinator.dob.includes('-')) {
-                  let coordinationDate = signup.data.coordinator.dob.split('-');
-                  coordinationDate =
-                    coordinationDate[2] +
-                    '/' +
-                    coordinationDate[1] +
-                    '/' +
-                    coordinationDate[0];
-                  signup.data.coordinator.dob = coordinationDate;
-                }
-
-                signup.is_approved_by_manager = false;
-                if (res.data) {
-                  signup.is_approved_by_manager = true;
-                }
-              }
-            });
-          }
-        };
-
-        $scope.approve = function (signup) {
-          StateSignups.approve({ id: signup.id }, function () {
-            $scope.refresh();
-            $scope.signup = {};
-          });
-        };
-
-        $scope.reject = function (signup) {
-          StateSignups.reject({ id: signup.id }, function () {
-            $scope.refresh();
-            $scope.signup = {};
-          });
-        };
-
-        $scope.updateRegistrationData = function (type, signup) {
-          StateSignups.updateRegistrationData(
-            { id: signup.id, type: type, data: signup.data[type] },
-            function (res) {
-              typeName = type === 'admin' ? 'gestor' : 'coordenador';
-
-              if (res.status !== 'ok') {
-                ngToast.danger(
-                  `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `
-                );
-                return;
-              }
-
-              //`horseThumb_${id}`
-              ngToast.success(`Dados do(a) ${typeName}(a)  atualizado!`);
-            }
-          );
-        };
-
-        $scope.resendNotification = function (signup) {
-          StateSignups.resendNotification({ id: signup.id }, function () {
-            ngToast.success('Notificação reenviada!');
-          });
-        };
-
-        $scope.resendMail = function (signup) {
-          StateSignups.resendMail({ id: signup.id }, function () {
-            ngToast.success('Notificação reenviada!');
-          });
-        };
-
-        $scope.refresh();
-      }
-    );
-})();
-
-(function() {
-
-	angular.module('BuscaAtivaEscolar')
-		.config(function($stateProvider) {
-			$stateProvider.state('state_browser', {
-				url: '/states',
-				templateUrl: '/views/states/list.html',
-				controller: 'StateBrowserCtrl'
-			})
-		})
-		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
-
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-			$scope.states = {};
-			$scope.query = {
-				filter: {},
-				sort: {},
-				max: 27,
-				page: 1
-			};
-
-			$scope.refresh = function() {
-				$scope.states = States.all($scope.query);
-			};
-
-            $scope.export = function() {
-                Identity.provideToken().then(function (token) {
-                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
-                });
-            };
-			
-			$scope.refresh();
-
-		});
-
-})();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
       $stateProvider.state('manager_confirmation', {
         url: '/confirmacao_gestor_estadual/{id}',
         templateUrl: '/views/state_signup/manager_confirmation.html',
@@ -14643,6 +14565,163 @@ function identify(namespace, file) {
     );
 })();
 
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
+      $stateProvider.state('pending_state_signups', {
+        url: '/pending_state_signups',
+        templateUrl: '/views/states/pending_signups.html',
+        controller: 'PendingStateSignupsCtrl',
+      });
+    })
+    .controller(
+      'PendingStateSignupsCtrl',
+      function (
+        $scope,
+        $rootScope,
+        ngToast,
+        Identity,
+        StateSignups,
+        StaticData
+      ) {
+        $scope.identity = Identity;
+        $scope.static = StaticData;
+
+        $scope.signups = {};
+        $scope.signup = {};
+        $scope.query = {
+          sort: { created_at: 'desc' },
+          filter: { status: 'pending' },
+          max: 16,
+          page: 1,
+        };
+
+        $scope.refresh = function () {
+          $scope.signups = StateSignups.getPending($scope.query);
+          return $scope.signups.$promise;
+        };
+
+        $scope.preview = function (signup) {
+          $scope.signup = signup;
+          if (signup.deleted_at === null) {
+            const accepted = StateSignups.accepted({ id: signup.id }).$promise;
+            accepted.then(function (res) {
+              if (res.status === 200) {
+                $scope.signup = signup;
+                if (signup.data.admin.dob.includes('-')) {
+                  let adminDate = signup.data.admin.dob.split('-');
+                  adminDate =
+                    adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
+                  signup.data.admin.dob = adminDate;
+                }
+                if (signup.data.coordinator.dob.includes('-')) {
+                  let coordinationDate = signup.data.coordinator.dob.split('-');
+                  coordinationDate =
+                    coordinationDate[2] +
+                    '/' +
+                    coordinationDate[1] +
+                    '/' +
+                    coordinationDate[0];
+                  signup.data.coordinator.dob = coordinationDate;
+                }
+
+                signup.is_approved_by_manager = false;
+                if (res.data) {
+                  signup.is_approved_by_manager = true;
+                }
+              }
+            });
+          }
+        };
+
+        $scope.approve = function (signup) {
+          StateSignups.approve({ id: signup.id }, function () {
+            $scope.refresh();
+            $scope.signup = {};
+          });
+        };
+
+        $scope.reject = function (signup) {
+          StateSignups.reject({ id: signup.id }, function () {
+            $scope.refresh();
+            $scope.signup = {};
+          });
+        };
+
+        $scope.updateRegistrationData = function (type, signup) {
+          StateSignups.updateRegistrationData(
+            { id: signup.id, type: type, data: signup.data[type] },
+            function (res) {
+              typeName = type === 'admin' ? 'gestor' : 'coordenador';
+
+              if (res.status !== 'ok') {
+                ngToast.danger(
+                  `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `
+                );
+                return;
+              }
+
+              //`horseThumb_${id}`
+              ngToast.success(`Dados do(a) ${typeName}(a)  atualizado!`);
+            }
+          );
+        };
+
+        $scope.resendNotification = function (signup) {
+          StateSignups.resendNotification({ id: signup.id }, function () {
+            ngToast.success('Notificação reenviada!');
+          });
+        };
+
+        $scope.resendMail = function (signup) {
+          StateSignups.resendMail({ id: signup.id }, function () {
+            ngToast.success('Notificação reenviada!');
+          });
+        };
+
+        $scope.refresh();
+      }
+    );
+})();
+
+(function() {
+
+	angular.module('BuscaAtivaEscolar')
+		.config(function($stateProvider) {
+			$stateProvider.state('state_browser', {
+				url: '/states',
+				templateUrl: '/views/states/list.html',
+				controller: 'StateBrowserCtrl'
+			})
+		})
+		.controller('StateBrowserCtrl', function ($scope, $rootScope, ngToast, $state, StaticData, States, Modals, Identity, Config) {
+
+			$scope.identity = Identity;
+			$scope.static = StaticData;
+			$scope.states = {};
+			$scope.query = {
+				filter: {},
+				sort: {},
+				max: 27,
+				page: 1
+			};
+
+			$scope.refresh = function() {
+				$scope.states = States.all($scope.query);
+			};
+
+            $scope.export = function() {
+                Identity.provideToken().then(function (token) {
+                    window.open(Config.getAPIEndpoint() + 'states/export?token=' + token);
+                });
+            };
+			
+			$scope.refresh();
+
+		});
+
+})();
 (function() {
 
 	var app = angular.module('BuscaAtivaEscolar')

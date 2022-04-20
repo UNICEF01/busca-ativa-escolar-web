@@ -349,6 +349,8 @@
         $scope.groupsToMove = [];
         $scope.groupsOfCase = [];
 
+        $scope.nodesGroup = [];
+
         $scope.addContact = function (id, parent) {
             if (id || (id === undefined)) {
                 $scope.fields.aux.contatos[parent].push({
@@ -576,7 +578,63 @@
         };
 
         $scope.assignUser = function () {
-            alert("");
+
+            var groupOfCase = null;
+
+            if ($scope.step.case.hasOwnProperty('group')){
+
+                if( $scope.step.case.group != null ){
+                    groupOfCase = $scope.step.case.group.id;
+
+                    //retorna grupo do caso com os grupos pais
+                    Groups.findByIdWithParents({id: groupOfCase}, function (res){
+
+                        var groupOfCaseWithParents = res.data[0];
+
+                        var groupsToMove = [];
+                        groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
+                        if ( groupOfCaseWithParents.parent != null) {
+                            groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
+                            if ( groupOfCaseWithParents.parent.parent != null) {
+                                groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
+                                if ( groupOfCaseWithParents.parent.parent.parent != null) {
+                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                                }
+                            }
+                        }
+                        $scope.groupsOfCase = groupsToMove.reverse();
+
+                        $scope.loadModalAssignUser();
+
+                    });
+                }
+
+            }
+
+        };
+
+        $scope.loadModalAssignUser = function (){
+
+            var nodes = [];
+            $scope.groupsOfCase.forEach(function(group) {
+                nodes.push(group.id);
+            });
+
+            CaseSteps.assignableUsers({type: $scope.step.step_type, id: $scope.step.id, nodes_groups: nodes}).$promise
+                .then(function (res) {
+                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
+                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfCase, true))
+                })
+                .then(function (user_id) {
+                    return CaseSteps.assignUser({
+                        type: $scope.step.step_type,
+                        id: $scope.step.id,
+                        user_id: user_id
+                    }).$promise;
+                }).then(function (res) {
+                ngToast.success("Usuário atribuído!");
+                $state.go('child_browser');
+            });
         };
 
         $scope.canAssignUser = function () {
@@ -587,6 +645,7 @@
             if ($scope.scopeOfCase() == "state") return false;
             if ($scope.identity.can('cases.assign')) return true;
             return false;
+
         };
 
         $scope.isCheckboxChecked = function (field, value) {
