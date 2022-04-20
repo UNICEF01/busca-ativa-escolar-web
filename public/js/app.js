@@ -1149,26 +1149,27 @@
                     groupOfCase = $scope.step.case.group.id;
 
                     //retorna grupo do caso com os grupos pais
-                    Groups.findByIdWithParents({id: groupOfCase}, function (res){
+                    Groups.findByIdWithParents({id: groupOfCase}).$promise
+                        .then(function (res){
 
-                        var groupOfCaseWithParents = res.data[0];
-
-                        var groupsToMove = [];
-                        groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
-                        if ( groupOfCaseWithParents.parent != null) {
-                            groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
-                            if ( groupOfCaseWithParents.parent.parent != null) {
-                                groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
-                                if ( groupOfCaseWithParents.parent.parent.parent != null) {
-                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                            var groupOfCaseWithParents = res.data[0];
+                            var groupsToMove = [];
+                            
+                            groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
+                            if ( groupOfCaseWithParents.parent != null) {
+                                groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
+                                if ( groupOfCaseWithParents.parent.parent != null) {
+                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
+                                    if ( groupOfCaseWithParents.parent.parent.parent != null) {
+                                        groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                                    }
                                 }
                             }
-                        }
-                        $scope.groupsOfCase = groupsToMove.reverse();
+                            $scope.groupsOfCase = groupsToMove.reverse();
+                            $scope.loadModalAssignUser();
 
-                        $scope.loadModalAssignUser();
+                        });
 
-                    });
                 }
 
             }
@@ -9585,58 +9586,6 @@ if (!Array.prototype.find) {
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
-      $stateProvider.state('user_preferences', {
-        url: '/user_preferences',
-        templateUrl: '/views/preferences/manage_user_preferences.html',
-        controller: 'ManageUserPreferencesCtrl',
-      });
-    })
-    .controller(
-      'ManageUserPreferencesCtrl',
-      function (
-        $scope,
-        ngToast,
-        Identity,
-        UserPreferences,
-        PasswordReset,
-        StaticData
-      ) {
-        $scope.static = StaticData;
-        $scope.settings = {};
-
-        $scope.refresh = function () {
-          UserPreferences.get({}, function (res) {
-            $scope.settings = res.settings;
-          });
-        };
-
-        $scope.save = function () {
-          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
-        };
-
-        $scope.resetPassword = function () {
-          $scope.true = false;
-
-          PasswordReset.begin(
-            { email: Identity.getCurrentUser().email },
-            function (res) {
-              $scope.isLoading = false;
-              ngToast.success(
-                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
-              );
-            }
-          );
-        };
-
-        $scope.refresh();
-      }
-    );
-})();
-
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
       $stateProvider.state('reports', {
         url: '/reports',
         templateUrl: '/views/reports/reports.html',
@@ -10362,6 +10311,58 @@ if (!Array.prototype.find) {
         });
 
 })();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
+      $stateProvider.state('user_preferences', {
+        url: '/user_preferences',
+        templateUrl: '/views/preferences/manage_user_preferences.html',
+        controller: 'ManageUserPreferencesCtrl',
+      });
+    })
+    .controller(
+      'ManageUserPreferencesCtrl',
+      function (
+        $scope,
+        ngToast,
+        Identity,
+        UserPreferences,
+        PasswordReset,
+        StaticData
+      ) {
+        $scope.static = StaticData;
+        $scope.settings = {};
+
+        $scope.refresh = function () {
+          UserPreferences.get({}, function (res) {
+            $scope.settings = res.settings;
+          });
+        };
+
+        $scope.save = function () {
+          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
+        };
+
+        $scope.resetPassword = function () {
+          $scope.true = false;
+
+          PasswordReset.begin(
+            { email: Identity.getCurrentUser().email },
+            function (res) {
+              $scope.isLoading = false;
+              ngToast.success(
+                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
+              );
+            }
+          );
+        };
+
+        $scope.refresh();
+      }
+    );
+})();
+
 (function() {
     angular
         .module('BuscaAtivaEscolar')

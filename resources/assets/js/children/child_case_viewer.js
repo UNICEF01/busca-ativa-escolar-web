@@ -587,26 +587,27 @@
                     groupOfCase = $scope.step.case.group.id;
 
                     //retorna grupo do caso com os grupos pais
-                    Groups.findByIdWithParents({id: groupOfCase}, function (res){
+                    Groups.findByIdWithParents({id: groupOfCase}).$promise
+                        .then(function (res){
 
-                        var groupOfCaseWithParents = res.data[0];
-
-                        var groupsToMove = [];
-                        groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
-                        if ( groupOfCaseWithParents.parent != null) {
-                            groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
-                            if ( groupOfCaseWithParents.parent.parent != null) {
-                                groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
-                                if ( groupOfCaseWithParents.parent.parent.parent != null) {
-                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                            var groupOfCaseWithParents = res.data[0];
+                            var groupsToMove = [];
+                            
+                            groupsToMove.push({id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin:80 });
+                            if ( groupOfCaseWithParents.parent != null) {
+                                groupsToMove.push({id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin:60});
+                                if ( groupOfCaseWithParents.parent.parent != null) {
+                                    groupsToMove.push({id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin:40});
+                                    if ( groupOfCaseWithParents.parent.parent.parent != null) {
+                                        groupsToMove.push({id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin:20});
+                                    }
                                 }
                             }
-                        }
-                        $scope.groupsOfCase = groupsToMove.reverse();
+                            $scope.groupsOfCase = groupsToMove.reverse();
+                            $scope.loadModalAssignUser();
 
-                        $scope.loadModalAssignUser();
+                        });
 
-                    });
                 }
 
             }
