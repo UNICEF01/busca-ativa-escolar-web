@@ -48,7 +48,6 @@
                 if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
                     //se tem usuário assinado para o caso
 
-
                 } else {
                     //se não tem usuário assinado para o caso
 
