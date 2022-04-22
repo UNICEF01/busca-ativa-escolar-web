@@ -12,6 +12,8 @@
 
             $scope.currentState = $state.current.name;
 
+            $scope.typeUSer = {};
+
             $scope.user = {};
             $scope.selectedGroup = {};
             $scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
@@ -43,6 +45,7 @@
                 userTypeVisitantes = StaticData.getUserTypeVisitantes();
                 permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
                 $scope.selectedGroup = Identity.getCurrentUser().group;
+                $scope.typeUSer = Identity.getCurrentUser().type;
 
                 if (!$scope.isCreating) {
 
@@ -195,6 +198,13 @@
             };
 
             $scope.save = function() {
+                //se tiver grupo - set group
+                if ($scope.user.hasOwnProperty('group'))
+                    $scope.user.group_id = $scope.user.group.id;
+
+                //se não tiver grupo - set group
+                if (!$scope.user.hasOwnProperty('group'))
+                    $scope.user.group_id = $scope.selectedGroup.id;
 
                 //se for algum perfil estadua que faz a edicao do usuario
                 if (Identity.getType() === 'gestor_estadual' ||
@@ -204,22 +214,12 @@
                     delete $scope.user.group_id;
                 }
 
-                //se tiver grupo - set group
-                if ($scope.user.hasOwnProperty('group'))
-                    $scope.user.group_id = $scope.user.group.id;
-
-
                 if ($scope.user.type === "perfil_visitante")
                     $scope.user.type = getFinalTypeUser();
-
 
                 var data = Object.assign({}, $scope.user);
                 data = Utils.prepareDateFields(data, dateOnlyFields);
                 data = Utils.prepareCityFields(data, ['work_city']);
-
-                //se não tiver grupo - set group
-                if (!$scope.user.hasOwnProperty('group'))
-                    data.group_id = $scope.selectedGroup.id;
 
                 if ($scope.isCreating)
                     return Users.create(data).$promise.then(onSaved)
