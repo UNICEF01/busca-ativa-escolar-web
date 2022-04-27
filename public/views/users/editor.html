@@ -30,19 +30,18 @@
 
         <div class="panel-body">
 
-            <div class="row">
-                <div class="form-group {{currentState !== 'lgpd_signup' ? 'col-md-6' : 'col-md-12'}}">
-                    <label class="control-label" for="fld-name">Nome*</label>
-                    <input type="text" class="form-control" id="fld-name" ng-model="user.name" required />
-                </div>
+            <div class="form-group {{currentState !== 'lgpd_signup' ? 'col-md-6' : 'col-md-12'}}">
+                <label class="control-label" for="fld-name">Nome*</label>
+                <input type="text" class="form-control" id="fld-name" ng-model="user.name" required />
+            </div>
 
-                <div class="form-group col-md-6" ng-show="currentState !== 'lgpd_signup'">
+            <div ng-show="currentState !== 'lgpd_signup'">
+                <div class="form-group col-md-6">
                     <label class="control-label" for="fld-type">Função ocupada no sistema*</label>
                     <select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunction()" required></select>
                 </div>
             </div>
-
-            <hr>
+            <hr />
 
             <div ng-if="user.type=='perfil_visitante'">
                 <div class="col-md-6">
@@ -55,7 +54,7 @@
                         </div>
                         <div class="form-check">
                             <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name" value="visitante_estadual" id="visitante_estadual" />
-                            <label class="form-check-label" for="visitante_estadual"> Visitante</label>
+                            <label class="form-check-label" for="visitante_estadual"> Visitante estadual </label>
                         </div>
                     </div>
                 </div>
@@ -88,129 +87,125 @@
             </div>
 
             <div ng-if="canDefineUserTenant() || canDefineUserUF()">
-                <div class="row">
-                    <div class="form-group col-md-12" ng-if="!canDefineUserUF() && canDefineUserTenant() && user.type != 'perfil_visitante'">
-                        <label class="control-label" for="fld-tenant_id">
-              <i class="fa fa-university"></i> Município da plataforma* </label>
-                        <select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id" ng-options="n.id as n.name for n in tenants.data" ng-change="onSelectTenant()"></select>
-                    </div>
+                <div class="form-group col-md-12" ng-if="!canDefineUserUF() && canDefineUserTenant() && user.type != 'perfil_visitante'">
+                    <label class="control-label" for="fld-tenant_id">
+                        <i class="fa fa-university"></i> Município da plataforma* </label>
+                    <select class="form-control" id="fld-tenant_id" ng-model="user.tenant_id" ng-options="n.id as n.name for n in tenants.data" ng-change="onSelectTenant()"></select>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12" ng-if="canDefineUserUF() || perfilVisitante.name == 'visitante_estadual'">
-                        <label class="control-label" for="fld-uf">
-              <i class="fa fa-university"></i> Unidade Federal* </label>
-                        <select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'" ng-change="onSelectUf()"></select>
-                    </div>
+                <div class="form-group col-md-12" ng-if="canDefineUserUF() || perfilVisitante.name == 'visitante_estadual'">
+                    <label class="control-label" for="fld-uf">
+                        <i class="fa fa-university"></i> Unidade Federal* </label>
+                    <select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'" ng-change="onSelectUf()"></select>
                 </div>
             </div>
 
             <div ng-show="currentState !== 'lgpd_signup'">
-
-                <div class="col-md-12 pl-0">
-                    <h5>Dados de acesso</h5>
-                </div>
-
-                <div class="row">
-                    <div class="form-group col-md-6">
+                <div class="col-md-12">
+                    <div class="col-md-12 pl-0">
+                        <h5>Dados de acesso</h5>
+                    </div>
+                    <!--                    <div class="col-md-6">-->
+                    <!--                        <button class="btn btn-xs btn-raised btn-info pull-right"-->
+                    <!--                                ng-click="showInputKey = !showInputKey"-->
+                    <!--                                ng-show="user.tenant_id"-->
+                    <!--                                type="button"><i class="fa fa-key"></i> Alterar senha-->
+                    <!--                        </button>-->
+                    <!--                    </div>-->
+                    <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}">
                         <label class="control-label" for="fld-email">
-              <i class="fa fa-envelope"></i> E-mail de acesso* </label>
+                            <i class="fa fa-envelope"></i> E-mail de acesso* </label>
                         <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required ng-model="user.email" />
                     </div>
-
-                </div>
-            </div>
-            <div class="row" ng-if="!typeUSer.include(estadual) || !typeUSer.include(nacional)">
-                <div class="panel-heading"><i class="material-icons">group</i> Grupo*</div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="form-group col-md-9">
-                            <input type="text" class="form-control" id="fld-group" ng-if="isCreating == true" ng-model="selectedGroup.name" disabled>
-                            <input type="text" class="form-control" id="fld-group" ng-if="isCreating != true" ng-model="user.group.name" disabled>
-                        </div>
-                        <div class="form-group col-md-3">
-                            <button class="btn btn-raised btn-default" type="button" ng-if="isCreating == true" ng-click="addGroup()">Atribuir grupo</button>
-                            <button class="btn btn-raised btn-default" type="button" ng-if="isCreating != true" ng-click="changeGroup()">Alterar grupo</button>
-                        </div>
+                    <div class="form-group col-md-6" ng-class="{'col-md-4': showInputKey || !user.tenant_id}" ng-if="( isTargetUserTenantBound() || isTargetUserUFBound() ) && user.type != 'perfil_visitante'">
+                        <label class="control-label" for="fld-group">Grupo*</label>
+                        <select class="form-control" id="fld-group" ng-model="user.group_id" ng-options="n.id as n.name for n in groups.data">
+                            <option value="">Nenhum</option>
+                        </select>
                     </div>
+                    <!--                    <div class="form-group col-md-4" ng-show="showInputKey || !user.tenant_id">-->
+                    <!--                        <div class="input-group">-->
+                    <!--                            <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de acesso*</label>-->
+                    <!--                            <input type="password" autocomplete="new-password" class="form-control" id="fld-password" ng-model="user.password">-->
+                    <!--                            <span class="input-group-btn" uib-tooltip="Exibir a senha">-->
+                    <!--                            <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()">-->
+                    <!--                                <i class="fa fa-eye"></i>-->
+                    <!--                            </button>-->
+                    <!--                        </span>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
             </div>
-            <hr>
+            <hr />
 
             <h5>Dados pessoais</h5>
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-dob">Data de nascimento*</label>
-                    <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" />
-                    <div id="message_date">
-                        <p id="error_date"></p>
-                    </div>
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-cpf">CPF*</label>
-                    <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf" placeholder="000.000.000-00" />
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-dob">Data de nascimento*</label>
+                <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" />
+                <div id="message_date">
+                    <p id="error_date"></p>
                 </div>
             </div>
-            <hr>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-cpf">CPF*</label>
+                <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf" placeholder="000.000.000-00" />
+            </div>
+            <hr />
 
             <h5>Contatos</h5>
 
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-                    <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" />
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-                    <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.work_mobile" placeholder="(00) 00000-0000" />
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
-                    <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000" />
-                </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" />
             </div>
 
-            <hr>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.work_mobile" placeholder="(00) 00000-0000" />
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
+                <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000" />
+            </div>
+
+            <hr />
 
             <h5>Endereço institucional</h5>
 
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label class="control-label" for="fld-address">Endereço institucional</label>
-                    <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
-                </div>
+            <div class="form-group col-md-12">
+                <label class="control-label" for="fld-address">Endereço institucional</label>
+                <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
             </div>
 
-            <div class="row">
-                <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+            <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-cep">CEP institucional</label>
+                <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
             </div>
 
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-cep">CEP institucional</label>
-                    <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-neighborhood">Bairro</label>
-                    <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
-                </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-neighborhood">Bairro</label>
+                <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
             </div>
 
-            <hr>
+            <hr />
 
             <h5>Dados organizacionais</h5>
 
-            <div class="row">
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-institution">Órgão</label>
-                    <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
-                </div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-position">Cargo</label>
-                    <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
-                </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-institution">Órgão</label>
+                <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
             </div>
 
-            <hr>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="fld-position">Cargo</label>
+                <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
+            </div>
+
+            <hr />
 
             <div ng-if="currentState === 'lgpd_signup'">
 
@@ -218,7 +213,7 @@
 
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-gp-email">
-            <i class="fa fa-envelope"></i> E-mail de acesso* </label>
+                        <i class="fa fa-envelope"></i> E-mail de acesso* </label>
                     <input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="user.email" />
                 </div>
 
@@ -226,9 +221,8 @@
 
                     <div class="input-group">
                         <label class="control-label" for="fld-gp-password">
-              <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
-                        <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}" title="Senha não pode estar em branco."
-                        />
+                            <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
+                        <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}" title="Senha não pode estar em branco." />
                         <span class="input-group-btn" uib-tooltip="Exibir a senha">
               <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
                 <i class="fa fa-eye"></i>
@@ -264,15 +258,12 @@
                         <input type="checkbox" ng-model="checked" />&nbsp;Declaro que estou ciente dos termos deste Aviso de Privacidade.
                     </p>
                     <p style="margin-top:0pt; margin-bottom:18pt;">
-                        <input type="checkbox" ng-model="checked1" /> Declaro que estou ciente e concordo com a transfer&ecirc;ncia dos meus dados pessoais e dos dados pessoais da crian&ccedil;a e/ou adolescente que represento para o exterior, nos termos
-                        do cap&iacute;tulo &ldquo;
-                        <a href="#_Ref25330631" style="text-decoration:none;">
-                            <span style="color:#0563c1;">Transfer&ecirc;ncia de Dados entre Fronteiras</span>
-                        </a>&rdquo; deste Aviso de Privacidade.
+                        <input type="checkbox" ng-model="checked1" /> Declaro que estou ciente e concordo com a transfer&ecirc;ncia dos meus dados pessoais e dos dados pessoais da crian&ccedil;a e/ou adolescente que represento para o exterior, nos termos do cap&iacute;tulo &ldquo; <a href="#_Ref25330631" style="text-decoration:none;">
+                        <span style="color:#0563c1;">Transfer&ecirc;ncia de Dados entre Fronteiras</span>
+                    </a>&rdquo; deste Aviso de Privacidade.
                     </p>
                     <p style="margin-top:0pt; margin-bottom:18pt;">
-                        <input type="checkbox" ng-model="checked2" />&nbsp;Declaro que estou ciente e concordo com o tratamento dos dados pessoais do(a) crian&ccedil;a e/ou adolescente que aqui represento, ou em rela&ccedil;&atilde;o ao(&agrave;) qual
-                        sou o respons&aacute;vel legal, conforme previsto neste Aviso de Privacidade.
+                        <input type="checkbox" ng-model="checked2" />&nbsp;Declaro que estou ciente e concordo com o tratamento dos dados pessoais do(a) crian&ccedil;a e/ou adolescente que aqui represento, ou em rela&ccedil;&atilde;o ao(&agrave;) qual sou o respons&aacute;vel legal, conforme previsto neste Aviso de Privacidade.
                     </p>
                 </div>
 
@@ -280,11 +271,11 @@
 
             <div class="clearfix">
                 <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary">
-          <i class="fa fa-arrow-left"></i> Voltar </button>
+                    <i class="fa fa-arrow-left"></i> Voltar </button>
                 <button ng-if="currentState !== 'lgpd_signup'" type="submit" class="btn btn-raised btn-primary pull-right">
-          <i class="fa fa-save"></i> Salvar </button>
+                    <i class="fa fa-save"></i> Salvar </button>
                 <button ng-if="currentState === 'lgpd_signup'" type="submit" ng-disabled="!checked || !checked1 || !checked2" class="btn btn-raised btn-primary pull-right">
-          <i class="fa fa-save"></i> Salvar </button>
+                    <i class="fa fa-save"></i> Salvar </button>
             </div>
 
         </div>
@@ -312,13 +303,13 @@
         padding: 0px;
         margin: 0px;
     }
-    
+
     #message p {
         padding: 0px 0px 0px 30px;
         font-size: 12px;
         margin: 0px;
     }
-    
+
     #message_date {
         font-size: 12px;
         display: none;
@@ -327,29 +318,29 @@
         padding: 0px;
         margin: 0px;
     }
-    
+
     #message_date p {
         padding: 0px;
         font-size: 12px;
         margin: 0px;
     }
+
     /* Add a green text color and a checkmark when the requirements are right */
-    
     .valid {
         color: green;
     }
-    
+
     .valid:before {
         position: relative;
         left: -10px;
         content: '✔';
     }
+
     /* Add a red text color and an "x" icon when the requirements are wrong */
-    
     .invalid {
         color: red;
     }
-    
+
     .invalid:before {
         position: relative;
         left: -10px;

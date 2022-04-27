@@ -66,7 +66,7 @@
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };
@@ -86,7 +86,7 @@
                     $scope.child.group_name = selectedGroup.name
                     $scope.child.group_id = selectedGroup.id
                     $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id, false)
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };
@@ -221,8 +221,16 @@
                     Alerts.edit({ id: id, data: data, type: type }, function() {
                         $scope.refresh();
                     })
-                else
-                    Alerts.edit({ id: id, data: data, type: type }, function() {})
+                else {
+                    if (type == 'groups')
+                        Alerts.edit({ id: id, data: data, type: type }, function() {
+                            $scope.refresh();
+                            $('#modalChild').modal('hide');
+                        })
+                    else
+                        Alerts.edit({ id: id, data: data, type: type }, function() {})
+                }
+
             }
 
             Platform.whenReady(function() {
