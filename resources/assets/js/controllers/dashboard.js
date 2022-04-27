@@ -6,7 +6,6 @@
         $scope.static = StaticData;
         $scope.tenantInfo = Tenants.getSettings();
         $scope.tenants = [];
-        $scope.showDetailsMap = false;
         $scope.showMessageMap = 'Ver detalhes';
         $scope.otherData = {};
 

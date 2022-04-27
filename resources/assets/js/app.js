@@ -18,8 +18,6 @@
 
 			'idf.br-filters',
 			'jsonFormatter',
-			'uiGmapgoogle-maps',
-
 			'ui.router',
 			'ui.bootstrap',
 			'ui.select',
@@ -29,7 +27,6 @@
             'ui.mask',
             'angular.viacep',
 			'ngclipboard',
-			'ng-fusioncharts',
-			// 'heremaps',
+			'ng-fusioncharts'
 		])
 })();
