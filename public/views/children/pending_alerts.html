@@ -59,6 +59,12 @@
                         <thead>
                             <tr>
                                 <th>
+
+                                    <input type="checkbox" ng-model="check_all_child" ng-change="onCheckSelectAll()">
+                                    <span class="checkmark"></span>
+
+                                </th>
+                                <th>
                                     <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
                                 </th>
                                 <th>
@@ -84,6 +90,11 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="child in children.data" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
+                                <td>
+                                    <input type="checkbox" checklist-model="selected.children" checklist-value="child" ng-change="getChild(child)" ng-model="check_child" />
+                                    <span class="checkmark"></span>
+
+                                </td>
                                 <td ng-click="preview(child)">
                                     <span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i>
                                 </td>
@@ -125,6 +136,9 @@
                     </div>
                     <hr>
                     <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+                </div>
+                <div class="panel-footer">
+                    <p class="text-right"> <button type="button" class="btn btn-raised btn-default" ng-click="changeAllGroup()">Alterar grupo</button></p>
                 </div>
             </div>
 
@@ -320,6 +334,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>
