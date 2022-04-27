@@ -28,6 +28,27 @@
                 group_id: null,
             };
 
+            $scope.selected = {
+                children: []
+            };
+
+            $scope.onCheckSelectAll = function() {
+                if ($scope.check_all_child) {
+                    $scope.selected.children = angular.copy($scope.children.data);
+                } else {
+                    $scope.selected.children = [];
+                }
+
+            };
+
+            $scope.getChild = function(child) {
+                if ($scope.check_child)
+                    $scope.selected.children.push(child)
+                else
+                    $scope.selected.children = $scope.selected.children.filter(function(el) { return el.id != child.id; });
+            }
+
+
             $scope.search = {};
 
             $scope.changeGroup = function() {
@@ -45,7 +66,7 @@
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };
@@ -64,10 +85,35 @@
                 ).then(function(selectedGroup) {
                     $scope.child.group_name = selectedGroup.name
                     $scope.child.group_id = selectedGroup.id
-                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id)
-                }).then(function(res) {
+                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id, false)
+                }).then(function() {
 
                 });
+            };
+
+            $scope.changeAllGroup = function() {
+                if ($scope.selected.children.length > 0) {
+                    Modals.show(
+                        Modals.GroupPicker(
+                            'Atribuir grupo ao alerta',
+                            'O último grupo selecionado será atrinuído ao alerta:', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                            'Atribuindo grupo: ',
+                            false,
+                            null,
+                            null,
+                            true,
+                            'Nenhum grupo selecionado', )
+                    ).then(function(selectedGroup) {
+                        var size = $scope.selected.children.length;
+                        ids = []
+                        for (let i = 0; i < size; ++i)
+                            ids[i] = $scope.selected.children[i].id
+                        $scope.editAlert([selectedGroup.name, selectedGroup.id], 'groups', ids, true)
+                    }).then(function() {});
+                } else {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione os alertas para os quais deseja atribuir um novo grupo'));
+                }
+
             };
 
             $scope.branchGroups = "carregando ...";
@@ -112,6 +158,8 @@
                 $scope.child = null;
                 $scope.children = Alerts.getPending($scope.query);
                 $scope.search = $scope.children;
+                $scope.selected.children = [];
+                $scope.check_all_child = false;
             };
 
             $scope.preview = function(child) {
@@ -168,9 +216,21 @@
                 });
             };
 
-            $scope.editAlert = function(data, type, id) {
-                console.log($scope.child)
-                Alerts.edit({ id: id, data: data, type: type }, function() {})
+            $scope.editAlert = function(data, type, id, check) {
+                if (check == true)
+                    Alerts.edit({ id: id, data: data, type: type }, function() {
+                        $scope.refresh();
+                    })
+                else {
+                    if (type == 'groups')
+                        Alerts.edit({ id: id, data: data, type: type }, function() {
+                            $scope.refresh();
+                            $('#modalChild').modal('hide');
+                        })
+                    else
+                        Alerts.edit({ id: id, data: data, type: type }, function() {})
+                }
+
             }
 
             Platform.whenReady(function() {

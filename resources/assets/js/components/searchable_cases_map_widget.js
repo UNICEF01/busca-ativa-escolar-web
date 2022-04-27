@@ -26,7 +26,7 @@
                 if (uf) {
                     scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
                 }
-
+                
             };
 
             scope.refresh = function () {

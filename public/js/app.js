@@ -1768,6 +1768,27 @@
                 group_id: null,
             };
 
+            $scope.selected = {
+                children: []
+            };
+
+            $scope.onCheckSelectAll = function() {
+                if ($scope.check_all_child) {
+                    $scope.selected.children = angular.copy($scope.children.data);
+                } else {
+                    $scope.selected.children = [];
+                }
+
+            };
+
+            $scope.getChild = function(child) {
+                if ($scope.check_child)
+                    $scope.selected.children.push(child)
+                else
+                    $scope.selected.children = $scope.selected.children.filter(function(el) { return el.id != child.id; });
+            }
+
+
             $scope.search = {};
 
             $scope.changeGroup = function() {
@@ -1785,7 +1806,7 @@
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };
@@ -1804,10 +1825,35 @@
                 ).then(function(selectedGroup) {
                     $scope.child.group_name = selectedGroup.name
                     $scope.child.group_id = selectedGroup.id
-                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id)
-                }).then(function(res) {
+                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id, false)
+                }).then(function() {
 
                 });
+            };
+
+            $scope.changeAllGroup = function() {
+                if ($scope.selected.children.length > 0) {
+                    Modals.show(
+                        Modals.GroupPicker(
+                            'Atribuir grupo ao alerta',
+                            'O último grupo selecionado será atrinuído ao alerta:', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                            'Atribuindo grupo: ',
+                            false,
+                            null,
+                            null,
+                            true,
+                            'Nenhum grupo selecionado', )
+                    ).then(function(selectedGroup) {
+                        var size = $scope.selected.children.length;
+                        ids = []
+                        for (let i = 0; i < size; ++i)
+                            ids[i] = $scope.selected.children[i].id
+                        $scope.editAlert([selectedGroup.name, selectedGroup.id], 'groups', ids, true)
+                    }).then(function() {});
+                } else {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione os alertas para os quais deseja atribuir um novo grupo'));
+                }
+
             };
 
             $scope.branchGroups = "carregando ...";
@@ -1852,6 +1898,8 @@
                 $scope.child = null;
                 $scope.children = Alerts.getPending($scope.query);
                 $scope.search = $scope.children;
+                $scope.selected.children = [];
+                $scope.check_all_child = false;
             };
 
             $scope.preview = function(child) {
@@ -1908,9 +1956,21 @@
                 });
             };
 
-            $scope.editAlert = function(data, type, id) {
-                console.log($scope.child)
-                Alerts.edit({ id: id, data: data, type: type }, function() {})
+            $scope.editAlert = function(data, type, id, check) {
+                if (check == true)
+                    Alerts.edit({ id: id, data: data, type: type }, function() {
+                        $scope.refresh();
+                    })
+                else {
+                    if (type == 'groups')
+                        Alerts.edit({ id: id, data: data, type: type }, function() {
+                            $scope.refresh();
+                            $('#modalChild').modal('hide');
+                        })
+                    else
+                        Alerts.edit({ id: id, data: data, type: type }, function() {})
+                }
+
             }
 
             Platform.whenReady(function() {
@@ -4415,7 +4475,7 @@
                 if (uf) {
                     scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
                 }
-
+                
             };
 
             scope.refresh = function () {
@@ -7095,119 +7155,6 @@ Highcharts.maps["countries/br/br-all"] = {
         });
 })();
 (function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('maintenance_imports', {
-					url: '/maintenance/imports',
-					templateUrl: '/views/maintenance/imports.html',
-					controller: 'ImportsCtrl'
-				})
-		})
-		.controller('ImportsCtrl',
-			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, ImportJobs, Modals, ngToast, API) {
-
-				$scope.static = StaticData;
-
-				$scope.query = {
-					max: 20,
-					page: 1
-				};
-
-				$scope.search = {};
-
-				$scope.refresh = function() {
-					ImportJobs.all({$hide_loading_feedback: true, per_page: $scope.query.max, page: $scope.query.page}, function (jobs) {
-						$scope.jobs = jobs.data;
-						$scope.search = $scope.returnNewSearch(jobs);
-						//console.log($scope.search);
-					});
-				};
-
-				$scope.jobs = {};
-
-				$scope.refresh();
-
-				$scope.newImport = function (type) {
-					Modals.show(
-						Modals.FileUploader(
-							'Nova importação',
-							'Selecione o arquivo que deseja importar',
-							API.getURI('maintenance/import_jobs/new'), {type: type}
-						)
-					).then(function (res) {
-						ngToast.success('Arquivo pronto para processamento!');
-						console.info("[maintenance.imports] Job ready, return: ", res);
-						$scope.refresh();
-					});
-				};
-
-				$scope.processJob = function(job) {
-					ImportJobs.process({id: job.id, $hide_loading_feedback: true}, function (res) {
-						ngToast.success('Processamento do arquivo concluído!');
-						console.info("[maintenance.imports] Job processed, return: ", res);
-					});
-					$timeout($scope.refresh, 100);
-				};
-
-				$scope.renderProgress = function(job) {
-					if(job.total_records === 0) return '100 %';
-					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
-				};
-
-				$scope.returnNewSearch = function(jobs) {
-					return {
-						data: jobs.data,
-						meta: {
-							pagination: {
-								total: jobs.total,
-								count: jobs.per_page,
-								per_page: jobs.per_page,
-								current_page: jobs.current_page,
-								total_pages: jobs.last_page,
-								links: {
-									next: jobs.next_page_url ? jobs.next_page_url : null,
-									prev: jobs.prev_page_url ? jobs.prev_page_url : null
-								}
-							}
-						}
-					}
-				}
-
-			}
-		);
-})();
-(function() {
-
-	angular
-		.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('sms_conversations', {
-					url: '/maintenance/sms_conversations',
-					templateUrl: '/views/maintenance/sms_conversations.html',
-					controller: 'SmsConversationsCtrl'
-				})
-		})
-		.controller('SmsConversationsCtrl',
-			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, SmsConversations, Modals, ngToast, API) {
-
-				$scope.static = StaticData;
-
-				$scope.refresh = function() {
-					SmsConversations.all({}, function (conversations) {
-						$scope.conversations = conversations;
-					});
-				};
-
-				$scope.conversations = {};
-				$scope.refresh();
-			}
-		);
-})();
-(function() {
 	angular
 		.module('BuscaAtivaEscolar')
 		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
@@ -7426,6 +7373,119 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 
 	});
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('maintenance_imports', {
+					url: '/maintenance/imports',
+					templateUrl: '/views/maintenance/imports.html',
+					controller: 'ImportsCtrl'
+				})
+		})
+		.controller('ImportsCtrl',
+			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, ImportJobs, Modals, ngToast, API) {
+
+				$scope.static = StaticData;
+
+				$scope.query = {
+					max: 20,
+					page: 1
+				};
+
+				$scope.search = {};
+
+				$scope.refresh = function() {
+					ImportJobs.all({$hide_loading_feedback: true, per_page: $scope.query.max, page: $scope.query.page}, function (jobs) {
+						$scope.jobs = jobs.data;
+						$scope.search = $scope.returnNewSearch(jobs);
+						//console.log($scope.search);
+					});
+				};
+
+				$scope.jobs = {};
+
+				$scope.refresh();
+
+				$scope.newImport = function (type) {
+					Modals.show(
+						Modals.FileUploader(
+							'Nova importação',
+							'Selecione o arquivo que deseja importar',
+							API.getURI('maintenance/import_jobs/new'), {type: type}
+						)
+					).then(function (res) {
+						ngToast.success('Arquivo pronto para processamento!');
+						console.info("[maintenance.imports] Job ready, return: ", res);
+						$scope.refresh();
+					});
+				};
+
+				$scope.processJob = function(job) {
+					ImportJobs.process({id: job.id, $hide_loading_feedback: true}, function (res) {
+						ngToast.success('Processamento do arquivo concluído!');
+						console.info("[maintenance.imports] Job processed, return: ", res);
+					});
+					$timeout($scope.refresh, 100);
+				};
+
+				$scope.renderProgress = function(job) {
+					if(job.total_records === 0) return '100 %';
+					return ((job.offset / job.total_records) * 100).toFixed(2) + ' %';
+				};
+
+				$scope.returnNewSearch = function(jobs) {
+					return {
+						data: jobs.data,
+						meta: {
+							pagination: {
+								total: jobs.total,
+								count: jobs.per_page,
+								per_page: jobs.per_page,
+								current_page: jobs.current_page,
+								total_pages: jobs.last_page,
+								links: {
+									next: jobs.next_page_url ? jobs.next_page_url : null,
+									prev: jobs.prev_page_url ? jobs.prev_page_url : null
+								}
+							}
+						}
+					}
+				}
+
+			}
+		);
+})();
+(function() {
+
+	angular
+		.module('BuscaAtivaEscolar')
+		.config(function ($stateProvider) {
+			$stateProvider
+				.state('sms_conversations', {
+					url: '/maintenance/sms_conversations',
+					templateUrl: '/views/maintenance/sms_conversations.html',
+					controller: 'SmsConversationsCtrl'
+				})
+		})
+		.controller('SmsConversationsCtrl',
+			function ($scope, $rootScope, $localStorage, $http, $timeout, $interval, StaticData, SmsConversations, Modals, ngToast, API) {
+
+				$scope.static = StaticData;
+
+				$scope.refresh = function() {
+					SmsConversations.all({}, function (conversations) {
+						$scope.conversations = conversations;
+					});
+				};
+
+				$scope.conversations = {};
+				$scope.refresh();
+			}
+		);
 })();
 (function() {
 
