@@ -15,7 +15,7 @@
 			$scope.schools = {};
 			$scope.msg_success = false;
 			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021];
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
 			$scope.query = {
 				year_educacenso: new Date().getFullYear(),
 				sort: {},

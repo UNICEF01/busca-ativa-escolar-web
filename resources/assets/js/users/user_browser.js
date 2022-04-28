@@ -175,7 +175,6 @@
 
             Platform.whenReady(function() {
                 $scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
-                console.log("[user_browser] Can filter by tenant? ", Identity.getType(), $scope.canFilterByTenant);
                 $scope.selectedGroup = Identity.getCurrentUser().group;
             });
 
