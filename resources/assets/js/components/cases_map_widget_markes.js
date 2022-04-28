@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function ($rootScope, $window, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function ($rootScope, $window, moment, $timeout, Identity, Platform, Children, Decorators) {
 
         function init(scope, element, attrs, tabsCtrl) {
 

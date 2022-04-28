@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function (moment, $timeout, uiGmapGoogleMapApi, Utils, Identity, Platform, Children, StaticData) {
+    angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function (moment, $timeout, Utils, Identity, Platform, Children, StaticData) {
 
         function init(scope, element, attrs) {
 
@@ -26,7 +26,7 @@
                 if (uf) {
                     scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
                 }
-
+                
             };
 
             scope.refresh = function () {
@@ -65,11 +65,6 @@
             scope.isMapReady = function () {
                 return scope.mapReady;
             };
-
-
-            uiGmapGoogleMapApi.then(function (maps) {
-                scope.refresh();
-            });
 
         }
 
