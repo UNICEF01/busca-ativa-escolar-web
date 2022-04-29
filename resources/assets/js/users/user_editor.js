@@ -8,7 +8,7 @@
                 controller: 'UserEditorCtrl'
             })
         })
-        .controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
+        .controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Identity, Users, Groups, StaticData, Modals) {
 
             $scope.currentState = $state.current.name;
 
@@ -20,8 +20,6 @@
             $scope.static = StaticData;
             $scope.showInputKey = false;
 
-            $scope.groups = {};
-            $scope.tenants = Tenants.find();
             $scope.quickAdd = ($stateParams.quick_add === 'true');
 
             var permissions = {};
@@ -32,16 +30,6 @@
 
             $scope.perfilVisitante = { name: '' };
             $scope.permissionsVisitantes = ['relatorios'];
-
-            if(!$scope.isCreating) {
-                $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
-            }else{
-                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
-                }else{
-                    $scope.groups = Groups.find();
-                }
-            }
 
             $scope.isSuperAdmin = function() {
                 return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
@@ -116,17 +104,8 @@
 
             };
 
-            $scope.onSelectTenant = function(){
-                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
-            };
-
-            $scope.onSelectUf = function(){
-                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
-            };
-
-            $scope.onSelectFunction = function(){
+            $scope.onSelectFunctionFunction = function(){
                 if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
                     $scope.user.uf = null;
                     $scope.user.tenant_id = null;
                     $scope.perfilVisitante.name = '';
@@ -142,12 +121,6 @@
 
                 if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
 
-                    if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
-                        $scope.groups = Groups.findByUf({'uf': user.uf});
-                    }else {
-                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
-                    }
-
                     //perfil de visitante
                     if( user.type.includes("visitante_") ){
                         $scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
@@ -160,8 +133,6 @@
                         $scope.user.type = "perfil_visitante";
                     }
 
-                }else{
-                    $scope.groups = Groups.find();
                 }
 
                 return Utils.unpackDateFields(user, dateOnlyFields)
@@ -205,10 +176,35 @@
             };
 
             Platform.whenReady(function() {
+
                 permissions = StaticData.getPermissions();
                 userTypeVisitantes = StaticData.getUserTypeVisitantes();
                 permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
+                $scope.canSeeGroupsOptions = ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional');
+
+                if(!$scope.isCreating) $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+
             });
+
+            $scope.changeGroup = function() {
+                Modals.show(
+                    Modals.GroupPicker(
+                        'Atribuir usuário ao grupo',
+                        'Selecione um grupo para o perfil do usuário',
+                        { id: $scope.identity.getCurrentUser().tenant.primary_group_id, name: $scope.identity.getCurrentUser().tenant.primary_group_name },
+                        'Atribuindo grupo: ',
+                        false,
+                        null,
+                        null,
+                        true,
+                        'Nenhum grupo selecionado.')
+                ).then(function(selectedGroup) {
+                    $scope.user.group_id = selectedGroup.id;
+                    $scope.user.group_name = selectedGroup.name;
+                }).then(function(res) {
+
+                });
+            };
 
         });
 })();

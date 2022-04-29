@@ -1,288 +1,219 @@
 <div>
     <div class="panel panel-default">
+
         <div class="panel-heading clearfix">
             <h3 class="pull-left">
                 <strong ng-show="!$parent.isEditing">3.</strong>
                 <i class="fa fa-users"></i> Usuários | {{search.meta.pagination.total}}
             </h3>
-            <a ng-show="identity.can('users.manage') && !identity.isUserType('supervisor_estadual')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right"><i class="fa fa-plus"></i> Novo usuário</a
-    >
-    <a
-      ng-show="identity.can('users.export')"
-      ng-click="export()"
-      class="btn btn-primary btn-raised pull-right"
-      ><i class="fa fa-file-excel-o"></i> Exportar usuários</a
-    >
-    <a
-      ng-show="identity.isUserType('gestor_nacional')"
-      class="btn btn-primary btn-raised pull-right"
-      ui-sref="user_report"
-      ><i class="fa fa-file-excel-o"></i> Exportar todos</a
-    >
-  </div>
-  <div class="panel-body">
-    <a href="#" ng-click="info = !info" class="pull-right"
-      ><i class="fa fa-info-circle"></i> clique aqui para mais informações</a
-    ><br />
-
-    <div ng-show="info">
-      <p>
-        Cadastre aqui os diferentes usuários que vão participar da Busca Ativa
-        Escolar. No momento do cadastro, você deve escolher qual o perfil do
-        usuário.
-      </p>
-
-      <ul class="list-group basic-list">
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Prefeito(a) Municipal: organiza e
-          motiva os trabalhos da iniciativa do Busca Ativa Escolar no
-          município;
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Gestor(a) Político(a): reúne as
-          diversas instituições governamentais e não governamentais da cidade
-          para participar do programa e propõe a criação ou alteração de
-          políticas públicas para combater a exclusão escolar;
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Coordenador(a) operacional: é
-          responsável pelo planejamento, execução e acompanhamento do plano de
-          trabalho e de todas as ações do projeto;
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Supervisores institucionais: indicados
-          pelas secretarias/órgãos envolvidos no projeto;
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Técnicos verificadores: são os
-          responsáveis por elaborar o diagnóstico e produzir análise técnica
-          sobre os casos encontrados;
-        </li>
-        <li class="list-group-item">
-          <i class="fa fa-circle"></i> Agentes comunitários: são os
-          responsáveis por fazer os primeiros alertas de crianças e
-          adolescentes que estão fora da escola.
-        </li>
-      </ul>
-    </div>
-
-    <form ng-submit="refresh()" name="searchUsers" class="clearfix">
-      <div class="row">
-        <div class="form-group col-md-6" ng-if="canFilterByTenant">
-          <div class="row">
-            <div class="col-md-3">
-              <label>UF</label>
-              <ui-select ng-model="query.uf" on-select="refresh()">
-                <ui-select-match allow-clear="true" placeholder="Todos"
-                  >{{$select.selected.code}}</ui-select-match
-                >
-                <ui-select-choices
-                  repeat="uf.code as uf in getUFs() | orderObjectBy:'code' | filter: $select.search track by uf.id"
-                >
-                  <div
-                    ng-bind-html="uf.code | highlight: $select.search"
-                  ></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-
-            <div class="col-md-9">
-              <label><i class="fa fa-university"></i> Município</label>
-              <ui-select ng-model="query.tenant_id" on-select="refresh()">
-                <ui-select-match allow-clear="true" placeholder="Todos"
-                  >{{$select.selected.name}}</ui-select-match
-                >
-                <ui-select-choices
-                  repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id"
-                >
-                  <div
-                    ng-bind-html="tenant.name | highlight: $select.search"
-                  ></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
+            <a ng-show="identity.can('users.manage') && !identity.isUserType('supervisor_estadual')" ui-sref="user_editor({quick_add: quickAdd})" class="btn btn-primary btn-raised pull-right">
+                <i class="fa fa-plus"></i> Novo usuário </a>
+            <a ng-show="identity.can('users.export')" ng-click="export()" class="btn btn-primary btn-raised pull-right">
+                <i class="fa fa-file-excel-o"></i> Exportar usuários </a>
+            <a ng-show="identity.isUserType('gestor_nacional')" class="btn btn-primary btn-raised pull-right" ui-sref="user_report">
+                <i class="fa fa-file-excel-o"></i> Exportar todos </a>
         </div>
 
-        <div class="form-group col-md-12">
-          <label><i class="fa fa-user"></i> Tipo</label><br />
-          <div class="grid_col">
-            <div
-              class="radio-inline"
-              style="margin-left: 0px !important;"
-              ng-repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search"
-            >
-              <label>
-                <input
-                  name="type"
-                  ng-model="query.type"
-                  ng-value="type"
-                  type="radio"
-                  ng-click="refresh()"
-                />
-                {{type | lang:'user.type' | highlight: $select.search}}
-              </label>
-            </div>
-          </div>
-        </div>
+        <div class="panel-body">
 
-
-        <div class="form-group col-md-6" ng-if="!canFilterByTenant">
-          <input type="text" class="form-control" id="fld-group" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado"><input type="text" ng-model="query.group_id" class="form-control" hidden>                 
-        </div>
-        <div class="form-group col-md-3">
-          <button type="button" class="btn btn-raised btn-default" style="margin: 0!important; width: 100%;" ng-click="changeGroup()">Selecionar grupo</button>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group col-md-6">
-          <label><i class="fa fa-envelope"></i> E-mail</label>
-          <div class="clearfix">
-            <input
-              type="search"
-              ng-model="query.email"
-              class="form-control"
-              placeholder="Buscar por e-mail"
-              style="width: calc(100% - 60px); float: left;"
-            />
-            <button
-              type="submit"
-              class="btn btn-sm btn-raised"
-              style="margin-left: 8px; padding: 8px 16px;"
-            >
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-        </div>
-        <div class="form-group col-md-3">
-          <label><i class="fa fa-listl"></i> Limite de exibição</label>
-          <div class="clearfix" style="margin-top: 10px;">
-            <ul class="nav nav-pills adm-max-results-filter">
-              <li ng-class="{active: query.max==16}">
-                <a ng-click="setMaxResults(16)">16</a>
-            </li>
-            <li ng-class="{active: query.max==32}">
-                <a ng-click="setMaxResults(32)">32</a>
-            </li>
-            <li ng-class="{active: query.max==64}">
-                <a ng-click="setMaxResults(64)">64</a>
-            </li>
-            <li ng-class="{active: query.max==128}">
-                <a ng-click="setMaxResults(128)">128</a>
-            </li>
-            </ul>
+            <a href="#" ng-click="info = !info" class="pull-right">
+                <i class="fa fa-info-circle"></i> clique aqui para mais informações
+            </a>
             <br />
+
+            <div ng-show="info">
+                <p> Cadastre aqui os diferentes usuários que vão participar da Busca Ativa Escolar. No momento do cadastro, você deve escolher qual o perfil do usuário. </p>
+                <ul class="list-group basic-list">
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Prefeito(a) Municipal: organiza e motiva os trabalhos da iniciativa do Busca Ativa Escolar no município;
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Gestor(a) Político(a): reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a exclusão escolar;
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Coordenador(a) operacional: é responsável pelo planejamento, execução e acompanhamento do plano de trabalho e de todas as ações do projeto;
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Supervisores institucionais: indicados pelas secretarias/órgãos envolvidos no projeto;
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Técnicos verificadores: são os responsáveis por elaborar o diagnóstico e produzir análise técnica sobre os casos encontrados;
+                    </li>
+                    <li class="list-group-item">
+                        <i class="fa fa-circle"></i> Agentes comunitários: são os responsáveis por fazer os primeiros alertas de crianças e adolescentes que estão fora da escola.
+                    </li>
+                </ul>
+            </div>
+
+            <form ng-submit="refresh()" name="searchUsers" class="clearfix">
+                <div class="row">
+
+                    <div class="form-group col-md-12" ng-if="canFilterByTenant">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>UF</label>
+                                <ui-select ng-model="query.uf" on-select="refresh()">
+                                    <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.code}}</ui-select-match>
+                                    <ui-select-choices repeat="uf.code as uf in getUFs() | orderObjectBy:'code' | filter: $select.search track by uf.id">
+                                        <div ng-bind-html="uf.code | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-md-8">
+                                <label>
+                                    <i class="fa fa-university"></i> Município </label>
+                                <ui-select ng-model="query.tenant_id" on-select="refresh()">
+                                    <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
+                                        <div ng-bind-html="tenant.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <label>
+                            <i class="fa fa-user"></i> Tipo </label>
+                        <br />
+                        <div class="grid_col">
+                            <div class="radio-inline" style="margin-left: 0px !important;" ng-repeat="type in identity.getCurrentUser().can_filter | orderBy | filter: $select.search">
+                                <label>
+                                    <input name="type" ng-model="query.type" ng-value="type" type="radio" ng-click="refresh()" />
+                                    {{type | lang:'user.type' | highlight: $select.search}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-9" ng-if="isScopeOfTenant()">
+                        <input type="text" class="form-control" id="fld-group" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado">
+                        <input type="text" ng-model="query.group_id" class="form-control" hidden>
+                    </div>
+                    <div class="form-group col-md-3" ng-if="isScopeOfTenant()">
+                        <button type="button" class="btn btn-raised btn-default" ng-click="changeGroup()">Selecionar grupo</button>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>
+                            <i class="fa fa-envelope"></i> E-mail </label>
+                        <div class="clearfix">
+                            <input type="search" ng-model="query.email" class="form-control" placeholder="Buscar por e-mail" style="width: calc(100% - 60px); float: left;" />
+                            <button type="submit" class="btn btn-sm btn-raised" style="margin-left: 8px; padding: 8px 16px;">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>
+                            <i class="fa fa-listl"></i> Limite de exibição </label>
+                        <div class="clearfix" style="margin-top: 10px;">
+                            <ul class="nav nav-pills adm-max-results-filter">
+                                <li ng-class="{active: query.max==16}">
+                                    <a ng-click="setMaxResults(16)">16</a>
+                                </li>
+                                <li ng-class="{active: query.max==32}">
+                                    <a ng-click="setMaxResults(32)">32</a>
+                                </li>
+                                <li ng-class="{active: query.max==64}">
+                                    <a ng-click="setMaxResults(64)">64</a>
+                                </li>
+                                <li ng-class="{active: query.max==128}">
+                                    <a ng-click="setMaxResults(128)">128</a>
+                                </li>
+                            </ul>
+                            <br />
+                        </div>
+                        <p ng-show="users.length > 0">Total de registros: {{total}}</p>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="container_check_user_canceled" ng-click="onCheckCanceled()">Exibir desativados <input type="checkbox" ng-model="query.show_suspended" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
+                    </th>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter>
+                    </th>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter>
+                    </th>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'email'">Contato</column-sorter>
+                    </th>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'type'">Tipo</column-sorter>
+                    </th>
+                    <th>
+                        <column-sorter on-change="refresh" model="query.sort" field="'group_id'">Grupo</column-sorter>
+                    </th>
+                    <th ng-show="identity.can('users.manage')">Opções</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
+                    <td width="25%">
+                        <strong>{{user.name}}</strong>
+                        <br />
+                        <small uib-tooltip-html="user.created_at.date | dateFormat">
+                            <strong>Cadastrado em: {{user.created_at.date |
+                                amDateFormat:'DD/MM/YYYY'}}</strong>
+                        </small>
+                        <br />
+                        <span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
+                        <span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
+                    </td>
+                    <td width="5%">
+                        <span ng-show="user.uf">{{user.uf}}</span>
+                    </td>
+                    <td width="13%">
+                        <span ng-show="user.tenant">{{user.tenant.name}}</span>
+                    </td>
+                    <td width="18%">
+                        {{user.email}}
+                        <br />{{user.contact_phone | brPhoneNumber}}
+                    </td>
+                    <td width="18%">{{user.type | lang:'user.type'}}</td>
+                    <td width="21%">{{user.group.name}}</td>
+                    <td width="20%" ng-show="identity.can('users.manage')">
+                        <a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user) && isScopeOfUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                            <i class="fa fa-pencil-square"></i> Editar </a>
+                        <a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                            <i class="fa fa-ban"></i> Desativar </a>
+                        <a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                            <i class="fa fa-check"></i> Ativar </a>
+                        <a ng-click="sendReactivationMail(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user) && !user.lgpd" class="btn btn-info btn-xs" style="margin: 0;">
+                            <i class="fa fa-ban"></i> Reenviar email de ativação </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+
         </div>
-        <p ng-show="users.length > 0">Total de registros: {{total}}</p>
-    </div>
-    <div class="form-group col-md-3">
-        <label class="container_check_user_canceled" ng-click="onCheckCanceled()">Exibir desativados
-            <input type="checkbox" ng-model="query.show_suspended" />
-            <span class="checkmark"></span>
-          </label>
-    </div>
-</div>
-</form>
 
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
-            </th>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter>
-            </th>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter>
-            </th>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'email'">Contato</column-sorter>
-            </th>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'type'">Tipo</column-sorter>
-            </th>
-            <th>
-                <column-sorter on-change="refresh" model="query.sort" field="'group_id'">Grupo</column-sorter>
-            </th>
-            <th ng-show="identity.can('users.manage')">Opções</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
-            <td width="25%">
-                <strong>{{user.name}}</strong><br />
-                <small uib-tooltip-html="user.created_at.date | dateFormat">
-              <strong
-                >Cadastrado em: {{user.created_at.date |
-                amDateFormat:'DD/MM/YYYY'}}</strong
-              >
-            </small>
-                <br />
-                <span ng-show="!user.deleted_at" class="label label-success">Ativo</span
-            >
-            <span ng-show="user.deleted_at" class="label label-danger"
-              >Desativado
-              <span ng-show="user.deleted_at">
-                em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span
-              ></span
-            >
-          </td>
-          <td width="5%"><span ng-show="user.uf">{{user.uf}}</span></td>
-            <td width="13%">
-                <span ng-show="user.tenant">{{user.tenant.name}}</span>
-            </td>
-            <td width="18%">
-                {{user.email}}<br />{{user.contact_phone | brPhoneNumber}}
-            </td>
-            <td width="18%">{{user.type | lang:'user.type'}}</td>
-            <td width="21%">{{user.group.name}}</td>
-            <td width="20%" ng-show="identity.can('users.manage')">
-                <a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;"><i class="fa fa-pencil-square"></i> Editar</a
-            >
-            <a
-              ng-click="suspendUser(user)"
-              ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)"
-              class="btn btn-info btn-xs"
-              style="margin: 0;"
-              ><i class="fa fa-ban"></i> Desativar</a
-            >
-            <a
-              ng-click="restoreUser(user)"
-              ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)"
-              class="btn btn-info btn-xs"
-              style="margin: 0;"
-              ><i class="fa fa-check"></i> Ativar</a
-            >
-            <a
-              ng-click="sendReactivationMail(user)"
-              ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user) && !user.lgpd"
-              class="btn btn-info btn-xs"
-              style="margin: 0;"
-              ><i class="fa fa-ban"></i> Reenviar email de ativação</a
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <app-paginator
-      collection="search"
-      query="query"
-      on-refresh="refresh"
-    ></app-paginator>
-  </div>
-</div>
+    </div>
 </div>
 <style>
-.grid_col {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-}
-@media (max-width: 650px) {
-  .grid_col {
-    grid-template-columns: 1fr;
-  }
-}
+    .grid_col {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 650px) {
+        .grid_col {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>

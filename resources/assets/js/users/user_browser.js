@@ -7,7 +7,7 @@
                 controller: 'UserBrowserCtrl'
             })
         })
-        .controller('UserBrowserCtrl', function($scope, ngToast, Config, Platform, Identity, Users, Groups, Tenants, StaticData, Modals, Maintenance) {
+        .controller('UserBrowserCtrl', function($scope, ngToast, Config, Platform, Identity, Users, Tenants, StaticData, Modals, Maintenance) {
 
             $scope.identity = Identity;
             $scope.query = {
@@ -79,18 +79,14 @@
                 return (Identity.getCurrentUser().id === user.id);
             };
 
+            $scope.selectedGroup = {id:null, name:null};
+
             $scope.static = StaticData;
-            $scope.tenants = [];
-            $scope.groups = Groups.find();
+
             $scope.canFilterByTenant = false;
 
             $scope.checkboxes = {};
             $scope.search = {};
-
-            $scope.getGroups = function() {
-                if (!$scope.groups || !$scope.groups.data) return [];
-                return $scope.groups.data;
-            };
 
             $scope.getTenants = function() {
                 if (!$scope.tenants || !$scope.tenants.data) return [];
@@ -102,18 +98,15 @@
             };
 
             $scope.refresh = function() {
-                if (Identity.can('tenants.view')) {
-                    $scope.tenants = Tenants.findByUf({ 'uf': $scope.query.uf });
-                }
                 $scope.search = Users.search($scope.query);
             };
 
             $scope.changeGroup = function() {
                 Modals.show(
                     Modals.GroupPicker(
-                        'Filtrar alertas que pertencem ao grupo',
-                        'Seleione o grupo que deseja filtrar',
-                        Identity.getCurrentUser().group,
+                        'Filtrar usuários que pertencem ao grupo',
+                        '',
+                        $scope.identity.getCurrentUser().group,
                         'Filtrando grupo: ',
                         false,
                         null,
@@ -121,9 +114,9 @@
                         true,
                         'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
-                    $scope.selectedGroup = selectedGroup;
-                    $scope.query.group_id = $scope.selectedGroup.id;
-                    $scope.refresh()
+                    $scope.query.group_id = selectedGroup.id;
+                    $scope.selectedGroup.name = selectedGroup.name;
+                    $scope.refresh();
                 }).then(function() {
 
                 });
@@ -171,12 +164,30 @@
                 });
             };
 
-            $scope.refresh();
-
             Platform.whenReady(function() {
-                $scope.canFilterByTenant = (Identity.getType() === 'gestor_nacional' || Identity.getType() === 'superuser');
-                $scope.selectedGroup = Identity.getCurrentUser().group;
+                $scope.canFilterByTenant = ($scope.identity.getType() === 'gestor_nacional' || $scope.identity.getType() === 'superuser');
+                $scope.query.group_id = $scope.canFilterByTenant ? null : $scope.identity.getCurrentUser().group.id;
+                $scope.refresh();
             });
+
+            $scope.isScopeOfUser = function (user){
+                if ($scope.identity.getType() === 'gestor_nacional' || $scope.identity.getType() === 'superuser') {
+                    return user.tenant_id == null ? true : false;
+                }
+                if ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional' || $scope.identity.getType() === 'gestor_politico') {
+                    return true;
+                }
+                if ($scope.identity.getType() === 'coordenador_estadual' || $scope.identity.getType() === 'supervisor_estadual') {
+                    return true;
+                }
+            };
+
+            $scope.isScopeOfTenant = function (){
+                if ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional' || $scope.identity.getType() === 'gestor_politico') {
+                    return true;
+                }
+                return false;
+            }
 
         });
 })();

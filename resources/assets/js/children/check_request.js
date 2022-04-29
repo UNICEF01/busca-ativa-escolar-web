@@ -32,7 +32,7 @@
         $scope.refresh = function () {
           $scope.requests = Children.requests();
         };
-
+        
         $scope.refresh();
 
         var language = {
