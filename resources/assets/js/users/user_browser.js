@@ -83,6 +83,8 @@
 
             $scope.static = StaticData;
 
+            $scope.tenants = [];
+
             $scope.canFilterByTenant = false;
 
             $scope.checkboxes = {};
@@ -98,6 +100,9 @@
             };
 
             $scope.refresh = function() {
+                if(Identity.can('tenants.view')) {
+                    $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
+                }
                 $scope.search = Users.search($scope.query);
             };
 
