@@ -119,9 +119,13 @@
                         true,
                         'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
+
                     $scope.query.group_id = selectedGroup.id;
                     $scope.selectedGroup.name = selectedGroup.name;
+                    $scope.selectedGroup.id = selectedGroup.id;
+
                     $scope.refresh();
+
                 }).then(function() {
 
                 });
@@ -172,7 +176,7 @@
             Platform.whenReady(function() {
                 $scope.canFilterByTenant = ($scope.identity.getType() === 'gestor_nacional' || $scope.identity.getType() === 'superuser');
                 $scope.query.group_id = $scope.canFilterByTenant ? null : $scope.identity.getCurrentUser().group.id;
-                $scope.selectedGroup = $scope.identity.getCurrentUser().group;
+                $scope.selectedGroup = angular.copy($scope.identity.getCurrentUser().group);
                 $scope.refresh();
             });
 
