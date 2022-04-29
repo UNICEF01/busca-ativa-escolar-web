@@ -12,7 +12,7 @@
 
             $scope.currentState = $state.current.name;
 
-            $scope.user = {};
+            $scope.user = {} ;
             $scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
             $scope.isReviewing = false;
 
@@ -182,8 +182,12 @@
                 permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
                 $scope.canSeeGroupsOptions = ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional');
 
-                if(!$scope.isCreating) $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
-
+                if(!$scope.isCreating) {
+                    $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
+                }else{
+                    $scope.user.group_id = $scope.identity.getCurrentUser().group.id;
+                    $scope.user.group_name = $scope.identity.getCurrentUser().group.name;
+                }
             });
 
             $scope.changeGroup = function() {
@@ -191,7 +195,7 @@
                     Modals.GroupPicker(
                         'Atribuir usuário ao grupo',
                         'Selecione um grupo para o perfil do usuário',
-                        { id: $scope.identity.getCurrentUser().tenant.primary_group_id, name: $scope.identity.getCurrentUser().tenant.primary_group_name },
+                        $scope.identity.getCurrentUser().group,
                         'Atribuindo grupo: ',
                         false,
                         null,
