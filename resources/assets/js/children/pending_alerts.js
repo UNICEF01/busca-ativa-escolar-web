@@ -55,9 +55,9 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Filtrar alertas que pertencem ao grupo',
-                        'Seleione o grupo que deseja filtrar',
+                        'Selecione o grupo que deseja filtrar',
                         Identity.getCurrentUser().group,
-                        'Filtrando grupo: ',
+                        'Filtrando alertas do grupo: ',
                         false,
                         null,
                         null,
@@ -74,8 +74,9 @@
             $scope.updateGroup = function() {
                 Modals.show(
                     Modals.GroupPicker(
-                        'Atribuir grupo ao alerta',
-                        'O último grupo selecionado será atrinuído ao alerta:', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        'Atribuir aleta ao grupo',
+                        'O alerta ficará visível para o grupo selecionado.',
+                        { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo grupo: ',
                         false,
                         null,
@@ -95,9 +96,10 @@
                 if ($scope.selected.children.length > 0) {
                     Modals.show(
                         Modals.GroupPicker(
-                            'Atribuir grupo ao alerta',
-                            'O último grupo selecionado será atrinuído ao alerta:', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
-                            'Atribuindo grupo: ',
+                            'Atribuir alerta ao grupo',
+                            'Selecione o grupo do qual deseja visualizar os alertas.',
+                            { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                            'Filtrando alertas do grupo: ',
                             false,
                             null,
                             null,

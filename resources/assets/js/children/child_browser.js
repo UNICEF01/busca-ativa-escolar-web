@@ -146,7 +146,7 @@
                         'Filtrar casos que pertecem ao grupo',
                         '',
                         Identity.getCurrentUser().group,
-                        'Filtrando grupo: ',
+                        'Filtrando casos do grupo: ',
                         false,
                         null,
                         null,

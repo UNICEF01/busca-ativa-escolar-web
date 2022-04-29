@@ -69,10 +69,10 @@
             $scope.changeGroup = function() {
                 Modals.show(
                     Modals.GroupPicker(
-                        'Atribuir grupo ao alerta',
-                        'O último grupo selecionado será atribuído ao alerta.',
+                        'Atribuir alerta ao grupo',
+                        'O alerta ficará disponível para o grupo selecionado.',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
-                        'Atribuindo grupo: ',
+                        'Atribuindo alerta para o grupo: ',
                         false,
                         null,
                         null,

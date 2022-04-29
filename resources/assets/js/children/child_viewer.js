@@ -32,10 +32,10 @@
 
             Modals.show(
                 Modals.GroupPicker(
-                    'Atribuir grupo ao caso',
-                    'O último grupo selecionado será atrubuído ao caso:',
+                    'Atribuir caso grupo',
+                    'O caso ficará visível para o grupo selecionado.',
                     $scope.identity.getCurrentUser().group,
-                    'Atribuindo grupo: ',
+                    'Atribuindo caso ao grupo: ',
                     false,
                     null,
                     null,
@@ -43,17 +43,16 @@
                     'Nenhum grupo selecionado')
             ).then(function(selectedGroup) {
 
-                var detachUser = false;
+                var detachUser = true;
 
                 if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
                     //se tem usuário assinado para o caso
 
-                    Groups.findById({id: $scope.child.currentCase.currentStep.assigned_user.group.id}).$promise
+                    Groups.findByIdWithParents({id: selectedGroup.id }).$promise
                         .then(function (group){
 
-                            if ( $scope.needsToRemoveUser(group.data[0], selectedGroup) ){
-                                detachUser = true;
-                            } else {
+                            //verifica se o grupo do usuário atribuido ao caso é igual ou um dos pais do novo grupo selecionado
+                            if ( $scope.isFatherOrSameGroup( $scope.child.currentCase.currentStep.assigned_user.group, group.data[0] ) ){
                                 detachUser = false;
                             }
 
@@ -65,7 +64,7 @@
 
                             Cases.update(currentCase).$promise
                                 .then(function (res){
-                                    ngToast.success('Grupo atribuído com sucesso!')
+                                    ngToast.success('Caso atribuído com sucesso!')
                                     $state.go('child_browser');
                                 });
 
@@ -82,7 +81,7 @@
 
                     Cases.update(currentCase).$promise
                         .then(function (res){
-                            ngToast.success('Grupo atribuído com sucesso!')
+                            ngToast.success('Caso atribuído com sucesso!')
                             $state.go('child_browser');
                         });
                 }
@@ -117,21 +116,20 @@
             return false;
         };
 
-        //verifica se deve remover usuário do caso ao atribuir novo grupo
-        $scope.needsToRemoveUser = function (groupOfuser, newGroupSelected){
-            if (newGroupSelected.id == groupOfuser.id){ return false; }
-            if (newGroupSelected.is_primary){ return true; }
-            var needsToRemove = true;
-            groupOfuser.children.forEach(function (group){
-                if (group.id == newGroupSelected.id) { needsToRemove = false; }
-                group.children.forEach(function (group2){
-                    if (group2.id == newGroupSelected.id) { needsToRemove = false; }
-                    group2.children.forEach(function (group3){
-                        if (group3.id == newGroupSelected.id) { needsToRemove = false; }
-                    });
-                });
-            });
-            return needsToRemove;
+        //verifica se rootGroup é um dos pais de groupTobeChecked ou o mesmo
+        $scope.isFatherOrSameGroup = function (rootGroup, groupTobeChecked){
+            if(groupTobeChecked.id == rootGroup.id) { return true; }
+            var isFather = false;
+            if (groupTobeChecked.parent != null) {
+                if( groupTobeChecked.parent.id == rootGroup.id ) { isFather = true; }
+                if (groupTobeChecked.parent.parent != null) {
+                    if( groupTobeChecked.parent.parent.id == rootGroup.id ) { isFather = true; }
+                    if (groupTobeChecked.parent.parent.parent != null) {
+                        if( groupTobeChecked.parent.parent.parent.id == rootGroup.id ) { isFather = true; }
+                    }
+                }
+            }
+            return isFather;
         };
 
     }

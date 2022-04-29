@@ -292,9 +292,9 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Movimentar grupo '+group.name,
-                        'Selecione o grupo para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos. Essa operação não poderá ser desfeita.',
+                        'Selecione o destino para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos. Essa operação não poderá ser desfeita.',
                         { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
-                        'Movendo para: ',
+                        'Movendo grupo para: ',
                         true,
                         group,
                         level,
