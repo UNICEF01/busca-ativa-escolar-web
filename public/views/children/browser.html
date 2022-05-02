@@ -123,6 +123,7 @@
             <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
                 <thead>
                     <tr>
+                        <th> <input type="checkbox" ng-model="check_all_child" ng-change="onCheckSelectAll(check_all_child)"></th>
                         <th>Nome <br /><small>da criança ou adolescente</small></th>
                         <th>Responsáveis <br /> pela criança</th>
                         <th>Município</th>
@@ -138,6 +139,9 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="(i, child) in search.results">
+                        <td style="vertical-align: middle; padding-left: 19px;">
+                            <input type="checkbox" checklist-model="selected.children" checklist-value="child" ng-change="getChild(child)" ng-model="check_child" />
+                        </td>
                         <td width="34%" style="vertical-align: middle;">
                             <strong style="font-size: 15px;">
 								<i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i><span uib-tooltip="Data de abertura: {{child.created_at | date:'dd/MM/yyyy'}}">
@@ -210,6 +214,9 @@
                 </tbody>
             </table>
 
+        </div>
+        <div class="panel-footer">
+            <p class="text-right"> <button type="button" class="btn btn-raised btn-default" ng-click="changeAllGroup()">Alterar grupo</button></p>
         </div>
     </div>
 </div>

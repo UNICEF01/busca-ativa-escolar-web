@@ -10,7 +10,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform) {
+        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases, Users, Utils) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -18,6 +18,8 @@
             $scope.lastOrder = {
                 date: null
             };
+
+            var dateOnlyFields = ['dob'];
 
             $scope.identity = Identity;
 
@@ -38,6 +40,10 @@
                 place_kind_null: true,
                 group_id: null,
                 case_not_info: null
+            };
+
+            $scope.selected = {
+                children: []
             };
 
             $scope.branchGroups = "carregando ...";
@@ -86,7 +92,22 @@
                     });
             };
 
-            $scope.refresh();
+            function prepareUserModel(user) {
+
+                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
+
+                    if (user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual') {
+                        $scope.groups = Groups.findByUf({ 'uf': user.uf });
+                    } else {
+                        $scope.groups = Groups.findByTenant({ 'tenant_id': user.tenant_id });
+                    }
+
+                } else {
+                    $scope.groups = Groups.find();
+                }
+
+                return Utils.unpackDateFields(user, dateOnlyFields)
+            }
 
             var language = {
                 "sEmptyTable": "Nenhum registro encontrado",
@@ -155,10 +176,110 @@
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };
+
+            $scope.onCheckSelectAll = function(element) {
+                if (element) {
+                    $scope.selected.children = angular.copy($scope.search.results);
+                } else {
+                    $scope.selected.children = [];
+                }
+
+            };
+
+            $scope.getChild = function(child) {
+                if ($scope.check_child)
+                    $scope.selected.children.push(child)
+                else
+                    $scope.selected.children = $scope.selected.children.filter(function(el) { return el.id != child.id; });
+            }
+
+            $scope.changeAllGroup = function() {
+                if ($scope.selected.children.length > 0) {
+                    Modals.show(
+                        Modals.GroupPicker(
+                            'Atribuir alerta ao grupo',
+                            'Selecione o grupo do qual deseja visualizar os alertas.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                            'Filtrando alertas do grupo: ',
+                            false,
+                            null,
+                            null,
+                            true,
+                            'Nenhum grupo selecionado', )
+                    ).then(function(selectedGroup) {
+                        var size = $scope.selected.children.length;
+                        for (let i = 0; i < size; ++i) {
+
+                            var detachUser = true;
+
+                            if ($scope.selected.children[i].assigned_user_id) {
+                                //se tem usuário assinado para o caso
+                                $scope.user = Users.find({ id: $scope.selected.children[i].assigned_user_id }, prepareUserModel).$promise.then(function(user) {
+                                    Groups.findUserGroups({ id: user.id }).$promise
+                                        .then(function(group) {
+                                            group.data.sort();
+                                            if ($scope.binarySearch(group.data, user.group_id) != -1)
+                                                detachUser = false;
+
+                                            var currentCase = {
+                                                id: $scope.selected.children[i].current_case_id,
+                                                group_id: selectedGroup.id,
+                                                detach_user: detachUser
+                                            };
+                                            Cases.update(currentCase).$promise
+                                                .then(function() {});
+                                        });
+
+                                })
+
+                            } else {
+                                //se não tem usuário assinado para o caso
+                                var currentCase = {
+                                    id: $scope.selected.children[i].current_case_id,
+                                    group_id: selectedGroup.id,
+                                    detach_user: detachUser
+                                };
+
+                                Cases.update(currentCase).$promise
+                                    .then(function() {});
+                            }
+                        }
+                        $scope.refresh();
+                    }).then(function() {
+
+                    });
+                } else {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione os casos para os quais deseja atribuir um novo grupo'));
+                }
+
+            };
+
+            $scope.binarySearch = function(arr, x) {
+                let l = 0,
+                    r = arr.length - 1;
+                while (l <= r) {
+                    let m = l + Math.floor((r - l) / 2);
+
+                    let res = x.localeCompare(arr[m]);
+
+                    // Check if x is present at mid
+                    if (res == 0)
+                        return m;
+
+                    // If x greater, ignore left half
+                    if (res > 0)
+                        l = m + 1;
+
+                    // If x is smaller, ignore right half
+                    else
+                        r = m - 1;
+                }
+
+                return -1;
+            }
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
@@ -168,6 +289,7 @@
                     $scope.causes = [...new Set($scope.causes)];
                 }
                 $scope.selectedGroup = Identity.getCurrentUser().group;
+                $scope.search = Children.search($scope.query);
             });
         });
 })();
