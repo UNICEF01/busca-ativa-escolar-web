@@ -19,8 +19,6 @@
                 date: null
             };
 
-            var dateOnlyFields = ['dob'];
-
             $scope.identity = Identity;
 
             $scope.defaultQuery = {
@@ -55,7 +53,7 @@
 
             $scope.refresh = function() {
                 $scope.search = Children.search($scope.query);
-                $scope.reports = Reports.reportsChild();
+                $scope.selected.children = [];
             };
 
             $scope.resetQuery = function() {
@@ -91,23 +89,6 @@
                         }, 600000);
                     });
             };
-
-            function prepareUserModel(user) {
-
-                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
-
-                    if (user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual') {
-                        $scope.groups = Groups.findByUf({ 'uf': user.uf });
-                    } else {
-                        $scope.groups = Groups.findByTenant({ 'tenant_id': user.tenant_id });
-                    }
-
-                } else {
-                    $scope.groups = Groups.find();
-                }
-
-                return Utils.unpackDateFields(user, dateOnlyFields)
-            }
 
             var language = {
                 "sEmptyTable": "Nenhum registro encontrado",
@@ -212,40 +193,35 @@
                     ).then(function(selectedGroup) {
                         var size = $scope.selected.children.length;
                         for (let i = 0; i < size; ++i) {
-
-                            var detachUser = true;
-
                             if ($scope.selected.children[i].assigned_user_id) {
-                                //se tem usuário assinado para o caso
-                                $scope.user = Users.find({ id: $scope.selected.children[i].assigned_user_id }, prepareUserModel).$promise.then(function(user) {
-                                    Groups.findUserGroups({ id: user.id, searched: selectedGroup.id }).$promise
-                                        .then(function(group) {
-                                            if (group.data)
-                                                detachUser = false;
+                                Groups.findUserGroups({ name: $scope.selected.children[i].assigned_group_name, tenant: $scope.selected.children[i].tenant_id }).$promise.then(function(group) {
+                                    var dados = [];
+                                    dados.push(group.data['0'].grupo)
+                                    dados.push(group.data['0'].pai)
+                                    dados.push(group.data['0'].avo)
+                                    dados.push(group.data['0'].bisavo)
+                                    dados.sort()
+                                    var detachUser = $scope.binarySearch(dados, selectedGroup.name)
 
-                                            var currentCase = {
-                                                id: $scope.selected.children[i].current_case_id,
-                                                group_id: selectedGroup.id,
-                                                detach_user: detachUser
-                                            };
-                                            if (i == size - 1)
-                                                Cases.update(currentCase).$promise
-                                                .then(function() { $scope.refresh(); });
-                                            else
-                                                Cases.update(currentCase).$promise
-                                                .then(function() {});
-                                        });
-
-                                })
-
+                                    var currentCase = {
+                                        id: $scope.selected.children[i].current_case_id,
+                                        group_id: selectedGroup.id,
+                                        detach_user: detachUser
+                                    };
+                                    if (i == size - 1)
+                                        Cases.update(currentCase).$promise
+                                        .then(function() { $scope.refresh(); });
+                                    else
+                                        Cases.update(currentCase).$promise
+                                        .then(function() {});
+                                });
                             } else {
                                 //se não tem usuário assinado para o caso
                                 var currentCase = {
                                     id: $scope.selected.children[i].current_case_id,
                                     group_id: selectedGroup.id,
-                                    detach_user: detachUser
+                                    detach_user: true
                                 };
-
                                 if (i == size - 1)
                                     Cases.update(currentCase).$promise
                                     .then(function() { $scope.refresh(); });
@@ -263,6 +239,25 @@
                 }
 
             };
+
+            $scope.binarySearch = function(arr, x) {
+                let l = 0,
+                    r = arr.length - 1;
+                while (l <= r) {
+                    let m = l + Math.floor((r - l) / 2);
+
+                    let res = x.localeCompare(arr[m]);
+
+                    if (res == 0)
+                        return false;
+                    if (res > 0)
+                        l = m + 1;
+                    else
+                        r = m - 1;
+                }
+
+                return true;
+            }
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
