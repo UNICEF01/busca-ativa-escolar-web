@@ -218,10 +218,9 @@
                             if ($scope.selected.children[i].assigned_user_id) {
                                 //se tem usuário assinado para o caso
                                 $scope.user = Users.find({ id: $scope.selected.children[i].assigned_user_id }, prepareUserModel).$promise.then(function(user) {
-                                    Groups.findUserGroups({ id: user.id }).$promise
+                                    Groups.findUserGroups({ id: user.id, searched: selectedGroup.id }).$promise
                                         .then(function(group) {
-                                            group.data.sort();
-                                            if ($scope.binarySearch(group.data, user.group_id) != -1)
+                                            if (group.data)
                                                 detachUser = false;
 
                                             var currentCase = {
@@ -229,7 +228,11 @@
                                                 group_id: selectedGroup.id,
                                                 detach_user: detachUser
                                             };
-                                            Cases.update(currentCase).$promise
+                                            if (i == size - 1)
+                                                Cases.update(currentCase).$promise
+                                                .then(function() { $scope.refresh(); });
+                                            else
+                                                Cases.update(currentCase).$promise
                                                 .then(function() {});
                                         });
 
@@ -243,11 +246,15 @@
                                     detach_user: detachUser
                                 };
 
-                                Cases.update(currentCase).$promise
+                                if (i == size - 1)
+                                    Cases.update(currentCase).$promise
+                                    .then(function() { $scope.refresh(); });
+                                else
+                                    Cases.update(currentCase).$promise
                                     .then(function() {});
                             }
                         }
-                        $scope.refresh();
+
                     }).then(function() {
 
                     });
@@ -256,30 +263,6 @@
                 }
 
             };
-
-            $scope.binarySearch = function(arr, x) {
-                let l = 0,
-                    r = arr.length - 1;
-                while (l <= r) {
-                    let m = l + Math.floor((r - l) / 2);
-
-                    let res = x.localeCompare(arr[m]);
-
-                    // Check if x is present at mid
-                    if (res == 0)
-                        return m;
-
-                    // If x greater, ignore left half
-                    if (res > 0)
-                        l = m + 1;
-
-                    // If x is smaller, ignore right half
-                    else
-                        r = m - 1;
-                }
-
-                return -1;
-            }
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
