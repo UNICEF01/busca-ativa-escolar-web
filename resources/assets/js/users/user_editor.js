@@ -180,7 +180,7 @@
                 permissions = StaticData.getPermissions();
                 userTypeVisitantes = StaticData.getUserTypeVisitantes();
                 permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
-                $scope.canSeeGroupsOptions = ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional');
+                $scope.canSeeGroupsOptions = ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional' || $scope.identity.getType() === 'gestor_politico');
 
                 if(!$scope.isCreating) {
                     $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
