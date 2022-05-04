@@ -10,9 +10,9 @@
 
 		<table class="table parameterization-grid">
 			<tbody ng-repeat="(i, cause) in static.getAlertCauses()">
-			<tr class="active">
-				<th>{{cause.label}}</th>
-				<th colspan="2">
+			<tr>
+				<td>{{cause.label}}</td>
+				<td>
 					<div class="col-md-4 text-center">
 						<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
 							<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
@@ -30,11 +30,10 @@
 							<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
 						</label>
 					</div>
-				</th>
+				</td>
 			</tr>
 			</tbody>
 		</table>
-
 	</div>
 
 	<div class="panel-footer clearfix">
