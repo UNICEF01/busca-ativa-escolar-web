@@ -1,14 +1,13 @@
-(function () {
+(function() {
     identify('config', 'states.js');
 
     angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
+        .config(function($stateProvider, $locationProvider, $urlRouterProvider) {
 
             $locationProvider.html5Mode({
-                    enabled: true,
-                    requireBase: true
-                }
-            );
+                enabled: true,
+                requireBase: true
+            });
             $urlRouterProvider.otherwise('/dashboard');
 
             $stateProvider

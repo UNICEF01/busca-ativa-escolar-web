@@ -70,8 +70,7 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Atribuir alerta ao grupo',
-                        'O alerta ficará disponível para o grupo selecionado.',
-                        { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        'O alerta ficará disponível para o grupo selecionado.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo alerta para o grupo: ',
                         false,
                         null,
@@ -80,7 +79,7 @@
                         'Nenhum grupo selecionado.')
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
-                }).then(function(res) {
+                }).then(function() {
 
                 });
             };

@@ -1,8 +1,8 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function (moment, $timeout, Utils, Identity, Platform, Children, StaticData) {
+    angular.module('BuscaAtivaEscolar').directive('searchableCasesMap', function($timeout, Utils, Children, StaticData) {
 
-        function init(scope, element, attrs) {
+        function init(scope) {
 
             scope.clustererOptions = {
                 imagePath: '/images/clusterer/m'
@@ -10,59 +10,58 @@
 
             scope.ctrl = {
                 events: {
-                    tilesloaded: function (map) {
+                    tilesloaded: function(map) {
                         scope.ctrl.map = map;
                     }
                 }
             };
 
-            scope.onSearch = function (givenUf, givenCity) {
-                //console.log("[widget.searchable_cases_map] Searching for: ", givenUf, givenCity);
+            scope.onSearch = function(givenUf) {
 
-                var uf = Utils.search(StaticData.getUFs(), function (uf) {
+                var uf = Utils.search(StaticData.getUFs(), function(uf) {
                     return (uf.code === givenUf);
                 });
 
                 if (uf) {
                     scope.lookAt(parseFloat(uf.lat), parseFloat(uf.lng), 6);
                 }
-                
+
             };
 
-            scope.refresh = function () {
-                //console.log('[widget.searchable_cases_map] Loading data...');
+            scope.refresh = function() {
 
-                Children.getMap({}, function (data) {
+
+                Children.getMap({}, function(data) {
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
                     scope.mapZoom = data.center.zoom;
                     scope.mapReady = true;
 
-                    //console.log("[widget.searchable_cases_map] Data loaded: ", data.coordinates, data.center);
+
                 });
             };
 
-            scope.onMarkerClick = function (marker, event, coords) {
-                //console.log('[widget.searchable_cases_map] Marker clicked: ', marker, event, coords);
+            scope.onMarkerClick = function() {
+
             };
 
 
-            scope.reloadMap = function () {
+            scope.reloadMap = function() {
                 scope.mapReady = false;
-                $timeout(function () {
+                $timeout(function() {
                     scope.mapReady = true;
                 }, 10);
             };
 
-            scope.lookAt = function (lat, lng, zoom) {
-                //console.log("[widget.searchable_cases_map] Look at @ ", lat, lng, zoom, scope.ctrl);
+            scope.lookAt = function(lat, lng, zoom) {
 
-                scope.ctrl.map.panTo({lat: lat, lng: lng});
+
+                scope.ctrl.map.panTo({ lat: lat, lng: lng });
                 scope.ctrl.map.setZoom(zoom);
 
             };
 
-            scope.isMapReady = function () {
+            scope.isMapReady = function() {
                 return scope.mapReady;
             };
 

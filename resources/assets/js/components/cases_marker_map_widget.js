@@ -1,6 +1,6 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function () {
+    angular.module('BuscaAtivaEscolar').directive('casesMarkerMap', function() {
 
         function init(scope) {
             /**
@@ -23,10 +23,8 @@
                 // Ensure that the marker can receive drag events
                 scope.marker.draggable = true;
                 scope.map.addObject(scope.marker);
-                scope.map.addEventListener('dragstart', function (ev) {
-                    // scope.$parent.fields.place_lat = ev.target.b.lat;
-                    // scope.$parent.fields.place_lng = ev.target.b.lng;
-                    // scope.$apply();
+                scope.map.addEventListener('dragstart', function(ev) {
+
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -38,7 +36,7 @@
 
                 // re-enable the default draggability of the underlying map
                 // when dragging has completed
-                scope.map.addEventListener('dragend', function (ev) {
+                scope.map.addEventListener('dragend', function(ev) {
                     scope.$parent.fields.place_lat = ev.target.b.lat;
                     scope.$parent.fields.place_lng = ev.target.b.lng;
 
@@ -54,10 +52,8 @@
 
                 // Listen to the drag event and move the position of the marker
                 // as necessary
-                scope.map.addEventListener('drag', function (ev) {
-                    // scope.$parent.fields.place_lat = ev.target.b.lat;
-                    // scope.$parent.fields.place_lng = ev.target.b.lng;
-                    // scope.$apply();
+                scope.map.addEventListener('drag', function(ev) {
+
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -66,7 +62,7 @@
                 }, false);
             }
 
-            scope.$watchGroup(['fields.place_lat','fields.place_lng'], function (newVal, oldVal) {
+            scope.$watchGroup(['fields.place_lat', 'fields.place_lng'], function(newVal, oldVal) {
 
                 if (newVal !== oldVal) {
                     scope.map.removeObject(scope.marker);
@@ -80,7 +76,7 @@
                     // Ensure that the marker can receive drag events
                     scope.marker.draggable = true;
                     scope.map.addObject(scope.marker);
-                    scope.map.setCenter({lat: scope.$parent.fields.place_lat, lng: scope.$parent.fields.place_lng});
+                    scope.map.setCenter({ lat: scope.$parent.fields.place_lat, lng: scope.$parent.fields.place_lng });
                     scope.map.setZoom(18);
                 }
             });

@@ -4,7 +4,6 @@
         .factory('Modals', function($q, $uibModal) {
             return {
                 show: function(params) {
-                    //console.log('[modals] Show modal: ', params);
 
                     var def = $q.defer();
 
@@ -305,17 +304,17 @@
                             initialGroup: function() {
                                 return initialGroup;
                             },
-                            messageButton: function (){
+                            messageButton: function() {
                                 return messageButton;
                             },
-                            isMovement: function (){
+                            isMovement: function() {
                                 return isMovement;
                             },
-                            toBeMoved: function (){
+                            toBeMoved: function() {
                                 return toBeMoved;
                             },
-                            levelOfToBeMoved: function (){
-                              return levelOfToBeMoved;
+                            levelOfToBeMoved: function() {
+                                return levelOfToBeMoved;
                             },
                             noGroupsMessage: function() {
                                 return noGroupsMessage;
@@ -463,10 +462,6 @@
                         resolve: {},
                     };
 
-                    //if (!canDismiss) {
-                    //params.keyboard = false;
-                    //params.backdrop = 'static';
-                    //}
 
                     return params;
                 },

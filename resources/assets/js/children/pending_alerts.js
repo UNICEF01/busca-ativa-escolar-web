@@ -75,8 +75,7 @@
                 Modals.show(
                     Modals.GroupPicker(
                         'Atribuir aleta ao grupo',
-                        'O alerta ficará visível para o grupo selecionado.',
-                        { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        'O alerta ficará visível para o grupo selecionado.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Atribuindo grupo: ',
                         false,
                         null,
@@ -97,8 +96,7 @@
                     Modals.show(
                         Modals.GroupPicker(
                             'Atribuir alerta ao grupo',
-                            'Selecione o grupo do qual deseja visualizar os alertas.',
-                            { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                            'Selecione o grupo do qual deseja visualizar os alertas.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                             'Filtrando alertas do grupo: ',
                             false,
                             null,

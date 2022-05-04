@@ -1,13 +1,14 @@
-(function () {
+(function() {
 
     identify("core", "utils.js");
 
     var app = angular.module('BuscaAtivaEscolar');
 
     app
-        .run(function () {
-            Array.prototype.shuffle = function () {
-                var i = this.length, j, temp;
+        .run(function() {
+            Array.prototype.shuffle = function() {
+                var i = this.length,
+                    j, temp;
                 if (i == 0) return this;
                 while (--i) {
                     j = Math.floor(Math.random() * (i + 1));
@@ -18,20 +19,20 @@
                 return this;
             };
 
-            Array.prototype.clone = function () {
+            Array.prototype.clone = function() {
                 return this.slice(0);
             };
 
         })
-        .filter('orderObjectBy', function () {
-            return function (items, field, reverse) {
+        .filter('orderObjectBy', function() {
+            return function(items, field, reverse) {
                 var filtered = [];
 
-                angular.forEach(items, function (item) {
+                angular.forEach(items, function(item) {
                     filtered.push(item);
                 });
 
-                filtered.sort(function (a, b) {
+                filtered.sort(function(a, b) {
                     return (a[field] > b[field] ? 1 : -1);
                 });
 
@@ -41,7 +42,7 @@
             };
         })
 
-        .factory('Utils', function (ngToast) {
+    .factory('Utils', function(ngToast) {
 
             function generateRandomID() {
                 return 'rand-' + (new Date()).getTime() + '-' + Math.round(Math.random() * 10000);
@@ -115,7 +116,8 @@
             function filter(obj, predicate) {
                 if (obj.constructor === Array) return obj.filter(predicate);
 
-                var result = {}, key;
+                var result = {},
+                    key;
 
                 for (key in obj) {
                     if (obj.hasOwnProperty(key) && !!predicate(obj[key])) {
@@ -188,7 +190,7 @@
                 if (invalidFields.length <= 0) return true;
 
                 message += invalidFields
-                    .map(function (field) {
+                    .map(function(field) {
                         return fieldNames[field] || field;
                     })
                     .join(", ");
@@ -200,33 +202,32 @@
 
             function haveEqualsValue(name, values) {
                 var value = _.uniq(values)
-                if(value.length === 1){
+                if (value.length === 1) {
                     ngToast.danger(name + ' não podem ser iguais');
                     return false;
-                }else{
+                } else {
                     return true;
                 }
             }
 
 
-            function isValidBirthDay (user) {
+            function isValidBirthDay(user) {
 
                 const data = new Date(user.dob);
-        
+
                 const currentdate = new Date();
-                    
+
                 const maxDate = new Date(currentdate.setDate(currentdate.getDate() + 1));
-                
+
                 const mindate = new Date(currentdate.setFullYear(currentdate.getFullYear() - 100));
-                
-                if (data < maxDate && data > mindate ){
-                     return true;
-                }
-                else{
+
+                if (data < maxDate && data > mindate) {
+                    return true;
+                } else {
                     alert('Informe uma data válida!')
                 }
             }
-            
+
 
             function isvalidTerm(value) {
                 if (value)
@@ -245,7 +246,7 @@
                 return base;
             }
 
-            function renderCallStack(stack, knownRootPaths) {
+            function renderCallStack(stack) {
                 if (!stack) return ['[ empty stack! ]'];
 
                 var messages = [];
@@ -263,12 +264,12 @@
                     var c = stack[callNum];
 
                     messages.push(
-                        'at '
-                        + (c.class ? c.class : '[root]')
-                        + (c.type ? c.type : '@')
-                        + (c.function ? c.function : '[anonymous function]')
-                        + '()'
-                        + ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
+                        'at ' +
+                        (c.class ? c.class : '[root]') +
+                        (c.type ? c.type : '@') +
+                        (c.function ? c.function : '[anonymous function]') +
+                        '()' +
+                        ((c.file) ? (" @ " + basename(c.file) + ':' + (c.line ? c.line : '[NL]')) : ' [no file]')
                     );
                 }
 
@@ -298,28 +299,28 @@
                 isValidBirthDay: isValidBirthDay
             };
         })
-        .directive('stringToNumber', function () {
+        .directive('stringToNumber', function() {
             return {
                 require: 'ngModel',
-                link: function (scope, element, attrs, ngModel) {
-                    ngModel.$parsers.push(function (value) {
+                link: function(ngModel) {
+                    ngModel.$parsers.push(function(value) {
                         return '' + value;
                     });
-                    ngModel.$formatters.push(function (value) {
+                    ngModel.$formatters.push(function(value) {
                         return parseFloat(value);
                     });
                 }
             };
         })
 
-        .filter('parseDate', function () {
-            return function (input) {
-                return new Date(input);
-            };
-        });
+    .filter('parseDate', function() {
+        return function(input) {
+            return new Date(input);
+        };
+    });
 
 })();
 
 function identify(namespace, file) {
-    //console.log("[core.load] ", namespace, file);
+
 }

@@ -1,8 +1,8 @@
-(function () {
+(function() {
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance, $typeUser, StaticData, Identity, Tenants, Users) {
+        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance, $typeUser, StaticData, Tenants) {
 
             $scope.step = 1;
             $scope.reason = "";
@@ -19,7 +19,7 @@
                 case_status: ['in_progress'],
                 risk_level: ['low', 'medium', 'high'],
                 age_null: true,
-                age: {from: 0, to: 10000},
+                age: { from: 0, to: 10000 },
                 gender: ['male', 'female', 'undefined'],
                 gender_null: true,
                 place_kind: ['rural', 'urban'],
@@ -28,35 +28,33 @@
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
             $scope.search = {};
-// Todo Criar um serviço para reaproveitar isso
-            $scope.getUFs = function () {
+            // Todo Criar um serviço para reaproveitar isso
+            $scope.getUFs = function() {
                 return StaticData.getUFs();
             };
 
-            $scope.refresh = function () {
-                $scope.tenants = Tenants.findByUfPublic({'uf': $scope.query.uf});
+            $scope.refresh = function() {
+                $scope.tenants = Tenants.findByUfPublic({ 'uf': $scope.query.uf });
             };
 
-            $scope.getTenants = function () {
+            $scope.getTenants = function() {
                 if (!$scope.tenants || !$scope.tenants.data) return [];
                 return $scope.tenants.data;
             };
 
-            $scope.ok = function () {
+            $scope.ok = function() {
                 if (!$scope.reason) return;
-                var city = _.find($scope.tenants.data, {id: $scope.query.tenant_id})
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                tenant_id: $scope.query.tenant_id,
-                                reason: $scope.reason,
-                                city: city
-                            }
-                    });
+                var city = _.find($scope.tenants.data, { id: $scope.query.tenant_id })
+                $uibModalInstance.close({
+                    response: {
+                        tenant_id: $scope.query.tenant_id,
+                        reason: $scope.reason,
+                        city: city
+                    }
+                });
             };
 
-            $scope.cancel = function () {
+            $scope.cancel = function() {
                 $uibModalInstance.dismiss(false);
             };
 

@@ -1,8 +1,8 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive("scroll", function () {
-        return function (scope, element, attrs) {
-            angular.element(element).bind("scroll", function () {
+    angular.module('BuscaAtivaEscolar').directive("scroll", function() {
+        return function(scope, element) {
+            angular.element(element).bind("scroll", function() {
                 var divHeight = this.children[0].offsetHeight;
                 var divHeightVisibleScroll = this.offsetHeight;
                 console.log(divHeight, divHeightVisibleScroll, this.scrollTop)

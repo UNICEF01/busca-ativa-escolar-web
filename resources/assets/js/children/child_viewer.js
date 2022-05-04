@@ -45,14 +45,14 @@
 
                 var detachUser = true;
 
-                if($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')){
+                if ($scope.child.currentCase.currentStep.hasOwnProperty('assigned_user')) {
                     //se tem usuário assinado para o caso
 
-                    Groups.findByIdWithParents({id: selectedGroup.id }).$promise
-                        .then(function (group){
+                    Groups.findByIdWithParents({ id: selectedGroup.id }).$promise
+                        .then(function(group) {
 
                             //verifica se o grupo do usuário atribuido ao caso é igual ou um dos pais do novo grupo selecionado
-                            if ( $scope.isFatherOrSameGroup( $scope.child.currentCase.currentStep.assigned_user.group, group.data[0] ) ){
+                            if ($scope.isFatherOrSameGroup($scope.child.currentCase.currentStep.assigned_user.group, group.data[0])) {
                                 detachUser = false;
                             }
 
@@ -63,7 +63,7 @@
                             };
 
                             Cases.update(currentCase).$promise
-                                .then(function (res){
+                                .then(function(res) {
                                     ngToast.success('Caso atribuído com sucesso!')
                                     $state.go('child_browser');
                                 });
@@ -80,13 +80,13 @@
                     };
 
                     Cases.update(currentCase).$promise
-                        .then(function (res){
+                        .then(function() {
                             ngToast.success('Caso atribuído com sucesso!')
                             $state.go('child_browser');
                         });
                 }
 
-            }).then(function(res) {
+            }).then(function() {
 
             });
 
@@ -117,15 +117,15 @@
         };
 
         //verifica se rootGroup é um dos pais de groupTobeChecked ou o mesmo
-        $scope.isFatherOrSameGroup = function (rootGroup, groupTobeChecked){
-            if(groupTobeChecked.id == rootGroup.id) { return true; }
+        $scope.isFatherOrSameGroup = function(rootGroup, groupTobeChecked) {
+            if (groupTobeChecked.id == rootGroup.id) { return true; }
             var isFather = false;
             if (groupTobeChecked.parent != null) {
-                if( groupTobeChecked.parent.id == rootGroup.id ) { isFather = true; }
+                if (groupTobeChecked.parent.id == rootGroup.id) { isFather = true; }
                 if (groupTobeChecked.parent.parent != null) {
-                    if( groupTobeChecked.parent.parent.id == rootGroup.id ) { isFather = true; }
+                    if (groupTobeChecked.parent.parent.id == rootGroup.id) { isFather = true; }
                     if (groupTobeChecked.parent.parent.parent != null) {
-                        if( groupTobeChecked.parent.parent.parent.id == rootGroup.id ) { isFather = true; }
+                        if (groupTobeChecked.parent.parent.parent.id == rootGroup.id) { isFather = true; }
                     }
                 }
             }

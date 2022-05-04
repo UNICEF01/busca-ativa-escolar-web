@@ -1,7 +1,7 @@
-(function () {
+(function() {
 
     angular.module('BuscaAtivaEscolar')
-        .service('Notifications', function ($interval, $location, $rootScope, ngToast, Auth, Identity, Config, Platform, UserNotifications) {
+        .service('Notifications', function($interval, $location, $rootScope, ngToast, Auth, Identity, Config, UserNotifications) {
 
             var notifications = [];
             var seenNotifications = [];
@@ -15,7 +15,7 @@
 
                 isBusy = true;
 
-                UserNotifications.getUnread({$hide_loading_feedback: true}, function (res) {
+                UserNotifications.getUnread({ $hide_loading_feedback: true }, function(res) {
                     notifications = res.data;
                     isBusy = false;
                     setTimeout(emitToastsOnNewNotifications(isFirstRefresh), 60000);
@@ -27,14 +27,14 @@
 
                 $interval(checkForNewNotifications, Config.NOTIFICATIONS_REFRESH_INTERVAL);
 
-                $rootScope.$on('auth.logged_in', function () {
+                $rootScope.$on('auth.logged_in', function() {
                     notifications = [];
                     seenNotifications = [];
 
                     refresh(true);
                 });
 
-                $rootScope.$on('auth.logged_out', function () {
+                $rootScope.$on('auth.logged_out', function() {
                     notifications = [];
                     seenNotifications = [];
                 });
@@ -77,7 +77,7 @@
 
             function markAsRead(notification) {
                 if (!notification) return false;
-                UserNotifications.markAsRead({id: notification.id}, function () {
+                UserNotifications.markAsRead({ id: notification.id }, function() {
                     refresh();
                 });
             }
@@ -106,7 +106,7 @@
             }
 
         })
-        .run(function (Notifications) {
+        .run(function(Notifications) {
             Notifications.setup();
         })
 

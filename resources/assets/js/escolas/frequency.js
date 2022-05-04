@@ -1,7 +1,7 @@
-(function () {
+(function() {
 
     angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('frequency', {
                 url: '/frequencia/{school_id}',
                 templateUrl: '/views/escolas/frequencia.html',
@@ -9,7 +9,7 @@
                 unauthenticated: true
             });
         })
-        .controller('FrequencyCtrl', function ($scope, $stateParams, ngToast, Classes, Modals) {
+        .controller('FrequencyCtrl', function($scope, $stateParams, Classes, Modals) {
 
             $scope.school_id = $stateParams.school_id;
 
@@ -70,10 +70,7 @@
 
                     labels: {
                         rotation: -90,
-                        //x: 0,
-                        //y: 50,
-                        // format: '{value: %d/%m}',
-                        formatter: function () {
+                        formatter: function() {
                             return $scope.getLabelForAxisChart(new Date(this.value), this.chart.title.textStr.substr(25));
                         }
                     },
@@ -96,55 +93,55 @@
                     },
                 },
 
-                credits:{
-                    enabled:false,
+                credits: {
+                    enabled: false,
                 },
 
                 series: []
             };
 
-            $scope.onModifyFrequency = function(frequency, turma){
-                var newValuePresenca = angular.element('#frequency_'+frequency.id).val();
-                if( parseInt(turma.qty_enrollment) < parseInt(newValuePresenca) ){
+            $scope.onModifyFrequency = function(frequency, turma) {
+                var newValuePresenca = angular.element('#frequency_' + frequency.id).val();
+                if (parseInt(turma.qty_enrollment) < parseInt(newValuePresenca)) {
                     Modals.show(Modals.Alert("A frequência não pode ser maior que a quantidade de alunos presentes"));
                     $scope.refresh();
-                }else{
+                } else {
                     frequency.qty_presence = parseInt(newValuePresenca);
                     Classes.updateFrequency(frequency).$promise
-                        .then(function (res) {
+                        .then(function() {
                             $scope.refresh();
                         });
                 }
             };
 
-            $scope.getLabelForAxisChart = function(date, periodicidade){
+            $scope.getLabelForAxisChart = function(date, periodicidade) {
 
-                if(periodicidade == 'Diária'){
+                if (periodicidade == 'Diária') {
                     var splitDate = date.toISOString().substr(0, 10).split('-');
-                    return splitDate[2]+"/"+splitDate[1];
+                    return splitDate[2] + "/" + splitDate[1];
                 }
 
-                if(periodicidade == 'Semanal'){
+                if (periodicidade == 'Semanal') {
                     var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
                     var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
                 }
 
-                if(periodicidade == 'Quinzenal'){
+                if (periodicidade == 'Quinzenal') {
                     var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
                     var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
                 }
 
-                if(periodicidade == 'Mensal'){
+                if (periodicidade == 'Mensal') {
                     var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
                     var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2]+"/"+splitDate1[1] +" até "+ splitDate2[2]+"/"+splitDate2[1];
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
                 }
 
             };
 
-            $scope.initChart = function(){
+            $scope.initChart = function() {
 
                 /*
                     No topo da página frequencia.html mudamos a referência para Highcharts para highstock
@@ -195,31 +192,31 @@
                     para setar as configuraçoes do gráfico
                     Cada gráfico recebe um objeto de configuracao
                  */
-                $scope.periodicidades.forEach( function (period) {
+                $scope.periodicidades.forEach(function(period) {
 
                     $scope.options_graph.series = [];
-                    $scope.options_graph.chart.renderTo = 'chart_classes_'+period;
-                    $scope.options_graph.title.text = 'Frequências das turmas - '+$scope.getNamePeriodicidades(period);
+                    $scope.options_graph.chart.renderTo = 'chart_classes_' + period;
+                    $scope.options_graph.title.text = 'Frequências das turmas - ' + $scope.getNamePeriodicidades(period);
 
-                    $scope.classes.turmas.forEach( function(element) {
+                    $scope.classes.turmas.forEach(function(element) {
 
                         var data = [];
 
-                        element.frequencies.forEach( function (frequency) {
+                        element.frequencies.forEach(function(frequency) {
 
-                            if(frequency.periodicidade == period){
+                            if (frequency.periodicidade == period) {
 
-                                $scope.options_graph.chart.renderTo = "graph_"+period;
+                                $scope.options_graph.chart.renderTo = "graph_" + period;
 
                                 var dataSplit = frequency.created_at.substr(0, 10).split('-');
 
                                 data.push([
-                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2])),
+                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1]) - 1, parseInt(dataSplit[2])),
                                     parseInt(frequency.qty_presence),
                                 ]);
 
                                 $scope.categories.push(
-                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1])-1, parseInt(dataSplit[2]))
+                                    Date.UTC(parseInt(dataSplit[0]), parseInt(dataSplit[1]) - 1, parseInt(dataSplit[2]))
                                 );
                             }
 
@@ -232,36 +229,34 @@
 
                     });
 
-                    //console.log($scope.options_graph.xAxis.tickPositions);
-
-                    var chart = new Highcharts.stockChart( 'chart_classes_'+period, $scope.options_graph);
+                    var chart = new Highcharts.stockChart('chart_classes_' + period, $scope.options_graph);
 
                 });
 
             };
 
-            $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents){
-                return ( ( 100* ( arrayFrequencies[(arrayFrequencies.length)-1].qty_presence ) ) / totalStudents ).toFixed(2);
+            $scope.calculatePercentualFrequencies = function(arrayFrequencies, totalStudents) {
+                return ((100 * (arrayFrequencies[(arrayFrequencies.length) - 1].qty_presence)) / totalStudents).toFixed(2);
             };
 
-            $scope.finish = function(){
+            $scope.finish = function() {
                 Modals.show(Modals.ConfirmLarge("Suas informações do registro de frequência foram salvas. A Busca Ativa Escolar é uma estratégia que conta com uma metodologia social e uma plataforma tecnológica e visa apoiar municípios e estados no enfrentamento da exclusão escolar. Em períodos de crises e emergências, como a que ocorre nesse momento, com a covid-19, a estratégia pode colaborar de maneira efetiva para prevenir ou mitigar o abandono e a evasão escolares. Deseja acessar o guia Busca Ativa Escolar em crises e emergências e verificar como seu município e estado podem proceder?"))
-                    .then(function () {
+                    .then(function() {
                         window.location.href = "https://buscaativaescolar.org.br/criseseemergencias";
                     });
             };
 
-            $scope.getNamePeriodicidade = function(){
-              var periodicidades = {
-                  Diaria: 'Diária',
-                  Semanal: 'Semanal',
-                  Quinzenal: 'Quinzenal',
-                  Mensal: 'Mensal'
-              };
-              return periodicidades[$scope.classes.school.periodicidade];
+            $scope.getNamePeriodicidade = function() {
+                var periodicidades = {
+                    Diaria: 'Diária',
+                    Semanal: 'Semanal',
+                    Quinzenal: 'Quinzenal',
+                    Mensal: 'Mensal'
+                };
+                return periodicidades[$scope.classes.school.periodicidade];
             };
 
-            $scope.getNamePeriodicidades = function(period){
+            $scope.getNamePeriodicidades = function(period) {
                 var periodicidades = {
                     Diaria: 'Diária',
                     Semanal: 'Semanal',
@@ -271,30 +266,30 @@
                 return periodicidades[period];
             };
 
-            $scope.addPeriodFrequency = function(turma){
+            $scope.addPeriodFrequency = function(turma) {
                 Modals.show(
                     Modals.AddPeriodFrequency(
                         turma.name,
                         'Atualização de períodos anteriores | Frequência ' + $scope.getNamePeriodicidade().toLowerCase(),
                         turma,
                         $scope.classes.school.periodicidade
-                    )).then(function () {
-                        $scope.refresh();
-                    });
+                    )).then(function() {
+                    $scope.refresh();
+                });
             };
 
-            $scope.refresh = function () {
+            $scope.refresh = function() {
 
-                Classes.frequencies({id: $scope.school_id}).$promise
-                    .then(function (res) {
+                Classes.frequencies({ id: $scope.school_id }).$promise
+                    .then(function(res) {
 
                         $scope.classes = res;
                         $scope.initChart();
 
-                        document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("active"); //ativa a aba correta dos graficos
-                        document.getElementById("aba_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("in");
-                        document.getElementById("li_"+$scope.classes.school.periodicidade.toLowerCase()).classList.add("active");
-                        document.getElementById("link_"+$scope.classes.school.periodicidade.toLowerCase()).setAttribute("aria-expanded", "true");
+                        document.getElementById("aba_" + $scope.classes.school.periodicidade.toLowerCase()).classList.add("active"); //ativa a aba correta dos graficos
+                        document.getElementById("aba_" + $scope.classes.school.periodicidade.toLowerCase()).classList.add("in");
+                        document.getElementById("li_" + $scope.classes.school.periodicidade.toLowerCase()).classList.add("active");
+                        document.getElementById("link_" + $scope.classes.school.periodicidade.toLowerCase()).setAttribute("aria-expanded", "true");
 
                     });
 
@@ -306,31 +301,31 @@
             $scope.subtractDaysOfDayInstance = function(date, days) {
                 var copy = new Date(Number(date));
                 copy.setDate(date.getDate() - days);
-                if( copy.getUTCDay() == 0 ) //domingo
+                if (copy.getUTCDay() == 0) //domingo
                 { copy.setDate(copy.getDate() - 2); }
-                if( copy.getUTCDay() == 6 ) //sabado
+                if (copy.getUTCDay() == 6) //sabado
                 { copy.setDate(copy.getDate() - 1); }
                 return copy;
             };
 
             //pega a ultima sexta-feira para periodicidade semanal
-            $scope.subtractAWeekOfDayInstance = function(date){
+            $scope.subtractAWeekOfDayInstance = function(date) {
                 var lastFriday = new Date(Number(date));
-                if(date.getDay() == 5){
+                if (date.getDay() == 5) {
                     lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
                 }
-                while (lastFriday.getDay() != 5){
+                while (lastFriday.getDay() != 5) {
                     lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
                 }
                 return lastFriday;
             };
 
             //pega o ultimo dia 15 ou dia 1o
-            $scope.subtractFortnightOfDayInstance = function(date){
+            $scope.subtractFortnightOfDayInstance = function(date) {
                 var date2 = new Date(Number(date));
-                if(date.getUTCDate() > 15){
+                if (date.getUTCDate() > 15) {
                     date2.setUTCDate(15);
-                }else{ //se é de 1 a 15 pega ultima data do mes anterior
+                } else { //se é de 1 a 15 pega ultima data do mes anterior
                     date2 = new Date(date.getFullYear(), date.getMonth(), 0);
                 }
                 return date2;

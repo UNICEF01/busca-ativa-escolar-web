@@ -1,7 +1,7 @@
 (function() {
 
     angular.module('BuscaAtivaEscolar')
-        .controller('ManageGroupsCtrl', function($scope, $window, $filter, $rootScope, $q, ngToast, Platform, Identity, Groups, StaticData, Modals) {
+        .controller('ManageGroupsCtrl', function($scope, $window, $filter, ngToast, Platform, Identity, Groups, Modals) {
 
             $scope.groups = []
             $scope.getName = function(index) {
@@ -219,7 +219,7 @@
                             $scope.onSelectGroup(3, group.parent_id);
                         }
                     },
-                    function(err) {
+                    function() {
                         ngToast.danger('Ocorreu um erro ao salvar os grupos!')
                         $scope.onSelectGroup(3, group.parent_id);
                     });
@@ -227,73 +227,72 @@
             };
 
 
-            $scope.canMovGroup = function (level) {
-                if (level==3){ return true; }
-                if (level==4){ if(!$scope.currentUser.tenant.is_state){ return true; } }
+            $scope.canMovGroup = function(level) {
+                if (level == 3) { return true; }
+                if (level == 4) { if (!$scope.currentUser.tenant.is_state) { return true; } }
                 return false;
             };
 
-            $scope.userCanMovGroup = function (level, group) {
-                if(level==2) { return false; }
-                if (level==3){
-                    if($scope.currentUser.group.is_primary) { return true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
+            $scope.userCanMovGroup = function(level) {
+                if (level == 2) { return false; }
+                if (level == 3) {
+                    if ($scope.currentUser.group.is_primary) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
                 }
-                if (level==4){
-                    if($scope.currentUser.group.is_primary) { return true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
-                }
-                return false;
-            };
-
-
-            $scope.canEditGroup = function (level, group) {
-                if(level==2){ return true; }
-                if(level==3){
-                    if($scope.currentUser.tenant.is_state) { return false; }
-                    if(!$scope.currentUser.tenant.is_state) { return true; }
-                }
-                if(level==4){ return false; }
-                return false;
-            };
-
-            $scope.userCanEditGroup = function (level, group) {
-                if($scope.currentUser.group.is_primary) { return true; }
-                if(level==3){
-                    if($scope.currentUser.group.is_primary) { return true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
-                }
-                if(level==4){
-                    if($scope.currentUser.group.is_primary) { return true; }
-                    if($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
+                if (level == 4) {
+                    if ($scope.currentUser.group.is_primary) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
                 }
                 return false;
             };
 
 
-            $scope.disableNewGroup = function (level){
-                if(level==2){
-                    if($scope.currentUser.group.is_primary) { return false; }
+            $scope.canEditGroup = function(level) {
+                if (level == 2) { return true; }
+                if (level == 3) {
+                    if ($scope.currentUser.tenant.is_state) { return false; }
+                    if (!$scope.currentUser.tenant.is_state) { return true; }
                 }
-                if(level==3){
-                    if($scope.selectedTabTwo == null){
+                if (level == 4) { return false; }
+                return false;
+            };
+
+            $scope.userCanEditGroup = function(level) {
+                if ($scope.currentUser.group.is_primary) { return true; }
+                if (level == 3) {
+                    if ($scope.currentUser.group.is_primary) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id) { return true; }
+                }
+                if (level == 4) {
+                    if ($scope.currentUser.group.is_primary) { return true; }
+                    if ($scope.selectedTabTwo == $scope.currentUser.group.id || $scope.selectedTabThree == $scope.currentUser.group.id) { return true; }
+                }
+                return false;
+            };
+
+
+            $scope.disableNewGroup = function(level) {
+                if (level == 2) {
+                    if ($scope.currentUser.group.is_primary) { return false; }
+                }
+                if (level == 3) {
+                    if ($scope.selectedTabTwo == null) {
                         return true;
-                    }else{
-                        if($scope.currentUser.tenant.is_state) { return  true; }
-                        if($scope.currentUser.group.is_primary) { return false; }
-                        if($scope.selectedTabTwo == $scope.currentUser.group.id) { return false; }
+                    } else {
+                        if ($scope.currentUser.tenant.is_state) { return true; }
+                        if ($scope.currentUser.group.is_primary) { return false; }
+                        if ($scope.selectedTabTwo == $scope.currentUser.group.id) { return false; }
                     }
                 }
                 return true;
             };
 
 
-            $scope.movGroup = function (level, group) {
+            $scope.movGroup = function(level, group) {
                 Modals.show(
                     Modals.GroupPicker(
-                        'Movimentar grupo '+group.name,
-                        'Selecione o destino para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos. Essa operação não poderá ser desfeita.',
-                        { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
+                        'Movimentar grupo ' + group.name,
+                        'Selecione o destino para onde deseja mover o grupo selecionado. Todos os alertas, casos e usuários que pertencem a esse grupo também serão movidos. Essa operação não poderá ser desfeita.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
                         'Movendo grupo para: ',
                         true,
                         group,
@@ -306,7 +305,7 @@
                         id: group.id
                     };
                     return Groups.update(groupToBeEdited);
-                }).then(function(res) {
+                }).then(function() {
                     ngToast.success('Grupo movimentado com sucesso!')
                     $scope.refresh();
                 });

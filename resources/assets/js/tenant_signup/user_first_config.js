@@ -1,7 +1,7 @@
 (function() {
 
     var app = angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('user_first_config', {
                 url: '/user_setup/{id}?token',
                 templateUrl: '/views/initial_admin_setup/review_user.html',
@@ -9,7 +9,7 @@
                 unauthenticated: true
             });
         })
-        .controller('UserSetupCtrl', function ($scope, $stateParams, $window, moment, ngToast, Platform, Utils, TenantSignups, Modals, $state) {
+        .controller('UserSetupCtrl', function($scope, $stateParams, moment, ngToast, Utils, TenantSignups, Modals, $state) {
 
             $scope.canUpdateDataUser = true;
             $scope.message = "";
@@ -34,7 +34,7 @@
                 lgpd: 'termo de adesão'
             };
 
-            var requiredFields = ['email','name','cpf','dob','phone','password', 'lgpd'];
+            var requiredFields = ['email', 'name', 'cpf', 'dob', 'phone', 'password', 'lgpd'];
 
             var messages = {
                 invalid_user: 'Dados do usuário incompletos! Campos inválidos: '
@@ -43,18 +43,17 @@
             var dateOnlyFields = ['dob'];
 
             $scope.fetchUserDetails = function() {
-                TenantSignups.getUserViaToken(
-                    {id: userID, token: userToken},
-                    function (data) {
+                TenantSignups.getUserViaToken({ id: userID, token: userToken },
+                    function(data) {
 
-                        if( 'status' in data && 'reason' in data ){
+                        if ('status' in data && 'reason' in data) {
                             $scope.canUpdateDataUser = false;
-                            if(data.reason == 'token_mismatch') { $scope.message = "Token inválido"; }
-                            if(data.reason == 'invalid_token') { $scope.message = "Token inválido"; }
-                            if(data.reason == 'lgpd_already_accepted') { $scope.message = "Usuário já ativado"; }
+                            if (data.reason == 'token_mismatch') { $scope.message = "Token inválido"; }
+                            if (data.reason == 'invalid_token') { $scope.message = "Token inválido"; }
+                            if (data.reason == 'lgpd_already_accepted') { $scope.message = "Usuário já ativado"; }
                         }
 
-                        if( 'email' in data && 'name' in data ){
+                        if ('email' in data && 'name' in data) {
                             $scope.canUpdateDataUser = true;
                             $scope.message = "";
 
@@ -65,12 +64,12 @@
                     });
             };
 
-            $scope.activeUser = function () {
+            $scope.activeUser = function() {
 
                 //set lgpd = 1 pois na API é obrigatório
                 $scope.user.lgpd = 1;
 
-                if(!Utils.isValid($scope.user, requiredFields, fieldNames, messages.invalid_user)) return;
+                if (!Utils.isValid($scope.user, requiredFields, fieldNames, messages.invalid_user)) return;
 
                 Modals.show(Modals.Confirm(
                     'Confirma os dados?',
@@ -86,31 +85,31 @@
                         user: finalUser
                     };
 
-                    TenantSignups.activeUser(data, function (res) {
+                    TenantSignups.activeUser(data, function(res) {
 
-                        if( 'status' in res && 'reason' in res ){
+                        if ('status' in res && 'reason' in res) {
 
-                            if(res.reason == 'token_mismatch') {
+                            if (res.reason == 'token_mismatch') {
                                 ngToast.danger("Token inválido");
                             }
-                            if(res.reason == 'invalid_token') {
+                            if (res.reason == 'invalid_token') {
                                 ngToast.danger("Token inválido");
                             }
-                            if(res.reason == 'lgpd_already_accepted') {
+                            if (res.reason == 'lgpd_already_accepted') {
                                 ngToast.danger("Usuário já ativado");
                             }
-                            if(res.reason == 'email_already_used') {
+                            if (res.reason == 'email_already_used') {
                                 ngToast.danger("Email inválido. Já pertence a outro usuário");
                             }
-                            if(res.reason == 'invalid_password') {
+                            if (res.reason == 'invalid_password') {
                                 ngToast.danger("Senha inválida.");
                             }
-                            if(res.reason == 'validation_failed') {
+                            if (res.reason == 'validation_failed') {
                                 ngToast.danger("Campos inválidos. Preencha todos os campos obrigatórios");
                             }
                         }
 
-                        if( 'status' in res && 'updated' in res ){
+                        if ('status' in res && 'updated' in res) {
                             ngToast.success("Perfil ativado");
                             $state.go('login');
                         }
@@ -120,7 +119,7 @@
                 });
             };
 
-            $scope.showPassowrd = function () {
+            $scope.showPassowrd = function() {
                 var field_password = document.getElementById("fld-co-password");
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password";
             };
@@ -128,66 +127,62 @@
             $scope.fetchUserDetails();
 
         });
-        app.directive('myDirective', function() {
-			return {
-					require: 'ngModel',
-					link: function(scope, element, attr, mCtrl) {
-							function myValidation(value) {
-									const capital = document.getElementById('capital');
-									const number = document.getElementById('number');
-									const length = document.getElementById('length');
-									const letter = document.getElementById('letter');
-									const symbol = document.getElementById('symbol')
-									const check = function(entrada) {
-											entrada.classList.remove('invalid');
-											entrada.classList.add('valid');
-											//mCtrl.$setValidity('charE', true);
-									}
-									const uncheck = function(entrada) {
-											entrada.classList.remove('valid');
-											entrada.classList.add('invalid');
-									}
-									if(typeof(value) === "string"){
-											var lowerCaseLetters = /[a-z]/g;
-											if (value.match(lowerCaseLetters)) {
-													check(letter)
-											} else {
-													uncheck(letter)
-											}
-											var upperCaseLetters = /[A-Z]/g;
-											if (value.match(upperCaseLetters)) {
-													check(capital)
-											} else {
-													uncheck(capital)
-											}
-											var numbers = /[0-9]/g;
-											if (value.match(numbers)) {
-													check(number)
-											} else {
-													uncheck(number)
-											}
-											var symbols = /[!@#$%&*?]/g;
-											if (value.match(symbols)) {
-													check(symbol)
-											} else {
-													uncheck(symbol)
-											}
-									// Validate length
-											if (value.length >= 8 && value.length <= 16) {
-													check(length);
-											} else {
-													uncheck(length);
-											}
-									}
-									
-									/*else {
-													mCtrl.$setValidity('charE', false);
-											}*/
-									return value;
-							}
-							mCtrl.$parsers.push(myValidation);
-					}
-			};
-	});
+    app.directive('myDirective', function() {
+        return {
+            require: 'ngModel',
+            link: function(mCtrl) {
+                function myValidation(value) {
+                    const capital = document.getElementById('capital');
+                    const number = document.getElementById('number');
+                    const length = document.getElementById('length');
+                    const letter = document.getElementById('letter');
+                    const symbol = document.getElementById('symbol')
+                    const check = function(entrada) {
+                        entrada.classList.remove('invalid');
+                        entrada.classList.add('valid');
+                    }
+                    const uncheck = function(entrada) {
+                        entrada.classList.remove('valid');
+                        entrada.classList.add('invalid');
+                    }
+                    if (typeof(value) === "string") {
+                        var lowerCaseLetters = /[a-z]/g;
+                        if (value.match(lowerCaseLetters)) {
+                            check(letter)
+                        } else {
+                            uncheck(letter)
+                        }
+                        var upperCaseLetters = /[A-Z]/g;
+                        if (value.match(upperCaseLetters)) {
+                            check(capital)
+                        } else {
+                            uncheck(capital)
+                        }
+                        var numbers = /[0-9]/g;
+                        if (value.match(numbers)) {
+                            check(number)
+                        } else {
+                            uncheck(number)
+                        }
+                        var symbols = /[!@#$%&*?]/g;
+                        if (value.match(symbols)) {
+                            check(symbol)
+                        } else {
+                            uncheck(symbol)
+                        }
+                        // Validate length
+                        if (value.length >= 8 && value.length <= 16) {
+                            check(length);
+                        } else {
+                            uncheck(length);
+                        }
+                    }
+
+                    return value;
+                }
+                mCtrl.$parsers.push(myValidation);
+            }
+        };
+    });
 
 })();

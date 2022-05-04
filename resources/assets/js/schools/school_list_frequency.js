@@ -1,14 +1,14 @@
 (function() {
 
     angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('school_list_frequency', {
                 url: '/frequency',
                 templateUrl: '/views/schools/school_list_frequency.html',
                 controller: 'SchoolFrequencyBrowserCtrl'
             });
         })
-        .controller('SchoolFrequencyBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
+        .controller('SchoolFrequencyBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
 
             $scope.check_all_schools = false;
             $scope.identity = Identity;
@@ -25,57 +25,57 @@
                 schools: []
             };
 
-            $scope.onCheckSelectAll = function(){
-                if( $scope.check_all_schools ){
+            $scope.onCheckSelectAll = function() {
+                if ($scope.check_all_schools) {
                     $scope.selected.schools = angular.copy($scope.schools.data);
-                }else{
+                } else {
                     $scope.selected.schools = [];
                 }
             };
 
-            $scope.onModifySchool = function(school){
+            $scope.onModifySchool = function(school) {
                 Schools.update(school).$promise.then($scope.onSaved);
             };
 
             $scope.onSaved = function(res) {
-                if(res.status === "ok") {
-                    ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+                if (res.status === "ok") {
+                    ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
                     return;
-                }else{
-                    ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+                } else {
+                    ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
                     $scope.refresh();
                 }
             };
 
-            $scope.sendnotification = function(){
+            $scope.sendnotification = function() {
 
                 //remove objects without email
-                var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-                    if(school.school_email != null && school.school_email != ""){
+                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
+                    if (school.school_email != null && school.school_email != "") {
                         return true;
-                    }else{
+                    } else {
                         return false;
                     }
                 });
 
-                if(schools_to_send_notification.length > 0){
+                if (schools_to_send_notification.length > 0) {
 
                     Modals.show(
-                        Modals.ConfirmEmail(
-                            'Confirma o envio de sms e email para as seguintes escolas?',
-                            'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
-                            schools_to_send_notification
-                        )).then(function () {
-                        return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
-                    })
-                        .then(function (res) {
-                            if(res.status == "error"){
+                            Modals.ConfirmEmail(
+                                'Confirma o envio de sms e email para as seguintes escolas?',
+                                'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
+                                schools_to_send_notification
+                            )).then(function() {
+                            return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
+                        })
+                        .then(function(res) {
+                            if (res.status == "error") {
                                 ngToast.danger(res.message);
                                 $scope.msg_success = false;
                                 $scope.msg_error = true;
                                 $scope.refresh();
                                 window.scrollTo(0, 0);
-                            }else{
+                            } else {
                                 ngToast.warning(res.message);
                                 $scope.msg_success = true;
                                 $scope.msg_error = false;
@@ -83,7 +83,7 @@
                                 window.scrollTo(0, 0);
                             }
                         });
-                }else{
+                } else {
                     Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
                 }
 

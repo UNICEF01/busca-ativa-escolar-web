@@ -1,41 +1,41 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('myAlerts', function (moment, Identity, Platform, Alerts) {
+    angular.module('BuscaAtivaEscolar').directive('myAlerts', function(Platform, Alerts) {
 
-		var alerts = [];
-		var isReady = false;
+        var alerts = [];
+        var isReady = false;
 
-		function refresh() {
-			Alerts.mine({}, function(data) {
-				alerts = data.data;
-				isReady = true;
-			});
-		}
+        function refresh() {
+            Alerts.mine({}, function(data) {
+                alerts = data.data;
+                isReady = true;
+            });
+        }
 
-		function init(scope, element, attrs) {
+        function init(scope) {
 
-			scope.getAlerts = function() {
-				return alerts;
-			};
+            scope.getAlerts = function() {
+                return alerts;
+            };
 
-			scope.isReady = function() {
-				return isReady;
-			};
+            scope.isReady = function() {
+                return isReady;
+            };
 
-			scope.hasAlerts = function() {
-				return (alerts && alerts.length > 0);
-			};
+            scope.hasAlerts = function() {
+                return (alerts && alerts.length > 0);
+            };
 
-			Platform.whenReady(function () {
-				refresh();
-			});
-		}
+            Platform.whenReady(function() {
+                refresh();
+            });
+        }
 
-		return {
-			link: init,
-			replace: true,
-			templateUrl: '/views/components/my_alerts.html'
-		};
-	});
+        return {
+            link: init,
+            replace: true,
+            templateUrl: '/views/components/my_alerts.html'
+        };
+    });
 
 })();

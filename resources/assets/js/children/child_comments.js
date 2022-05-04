@@ -1,40 +1,38 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('child_viewer.comments', {
-				url: '/comments',
-				templateUrl: '/views/children/view/comments.html',
-				controller: 'ChildCommentsCtrl'
-			})
-		})
-		.controller('ChildCommentsCtrl', function ($scope, $state, $stateParams, Children) {
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('child_viewer.comments', {
+                url: '/comments',
+                templateUrl: '/views/children/view/comments.html',
+                controller: 'ChildCommentsCtrl'
+            })
+        })
+        .controller('ChildCommentsCtrl', function($scope, $stateParams, Children) {
 
-			$scope.Children = Children;
+            $scope.Children = Children;
 
-			$scope.comments = {};
-			$scope.message = "";
+            $scope.comments = {};
+            $scope.message = "";
 
-			$scope.refresh = function() {
-				$scope.comments = Children.getComments({id: $stateParams.child_id});
-			};
+            $scope.refresh = function() {
+                $scope.comments = Children.getComments({ id: $stateParams.child_id });
+            };
 
-			$scope.sendMessage = function() {
+            $scope.sendMessage = function() {
 
-				Children.postComment({
-					id: $scope.$parent.child.id,
-					message: $scope.message
-				}, function (res) {
-					$scope.refresh();
-				});
+                Children.postComment({
+                    id: $scope.$parent.child.id,
+                    message: $scope.message
+                }, function() {
+                    $scope.refresh();
+                });
 
-				$scope.message = "";
-			};
+                $scope.message = "";
+            };
 
-			//console.log("[core] @ChildCommentsCtrl", $stateParams);
+            $scope.refresh();
 
-			$scope.refresh();
-
-		});
+        });
 
 })();

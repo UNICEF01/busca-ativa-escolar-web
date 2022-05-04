@@ -1,8 +1,8 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive('myAssignments', function (moment, Identity, Platform, Children, Decorators, DTOptionsBuilder, DTColumnDefBuilder) {
+    angular.module('BuscaAtivaEscolar').directive('myAssignments', function(Identity, Platform, Children, Decorators, DTOptionsBuilder, DTColumnDefBuilder) {
 
-        function init(scope, element, attrs) {
+        function init(scope) {
             scope.Decorators = Decorators;
             scope.children = [];
 
@@ -41,12 +41,11 @@
                 DTColumnDefBuilder.newColumnDef(6).notSortable()
             ];
 
-            scope.refresh = function () {
-                //console.log("[widget.my_assignments] Loading assignments...");
+            scope.refresh = function() {
+
                 isReady = false;
 
-                Children.search(
-                    {
+                Children.search({
                         assigned_user_id: Identity.getCurrentUserID(),
                         name: '',
                         step_name: '',
@@ -56,34 +55,34 @@
                         alert_status: ['accepted'],
                         case_status: ['in_progress'],
                         risk_level: ['low', 'medium', 'high'],
-                        age: {from: 0, to: 100},
+                        age: { from: 0, to: 100 },
                         age_null: true,
                         gender: ['male', 'female', 'undefined'],
                         gender_null: true,
                         place_kind: ['rural', 'urban'],
                         place_kind_null: true
                     },
-                    function (data) {
-                        //console.log("[widget.my_assignments] Loaded: ", data.results);
+                    function(data) {
+
                         scope.children = data.results;
                         isReady = true;
                     }
                 );
             };
 
-            scope.getChildren = function () {
+            scope.getChildren = function() {
                 return scope.children;
             };
 
-            scope.isReady = function () {
+            scope.isReady = function() {
                 return isReady;
             };
 
-            scope.hasAssignments = function () {
+            scope.hasAssignments = function() {
                 return (scope.children && scope.children.length > 0);
             };
 
-            Platform.whenReady(function () {
+            Platform.whenReady(function() {
                 scope.refresh();
             });
         }

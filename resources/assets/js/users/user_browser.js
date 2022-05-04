@@ -79,7 +79,7 @@
                 return (Identity.getCurrentUser().id === user.id);
             };
 
-            $scope.selectedGroup = {id:null, name:null};
+            $scope.selectedGroup = { id: null, name: null };
 
             $scope.static = StaticData;
 
@@ -100,8 +100,8 @@
             };
 
             $scope.refresh = function() {
-                if(Identity.can('tenants.view')) {
-                    $scope.tenants = Tenants.findByUf({'uf': $scope.query.uf});
+                if (Identity.can('tenants.view')) {
+                    $scope.tenants = Tenants.findByUf({ 'uf': $scope.query.uf });
                 }
                 $scope.search = Users.search($scope.query);
             };
@@ -144,8 +144,8 @@
                             '(Ré)matrícula: ' + response.rematricula.casos + ', ' +
                             'Observação: ' + response.observacao.casos + ', ' +
                             'Clique sim para prosseguir'
-                        )).then(function(res) {
-                            Maintenance.assignForAdminUser({ id: user.id }, function(response) {
+                        )).then(function() {
+                            Maintenance.assignForAdminUser({ id: user.id }, function() {
                                 ngToast.success(
                                     'Usuário desativado e casos atribuidos com sucesso!'
                                 );
@@ -160,14 +160,14 @@
             };
 
             $scope.restoreUser = function(user) {
-                Users.restore({ id: user.id }, function(res) {
+                Users.restore({ id: user.id }, function() {
                     ngToast.success('Usuário reativado!');
                     $scope.refresh();
                 });
             };
 
             $scope.sendReactivationMail = function(user) {
-                Users.sendReactivationMail({ id: user.id }, function(res) {
+                Users.sendReactivationMail({ id: user.id }, function() {
                     ngToast.success('Email encaminhado!');
                     $scope.refresh();
                 });
@@ -180,7 +180,7 @@
                 $scope.refresh();
             });
 
-            $scope.isScopeOfUser = function (user){
+            $scope.isScopeOfUser = function(user) {
                 if ($scope.identity.getType() === 'gestor_nacional' || $scope.identity.getType() === 'superuser') {
                     return user.tenant_id == null ? true : false;
                 }
@@ -192,7 +192,7 @@
                 }
             };
 
-            $scope.isScopeOfTenant = function (){
+            $scope.isScopeOfTenant = function() {
                 if ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional' || $scope.identity.getType() === 'gestor_politico') {
                     return true;
                 }

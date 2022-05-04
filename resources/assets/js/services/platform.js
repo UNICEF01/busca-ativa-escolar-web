@@ -1,102 +1,100 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
-		.run(function (Platform) {
-			Platform.setup();
-		})
-		.service('Platform', function Platform($q, $state, $rootScope, StaticData, Language) {
+    angular.module('BuscaAtivaEscolar')
+        .run(function(Platform) {
+            Platform.setup();
+        })
+        .service('Platform', function Platform($rootScope) {
 
-			var servicesRequired = [
-				'StaticData',
-				'Language',
-				'Identity'
-			];
+            var servicesRequired = [
+                'StaticData',
+                'Language',
+                'Identity'
+            ];
 
-			var servicesReady = [];
-			var allReady = false;
+            var servicesReady = [];
+            var allReady = false;
 
-			var flags = {};
+            var flags = {};
 
-			var whenReadyCallbacks = [];
+            var whenReadyCallbacks = [];
 
-			function setup() {
+            function setup() {
 
-				//console.log('[platform.service_registry] Setting up service registry...');
 
-				for(var i in servicesRequired) {
-					if(!servicesRequired.hasOwnProperty(i)) continue;
 
-					//console.log("\tAwait for service: ", servicesRequired[i]);
+                for (var i in servicesRequired) {
+                    if (!servicesRequired.hasOwnProperty(i)) continue;
 
-					$rootScope.$on(servicesRequired[i] + '.ready', function(event) {
-						onServiceReady(event.name.split('.').shift());
-					})
-				}
 
-				$rootScope.$on('$stateChangeStart', clearRegisteredCallbacks);
-				$rootScope.$on('$stateChangeSuccess', checkIfAllServicesReady);
-				$rootScope.$on('Platform.ready', fireRegisteredCallbacks);
-			}
+                    $rootScope.$on(servicesRequired[i] + '.ready', function(event) {
+                        onServiceReady(event.name.split('.').shift());
+                    })
+                }
 
-			function setFlag(flag, value) {
-				//console.log('[platform.flags] Set flag: ', flag, '->', value);
-				flags[flag] = value;
-			}
+                $rootScope.$on('$stateChangeStart', clearRegisteredCallbacks);
+                $rootScope.$on('$stateChangeSuccess', checkIfAllServicesReady);
+                $rootScope.$on('Platform.ready', fireRegisteredCallbacks);
+            }
 
-			function getFlag(flag) {
-				return flags[flag];
-			}
+            function setFlag(flag, value) {
 
-			function onServiceReady(service) {
-				//console.log('[platform.service_registry] Service is ready: ' + service);
+                flags[flag] = value;
+            }
 
-				if(servicesReady.indexOf(service) === -1) {
-					servicesReady.push(service);
-				}
+            function getFlag(flag) {
+                return flags[flag];
+            }
 
-				checkIfAllServicesReady();
-			}
+            function onServiceReady(service) {
 
-			function clearRegisteredCallbacks() {
-				//console.log('[platform.service_registry] Cleared callbacks');
-				whenReadyCallbacks = [];
-			}
+                if (servicesReady.indexOf(service) === -1) {
+                    servicesReady.push(service);
+                }
 
-			function checkIfAllServicesReady() {
-				if(servicesReady.length < servicesRequired.length) return;
-				allReady = true;
+                checkIfAllServicesReady();
+            }
 
-				//console.log("[platform.service_registry] All services ready!");
+            function clearRegisteredCallbacks() {
 
-				$rootScope.$broadcast('Platform.ready');
-			}
+                whenReadyCallbacks = [];
+            }
 
-			function fireRegisteredCallbacks() {
-				//console.log('[platform.service_registry] Firing registered callbacks: ', whenReadyCallbacks);
-				for(var i in whenReadyCallbacks) {
-					if(!whenReadyCallbacks.hasOwnProperty(i)) continue;
-					whenReadyCallbacks[i]();
-				}
-			}
+            function checkIfAllServicesReady() {
+                if (servicesReady.length < servicesRequired.length) return;
+                allReady = true;
 
-			function isReady() {
-				return allReady;
-			}
 
-			function whenReady(callback) {
-				if(isReady()) return callback(); // Callback being registered post-ready, so we can already ping it
 
-				whenReadyCallbacks.push(callback);
-			}
+                $rootScope.$broadcast('Platform.ready');
+            }
 
-			return {
-				setup: setup,
-				isReady: isReady,
-				whenReady: whenReady,
-				setFlag: setFlag,
-				getFlag: getFlag,
-			}
+            function fireRegisteredCallbacks() {
 
-		});
+                for (var i in whenReadyCallbacks) {
+                    if (!whenReadyCallbacks.hasOwnProperty(i)) continue;
+                    whenReadyCallbacks[i]();
+                }
+            }
+
+            function isReady() {
+                return allReady;
+            }
+
+            function whenReady(callback) {
+                if (isReady()) return callback(); // Callback being registered post-ready, so we can already ping it
+
+                whenReadyCallbacks.push(callback);
+            }
+
+            return {
+                setup: setup,
+                isReady: isReady,
+                whenReady: whenReady,
+                setFlag: setFlag,
+                getFlag: getFlag,
+            }
+
+        });
 
 })();

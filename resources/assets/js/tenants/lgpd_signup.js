@@ -1,13 +1,13 @@
-(function () {
+(function() {
     var app = angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('lgpd_signup', {
                 url: '/lgpd_signup/:user_id',
                 templateUrl: '/views/users/user_lgpd_signup.html',
                 controller: 'LgpdSignupCtrl',
             })
         })
-        .controller('LgpdSignupCtrl', function ($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
+        .controller('LgpdSignupCtrl', function($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
 
             $scope.signed = false;
             $scope.term = true;
@@ -30,17 +30,17 @@
             var userTypeVisitantes = [];
             var permissionsFormForVisitante = [];
 
-            $scope.perfilVisitante = {name: ''};
+            $scope.perfilVisitante = { name: '' };
             $scope.permissionsVisitantes = ['relatorios'];
 
-            Platform.whenReady(function () {
+            Platform.whenReady(function() {
                 permissions = StaticData.getPermissions();
                 userTypeVisitantes = StaticData.getUserTypeVisitantes();
                 permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
                 $scope.isCreating = (!$scope.identity.getCurrentUser().id || $scope.identity.getCurrentUser().id === "new");
 
                 if (!$scope.isCreating) {
-                    $scope.user = Users.myself({id: $scope.identity.getCurrentUser().id}, prepareUserModel);
+                    $scope.user = Users.myself({ id: $scope.identity.getCurrentUser().id }, prepareUserModel);
                 } else {
                     if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
                         $scope.groups = {};
@@ -56,62 +56,62 @@
             });
 
 
-            $scope.isSuperAdmin = function () {
+            $scope.isSuperAdmin = function() {
                 return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
             };
 
-            $scope.isTargetUserTenantBound = function () {
+            $scope.isTargetUserTenantBound = function() {
                 return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
             };
 
-            $scope.isTargetUserUFBound = function () {
+            $scope.isTargetUserUFBound = function() {
                 return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
             };
 
-            $scope.canDefineUserTenant = function () {
+            $scope.canDefineUserTenant = function() {
                 // Can specify user tenant only if superadmin, and only if target user type is tenant-bound
                 if (!$scope.isSuperAdmin()) return false;
                 return $scope.isTargetUserTenantBound();
             };
 
-            $scope.canDefineUserUF = function () {
+            $scope.canDefineUserUF = function() {
                 // Only superusers can define user UF, and only on UF-bound user types
                 if (!$scope.isSuperAdmin()) return false;
                 return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
             };
 
-            $scope.openUser = function (user_id, is_reviewing) {
+            $scope.openUser = function(user_id, is_reviewing) {
                 $scope.isCreating = false;
                 $scope.isReviewing = !!is_reviewing;
-                $scope.user = Users.find({id: user_id}, prepareUserModel);
+                $scope.user = Users.find({ id: user_id }, prepareUserModel);
             };
 
-            $scope.goBack = function () {
+            $scope.goBack = function() {
                 return $state.go($rootScope.previousState, $rootScope.previousStateParams);
             };
 
-            $scope.getUserTypes = function () {
+            $scope.getUserTypes = function() {
                 if (!permissions) return {};
                 if (!permissions.can_manage_types) return {};
 
-                var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function (el) {
+                var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function(el) {
                     return $scope.getUserTypesVisitantes().indexOf(el) < 0;
                 });
 
                 return finalPermissions;
             };
 
-            $scope.getUserTypesVisitantes = function () {
+            $scope.getUserTypesVisitantes = function() {
                 if (!permissions) return {};
                 if (!permissions.can_manage_types) return {};
                 return userTypeVisitantes;
             };
 
-            $scope.getPermissionsFormForVisitante = function () {
+            $scope.getPermissionsFormForVisitante = function() {
                 return permissionsFormForVisitante;
             };
 
-            $scope.save = function () {
+            $scope.save = function() {
 
                 //1 pois a API valida essa opção;
                 $scope.user.lgpd = 1;
@@ -128,7 +128,7 @@
                     return Users.create(data).$promise.then(onSaved)
                 }
 
-                Users.updateYourself(data).$promise.then(function (res) {
+                Users.updateYourself(data).$promise.then(function(res) {
                     if (res.status === "ok") {
                         ngToast.success('TERMO DE RESPONSABILIDADE E CONFIDENCIALIDADE Assinado com Sucesso');
                         $localStorage.identity.current_user.lgpd = 1;
@@ -143,15 +143,15 @@
 
             };
 
-            $scope.onSelectTenant = function () {
-                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
+            $scope.onSelectTenant = function() {
+                $scope.groups = Groups.findByTenant({ 'tenant_id': $scope.user.tenant_id });
             }
 
-            $scope.onSelectUf = function () {
-                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
+            $scope.onSelectUf = function() {
+                $scope.groups = Groups.findByUf({ 'uf': $scope.user.uf });
             }
 
-            $scope.onSelectFunction = function () {
+            $scope.onSelectFunction = function() {
                 if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
                     $scope.groups = {};
                     $scope.user.uf = null;
@@ -165,9 +165,9 @@
                 if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
 
                     if (user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual') {
-                        $scope.groups = Groups.findByUf({'uf': user.uf});
+                        $scope.groups = Groups.findByUf({ 'uf': user.uf });
                     } else {
-                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
+                        $scope.groups = Groups.findByTenant({ 'tenant_id': user.tenant_id });
                     }
 
                     //perfil de visitante
@@ -190,15 +190,15 @@
             }
 
             $scope.test = () => {
-                let field_password = document.getElementById("fld-gp-password"); 
+                let field_password = document.getElementById("fld-gp-password");
                 field_password.onfocus = function() {
                     document.getElementById("message").style.display = "block";
-                  }
+                }
             };
 
-            $scope.showPassowrd = function () {
+            $scope.showPassowrd = function() {
                 var field_password = document.getElementById("fld-gp-password");
-                
+
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
             };
 
@@ -207,7 +207,7 @@
                     ngToast.success("Dados de usuário salvos com sucesso!");
 
                     if ($scope.quickAdd && $rootScope.previousState) return $state.go($rootScope.previousState, $rootScope.previousStateParams);
-                    if ($scope.isCreating) return $state.go('user_editor', {user_id: res.id});
+                    if ($scope.isCreating) return $state.go('user_editor', { user_id: res.id });
 
                     return;
                 }
@@ -220,9 +220,9 @@
             function getFinalTypeUser() {
                 var finalType = "";
                 for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
-                    if (arraysEqual($scope.permissionsVisitantes.filter(function (obj) {
-                        return obj
-                    }), value) && key.includes($scope.perfilVisitante.name)) {
+                    if (arraysEqual($scope.permissionsVisitantes.filter(function(obj) {
+                            return obj
+                        }), value) && key.includes($scope.perfilVisitante.name)) {
                         finalType = key;
                     }
                 }
@@ -241,7 +241,7 @@
                 return true;
             }
 
-            $scope.openTerm = function () {
+            $scope.openTerm = function() {
                 $scope.panelTerm = !$scope.panelTerm;
 
                 console.log($scope.lastCoordinators);
@@ -251,7 +251,7 @@
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(scope, element, attr, mCtrl) {
+            link: function(mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');
@@ -261,13 +261,12 @@
                     const check = function(entrada) {
                         entrada.classList.remove('invalid');
                         entrada.classList.add('valid');
-                        //mCtrl.$setValidity('charE', true);
                     }
                     const uncheck = function(entrada) {
                         entrada.classList.remove('valid');
                         entrada.classList.add('invalid');
                     }
-                    if(typeof(value) === "string"){
+                    if (typeof(value) === "string") {
                         var lowerCaseLetters = /[a-z]/g;
                         if (value.match(lowerCaseLetters)) {
                             check(letter)
@@ -292,23 +291,19 @@
                         } else {
                             uncheck(symbol)
                         }
-                    // Validate length
+                        // Validate length
                         if (value.length >= 8 && value.length <= 16) {
                             check(length);
                         } else {
                             uncheck(length);
                         }
                     }
-                    
-                    /*else {
-                            mCtrl.$setValidity('charE', false);
-                        }*/
                     return value;
                 }
                 mCtrl.$parsers.push(myValidation);
             }
         };
     });
-    
+
 
 })();

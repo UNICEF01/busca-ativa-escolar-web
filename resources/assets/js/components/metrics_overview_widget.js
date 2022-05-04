@@ -1,53 +1,53 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Report, Charts, Identity) {
+    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function(Platform, Report, Identity) {
 
-		function init(scope, element, attrs) {
+        function init(scope, attrs) {
 
-			var metrics = {};
+            var metrics = {};
 
-			function refreshMetrics() {
+            function refreshMetrics() {
 
-				if( attrs.ibgeId && attrs.uf){
-					Report.getStatusCityByCountry({ibge_id: attrs.ibgeId, uf: attrs.uf}, function (data) {
-						metrics = data._data;
-					});
-				}else{
-					Report.getStatusCity({city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf}, function (data) {
-						metrics = data._data;
-					});
-				}
+                if (attrs.ibgeId && attrs.uf) {
+                    Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function(data) {
+                        metrics = data._data;
+                    });
+                } else {
+                    Report.getStatusCity({ city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf }, function(data) {
+                        metrics = data._data;
+                    });
+                }
 
-			}
+            }
 
-			scope.getMetrics = function() {
-				return metrics;
-			};
+            scope.getMetrics = function() {
+                return metrics;
+            };
 
-			Platform.whenReady(function () {
-				refreshMetrics();
-			});
+            Platform.whenReady(function() {
+                refreshMetrics();
+            });
 
-			scope.$watch('objectToInjectInMetrics', function (value) {
-				if(value){
-					scope.Obj = value;
-					scope.Obj.invoke = function(ibgeId){
-						attrs.ibgeId = ibgeId;
-						refreshMetrics();
-					}
-				}
-			});
+            scope.$watch('objectToInjectInMetrics', function(value) {
+                if (value) {
+                    scope.Obj = value;
+                    scope.Obj.invoke = function(ibgeId) {
+                        attrs.ibgeId = ibgeId;
+                        refreshMetrics();
+                    }
+                }
+            });
 
-		}
+        }
 
-		return {
-			link: init,
-			scope: {
-				objectToInjectInMetrics: '='
-			},
-			replace: true,
-			templateUrl: '/views/components/metrics_overview.html'
-		};
-	});
+        return {
+            link: init,
+            scope: {
+                objectToInjectInMetrics: '='
+            },
+            replace: true,
+            templateUrl: '/views/components/metrics_overview.html'
+        };
+    });
 
 })();

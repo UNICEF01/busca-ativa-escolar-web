@@ -2,7 +2,7 @@
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $q, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, messageButton, isMovement, toBeMoved, levelOfToBeMoved, canDismiss, noGroupsMessage) {
+        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $filter, ngToast, $uibModalInstance, Groups, title, message, initialGroup, messageButton, isMovement, toBeMoved, levelOfToBeMoved, canDismiss, noGroupsMessage) {
 
             $scope.title = title;
             $scope.message = message;
@@ -117,29 +117,29 @@
                     return;
                 }
 
-                if($scope.isMovement){
+                if ($scope.isMovement) {
 
-                    if ($scope.levelOfToBeMoved == 1 || $scope.levelOfToBeMoved == 2){
+                    if ($scope.levelOfToBeMoved == 1 || $scope.levelOfToBeMoved == 2) {
                         ngToast.danger('Grupo selecionado não pode ser movimentado!');
                         return;
                     }
 
-                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup == 3){
+                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup == 3) {
                         ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
                         return;
                     }
 
-                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup == 4){
+                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup == 4) {
                         ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
                         return;
                     }
 
-                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup != 2){
+                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup != 2) {
                         ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
                         return;
                     }
 
-                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup != 3){
+                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup != 3) {
                         ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
                         return;
                     }

@@ -1,8 +1,8 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive('causesChart', function ($timeout, moment, Platform, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').directive('causesChart', function($timeout, moment, Platform, Reports, Charts) {
 
-        function init(scope, element, attrs) {
+        function init(scope) {
 
             var causesData = {};
             var causesChart = {};
@@ -17,29 +17,29 @@
 
             scope.getCausesConfig = getCausesConfig;
 
-            scope.isReadyForCausesChart = function () {
+            scope.isReadyForCausesChart = function() {
                 return isReadyForCausesChart;
             };
 
-            scope.hasEnoughDataForCausesChart = function () {
+            scope.hasEnoughDataForCausesChart = function() {
                 return hasEnoughDataForCausesChart;
             };
 
-            scope.filterShow = function () {
+            scope.filterShow = function() {
                 scope.showFilter = !scope.showFilter;
             }
-  
+
             scope.menuFilter = [
-                {name: 'Tudo', title: 'Todos os registros', qtd_days: null},
-                {name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7},
-                {name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30},
-                {name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90},
-                {name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180}
-              ]
+                { name: 'Tudo', title: 'Todos os registros', qtd_days: null },
+                { name: 'Semanal', title: 'Ũltimos 7 dias', qtd_days: 7 },
+                { name: 'Mensal', title: 'Últimos 30 dias', qtd_days: 30 },
+                { name: 'Trimestral', title: 'Últimos 90 dias', qtd_days: 90 },
+                { name: 'Semestral', title: 'Últimos 180 dias', qtd_days: 180 }
+            ]
 
-            scope.fetchCausesData = function (value) {
+            scope.fetchCausesData = function(value) {
 
-                if(value === null || typeof value === 'number'){
+                if (value === null || typeof value === 'number') {
                     scope.showFilter = false;
                 }
 
@@ -50,12 +50,12 @@
                     entity: 'children',
                     dimension: 'case_cause_ids',
                     filters: {
-                        case_status: ['in_progress','cancelled', 'completed', 'interrupted', 'transferred'],
+                        case_status: ['in_progress', 'cancelled', 'completed', 'interrupted', 'transferred'],
                         alert_status: ['accepted']
                     }
                 }
 
-                if(typeof value === 'number'){
+                if (typeof value === 'number') {
                     searchData.filters.created_at = {
                         gte: moment().subtract(value, 'days').format('YYYY-MM-DD'),
                         lte: moment().format('YYYY-MM-DD'),
@@ -64,7 +64,7 @@
                 }
 
                 if (value == 'filter') {
-                    if(scope.dt_inicial && scope.dt_final) {
+                    if (scope.dt_inicial && scope.dt_final) {
                         searchData.filters.created_at = {
                             gte: moment(scope.dt_inicial).format('YYYY-MM-DD'),
                             lte: moment(scope.dt_final).format('YYYY-MM-DD'),
@@ -73,7 +73,7 @@
                     }
                 }
 
-                return Reports.query(searchData, function (data) {
+                return Reports.query(searchData, function(data) {
                     causesData = data;
                     causesChart = getCausesChart();
                     causesReady = true;
@@ -86,7 +86,7 @@
                         !angular.equals([], causesData.response.report)
                     );
 
-                    $timeout(function () {
+                    $timeout(function() {
                         scope.$broadcast('highchartsng.reflow');
                     }, 1000);
                 });
@@ -106,24 +106,24 @@
                     sortable.push([value, report[value]]);
                 }
 
-                if(scope.sort == 'minToMax'){
+                if (scope.sort == 'minToMax') {
                     sortable.sort(function(a, b) {
                         return a[1] - b[1];
                     });
                 }
 
-                if(scope.sort == 'maxToMin'){
+                if (scope.sort == 'maxToMin') {
                     sortable.sort(function(a, b) {
                         return b[1] - a[1];
                     });
                 }
 
-                sortable.forEach(function(item){
-                    objSorted["_"+item[0]]=item[1]
+                sortable.forEach(function(item) {
+                    objSorted["_" + item[0]] = item[1]
                 });
 
-                for (var key in labels){
-                    finalLabels["_"+key] = labels[key];
+                for (var key in labels) {
+                    finalLabels["_" + key] = labels[key];
                 }
 
                 return Charts.generateDimensionChart(objSorted, chartName, finalLabels, 'bar');
@@ -134,7 +134,7 @@
                 return causesChart;
             }
 
-            Platform.whenReady(function () {
+            Platform.whenReady(function() {
                 scope.fetchCausesData(null);
             });
             //Date Picker and Masks
@@ -186,12 +186,12 @@
                 opened: false
             };
 
-            scope.refresByMinToMax = function () {
+            scope.refresByMinToMax = function() {
                 scope.sort = 'minToMax';
                 scope.fetchCausesData(null);
             };
 
-            scope.refresByMaxToMin = function () {
+            scope.refresByMaxToMin = function() {
                 scope.sort = 'maxToMin';
                 scope.fetchCausesData(null);
             }

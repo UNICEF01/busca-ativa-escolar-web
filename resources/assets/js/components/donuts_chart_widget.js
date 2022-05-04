@@ -1,15 +1,16 @@
-(function () {
+(function() {
 
-    angular.module('BuscaAtivaEscolar').directive('donutsChart', function ($timeout, moment, Platform, Reports, Charts) {
+    angular.module('BuscaAtivaEscolar').directive('donutsChart', function(Reports) {
 
         function getDadosRematricula(scope, element, attrs) {
-            Reports.getStatusBar(function (data) {
+            Reports.getStatusBar(function(data) {
                 if (data.status !== 'ok') {
                     init(scope, element, attrs, data);
                 }
             });
         }
-        function init(scope, element, attrs, data) {
+
+        function init(scope, data) {
 
             var meta = data.goal_box.goal;
             var atingido = (data.goal_box.reinsertions_classes - data.goal_box.accumulated_ciclo1) || 0;
@@ -44,7 +45,7 @@
                     break;
                 default:
                     color = color
-                    //console.log('Algum problema com o Donuts');
+
             }
 
             var colors = Highcharts.getOptions().colors,
@@ -52,8 +53,7 @@
                     'alcancado',
                     'meta'
                 ],
-                data = [
-                    {
+                data = [{
                         color: color,
                         drilldown: {
                             name: 'estou',
@@ -87,7 +87,7 @@
                 brightness;
 
 
-// Build the data arrays
+            // Build the data arrays
             for (i = 0; i < dataLen; i += 1) {
 
                 // add browser data
@@ -109,13 +109,13 @@
                 }
             }
 
-// Create the chart
+            // Create the chart
             Highcharts.chart('donuts-chart', {
                 chart: {
                     type: 'pie'
                 },
                 title: {
-                    text: '<span style="color:' + color + '">' +text+ '</span>',
+                    text: '<span style="color:' + color + '">' + text + '</span>',
                     align: 'center',
                     verticalAlign: 'middle',
                     y: 0
@@ -134,7 +134,7 @@
                     data: browserData,
                     size: '60%',
                     dataLabels: {
-                        formatter: function () {
+                        formatter: function() {
                             return this.y > 5 ? this.point.name : null;
                         },
                         color: '#ffffff',
@@ -165,7 +165,7 @@
                 credits: {
                     enabled: false
                 },
-                exporting: {enabled: false}
+                exporting: { enabled: false }
             });
         }
 
