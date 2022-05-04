@@ -82,7 +82,7 @@
                     <li ng-show="identity.can('cities.selo_reports')" ui-sref-active="active"><a ui-sref="reports_selo">
                         Selo Unicef</a></li>
 
-                    <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
+                    <li ng-show="canSeeConfigPage()"
                         ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
                     <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">

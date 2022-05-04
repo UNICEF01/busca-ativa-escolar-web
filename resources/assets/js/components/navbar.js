@@ -63,6 +63,12 @@
                 }
             });
 
+            scope.canSeeConfigPage = function (){
+                if ( (scope.identity.can('settings.manage') || scope.identity.can('groups.manage') || scope.identity.manageImports()) &&
+                     (scope.identity.getCurrentUser().tenant_id && scope.identity.getCurrentUser().group.is_primary) ) { return true; }
+                return false;
+            }
+
         }
 
         return {
