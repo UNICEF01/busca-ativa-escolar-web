@@ -164,141 +164,134 @@
 
 })();
 
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
-      $stateProvider.state('checks', {
-        url: '/checks',
-        templateUrl: '/views/children/checks.html',
-        controller: 'CheckRequestCtrl',
-      });
-    })
-    .controller(
-      'CheckRequestCtrl',
-      function (
-        $scope,
-        StaticData,
-        $anchorScroll,
-        $httpParamSerializer,
-        API,
-        Children,
-        Decorators,
-        ngToast,
-        DTOptionsBuilder,
-        DTColumnDefBuilder,
-        Modals
-      ) {
-        $scope.Decorators = Decorators;
-        $scope.Children = Children;
-
-        $scope.query = angular.merge({}, $scope.defaultQuery);
-        $scope.requests = {};
-
-        $scope.refresh = function () {
-          $scope.requests = Children.requests();
-        };
-        
-        $scope.refresh();
-
-        var language = {
-          sEmptyTable: 'Nenhum registro encontrado',
-          sInfo: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
-          sInfoEmpty: 'Mostrando 0 até 0 de 0 registros',
-          sInfoFiltered: '(Filtrados de _MAX_ registros)',
-          sInfoPostFix: '',
-          sInfoThousands: '.',
-          sLengthMenu: '_MENU_ resultados por página',
-          sLoadingRecords: 'Carregando...',
-          sProcessing: 'Processando...',
-          sZeroRecords: 'Nenhum registro encontrado',
-          sSearch: 'Pesquisar',
-          oPaginate: {
-            sNext: 'Próximo',
-            sPrevious: 'Anterior',
-            sFirst: 'Primeiro',
-            sLast: 'Último',
-          },
-          oAria: {
-            sSortAscending: ': Ordenar colunas de forma ascendente',
-            sSortDescending: ': Ordenar colunas de forma descendente',
-          },
-        };
-        //Configura a linguagem na diretiva dt-options=""
-        $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage(language);
-
-
-        $scope.dtColumnDefs = [
-          DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
-        ];
-
-        $scope.aprove = function (child) {
-          if (child.type_request === 'reopen') {
-            Children.reopenCase({
-              case_id: child.child.current_case_id,
-              reason: 'request',
-            }).$promise.then(function (res) {
-              if (res.status !== 'error') {
-                ngToast.success(res.result);
-                setTimeout(function () {
-                  window.location =
-                    'children/view/' + res.child_id + '/consolidated';
-                }, 4000);
-              } else {
-                ngToast.danger('Erro ao reabrir o caso!');
-              }
+(function() {
+    angular
+        .module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('checks', {
+                url: '/checks',
+                templateUrl: '/views/children/checks.html',
+                controller: 'CheckRequestCtrl',
             });
-          }
+        })
+        .controller(
+            'CheckRequestCtrl',
+            function(
+                $scope,
+                Children,
+                Decorators,
+                ngToast,
+                DTOptionsBuilder,
+                DTColumnDefBuilder,
+                Modals
+            ) {
+                $scope.Decorators = Decorators;
+                $scope.Children = Children;
 
-          
-          if (child.type_request === 'transfer') {      
-            Children.transferCase({
-              case_id: child.child.current_case_id,
-            }).$promise.then(function (res) {
-              if (res.status !== 'error') {
-                ngToast.success(res.result);
-                setTimeout(function () {
-                  window.location =
-                    'children/view/' + res.child_id + '/consolidated';
-                }, 4000);
-              } else {
-                ngToast.danger('Erro ao reabrir o caso!');
-              }
-            });
-          }
-        };
-        $scope.reject = function (child) {
-          Modals.show(Modals.CaseReject($scope.identity.getType()))
-            .then(function (response) {
-              if (!response) return $q.reject();
+                $scope.query = angular.merge({}, $scope.defaultQuery);
+                $scope.requests = {};
 
-              if ($scope.identity.getType() === 'coordenador_operacional') {
-                Children.reject({
-                  id: child.id,
-                  reject_reason: response.reason,
-                }).$promise.then(function (res) {
-                  if (res.status !== 'error') {
-                    ngToast.success(res.result);
-                    setTimeout(function () {
-                      window.location = 'checks';
-                    }, 4000);
-                  } else {
-                    ngToast.danger(res.result);
-                  }
-                });
-              } else {
-                ngToast.warning('Você não pode realizar essa ação.');
-              }
-            })
-            .then(function (res) {
-              //console.log(res);
-            });
-        };
+                $scope.refresh = function() {
+                    $scope.requests = Children.requests();
+                };
 
-      }
-    );
+                $scope.refresh();
+
+                var language = {
+                    sEmptyTable: 'Nenhum registro encontrado',
+                    sInfo: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
+                    sInfoEmpty: 'Mostrando 0 até 0 de 0 registros',
+                    sInfoFiltered: '(Filtrados de _MAX_ registros)',
+                    sInfoPostFix: '',
+                    sInfoThousands: '.',
+                    sLengthMenu: '_MENU_ resultados por página',
+                    sLoadingRecords: 'Carregando...',
+                    sProcessing: 'Processando...',
+                    sZeroRecords: 'Nenhum registro encontrado',
+                    sSearch: 'Pesquisar',
+                    oPaginate: {
+                        sNext: 'Próximo',
+                        sPrevious: 'Anterior',
+                        sFirst: 'Primeiro',
+                        sLast: 'Último',
+                    },
+                    oAria: {
+                        sSortAscending: ': Ordenar colunas de forma ascendente',
+                        sSortDescending: ': Ordenar colunas de forma descendente',
+                    },
+                };
+                //Configura a linguagem na diretiva dt-options=""
+                $scope.dtOptions = DTOptionsBuilder.newOptions().withLanguage(language);
+
+
+                $scope.dtColumnDefs = [
+                    DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
+                ];
+
+                $scope.aprove = function(child) {
+                    if (child.type_request === 'reopen') {
+                        Children.reopenCase({
+                            case_id: child.child.current_case_id,
+                            reason: 'request',
+                        }).$promise.then(function(res) {
+                            if (res.status !== 'error') {
+                                ngToast.success(res.result);
+                                setTimeout(function() {
+                                    window.location =
+                                        'children/view/' + res.child_id + '/consolidated';
+                                }, 4000);
+                            } else {
+                                ngToast.danger('Erro ao reabrir o caso!');
+                            }
+                        });
+                    }
+
+
+                    if (child.type_request === 'transfer') {
+                        Children.transferCase({
+                            case_id: child.child.current_case_id,
+                        }).$promise.then(function(res) {
+                            if (res.status !== 'error') {
+                                ngToast.success(res.result);
+                                setTimeout(function() {
+                                    window.location =
+                                        'children/view/' + res.child_id + '/consolidated';
+                                }, 4000);
+                            } else {
+                                ngToast.danger('Erro ao reabrir o caso!');
+                            }
+                        });
+                    }
+                };
+                $scope.reject = function(child) {
+                    Modals.show(Modals.CaseReject($scope.identity.getType()))
+                        .then(function(response) {
+                            if (!response) return $q.reject();
+
+                            if ($scope.identity.getType() === 'coordenador_operacional') {
+                                Children.reject({
+                                    id: child.id,
+                                    reject_reason: response.reason,
+                                }).$promise.then(function(res) {
+                                    if (res.status !== 'error') {
+                                        ngToast.success(res.result);
+                                        setTimeout(function() {
+                                            window.location = 'checks';
+                                        }, 4000);
+                                    } else {
+                                        ngToast.danger(res.result);
+                                    }
+                                });
+                            } else {
+                                ngToast.warning('Você não pode realizar essa ação.');
+                            }
+                        })
+                        .then(function() {});
+                };
+
+            }
+        );
 })();
-
 (function() {
 
 	angular.module('BuscaAtivaEscolar')
@@ -396,7 +389,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases, Users, Utils) {
+        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -577,46 +570,7 @@
                             true,
                             'Nenhum grupo selecionado', )
                     ).then(function(selectedGroup) {
-                        var size = $scope.selected.children.length;
-                        for (let i = 0; i < size; ++i) {
-                            if ($scope.selected.children[i].assigned_user_id) {
-                                Groups.findUserGroups({ name: $scope.selected.children[i].assigned_group_name, tenant: $scope.selected.children[i].tenant_id }).$promise.then(function(group) {
-                                    var dados = [];
-                                    dados.push(group.data['0'].grupo)
-                                    dados.push(group.data['0'].pai)
-                                    dados.push(group.data['0'].avo)
-                                    dados.push(group.data['0'].bisavo)
-                                    dados.sort()
-                                    var detachUser = $scope.binarySearch(dados, selectedGroup.name)
-
-                                    var currentCase = {
-                                        id: $scope.selected.children[i].current_case_id,
-                                        group_id: selectedGroup.id,
-                                        detach_user: detachUser
-                                    };
-                                    if (i == size - 1)
-                                        Cases.update(currentCase).$promise
-                                        .then(function() { $scope.refresh(); });
-                                    else
-                                        Cases.update(currentCase).$promise
-                                        .then(function() {});
-                                });
-                            } else {
-                                //se não tem usuário assinado para o caso
-                                var currentCase = {
-                                    id: $scope.selected.children[i].current_case_id,
-                                    group_id: selectedGroup.id,
-                                    detach_user: true
-                                };
-                                if (i == size - 1)
-                                    Cases.update(currentCase).$promise
-                                    .then(function() { $scope.refresh(); });
-                                else
-                                    Cases.update(currentCase).$promise
-                                    .then(function() {});
-                            }
-                        }
-
+                        Cases.changeGroups({ children: $scope.selected.children, group: selectedGroup }).$promise.then(function() { $scope.refresh(); })
                     }).then(function() {
 
                     });
@@ -625,25 +579,6 @@
                 }
 
             };
-
-            $scope.binarySearch = function(arr, x) {
-                let l = 0,
-                    r = arr.length - 1;
-                while (l <= r) {
-                    let m = l + Math.floor((r - l) / 2);
-
-                    let res = x.localeCompare(arr[m]);
-
-                    if (res == 0)
-                        return false;
-                    if (res > 0)
-                        l = m + 1;
-                    else
-                        r = m - 1;
-                }
-
-                return true;
-            }
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
@@ -6693,25 +6628,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		}
 	}]
 };
-(function() {
-	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
-		var Child = {
-			parents: function(child) {
-				return (child.mother_name || '')
-					+ ((child.mother_name && child.father_name) ? ' | ' : '')
-					+ (child.father_name || '');
-			}
-		};
-
-		var Step = {
-		};
-
-		return {
-			Child: Child,
-			Step: Step
-		};
-	})
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -7253,6 +7169,25 @@ Highcharts.maps["countries/br/br-all"] = {
             };
 
         });
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').service('Decorators', function () {
+		var Child = {
+			parents: function(child) {
+				return (child.mother_name || '')
+					+ ((child.mother_name && child.father_name) ? ' | ' : '')
+					+ (child.father_name || '');
+			}
+		};
+
+		var Step = {
+		};
+
+		return {
+			Child: Child,
+			Step: Step
+		};
+	})
 })();
 (function() {
 	angular
@@ -10556,18 +10491,19 @@ if (!Array.prototype.find) {
 		});
 })();
 (function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Cases', function Cases(API, Identity, $resource) {
+    angular
+        .module('BuscaAtivaEscolar')
+        .factory('Cases', function Cases(API, $resource) {
 
-			var headers = API.REQUIRE_AUTH;
+            var headers = API.REQUIRE_AUTH;
 
-			return $resource(API.getURI('cases/:id'), {id: '@id', with: '@with'}, {
-				find: {method: 'GET', headers: headers},
-				update: {method: 'PUT', headers: headers}
-			});
+            return $resource(API.getURI('cases/:id'), { id: '@id', with: '@with' }, {
+                find: { method: 'GET', headers: headers },
+                update: { method: 'PUT', headers: headers },
+                changeGroups: { method: 'POST', url: API.getURI('change_groups'), headers: headers }
+            });
 
-		});
+        });
 })();
 (function() {
 	angular

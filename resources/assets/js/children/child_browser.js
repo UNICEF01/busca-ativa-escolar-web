@@ -10,7 +10,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases, Users, Utils) {
+        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -191,46 +191,7 @@
                             true,
                             'Nenhum grupo selecionado', )
                     ).then(function(selectedGroup) {
-                        var size = $scope.selected.children.length;
-                        for (let i = 0; i < size; ++i) {
-                            if ($scope.selected.children[i].assigned_user_id) {
-                                Groups.findUserGroups({ name: $scope.selected.children[i].assigned_group_name, tenant: $scope.selected.children[i].tenant_id }).$promise.then(function(group) {
-                                    var dados = [];
-                                    dados.push(group.data['0'].grupo)
-                                    dados.push(group.data['0'].pai)
-                                    dados.push(group.data['0'].avo)
-                                    dados.push(group.data['0'].bisavo)
-                                    dados.sort()
-                                    var detachUser = $scope.binarySearch(dados, selectedGroup.name)
-
-                                    var currentCase = {
-                                        id: $scope.selected.children[i].current_case_id,
-                                        group_id: selectedGroup.id,
-                                        detach_user: detachUser
-                                    };
-                                    if (i == size - 1)
-                                        Cases.update(currentCase).$promise
-                                        .then(function() { $scope.refresh(); });
-                                    else
-                                        Cases.update(currentCase).$promise
-                                        .then(function() {});
-                                });
-                            } else {
-                                //se não tem usuário assinado para o caso
-                                var currentCase = {
-                                    id: $scope.selected.children[i].current_case_id,
-                                    group_id: selectedGroup.id,
-                                    detach_user: true
-                                };
-                                if (i == size - 1)
-                                    Cases.update(currentCase).$promise
-                                    .then(function() { $scope.refresh(); });
-                                else
-                                    Cases.update(currentCase).$promise
-                                    .then(function() {});
-                            }
-                        }
-
+                        Cases.changeGroups({ children: $scope.selected.children, group: selectedGroup }).$promise.then(function() { $scope.refresh(); })
                     }).then(function() {
 
                     });
@@ -239,25 +200,6 @@
                 }
 
             };
-
-            $scope.binarySearch = function(arr, x) {
-                let l = 0,
-                    r = arr.length - 1;
-                while (l <= r) {
-                    let m = l + Math.floor((r - l) / 2);
-
-                    let res = x.localeCompare(arr[m]);
-
-                    if (res == 0)
-                        return false;
-                    if (res > 0)
-                        l = m + 1;
-                    else
-                        r = m - 1;
-                }
-
-                return true;
-            }
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
