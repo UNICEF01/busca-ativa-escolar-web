@@ -185,8 +185,10 @@
                 if(!$scope.isCreating) {
                     $scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
                 }else{
-                    $scope.user.group_id = $scope.identity.getCurrentUser().group.id;
-                    $scope.user.group_name = $scope.identity.getCurrentUser().group.name;
+                    if($scope.canSeeGroupsOptions){
+                        $scope.user.group_id = $scope.identity.getCurrentUser().group.id;
+                        $scope.user.group_name = $scope.identity.getCurrentUser().group.name;
+                    }
                 }
             });
 
