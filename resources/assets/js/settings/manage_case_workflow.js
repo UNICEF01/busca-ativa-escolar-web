@@ -11,9 +11,8 @@
                         ngToast.success('Configurações salvas com sucesso!');
                         $scope.refresh();
                     },
-                    function(err) {
+                    function() {
                         ngToast.danger('Ocorreu um erro ao salvar as configurações!');
-                        console.error('[manage_case_workflow.save] Error: ', err);
                     }
                 );
             };

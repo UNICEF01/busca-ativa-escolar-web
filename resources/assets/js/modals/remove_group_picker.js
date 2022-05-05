@@ -136,7 +136,7 @@
                     }
 
                 }
-
+                
                 $uibModalInstance.close({ response: $scope.selectedGroup });
             };
 
