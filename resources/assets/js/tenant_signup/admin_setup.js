@@ -201,7 +201,7 @@
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(mCtrl) {
+            link: function(scope, element, attr, mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');

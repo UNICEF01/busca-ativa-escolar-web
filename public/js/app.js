@@ -11802,7 +11802,7 @@ Highcharts.maps["countries/br/br-all"] = {
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(mCtrl) {
+            link: function(scope, element, attr, mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');
@@ -17318,9 +17318,8 @@ function identify(namespace, file) {
                         ngToast.success('Configurações salvas com sucesso!');
                         $scope.refresh();
                     },
-                    function(err) {
+                    function() {
                         ngToast.danger('Ocorreu um erro ao salvar as configurações!');
-                        console.error('[manage_case_workflow.save] Error: ', err);
                     }
                 );
             };
@@ -18368,7 +18367,7 @@ function identify(namespace, file) {
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(mCtrl) {
+            link: function(scope, element, attr, mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');
@@ -18917,7 +18916,7 @@ function identify(namespace, file) {
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(mCtrl) {
+            link: function(scope, element, attr, mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');
@@ -19225,7 +19224,7 @@ function identify(namespace, file) {
     app.directive('myDirective', function() {
         return {
             require: 'ngModel',
-            link: function(mCtrl) {
+            link: function(scope, element, attr, mCtrl) {
                 function myValidation(value) {
                     const capital = document.getElementById('capital');
                     const number = document.getElementById('number');
