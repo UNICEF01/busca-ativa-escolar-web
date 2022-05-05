@@ -333,6 +333,60 @@
                     return params;
                 },
 
+                RemoveGroupPicker: function(
+                    title,
+                    message,
+                    initialGroup,
+                    messageButton,
+                    isMovement,
+                    toBeRemoved,
+                    levelOfToBeRemoved,
+                    noGroupsMessage,
+                    canDismiss
+                ) {
+                    var params = {
+                        templateUrl: '/views/modals/group_picker.html',
+                        controller: 'RemoveGroupPickerModalCtrl',
+                        size: 'lg',
+                        resolve: {
+                            title: function() {
+                                return title;
+                            },
+                            message: function() {
+                                return message;
+                            },
+                            initialGroup: function() {
+                                return initialGroup;
+                            },
+                            messageButton: function() {
+                                return messageButton;
+                            },
+                            isMovement: function() {
+                                return isMovement;
+                            },
+                            toBeRemoved: function() {
+                                return toBeRemoved;
+                            },
+                            levelOfToBeRemoved: function() {
+                                return levelOfToBeRemoved;
+                            },
+                            noGroupsMessage: function() {
+                                return noGroupsMessage;
+                            },
+                            canDismiss: function() {
+                                return canDismiss;
+                            }
+                        },
+                    };
+
+                    if (!canDismiss) {
+                        params.keyboard = false;
+                        params.backdrop = 'static';
+                    }
+
+                    return params;
+                },
+
                 CaseCancel: function() {
                     return {
                         templateUrl: '/views/modals/case_cancel.html',

@@ -311,8 +311,24 @@
                 });
             };
 
-            $scope.removeGroup = function(group) {
-                alert(group.name);
+            $scope.removeGroup = function(level, group) {
+                Modals.show(
+                    Modals.RemoveGroupPicker(
+                        'Remover grupo ' + group.name,
+                        'Selecione um grupo para onde deseja encaminhar os subgrupos, alertas, casos e usuários. Após a confirmação a operação não poderá ser desfeita.',
+                        Identity.getCurrentUser().group,
+                        'Movendo grupos, alertas, casos e usuários para: ',
+                        true,
+                        group,
+                        level,
+                        true,
+                        'Nenhum grupo selecionado')
+                ).then(function(selectedGroup) {
+                    return Groups.replaceAndDelete({ id: group.id, });
+                }).then(function() {
+                    ngToast.success('Grupo removido com sucesso!')
+                    $scope.refresh();
+                });
             };
 
             $scope.onSelectGroup = function(number, id) {
