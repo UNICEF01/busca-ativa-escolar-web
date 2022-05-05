@@ -324,10 +324,27 @@
                         true,
                         'Nenhum grupo selecionado')
                 ).then(function(selectedGroup) {
-                    return Groups.replaceAndDelete({ id: group.id, });
+
+                    var obj = {
+                        id: group.id,
+                        replace: selectedGroup.id
+                    }
+
+                    var promissGroup = Groups.replaceAndDelete(obj).$promise
+
+                    promissGroup.then(
+                        function (res){
+                            ngToast.success('Grupo removido com sucesso!')
+                            $scope.refresh();
+                        },
+                        function (err){
+                            ngToast.danger('Grupo não pôde ser removido!')
+                            $scope.refresh();
+                        }
+                    );
+
                 }).then(function() {
-                    ngToast.success('Grupo removido com sucesso!')
-                    $scope.refresh();
+
                 });
             };
 

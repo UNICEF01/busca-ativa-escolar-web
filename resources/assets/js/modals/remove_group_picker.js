@@ -130,6 +130,11 @@
                         return;
                     }
 
+                    if ($scope.groupToBeRemoved.id == $scope.selectedGroup.id) {
+                        ngToast.danger('Não é permitido selecionar o mesmo grupo');
+                        return;
+                    }
+
                 }
 
                 $uibModalInstance.close({ response: $scope.selectedGroup });
