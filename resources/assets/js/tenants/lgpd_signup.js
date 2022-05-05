@@ -7,7 +7,7 @@
                 controller: 'LgpdSignupCtrl',
             })
         })
-        .controller('LgpdSignupCtrl', function($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Utils, Tenants, Identity, Users, Groups, StaticData) {
+        .controller('LgpdSignupCtrl', function($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Utils, Identity, Users, Groups, StaticData) {
 
             $scope.signed = false;
             $scope.term = true;
@@ -21,7 +21,6 @@
             $scope.static = StaticData;
 
             $scope.groups = {};
-            $scope.tenants = Tenants.find();
             $scope.quickAdd = ($stateParams.quick_add === 'true');
 
             var permissions = {};
