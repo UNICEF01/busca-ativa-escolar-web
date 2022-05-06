@@ -102,7 +102,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li ng-show="identity.manageImports()" ui-sref-active="active">
+                            <li ng-show="identity.manageImports() && !identity.getCurrentUser().tenant.is_state" ui-sref-active="active">
                                 <a ui-sref="school_browser">
                                     <i class="fa fa-university"></i>
                                     Escolas
@@ -116,7 +116,7 @@
                                                        class="badge" ng-bind="pending_requests"></span>
                                 </a>
                             </li>
-                            <li ng-show="identity.manageImports()">
+                            <li ng-show="identity.manageImports() && !identity.getCurrentUser().tenant.is_state">
                                 <a ui-sref="school_list_frequency">
                                     <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                     Frequências
