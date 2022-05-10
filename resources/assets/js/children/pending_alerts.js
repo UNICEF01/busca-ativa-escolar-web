@@ -154,16 +154,30 @@
             $scope.setMaxResults = function(max) {
                 $scope.query.max = max;
                 $scope.query.page = 1;
+            };
+
+            $scope.reloadAlerts = function (){
+                $scope.query.page = 1;
                 $scope.refresh();
             };
 
             $scope.refresh = function() {
-                $scope.child = null;
-                $scope.children = Alerts.getPending($scope.query);
-                $scope.search = $scope.children;
 
-                $scope.check_all_alerts = false;
-                $scope.selected.alerts = [];
+                $scope.child = null;
+                $scope.isLoading = true;
+
+                Alerts.getPending($scope.query).$promise
+                    .then( function (res) {
+
+                        $scope.children = res;
+                        $scope.search = $scope.children;
+
+                        $scope.isLoading = false;
+                        $scope.check_all_alerts = false;
+                        $scope.selected.alerts = [];
+
+                    });
+
             };
 
             $scope.preview = function(child) {

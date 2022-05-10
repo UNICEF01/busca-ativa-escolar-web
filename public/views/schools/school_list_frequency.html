@@ -26,10 +26,11 @@
             <div class="row">
 
                 <div class="form-group col-md-3">
-                    <label class="container_check_school">
-                        <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
-                        <span class="checkmark"></span>
-                    </label>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
+                        </label>
+                    </div>
                 </div>
 
                 <div class="form-group col-md-3">
@@ -78,10 +79,11 @@
                 <div class="row" ng-repeat="(i, school) in schools.data">
 
                     <div class="form-group col-md-1 text-center">
-                        <label class="container_check_school">
-                            <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
-                            <span class="checkmark"></span>
-                        </label>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
+                            </label>
+                        </div>
                     </div>
 
                     <div class="form-group col-md-4">

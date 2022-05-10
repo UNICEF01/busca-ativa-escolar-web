@@ -1,138 +1,173 @@
-<div id="pending_alerts">
+<div>
     <div class="col-md-12">
         <div class="panel panel-default">
+
             <div class="panel-heading clearfix">
-                <h3 class="pull-left"><i class="fa fa-bell"></i> Alertas pendentes | {{children.meta.pagination.total}}</h3>
+                <h3 class="pull-left"><i class="fa fa-bell"></i> Alertas pendentes</h3>
             </div>
+
             <div class="panel-body">
-                <div>
-                    <div class="simple-filter">
-                        <div class="form-group col-md-3">
+
+                <div class="body_filter">
+
+                    <div class="row">
+                        <div class="col-md-3">
                             <input type="search" class="form-control" ng-model="query.name" placeholder="Nome..." />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="col-md-3">
                             <input type="search" class="form-control" ng-model="query.submitter_name" placeholder="Agente..." />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="col-md-3">
                             <input type="search" class="form-control" ng-model="query.neighborhood" placeholder="Bairro..." />
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="col-md-3">
                             <input type="search" class="form-control" ng-model="query.city_name" placeholder="Município..." />
                         </div>
-                        <div class="form-group col-md-3">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
                             <select name="cars" class="form-control" ng-model="query.alert_cause_id">
-                         <option value=""  selected >Motivo do Alerta...</option>
-                         <option ng-repeat="case in causes_filter"
-                            value="{{case.value}}">
-                            {{case.displayName}}
-                         </option>
-                      </select>
+                                <option value=""  selected >Motivo do Alerta...</option>
+                                <option ng-repeat="case in causes_filter"
+                                        value="{{case.value}}">
+                                    {{case.displayName}}
+                                </option>
+                            </select>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="col-md-6">
                             <input type="text" class="form-control" id="fld-group" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado">
                             <input type="text" ng-model="query.group_id" class="form-control" hidden>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="col-md-3">
                             <button type="button" class="btn btn-raised btn-default" style="margin: 0!important; width: 100%;" ng-click="changeGroup()">Selecionar grupo</button>
                         </div>
-                        <div class="form-group col-md-3">
-                            <label style="margin-top: 5px !important;" class="container_check_alert_rejected">Rejeitados
-                      <input type="checkbox" ng-model="query.show_suspended" >
-                      <span class="checkmark"></span>
-                      </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="control-label"><strong>Status do alerta</strong></label>
+                            <br><br>
+                            <div class="checkbox">
+                                <label for="filter-show_rejected">
+                                    <input id="filter-show_rejected" type="checkbox" ng-model="query.show_suspended"> Rejeitado
+                                </label>
+                            </div>
                         </div>
-                        <div class="form-group col-md-12 text-center">
-                            <a style="margin-top: 22px;" class="btn btn-primary btn-raised" ng-click="refresh()"><i class="fa fa-search"></i> Pesquisar</a>
+                        <div class="col-md-4">
+                            <label class="control-label"><strong>Limite de exibição</strong></label>
+                            <br><br>
+                            <ul class="nav nav-pills adm-max-results-filter">
+                                <li ng-class="{active: query.max==16}"><a ng-click="setMaxResults(16)">16</a></li>
+                                <li ng-class="{active: query.max==32}"><a ng-click="setMaxResults(32)">32</a></li>
+                                <li ng-class="{active: query.max==64}"><a ng-click="setMaxResults(64)">64</a></li>
+                                <li ng-class="{active: query.max==128}"><a ng-click="setMaxResults(128)">128</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <hr>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <label class="container_check_alert" style="margin-bottom: 25px;">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-right">
+                                <a class="btn btn-raised btn-info" ng-click="reloadAlerts()"><i class="fa fa-search"></i> Filtrar</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <p class="text-right">
+                    Página {{children.meta.pagination.current_page}} de {{children.meta.pagination.total_pages}}. | Exibindo {{children.meta.pagination.count}} alertas por página | Total de <strong>{{children.meta.pagination.total}} </strong>alertas.
+                </p>
+
+                <table class="table table-hover">
+                    <thead style="white-space:nowrap;">
+                        <tr>
+                            <th>
+                                <div class="checkbox">
+                                    <label>
                                         <input type="checkbox" ng-model="check_all_alerts" ng-change="onCheckSelectAllAlerts()">
-                                        <span class="checkmark"></span>
                                     </label>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'agent'">Agente</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'agent'">Grupo</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'neighborhood'">Bairro</column-sorter>
-                                </th>
-                                <th>
-                                    <column-sorter on-change="refresh" model="query.sort" field="'city_name'">Município</column-sorter>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="child in children.data" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
-                                <td>
-                                    <label class="container_check_alert">
+                                </div>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'agent'">Agente</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'agent'">Grupo</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'risk_level'">Prioridade</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'created_at'">Data</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'neighborhood'">Bairro</column-sorter>
+                            </th>
+                            <th>
+                                <column-sorter on-change="refresh" model="query.sort" field="'city_name'">Município</column-sorter>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="child in children.data" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
+                            <td>
+                                <div class="checkbox">
+                                    <label>
                                         <input type="checkbox" checklist-model="selected.alerts" checklist-value="child">
-                                        <span class="checkmark"></span>
                                     </label>
-                                </td>
-                                <td ng-click="preview(child)">
-                                    <span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i>
-                                </td>
-                                <td ng-click="preview(child)">
-                                    <span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
-                                    <div ng-show="child.submitter.group.name" class=""><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
-                                </td>
-                                <td>
-                                    <span uib-popover="{{branchGroups}}" popover-title="{{child.group_name}}" popover-trigger="'outsideClick'" ng-click="clikcInGroup(child.group_id)"> 
-                            <a href="#">{{child.group_name}}</a>
-                            </span>
-                                </td>
-                                </td>
-                                <td ng-click="preview(child)"><span ng-bind="child.risk_level | lang:'child.risk_level'"></span></td>
-                                <td ng-click="preview(child)"><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
-                                <td ng-click="preview(child)"><i class="fa fa-map-marker" ng-show="child.alert.place_neighborhood"></i> {{child.alert.place_neighborhood}}</td>
-                                <td ng-click="preview(child)"><i class="fa fa-map-marker" ng-show="child.alert.place_city_name"></i> {{child.alert.place_city_name}}</td>
-                                <td ng-click="preview(child)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <hr>
-                    <div>
-                        <div class="col-md-12 col-md-offset-3">
-                            <div class="col-md-3" style="margin-top: 10px;">
-                                <strong>Limite de exibição</strong>
-                            </div>
-                            <div class="col-md-9">
-                                <ul class="nav nav-pills adm-max-results-filter">
-                                    <li ng-class="{active: query.max==16}"><a ng-click="setMaxResults(16)">16</a></li>
-                                    <li ng-class="{active: query.max==32}"><a ng-click="setMaxResults(32)">32</a></li>
-                                    <li ng-class="{active: query.max==64}"><a ng-click="setMaxResults(64)">64</a></li>
-                                    <li ng-class="{active: query.max==128}"><a ng-click="setMaxResults(128)">128</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
-                </div>
-                <div class="panel-footer">
-                    <p class="text-right"> <button type="button" class="btn btn-raised btn-default" ng-click="changeAllGroups()">Alterar grupos</button></p>
-                </div>
+                                </div>
+                            </td>
+                            <td ng-click="preview(child)">
+                                <span ng-bind="child.name"></span> <i class="fa fa-warning text-warning" uib-tooltip="Endereço pendente!" ng-show="child.requires_address_update && (!child.alert || !child.alert.place_address || child.alert.place_address.length <= 0)"></i>
+                            </td>
+                            <td ng-click="preview(child)">
+                                <span ng-bind="child.submitter.name" uib-tooltip-html="child.submitter.type | lang:'user.type'"></span><br>
+                                <div ng-show="child.submitter.group.name" class=""><i class="fa fa-group"></i> <small ng-bind="child.submitter.group.name" uib-tooltip-html="child.submitter.group.name"></small></div>
+                            </td>
+                            <td>
+                                <span uib-popover="{{branchGroups}}" popover-title="{{child.group_name}}" popover-trigger="'outsideClick'" ng-click="clikcInGroup(child.group_id)">
+                                <a href="#">{{child.group_name}}</a>
+                                </span>
+                            </td>
+                            </td>
+                            <td ng-click="preview(child)">
+                                <div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
+                                <div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M</div>
+                                <div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B</div>
+                            </td>
+                            <td ng-click="preview(child)"><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
+                            <td ng-click="preview(child)">{{child.alert.place_neighborhood}}</td>
+                            <td ng-click="preview(child)">{{child.alert.place_city_name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="text-right">
+                    Página {{children.meta.pagination.current_page}} de {{children.meta.pagination.total_pages}}. | Exibindo {{children.meta.pagination.count}} alertas por página | Total de <strong>{{children.meta.pagination.total}} </strong>alertas.
+                </p>
+
+                <hr>
+
+                <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+
+            </div>
+
+            <div class="panel-footer">
+                <p class="text-right">
+                    <button type="button" class="btn btn-raised btn-info" ng-click="changeAllGroups()" ng-disabled="selected.alerts.length == 0">Alterar grupos</button>
+                </p>
             </div>
         </div>
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="modalChild" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
@@ -235,7 +270,7 @@
                                     <div class="form-group col-md-6 " ng-show="child.requires_address_update || child.alert.place_neighborhood ">
                                         <label class="control-label "><strong>Bairro</strong></label>
                                         <p><input type="text" ng-blur="editAlert(child.alert.place_neighborhood, 'place_neighborhood', child.id)" class="form-control " required ng-model="child.alert.place_neighborhood " placeholder="Indique o bairro... "
-                                            /></p>
+                                        /></p>
                                     </div>
                                 </div>
                             </div>
