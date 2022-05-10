@@ -1,8 +1,8 @@
-.span_status{
+#school_list .span_status{
     margin-top: 15px;
 }
 
-.container_check_school {
+#school_list .container_check_school {
     display: block;
     position: relative;
     padding-left: 35px;
@@ -15,7 +15,7 @@
     margin-top: 20px;
 }
 
-.container_year_educacenso{
+#school_list .container_year_educacenso{
     display: block;
     position: relative;
     cursor: pointer;
@@ -26,14 +26,14 @@
     user-select: none;
     margin-top: 20px;
 }
-.container_check_school input {
+#school_list .container_check_school input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     height: 0;
     width: 0;
 }
-.checkmark {
+#school_list .checkmark {
     position: absolute;
     top: 0;
     left: 0;
@@ -41,21 +41,21 @@
     width: 25px;
     background-color: #eee;
 }
-.container_check_school:hover input ~ .checkmark {
+#school_list .container_check_school:hover input ~ .checkmark {
     background-color: #ccc;
 }
-.container_check_school input:checked ~ .checkmark {
+#school_list .container_check_school input:checked ~ .checkmark {
     background-color: #2196F3;
 }
-.checkmark:after {
+#school_list .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
-.container_check_school input:checked ~ .checkmark:after {
+#school_list .container_check_school input:checked ~ .checkmark:after {
     display: block;
 }
-.container_check_school .checkmark:after {
+#school_list .container_check_school .checkmark:after {
     left: 9px;
     top: 5px;
     width: 5px;

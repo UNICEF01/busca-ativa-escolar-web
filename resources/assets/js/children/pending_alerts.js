@@ -8,8 +8,9 @@
                 controller: 'PendingAlertsCtrlCtrl'
             })
         })
-        .controller('PendingAlertsCtrlCtrl', function($scope, Groups, Platform, Identity, Alerts, StaticData, Modals) {
+        .controller('PendingAlertsCtrlCtrl', function($scope, Groups, Platform, Identity, Alerts, StaticData, Modals, ngToast) {
 
+            $scope.static = StaticData;
             $scope.identity = Identity;
             $scope.sendingAlert = false;
             $scope.children = {};
@@ -28,26 +29,55 @@
                 group_id: null,
             };
 
+            //checkboxes
+            $scope.check_all_alerts = false;
             $scope.selected = {
-                children: []
+                alerts: []
             };
-
-            $scope.onCheckSelectAll = function() {
-                if ($scope.check_all_child) {
-                    $scope.selected.children = angular.copy($scope.children.data);
+            $scope.onCheckSelectAllAlerts = function() {
+                if ($scope.check_all_alerts) {
+                    $scope.selected.alerts = angular.copy($scope.children.data);
                 } else {
-                    $scope.selected.children = [];
+                    $scope.selected.alerts = [];
                 }
-
             };
+            $scope.changeAllGroups = function (){
+                if ($scope.selected.alerts.length <= 0) {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione os alertas que deseja modificar'));
+                } else {
+                    Modals.show(
+                        Modals.GroupPicker(
+                            'Atribuir alertas ao grupo',
+                            'Selecione o grupo para onde deseja encaminhar os alertas',
+                            Identity.getCurrentUser().group,
+                            'Atribuindo alertas ao grupo: ',
+                            false,
+                            null,
+                            null,
+                            true,
+                            'Nenhum grupo selecionado')
+                    ).then(function(selectedGroup) {
 
-            $scope.getChild = function(child) {
-                if ($scope.check_child)
-                    $scope.selected.children.push(child)
-                else
-                    $scope.selected.children = $scope.selected.children.filter(function(el) { return el.id != child.id; });
+                        var obj = {
+                          newObject: selectedGroup,
+                          alerts: $scope.selected.alerts
+                        };
+
+                        return Alerts.changeGroups(obj).$promise;
+
+                    }).then(function(res) {
+                        if(res.status == "ok"){
+                            ngToast.success("Grupos editados com sucesso.");
+                            $scope.check_all_alerts = false;
+                            $scope.selected.alerts = [];
+                            $scope.refresh();
+                        }else{
+                            ngToast.danger("Ocorreu um erro ao editar os grupos.");
+                        }
+                    });
+                }
             }
-
+            //----
 
             $scope.search = {};
 
@@ -91,31 +121,6 @@
                 });
             };
 
-            $scope.changeAllGroup = function() {
-                if ($scope.selected.children.length > 0) {
-                    Modals.show(
-                        Modals.GroupPicker(
-                            'Atribuir alerta ao grupo',
-                            'Selecione o grupo do qual deseja visualizar os alertas.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
-                            'Filtrando alertas do grupo: ',
-                            false,
-                            null,
-                            null,
-                            true,
-                            'Nenhum grupo selecionado', )
-                    ).then(function(selectedGroup) {
-                        var size = $scope.selected.children.length;
-                        ids = []
-                        for (let i = 0; i < size; ++i)
-                            ids[i] = $scope.selected.children[i].id
-                        $scope.editAlert([selectedGroup.name, selectedGroup.id], 'groups', ids, true)
-                    }).then(function() {});
-                } else {
-                    Modals.show(Modals.Alert('Atenção', 'Selecione os alertas para os quais deseja atribuir um novo grupo'));
-                }
-
-            };
-
             $scope.branchGroups = "carregando ...";
 
             $scope.clikcInGroup = function(group_id) {
@@ -152,14 +157,13 @@
                 $scope.refresh();
             };
 
-            $scope.static = StaticData;
-
             $scope.refresh = function() {
                 $scope.child = null;
                 $scope.children = Alerts.getPending($scope.query);
                 $scope.search = $scope.children;
-                $scope.selected.children = [];
-                $scope.check_all_child = false;
+
+                $scope.check_all_alerts = false;
+                $scope.selected.alerts = [];
             };
 
             $scope.preview = function(child) {
@@ -207,7 +211,6 @@
                 });
             };
 
-
             $scope.reject = function(child) {
                 Alerts.reject({ id: child.id }, function() {
                     $scope.refresh();
@@ -231,7 +234,7 @@
                         Alerts.edit({ id: id, data: data, type: type }, function() {})
                 }
 
-            }
+            };
 
             Platform.whenReady(function() {
                 $scope.causes = StaticData.getAlertCauses();
