@@ -12,7 +12,7 @@
                 accept: { url: API.getURI('alerts/:id/accept'), method: 'POST', headers: headers },
                 edit: { url: API.getURI('alerts/edit'), method: 'POST', headers: headers },
                 reject: { url: API.getURI('alerts/:id/reject'), method: 'POST', headers: headers },
-                changeGroups: { url: API.getURI('alerts/change_groups?XDEBUG_SESSION_START=PHP_STORM'), method: 'POST', headers: headers }
+                changeGroups: { url: API.getURI('alerts/change_groups'), method: 'POST', headers: headers }
             });
         });
 })();

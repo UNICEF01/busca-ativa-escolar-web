@@ -1,12 +1,8 @@
 @charset "UTF-8";
-
 @import 'compass/css3';
-
 @import 'shared/util_mixins';
 @import 'shared/util_classes';
-
 @import 'shared/bootstrap_config';
-
 @import 'components/navbar';
 @import 'components/case_steps';
 @import 'components/subnav_tabs';
@@ -14,10 +10,8 @@
 @import 'components/loading_feedback';
 @import 'components/support_widget';
 @import 'components/tenants';
-@import 'components/data_table';
 @import 'components/painel_metas';
 @import 'components/animated';
-
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
 
 .form-control.ng-invalid {

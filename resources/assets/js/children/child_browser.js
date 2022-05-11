@@ -24,7 +24,6 @@
             $scope.defaultQuery = {
                 name: '',
                 step_name: '',
-                cause_name: '',
                 assigned_user_name: '',
                 location_full: '',
                 alert_status: ['accepted'],
@@ -37,7 +36,17 @@
                 place_kind: ['rural', 'urban'],
                 place_kind_null: true,
                 group_id: null,
-                case_not_info: null
+                case_not_info: null,
+                group_id: null,
+                from: 0,
+                size: 16
+            };
+
+            $scope.setMaxResults = function(max) {
+                $scope.defaultQuery.size = max;
+                $scope.defaultQuery.from = 0;
+                $scope.query = angular.merge({}, $scope.defaultQuery);
+                $scope.refresh();
             };
 
             $scope.selected = {
@@ -49,19 +58,26 @@
             $scope.causes = [];
 
             $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
+
+            $scope.search = {
+                stats: { total_results: 0 }
+            };
 
             $scope.refresh = function() {
                 $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsChild();
                 $scope.selected.children = [];
             };
 
             $scope.resetQuery = function() {
+                $scope.defaultQuery.group_id = Identity.getCurrentUser().group.id;
+                $scope.defaultQuery.size = 16;
+                $scope.defaultQuery.from = 0;
+
+                $scope.selectedGroup = $scope.identity.getCurrentUser().group;
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.refresh();
-                angular.element('#select_parent').css('text-indent', 0);
             };
-
 
             $scope.exportXLS = function() {
                 Children.export($scope.query, function(res) {
@@ -80,48 +96,9 @@
                     .then(function(res) {
                         $scope.lastOrder.date = res.date;
                         $scope.reports = {};
-
                         ngToast.success("Solicitação feita com sucesso. Arquivo estará disponível em breve!");
-
-                        setInterval(function() {
-                            $scope.reports = Reports.reportsChild();
-                            $scope.lastOrder.date = null;
-                        }, 600000);
                     });
             };
-
-            var language = {
-                "sEmptyTable": "Nenhum registro encontrado",
-                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "_MENU_ resultados por página",
-                "sLoadingRecords": "Carregando...",
-                "sProcessing": "Processando...",
-                "sZeroRecords": "Nenhum registro encontrado",
-                "sSearch": "Pesquisar",
-                "oPaginate": {
-                    "sNext": "Próximo",
-                    "sPrevious": "Anterior",
-                    "sFirst": "Primeiro",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Ordenar colunas de forma ascendente",
-                    "sSortDescending": ": Ordenar colunas de forma descendente"
-                }
-            }
-
-            //Configura a linguagem na diretiva dt-options=""
-            $scope.dtOptions = DTOptionsBuilder.newOptions()
-                .withLanguage(language);
-
-            //Configura a linguagem na diretiva dt-column-defs=""
-            $scope.dtColumnDefs = [
-                DTColumnDefBuilder.newColumnDef(8).notSortable()
-            ];
 
             $scope.clikcInGroup = function(group_id) {
                 $scope.branchGroups = "carregando ...";
@@ -208,8 +185,23 @@
                     $scope.causes.sort((a, b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
                     $scope.causes = [...new Set($scope.causes)];
                 }
-                $scope.selectedGroup = Identity.getCurrentUser().group;
+                $scope.selectedGroup = $scope.identity.getCurrentUser().group;
                 $scope.search = Children.search($scope.query);
+                $scope.reports = Reports.reportsChild();
             });
+
+            //checkboxes
+            $scope.check_all_cases = false;
+            $scope.selected = {
+                cases: []
+            };
+            $scope.onCheckSelectAllCases = function() {
+                if ($scope.check_all_cases) {
+                    $scope.selected.cases = angular.copy($scope.search.results);
+                } else {
+                    $scope.selected.cases = [];
+                }
+            };
+            //----
         });
 })();
