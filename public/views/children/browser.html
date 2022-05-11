@@ -114,9 +114,7 @@
 
             <hr>
 
-            <p class="text-right">
-                Página {{defaultQuery.from+1}} de {{ ((search.stats.total_results/defaultQuery.size)+1) | number:0 }}. | Exibindo {{defaultQuery.size}} casos por página | Total de <strong>{{search.stats.total_results}} </strong>casos.
-            </p>
+            <app-paginator-elastic collection="search.results" stats="search.stats" query="defaultQuery" on-refresh="refresh"></app-paginator-elastic>
 
             <table class="table table-hover">
                 <thead style="white-space:nowrap;">
@@ -220,9 +218,7 @@
                 </tbody>
             </table>
 
-            <p class="text-right">
-                Página {{defaultQuery.from+1}} de {{ ((search.stats.total_results/defaultQuery.size)+1) | number:0 }}. | Exibindo {{defaultQuery.size}} casos por página | Total de <strong>{{search.stats.total_results}} </strong>casos.
-            </p>
+            <app-paginator-elastic collection="search.results" stats="search.stats" query="defaultQuery" on-refresh="refresh"></app-paginator-elastic>
 
         </div>
 

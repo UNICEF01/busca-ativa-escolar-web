@@ -38,7 +38,7 @@
                 group_id: null,
                 case_not_info: null,
                 group_id: null,
-                from: 0,
+                from: 1,
                 size: 16
             };
 
@@ -68,11 +68,12 @@
             };
 
             $scope.resetQuery = function() {
+
                 $scope.defaultQuery.group_id = Identity.getCurrentUser().group.id;
                 $scope.defaultQuery.size = 16;
                 $scope.defaultQuery.from = 0;
-
                 $scope.selectedGroup = $scope.identity.getCurrentUser().group;
+
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.refresh();
             };
@@ -191,6 +192,7 @@
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
+
             });
 
             //checkboxes
