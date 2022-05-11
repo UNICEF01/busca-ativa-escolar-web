@@ -28,7 +28,8 @@
                         <i class="fa fa-circle"></i> Prefeito(a) Municipal: organiza e motiva os trabalhos da iniciativa do Busca Ativa Escolar no município;
                     </li>
                     <li class="list-group-item">
-                        <i class="fa fa-circle"></i> Gestor(a) Político(a): reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a exclusão escolar;
+                        <i class="fa fa-circle"></i> Gestor(a) Político(a): reúne as diversas instituições governamentais e não governamentais da cidade para participar do programa e propõe a criação ou alteração de políticas públicas para combater a
+                        exclusão escolar;
                     </li>
                     <li class="list-group-item">
                         <i class="fa fa-circle"></i> Coordenador(a) operacional: é responsável pelo planejamento, execução e acompanhamento do plano de trabalho e de todas as ações do projeto;
@@ -140,64 +141,64 @@
 
             <table class="table table-striped table-hover">
                 <thead>
-                <tr>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
-                    </th>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter>
-                    </th>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter>
-                    </th>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'email'">Contato</column-sorter>
-                    </th>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'type'">Tipo</column-sorter>
-                    </th>
-                    <th>
-                        <column-sorter on-change="refresh" model="query.sort" field="'group_id'">Grupo</column-sorter>
-                    </th>
-                    <th ng-show="identity.can('users.manage')">Opções</th>
-                </tr>
+                    <tr>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'name'">Nome</column-sorter>
+                        </th>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'uf'">UF</column-sorter>
+                        </th>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'tenant_id'">Município</column-sorter>
+                        </th>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'email'">Contato</column-sorter>
+                        </th>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'type'">Tipo</column-sorter>
+                        </th>
+                        <th>
+                            <column-sorter on-change="refresh" model="query.sort" field="'group_id'">Grupo</column-sorter>
+                        </th>
+                        <th ng-show="identity.can('users.manage')">Opções</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
-                    <td width="25%">
-                        <strong>{{user.name}}</strong>
-                        <br />
-                        <small uib-tooltip-html="user.created_at.date | dateFormat">
+                    <tr ng-repeat="(i, user) in search.data" class="{{!!user.deleted_at ? 'is-suspended' : ''}}">
+                        <td width="25%">
+                            <strong>{{user.name}}</strong>
+                            <br />
+                            <small uib-tooltip-html="user.created_at.date | dateFormat">
                             <strong>Cadastrado em: {{user.created_at.date |
                                 amDateFormat:'DD/MM/YYYY'}}</strong>
                         </small>
-                        <br />
-                        <span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
-                        <span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
-                    </td>
-                    <td width="5%">
-                        <span ng-show="user.uf">{{user.uf}}</span>
-                    </td>
-                    <td width="13%">
-                        <span ng-show="user.tenant">{{user.tenant.name}}</span>
-                    </td>
-                    <td width="18%">
-                        {{user.email}}
-                        <br />{{user.contact_phone | brPhoneNumber}}
-                    </td>
-                    <td width="18%">{{user.type | lang:'user.type'}}</td>
-                    <td width="21%">{{user.group.name}}</td>
-                    <td width="20%" ng-show="identity.can('users.manage')">
-                        <a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user) && isScopeOfUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
-                            <i class="fa fa-pencil-square"></i> Editar </a>
-                        <a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
-                            <i class="fa fa-ban"></i> Desativar </a>
-                        <a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
-                            <i class="fa fa-check"></i> Ativar </a>
-                        <a ng-click="sendReactivationMail(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user) && !user.lgpd" class="btn btn-info btn-xs" style="margin: 0;">
-                            <i class="fa fa-ban"></i> Reenviar email de ativação </a>
-                    </td>
-                </tr>
+                            <br />
+                            <span ng-show="!user.deleted_at" class="label label-success">Ativo</span>
+                            <span ng-show="user.deleted_at" class="label label-danger">Desativado <span ng-show="user.deleted_at"> em: {{user.deleted_at | amDateFormat:'DD/MM/YYYY'}}</span></span>
+                        </td>
+                        <td width="5%">
+                            <span ng-show="user.uf">{{user.uf}}</span>
+                        </td>
+                        <td width="13%">
+                            <span ng-show="user.tenant">{{user.tenant.name}}</span>
+                        </td>
+                        <td width="18%">
+                            {{user.email}}
+                            <br />{{user.contact_phone | brPhoneNumber}}
+                        </td>
+                        <td width="18%">{{user.type | lang:'user.type'}}</td>
+                        <td width="21%">{{user.group.name}}</td>
+                        <td width="20%" ng-show="identity.can('users.manage')">
+                            <a ui-sref="user_editor({user_id: user.id, quick_add: quickAdd})" ng-show="identity.can('users.manage') && canEditUser(user) && isScopeOfUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                                <i class="fa fa-pencil-square"></i> Editar </a>
+                            <a ng-click="suspendUser(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                                <i class="fa fa-ban"></i> Desativar </a>
+                            <a ng-click="restoreUser(user)" ng-show="user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user)" class="btn btn-info btn-xs" style="margin: 0;">
+                                <i class="fa fa-check"></i> Ativar </a>
+                            <a ng-click="sendReactivationMail(user)" ng-show="!user.deleted_at && identity.can('users.manage') && !isCurrentUser(user) && canEditUser(user) && !user.lgpd" class="btn btn-info btn-xs" style="margin: 0;">
+                                <i class="fa fa-ban"></i> Reenviar email de ativação </a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -212,7 +213,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
     }
-
+    
     @media (max-width: 650px) {
         .grid_col {
             grid-template-columns: 1fr;

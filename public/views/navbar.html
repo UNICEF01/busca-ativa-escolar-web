@@ -1,11 +1,9 @@
 <div>
-    <div id="app-navbar" class="navbar navbar-primary"
-         ng-if="!identity.isLoggedIn() && (location !== '/login') && identity.lgpdSigned()">
+    <div id="app-navbar" class="navbar navbar-primary" ng-if="!identity.isLoggedIn() && (location !== '/login') && identity.lgpdSigned()">
         <div class="container">
 
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items"
-                        aria-expanded="false">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -21,12 +19,10 @@
     </div>
 
 
-    <div id="app-navbar" class="navbar navbar-primary"
-         ng-show="identity.isLoggedIn() && !isHidden() && identity.lgpdSigned()">
+    <div id="app-navbar" class="navbar navbar-primary" ng-show="identity.isLoggedIn() && !isHidden() && identity.lgpdSigned()">
         <div class="navbar-container container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items"
-                        aria-expanded="false">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -43,21 +39,16 @@
                 <ul class="nav navbar-nav">
                     <li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
                     <!--<li ng-show="identity.can('alerts.spawn')"> <a ui-sref="child_create_from_alert"> <i class="fa fa-bell"></i> Criar alerta</a></li>-->
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown
-                        on-toggle="onMenuToggle(open)"
-                        ui-sref-active="active">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-bell"></i>
-                            Alertas
+                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-bell"></i> Alertas
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a ui-sref="child_create_from_alert"><i
                                     class="fa fa-bell-o" aria-hidden="true"></i> Criar alerta</a>
                             </li>
-                            <li ng-show="identity.can('alerts.pending')"><a
-                                    ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas pendentes</a></li>
+                            <li ng-show="identity.can('alerts.pending')"><a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas pendentes</a></li>
 
                             <li ng-show="identity.can('alerts.spawn')"><a ui-sref="user_alerts"><i
                                     class="fa fa-exclamation-triangle"></i> Meus alertas</a></li>
@@ -82,44 +73,33 @@
                     <li ng-show="identity.can('cities.selo_reports')" ui-sref-active="active"><a ui-sref="reports_selo">
                         Selo Unicef</a></li>
 
-                    <li ng-show="canSeeConfigPage()"
-                        ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
+                    <li ng-show="canSeeConfigPage()" ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
                     <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">
                         <a ui-sref="school_list_frequency">
-                            <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                            Frequências
+                            <i class="fa fa-bar-chart" aria-hidden="true"></i> Frequências
                         </a>
                     </li>
 
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown
-                        on-toggle="onMenuToggle(open)"
-                        ui-sref-active="active">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-wrench"></i>
-                            Ferramentas
+                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-wrench"></i> Ferramentas
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li ng-show="identity.manageImports() && !identity.getCurrentUser().tenant.is_state" ui-sref-active="active">
                                 <a ui-sref="school_browser">
-                                    <i class="fa fa-university"></i>
-                                    Escolas
+                                    <i class="fa fa-university"></i> Escolas
                                 </a>
                             </li>
-                            <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')"
-                                ui-sref-active="active">
+                            <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')" ui-sref-active="active">
                                 <a ui-sref="checks">
-                                    <i class="fa fa-exclamation-circle"></i>
-                                    Solicitações <span ng-if="pending_requests > 0" style="background-color: #953b39;"
-                                                       class="badge" ng-bind="pending_requests"></span>
+                                    <i class="fa fa-exclamation-circle"></i> Solicitações <span ng-if="pending_requests > 0" style="background-color: #953b39;" class="badge" ng-bind="pending_requests"></span>
                                 </a>
                             </li>
                             <li ng-show="identity.manageImports() && !identity.getCurrentUser().tenant.is_state">
                                 <a ui-sref="school_list_frequency">
-                                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                                    Frequências
+                                    <i class="fa fa-bar-chart" aria-hidden="true"></i> Frequências
                                 </a>
                             </li>
 
@@ -131,8 +111,7 @@
                 <ul class="nav navbar-nav navbar-right logged-user" ng-show="platform.isReady()">
 
                     <li class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">
+                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user-circle-o"></i>
                             <span class="user-details">
 							<strong ng-bind="identity.getCurrentUser().name"></strong>
@@ -144,34 +123,19 @@
                             <li ng-show="identity.can('notifications')"><a ng-click="toggleNotifications($event)"><i
                                     class="fa fa-envelope-o"></i> Notificações</a></li>
 
-                            <li ng-show="identity.can('notifications')" class="notification-center"
-                                uib-collapse="!showNotifications">
-                                <div ng-show="!notifications.hasUnread()" class="alert alert-info">Nenhuma notificação
-                                    recente.
+                            <li ng-show="identity.can('notifications')" class="notification-center" uib-collapse="!showNotifications">
+                                <div ng-show="!notifications.hasUnread()" class="alert alert-info">Nenhuma notificação recente.
                                 </div>
-                                <div ng-show="notifications.isLoading()" class="text-center" style="padding: 15px 0"><i
-                                        class="fa fa-refresh rotate-icon"></i></div>
+                                <div ng-show="notifications.isLoading()" class="text-center" style="padding: 15px 0"><i class="fa fa-refresh rotate-icon"></i></div>
 
-                                <div
-                                        ng-repeat="(i, notification) in notifications.getUnread()"
-                                        ng-click="notifications.open(notification)"
-                                        class="navbar-notification alert alert-{{notification.data.type}}"
-                                >
-                                    <button ng-click="notifications.markAsRead(notification)" type="button"
-                                            class="close"
-                                            data-dismiss="alert" aria-label="Esconder"><span
-                                            aria-hidden="true">&times;</span></button>
-                                    {{notification.data.title}}
+                                <div ng-repeat="(i, notification) in notifications.getUnread()" ng-click="notifications.open(notification)" class="navbar-notification alert alert-{{notification.data.type}}">
+                                    <button ng-click="notifications.markAsRead(notification)" type="button" class="close" data-dismiss="alert" aria-label="Esconder"><span
+                                            aria-hidden="true">&times;</span></button> {{notification.data.title}}
                                 </div>
                             </li>
-
-                            <li><a target="_blank" href="https://buscaativaescolar.org.br/#down"><i
-                                    class="fa fa-download"></i> Downloads</a></li>
                             <li ng-show="false"><a ui-sref="developer_mode"><i class="fa fa-code"></i> Área do
                                 desenvolvedor</a>
                             </li>
-
-                            <li role="separator" class="divider over-split-btn"></li>
 
                             <li class="has-split-btn" ng-if="identity.can('preferences')">
                                 <a class="col-md-7 split-btn" ui-sref="user_preferences"><i class="fa fa-cog"></i>
