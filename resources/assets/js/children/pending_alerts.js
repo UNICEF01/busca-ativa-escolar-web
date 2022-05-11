@@ -41,7 +41,7 @@
                     $scope.selected.alerts = [];
                 }
             };
-            $scope.changeAllGroups = function (){
+            $scope.changeAllGroups = function() {
                 if ($scope.selected.alerts.length <= 0) {
                     Modals.show(Modals.Alert('Atenção', 'Selecione os alertas que deseja modificar'));
                 } else {
@@ -59,25 +59,24 @@
                     ).then(function(selectedGroup) {
 
                         var obj = {
-                          newObject: selectedGroup,
-                          alerts: $scope.selected.alerts
+                            newObject: selectedGroup,
+                            alerts: $scope.selected.alerts
                         };
 
                         return Alerts.changeGroups(obj).$promise;
 
                     }).then(function(res) {
-                        if(res.status == "ok"){
+                        if (res.status == "ok") {
                             ngToast.success("Grupos editados com sucesso.");
                             $scope.check_all_alerts = false;
                             $scope.selected.alerts = [];
                             $scope.refresh();
-                        }else{
+                        } else {
                             ngToast.danger("Ocorreu um erro ao editar os grupos.");
                         }
                     });
                 }
             }
-            //----
 
             $scope.search = {};
 
@@ -115,7 +114,7 @@
                 ).then(function(selectedGroup) {
                     $scope.child.group_name = selectedGroup.name
                     $scope.child.group_id = selectedGroup.id
-                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id, false)
+                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id)
                 }).then(function() {
 
                 });
@@ -156,7 +155,7 @@
                 $scope.query.page = 1;
             };
 
-            $scope.reloadAlerts = function (){
+            $scope.reloadAlerts = function() {
                 $scope.query.page = 1;
                 $scope.refresh();
             };
@@ -167,7 +166,7 @@
                 $scope.isLoading = true;
 
                 Alerts.getPending($scope.query).$promise
-                    .then( function (res) {
+                    .then(function(res) {
 
                         $scope.children = res;
                         $scope.search = $scope.children;
@@ -233,21 +232,14 @@
                 });
             };
 
-            $scope.editAlert = function(data, type, id, check) {
-                if (check == true)
+            $scope.editAlert = function(data, type, id) {
+                if (type == 'groups')
                     Alerts.edit({ id: id, data: data, type: type }, function() {
                         $scope.refresh();
+                        $('#modalChild').modal('hide');
                     })
-                else {
-                    if (type == 'groups')
-                        Alerts.edit({ id: id, data: data, type: type }, function() {
-                            $scope.refresh();
-                            $('#modalChild').modal('hide');
-                        })
-                    else
-                        Alerts.edit({ id: id, data: data, type: type }, function() {})
-                }
-
+                else
+                    Alerts.edit({ id: id, data: data, type: type }, function() {})
             };
 
             Platform.whenReady(function() {

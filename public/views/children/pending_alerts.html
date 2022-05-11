@@ -78,9 +78,7 @@
 
                 <hr>
 
-                <p class="text-right">
-                    Página {{children.meta.pagination.current_page}} de {{children.meta.pagination.total_pages}}. | Exibindo {{children.meta.pagination.count}} alertas por página | Total de <strong>{{children.meta.pagination.total}} </strong>alertas.
-                </p>
+                <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
 
                 <table class="table table-hover">
                     <thead style="white-space:nowrap;">
@@ -149,13 +147,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <p class="text-right">
-                    Página {{children.meta.pagination.current_page}} de {{children.meta.pagination.total_pages}}. | Exibindo {{children.meta.pagination.count}} alertas por página | Total de <strong>{{children.meta.pagination.total}} </strong>alertas.
-                </p>
-
-                <hr>
-
                 <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
 
             </div>
@@ -270,7 +261,7 @@
                                     <div class="form-group col-md-6 " ng-show="child.requires_address_update || child.alert.place_neighborhood ">
                                         <label class="control-label "><strong>Bairro</strong></label>
                                         <p><input type="text" ng-blur="editAlert(child.alert.place_neighborhood, 'place_neighborhood', child.id)" class="form-control " required ng-model="child.alert.place_neighborhood " placeholder="Indique o bairro... "
-                                        /></p>
+                                            /></p>
                                     </div>
                                 </div>
                             </div>
