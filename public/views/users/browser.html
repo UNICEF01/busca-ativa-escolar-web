@@ -129,9 +129,11 @@
                         <p ng-show="users.length > 0">Total de registros: {{total}}</p>
                     </div>
                     <div class="form-group col-md-3">
-                        <label class="container_check_user_canceled" ng-click="onCheckCanceled()">Exibir desativados <input type="checkbox" ng-model="query.show_suspended" />
-                            <span class="checkmark"></span>
-                        </label>
+                        <div class="checkbox">
+                            <label for="filter-show_rejected" ng-click="onCheckCanceled()">
+                                <input id="filter-show_rejected" type="checkbox" ng-model="query.show_suspended" ng-model="query.show_suspended"> Exibir desativados
+                            </label>
+                        </div>
                     </div>
                 </div>
             </form>
