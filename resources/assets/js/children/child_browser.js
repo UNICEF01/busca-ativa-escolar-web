@@ -57,8 +57,6 @@
 
             $scope.causes = [];
 
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-
             $scope.search = {
                 stats: { total_results: 0 }
             };
@@ -180,12 +178,17 @@
 
             Platform.whenReady(function() {
                 $scope.data = StaticData.getCaseCauses()
+
                 if ($scope.causes.length == 0) {
                     Object.values($scope.data).forEach(val => $scope.causes.push(({ value: val.id, displayName: val.label })));
                     $scope.causes.sort((a, b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
                     $scope.causes = [...new Set($scope.causes)];
                 }
+
                 $scope.selectedGroup = $scope.identity.getCurrentUser().group;
+                $scope.defaultQuery.group_id = $scope.identity.getCurrentUser().group.id;
+
+                $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
             });
