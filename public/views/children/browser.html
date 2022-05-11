@@ -235,7 +235,7 @@
 
                 <button ng-show="identity.can('cases.export.all')" type="button" ng-click="createXLSReport()" class="btn btn-raised btn-default"><i class="fa fa-file-excel-o"></i> NOVO RELATÓRIO</button>
 
-                <button type="button" class="btn btn-raised btn-info" ng-disabled="selected.cases.length <= 0">Alterar grupos</button>
+                <button type="button" class="btn btn-raised btn-info" ng-disabled="selected.cases.length <= 0" ng-click="changeAllGroups()">Alterar grupos</button>
             </p>
         </div>
 

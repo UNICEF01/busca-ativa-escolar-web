@@ -8,7 +8,7 @@
             return $resource(API.getURI('cases/:id'), { id: '@id', with: '@with' }, {
                 find: { method: 'GET', headers: headers },
                 update: { method: 'PUT', headers: headers },
-                changeGroups: { method: 'POST', url: API.getURI('change_groups'), headers: headers }
+                changeGroups: { method: 'POST', url: API.getURI('cases/change_groups?XDEBUG_SESSION_START=PHP_STORM'), headers: headers }
             });
 
         });

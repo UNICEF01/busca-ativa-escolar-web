@@ -37,14 +37,14 @@
                 place_kind_null: true,
                 group_id: null,
                 case_not_info: null,
-                group_id: null,
                 from: 1,
                 size: 16
             };
 
             $scope.setMaxResults = function(max) {
                 $scope.defaultQuery.size = max;
-                $scope.defaultQuery.from = 0;
+                $scope.defaultQuery.from = 1;
+
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.refresh();
             };
@@ -133,6 +133,7 @@
                 ).then(function(selectedGroup) {
                     $scope.selectedGroup = selectedGroup;
                     $scope.query.group_id = $scope.selectedGroup.id;
+                    $scope.defaultQuery.group_id = $scope.selectedGroup.id;
                 }).then(function() {
 
                 });
@@ -207,6 +208,42 @@
                     $scope.selected.cases = [];
                 }
             };
+            $scope.changeAllGroups = function() {
+                if ($scope.selected.cases.length <= 0) {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione os casos que deseja modificar'));
+                } else {
+                    Modals.show(
+                        Modals.GroupPicker(
+                            'Atribuir casos ao grupo',
+                            'Selecione o grupo para onde deseja encaminhar os casos',
+                            Identity.getCurrentUser().group,
+                            'Atribuindo casos ao grupo: ',
+                            false,
+                            null,
+                            null,
+                            true,
+                            'Nenhum grupo selecionado')
+                    ).then(function(selectedGroup) {
+
+                        var obj = {
+                            newObject: selectedGroup,
+                            cases: $scope.selected.cases
+                        };
+
+                        return Cases.changeGroups(obj).$promise;
+
+                    }).then(function(res) {
+                        if (res.status == "ok") {
+                            ngToast.success("Casos editados com sucesso.");
+                            $scope.check_all_cases = false;
+                            $scope.selected.cases = [];
+                            $scope.refresh();
+                        } else {
+                            ngToast.danger("Ocorreu um erro ao editar os grupos.");
+                        }
+                    });
+                }
+            }
             //----
         });
 })();
