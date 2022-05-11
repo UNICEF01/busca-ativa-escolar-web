@@ -3,7 +3,7 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h3><i class="material-icons">list</i> Casos | {{search.stats.total_results}}</h3>
+            <h3><i class="material-icons">list</i> Casos | <small>Total - {{search.stats.total_results}}</small></h3>
         </div>
 
         <div class="panel-body">
@@ -14,7 +14,7 @@
 
                     <div class="row">
                         <div class="col-md-3"><input class="form-control" type="search" id="filter-name" ng-model="query.name" placeholder="Nome da criança..."></div>
-                        <div class="col-md-3"> <input class="form-control" type="search" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do usuário..."></div>
+                        <div class="col-md-3"> <input class="form-control" type="search" id="filter-assigned-user" ng-model="query.assigned_user_name" placeholder="Nome do responsável pelo caso ..."></div>
                         <div class="col-md-3"><input class="form-control" type="search" id="filter-stage" ng-model="query.step_name" placeholder="Etapa do caso..."></div>
                         <div class="col-md-3"><input type="search" id="filter-full-address" class="form-control" ng-model="query.location_full" placeholder="Bairro, CEP, Rua ..."></div>
                     </div>
@@ -33,7 +33,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label uib-tooltip="Para selecionar mais de um opção, segure o botão ctrl no teclado.">Motivo do Caso <i class="fa fa-info-circle"></i> </label>
-                                <select class="form-control" id="edit-rec" multiple class="chosen-select" ng-model="query.case_cause_ids" style="height: 100px;">
+                                <select class="form-control" id="edit-rec" multiple class="chosen-select" ng-model="query.case_cause_ids" style="height: 130px;">
                                     <option ng-repeat="case in causes"
                                             value="{{case.value}}">
                                         {{case.displayName}}
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="control-label"><strong>Limite de exibição</strong></label>
                             <br><br>
                             <ul class="nav nav-pills adm-max-results-filter">
@@ -104,11 +104,11 @@
                                 <li ng-class="{active: defaultQuery.size==128}"><a ng-click="setMaxResults(128)">128</a></li>
                             </ul>
                         </div>
-                    </div>
 
-                    <div class="text-right">
-                        <button type="button" ng-click="resetQuery()" class="btn btn-raised btn-default"><i class="fa fa-undo"></i> Limpar filtros</button>
-                        <button type="submit" class="btn btn-raised btn-info"><i class="fa fa-search"></i> Filtrar</button>
+                        <div class="col-md-6 text-right">
+                            <button type="button" ng-click="resetQuery()" class="btn btn-raised btn-default"><i class="fa fa-undo"></i> Limpar filtros</button>
+                            <button type="submit" class="btn btn-raised btn-info"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
                     </div>
 
                 </form>
