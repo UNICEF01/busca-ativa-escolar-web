@@ -43,6 +43,8 @@
 
             $scope.numberOfItens = 16;
 
+            $scope.mapOfPage = [1];
+
             $scope.setMaxResults = function(max) {
                 $scope.defaultQuery.from = 1;
                 $scope.numberOfItens = max;
@@ -63,7 +65,15 @@
             $scope.refresh = function() {
                 $scope.query.size = $scope.numberOfItens;
 
-                $scope.search = Children.search($scope.query);
+                $scope.finalQuery = angular.merge({}, $scope.query);
+                $scope.finalQuery.from = $scope.mapOfPage[($scope.query.from-1)];
+
+                Children.search($scope.finalQuery).$promise
+                    .then(function (res){
+                        $scope.search = res;
+                        $scope.createMapOfPages(res);
+                    });
+
                 $scope.reports = Reports.reportsChild();
                 $scope.selected.children = [];
             };
@@ -192,10 +202,31 @@
                 $scope.defaultQuery.group_id = $scope.identity.getCurrentUser().group.id;
 
                 $scope.query = angular.merge({}, $scope.defaultQuery);
-                $scope.search = Children.search($scope.query);
+
+                Children.search($scope.query).$promise
+                    .then(function (res){
+                        $scope.search = res;
+                        $scope.createMapOfPages(res);
+                    });
                 $scope.reports = Reports.reportsChild();
 
             });
+
+            $scope.createMapOfPages = function (res){
+                var arrayOfResults = [];
+                for (let i = 0; i < res.stats.total_results; i++) {
+                    arrayOfResults.push(i);
+                }
+                $scope.mapOfPage = $scope.getEveryNth(arrayOfResults, $scope.query.size);
+            };
+
+            $scope.getEveryNth = function (arr, nth) {
+                const result = [];
+                for (let i = 1; i < arr.length; i += nth) {
+                    result.push(arr[i]);
+                }
+                return result;
+            };
 
             //checkboxes
             $scope.check_all_cases = false;

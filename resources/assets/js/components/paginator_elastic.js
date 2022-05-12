@@ -40,7 +40,7 @@
             scope.fixedNumberOf = function(number) {
                 return parseInt(number);
             };
-            
+
         }
 
         return {
