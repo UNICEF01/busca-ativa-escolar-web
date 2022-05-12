@@ -96,10 +96,10 @@
                             <label class="control-label"><strong>Limite de exibição</strong></label>
                             <br><br>
                             <ul class="nav nav-pills adm-max-results-filter">
-                                <li ng-class="{active: defaultQuery.size==16}"><a ng-click="setMaxResults(16)">16</a></li>
-                                <li ng-class="{active: defaultQuery.size==32}"><a ng-click="setMaxResults(32)">32</a></li>
-                                <li ng-class="{active: defaultQuery.size==64}"><a ng-click="setMaxResults(64)">64</a></li>
-                                <li ng-class="{active: defaultQuery.size==128}"><a ng-click="setMaxResults(128)">128</a></li>
+                                <li ng-class="{active: numberOfItens==16}"><a ng-click="setMaxResults(16)">16</a></li>
+                                <li ng-class="{active: numberOfItens==32}"><a ng-click="setMaxResults(32)">32</a></li>
+                                <li ng-class="{active: numberOfItens==64}"><a ng-click="setMaxResults(64)">64</a></li>
+                                <li ng-class="{active: numberOfItens==128}"><a ng-click="setMaxResults(128)">128</a></li>
                             </ul>
                         </div>
                         <div class="col-md-6 text-right">
@@ -114,7 +114,7 @@
 
             <hr>
 
-            <app-paginator-elastic collection="search.results" stats="search.stats" query="defaultQuery" on-refresh="refresh"></app-paginator-elastic>
+            <app-paginator-elastic collection="search.results" stats="search.stats" query="query" on-refresh="refresh"></app-paginator-elastic>
 
             <table class="table table-hover">
                 <thead style="white-space:nowrap;">
@@ -218,7 +218,7 @@
                 </tbody>
             </table>
 
-            <app-paginator-elastic collection="search.results" stats="search.stats" query="defaultQuery" on-refresh="refresh"></app-paginator-elastic>
+            <app-paginator-elastic collection="search.results" stats="search.stats" query="query" on-refresh="refresh"></app-paginator-elastic>
 
         </div>
 

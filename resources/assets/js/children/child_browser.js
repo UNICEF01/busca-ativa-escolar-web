@@ -41,12 +41,11 @@
                 size: 16
             };
 
-            $scope.setMaxResults = function(max) {
-                $scope.defaultQuery.size = max;
-                $scope.defaultQuery.from = 1;
+            $scope.numberOfItens = 16;
 
-                $scope.query = angular.merge({}, $scope.defaultQuery);
-                $scope.refresh();
+            $scope.setMaxResults = function(max) {
+                $scope.defaultQuery.from = 1;
+                $scope.numberOfItens = max;
             };
 
             $scope.selected = {
@@ -62,6 +61,8 @@
             };
 
             $scope.refresh = function() {
+                $scope.query.size = $scope.numberOfItens;
+
                 $scope.search = Children.search($scope.query);
                 $scope.reports = Reports.reportsChild();
                 $scope.selected.children = [];
@@ -153,7 +154,7 @@
                     $scope.selected.children.push(child)
                 else
                     $scope.selected.children = $scope.selected.children.filter(function(el) { return el.id != child.id; });
-            }
+            };
 
             $scope.changeAllGroup = function() {
                 if ($scope.selected.children.length > 0) {
@@ -243,7 +244,7 @@
                         }
                     });
                 }
-            }
+            };
             //----
         });
 })();
