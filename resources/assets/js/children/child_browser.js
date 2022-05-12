@@ -233,6 +233,15 @@
                 return result;
             };
 
+            $scope.checkDisabled = function (child){
+               if (child.assigned_uf) return true;
+               if (child.case_status == 'cancelled') return true;
+               if (child.case_status == 'completed') return true;
+               if (child.case_status == 'transferred') return true;
+               if (child.case_status == 'interrupted') return true;
+               return false;
+            };
+
             //checkboxes
             $scope.check_all_cases = false;
             $scope.selected = {
