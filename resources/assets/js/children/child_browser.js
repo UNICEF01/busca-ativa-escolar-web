@@ -85,6 +85,7 @@
 
             $scope.resetQuery = function() {
 
+                $scope.setMaxResults(16);
                 $scope.defaultQuery.group_id = Identity.getCurrentUser().group.id;
                 $scope.defaultQuery.size = 16;
                 $scope.defaultQuery.from = 1;
