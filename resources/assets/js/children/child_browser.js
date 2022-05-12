@@ -87,7 +87,7 @@
 
                 $scope.defaultQuery.group_id = Identity.getCurrentUser().group.id;
                 $scope.defaultQuery.size = 16;
-                $scope.defaultQuery.from = 0;
+                $scope.defaultQuery.from = 1;
                 $scope.selectedGroup = $scope.identity.getCurrentUser().group;
 
                 $scope.query = angular.merge({}, $scope.defaultQuery);
