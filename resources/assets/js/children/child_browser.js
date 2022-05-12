@@ -62,6 +62,11 @@
                 stats: { total_results: 0 }
             };
 
+            $scope.reloadData = function (){
+                $scope.query.from = 1;
+                $scope.refresh();
+            };
+
             $scope.refresh = function() {
                 $scope.query.size = $scope.numberOfItens;
 
