@@ -6,18 +6,29 @@
 
     <form name="$parent.$parent.groupsEdit" class="panel-body">
 
-        <p ng-if="identity.getCurrentTenant()">
-            Os grupos de trabalho respondem por diferentes motivos de evasão escolar. Os grupos que você cadastrar aqui poderão ser personalizados para receber um ou mais alertas e casos, de acordo com o motivo. O ideal é que façam parte dos grupos as secretarias
-            municipais ou órgãos da administração pública, pois são eles que irão agir, junto com a secretaria de educação, na (re)matrícula das crianças e dos adolescentes.
-        </p>
-        <p ng-if="!identity.getCurrentTenant()">
-            Os grupos de trabalho deverão ser criados com base na organização da secretaria estadual de educação no território. Ou seja, cada grupo deverá corresponder às coordenadorias/regionais/diretorias estaduais de ensino, as quais serão responsáveis pela (re)matrícula
-            das crianças e adolescentes, cujos casos lhes foram atribuídos pelos municípios de determinada região.
-        </p>
+        <div class="row">
+            <div class="col-md-4">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam convallis quis metus eget lacinia. Etiam lectus mauris, interdum non dapibus non, vulputate non purus.</p>
+            </div>
+            <div class="col-md-4">
+                <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In lorem ligula, consectetur et semper id, iaculis ut eros.</p>
+            </div>
+            <div class="col-md-4">
+                <p>Curabitur leo eros, tempus pharetra eleifend quis, sollicitudin eget justo. Nunc eget nibh vitae leo tristique auctor. Cras elementum ac tellus non feugiat. Ut velit massa, dignissim et lectus id, rutrum accumsan neque. </p>
+            </div>
+        </div>
+
+        <hr>
 
         <div class="row">
 
             <style>
+                .vertical_text {
+                    writing-mode: tb-rl;
+                    transform: rotate(-180deg);
+                    height: 350px;
+                    text-align: center;
+                }
                 .selectgroup {
                     height: 300px;
                     overflow-y: scroll;
@@ -54,9 +65,29 @@
                     text-decoration: underline;
                     cursor: pointer;
                 }
+                #principal_group {
+                    padding-top: 62px;
+                }
+                #principal_group{
+                    padding-top: 62px;
+                }
             </style>
 
-            <div class="col-md-4">
+            <div class="col-md-1">
+                <div class="text-center">
+                    <span class="label label-default">Nível 1</span>
+                </div>
+                <div id="principal_group">
+                    <a class="vertical_text list-group-item active">
+                        Busca Ativa Escolar
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="text-center">
+                    <span class="label label-default">Nível 2</span>
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
@@ -93,6 +124,9 @@
             </div>
 
             <div class="col-md-4">
+                <div class="text-center">
+                    <span class="label label-default">Nível 3</span>
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
@@ -129,6 +163,9 @@
             </div>
 
             <div class="col-md-4">
+                <div class="text-center">
+                    <span class="label label-default">Nível 4</span>
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar">
