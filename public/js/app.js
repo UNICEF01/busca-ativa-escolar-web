@@ -384,7 +384,7 @@
             });
 
         })
-        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder, Reports, ngToast, Groups, StaticData, Platform, Cases) {
+        .controller('ChildSearchCtrl', function($scope, Identity, Config, Children, Decorators, Modals, Reports, ngToast, Groups, StaticData, Platform, Cases) {
 
             $scope.Decorators = Decorators;
             $scope.Children = Children;
@@ -436,7 +436,7 @@
                 stats: { total_results: 0 }
             };
 
-            $scope.reloadData = function (){
+            $scope.reloadData = function() {
                 $scope.query.from = 1;
                 $scope.refresh();
             };
@@ -445,10 +445,10 @@
                 $scope.query.size = $scope.numberOfItens;
 
                 $scope.finalQuery = angular.merge({}, $scope.query);
-                $scope.finalQuery.from = $scope.mapOfPage[($scope.query.from-1)];
+                $scope.finalQuery.from = $scope.mapOfPage[($scope.query.from - 1)];
 
                 Children.search($scope.finalQuery).$promise
-                    .then(function (res){
+                    .then(function(res) {
                         $scope.search = res;
                         $scope.createMapOfPages(res);
                     });
@@ -584,7 +584,7 @@
                 $scope.query = angular.merge({}, $scope.defaultQuery);
 
                 Children.search($scope.query).$promise
-                    .then(function (res){
+                    .then(function(res) {
                         $scope.search = res;
                         $scope.createMapOfPages(res);
                     });
@@ -592,7 +592,7 @@
 
             });
 
-            $scope.createMapOfPages = function (res){
+            $scope.createMapOfPages = function(res) {
                 var arrayOfResults = [];
                 for (let i = 0; i < res.stats.total_results; i++) {
                     arrayOfResults.push(i);
@@ -600,7 +600,7 @@
                 $scope.mapOfPage = $scope.getEveryNth(arrayOfResults, $scope.query.size);
             };
 
-            $scope.getEveryNth = function (arr, nth) {
+            $scope.getEveryNth = function(arr, nth) {
                 const result = [];
                 for (let i = 1; i < arr.length; i += nth) {
                     result.push(arr[i]);
@@ -608,13 +608,13 @@
                 return result;
             };
 
-            $scope.checkDisabled = function (child){
-               if (child.assigned_uf) return true;
-               if (child.case_status == 'cancelled') return true;
-               if (child.case_status == 'completed') return true;
-               if (child.case_status == 'transferred') return true;
-               if (child.case_status == 'interrupted') return true;
-               return false;
+            $scope.checkDisabled = function(child) {
+                if (child.assigned_uf) return true;
+                if (child.case_status == 'cancelled') return true;
+                if (child.case_status == 'completed') return true;
+                if (child.case_status == 'transferred') return true;
+                if (child.case_status == 'interrupted') return true;
+                return false;
             };
 
             //checkboxes
@@ -4498,6 +4498,12 @@
             }
         });
     });
+})();
+(function() {
+    identify('config', 'google_maps.js');
+
+    angular.module('BuscaAtivaEscolar').config(function() {});
+
 })();
 
 (function() {

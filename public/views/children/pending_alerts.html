@@ -84,7 +84,7 @@
                     <thead style="white-space:nowrap;">
                         <tr>
                             <th>
-                                <div class="checkbox">
+                                <div class="checkbox" style="margin-bottom:0px !important;">
                                     <label>
                                         <input type="checkbox" ng-model="check_all_alerts" ng-change="onCheckSelectAllAlerts()">
                                     </label>
@@ -117,7 +117,7 @@
                     <tbody>
                         <tr ng-repeat="child in children.data" style="cursor: pointer;" ng-class="child.alert_status == 'rejected' ? 'danger' : '' ">
                             <td>
-                                <div class="checkbox">
+                                <div class="checkbox" style="margin-top:0px !important;">
                                     <label>
                                         <input type="checkbox" checklist-model="selected.alerts" checklist-value="child">
                                     </label>
