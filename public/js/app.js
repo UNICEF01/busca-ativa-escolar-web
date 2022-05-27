@@ -1554,224 +1554,6 @@
 
 })();
 (function () {
-  identify('config', 'charts.js');
-  angular.module('BuscaAtivaEscolar').run(function (Config) {
-    Highcharts.setOptions({
-      lang: {
-        months: [
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ],
-        shortMonths: [
-          'Jan',
-          'Fev',
-          'Mar',
-          'Abr',
-          'Mai',
-          'Jun',
-          'Jul',
-          'Ago',
-          'Set',
-          'Out',
-          'Nov',
-          'Dez',
-        ],
-        weekdays: [
-          'Domingo',
-          'Segunda',
-          'Terça',
-          'Quarta',
-          'Quinta',
-          'Sexta',
-          'Sábado',
-        ],
-        loading: ['Atualizando o gráfico...'],
-        contextButtonTitle: 'Exportar gráfico',
-        decimalPoint: ',',
-        thousandsSep: '.',
-        downloadJPEG: 'Baixar imagem JPEG',
-        downloadPDF: 'Baixar arquivo PDF',
-        downloadPNG: 'Baixar imagem PNG',
-        downloadSVG: 'Baixar vetor SVG',
-        printChart: 'Imprimir gráfico',
-        rangeSelectorFrom: 'De',
-        rangeSelectorTo: 'Para',
-        rangeSelectorZoom: 'Zoom',
-        resetZoom: 'Voltar zoom',
-        resetZoomTitle: 'Voltar zoom para nível 1:1'
-      }
-    });
-  });
-})();
-
-(function() {
-	identify('config', 'google_maps.js');
-
-	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
-		/*uiGmapGoogleMapApiProvider.configure({
-			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
-			libraries: 'places,visualization'
-		});*/
-	});
-
-})();
-// (function () {
-//     identify('config', 'here_api.js');
-//
-//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
-//         HereMapsConfigProvider.setOptions({
-//             app_id: 'IaV356sfi2gAreQwtVsB',
-//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
-//             useHTTPS: true,
-//             apiVersion: '3.0',
-//             useCIT: true,
-//             mapTileConfig: {
-//                 scheme: 'reduced.day',
-//                 size: 256,
-//                 format: 'png8',
-//                 metadataQueryParams: {}
-//             }
-//         });
-//     }]);
-// })();
-//
-
-(function() {
-	identify('config', 'http.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
-		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
-
-		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-	});
-
-})();
-(function() {
-	identify('config', 'local_storage.js');
-
-	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
-		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-	});
-
-})();
-(function () {
-  identify('config', 'on_init.js');
-
-  angular
-    .module('BuscaAtivaEscolar')
-    .run(function (
-      $cookies,
-      $rootScope,
-      $state,
-      Identity,
-      Auth,
-      Config,
-      StaticData
-    ) {
-      $.material.init();
-
-      $rootScope.$on('unauthorized', function () {
-        Auth.logout();
-        $state.go('login');
-      });
-    });
-})();
-
-(function () {
-    identify('config', 'states.js');
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
-
-            $locationProvider.html5Mode({
-                    enabled: true,
-                    requireBase: true
-                }
-            );
-            $urlRouterProvider.otherwise('/dashboard');
-
-            $stateProvider
-                .state('login', {
-                    url: '/login',
-                    templateUrl: '/views/login.html',
-                    controller: 'LoginCtrl',
-                    unauthenticated: true
-                })
-                .state('dashboard', {
-                    url: '/dashboard',
-                    templateUrl: '/views/dashboard.html',
-                    controller: 'DashboardCtrl'
-                })
-                .state('developer_mode', {
-                    url: '/developer_mode',
-                    templateUrl: '/views/developer/developer_dashboard.html',
-                    controller: 'DeveloperCtrl',
-                    unauthenticated: true
-
-                })
-                .state('settings', {
-                    url: '/settings?step',
-                    templateUrl: '/views/settings/manage_settings.html',
-                    controller: 'SettingsCtrl'
-                })
-                .state('settings.parameterize_group', {
-                    url: '/parameterize_group/{group_id}',
-                    templateUrl: '/views/settings/parameterize_group.html',
-                    controller: 'ParameterizeGroupCtrl'
-                })
-                .state('credits', {
-                    url: '/credits',
-                    templateUrl: '/views/static/credits.html',
-                    controller: 'CreditsCtrl',
-                    unauthenticated: true
-                })
-                .state('tenant_signup', {
-                    url: '/tenant_signup',
-                    templateUrl: '/views/tenant_signup/main.html',
-                    controller: 'TenantSignupCtrl',
-                    unauthenticated: true
-                })
-                .state('state_signup', {
-                    url: '/state_signup',
-                    templateUrl: '/views/state_signup/main.html',
-                    controller: 'StateSignupCtrl',
-                    unauthenticated: true
-                })
-
-        });
-
-})();
-
-(function() {
-	identify('config', 'toasts.js');
-
-	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-		ngToastProvider.configure({
-			verticalPosition: 'top',
-			horizontalPosition: 'right',
-			maxNumber: 8,
-			animation: 'slide',
-			dismissButton: true,
-			timeout: 6000
-		});
-	});
-
-})();
-(function () {
 
     angular.module('BuscaAtivaEscolar').directive('casesMap', function ($rootScope, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
 
@@ -3293,55 +3075,57 @@
 
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Report, Charts, Identity) {
+    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function(moment, Platform, Reports, Report, Charts, Identity) {
 
-		function init(scope, element, attrs) {
+        function init(scope, element, attrs) {
 
-			var metrics = {};
+            var metrics = {};
 
-			function refreshMetrics() {
+            function refreshMetrics() {
 
-				if( attrs.ibgeId && attrs.uf){
-					Report.getStatusCityByCountry({ibge_id: attrs.ibgeId, uf: attrs.uf}, function (data) {
-						metrics = data._data;
-					});
-				}else{
-					Report.getStatusCity({city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf}, function (data) {
-						metrics = data._data;
-					});
-				}
+                if (attrs.ibgeId && attrs.uf) {
+                    Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function(data) {
+                        metrics = data._data;
+                        metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
+                    });
+                } else {
+                    Report.getStatusCity({ city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf }, function(data) {
+                        metrics = data._data;
+                        metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
+                    });
+                }
 
-			}
+            }
 
-			scope.getMetrics = function() {
-				return metrics;
-			};
+            scope.getMetrics = function() {
+                return metrics;
+            };
 
-			Platform.whenReady(function () {
-				refreshMetrics();
-			});
+            Platform.whenReady(function() {
+                refreshMetrics();
+            });
 
-			scope.$watch('objectToInjectInMetrics', function (value) {
-				if(value){
-					scope.Obj = value;
-					scope.Obj.invoke = function(ibgeId){
-						attrs.ibgeId = ibgeId;
-						refreshMetrics();
-					}
-				}
-			});
+            scope.$watch('objectToInjectInMetrics', function(value) {
+                if (value) {
+                    scope.Obj = value;
+                    scope.Obj.invoke = function(ibgeId) {
+                        attrs.ibgeId = ibgeId;
+                        refreshMetrics();
+                    }
+                }
+            });
 
-		}
+        }
 
-		return {
-			link: init,
-			scope: {
-				objectToInjectInMetrics: '='
-			},
-			replace: true,
-			templateUrl: '/views/components/metrics_overview.html'
-		};
-	});
+        return {
+            link: init,
+            scope: {
+                objectToInjectInMetrics: '='
+            },
+            replace: true,
+            templateUrl: '/views/components/metrics_overview.html'
+        };
+    });
 
 })();
 (function() {
@@ -4124,6 +3908,224 @@
 
 })();
 
+(function () {
+  identify('config', 'charts.js');
+  angular.module('BuscaAtivaEscolar').run(function (Config) {
+    Highcharts.setOptions({
+      lang: {
+        months: [
+          'Janeiro',
+          'Fevereiro',
+          'Março',
+          'Abril',
+          'Maio',
+          'Junho',
+          'Julho',
+          'Agosto',
+          'Setembro',
+          'Outubro',
+          'Novembro',
+          'Dezembro',
+        ],
+        shortMonths: [
+          'Jan',
+          'Fev',
+          'Mar',
+          'Abr',
+          'Mai',
+          'Jun',
+          'Jul',
+          'Ago',
+          'Set',
+          'Out',
+          'Nov',
+          'Dez',
+        ],
+        weekdays: [
+          'Domingo',
+          'Segunda',
+          'Terça',
+          'Quarta',
+          'Quinta',
+          'Sexta',
+          'Sábado',
+        ],
+        loading: ['Atualizando o gráfico...'],
+        contextButtonTitle: 'Exportar gráfico',
+        decimalPoint: ',',
+        thousandsSep: '.',
+        downloadJPEG: 'Baixar imagem JPEG',
+        downloadPDF: 'Baixar arquivo PDF',
+        downloadPNG: 'Baixar imagem PNG',
+        downloadSVG: 'Baixar vetor SVG',
+        printChart: 'Imprimir gráfico',
+        rangeSelectorFrom: 'De',
+        rangeSelectorTo: 'Para',
+        rangeSelectorZoom: 'Zoom',
+        resetZoom: 'Voltar zoom',
+        resetZoomTitle: 'Voltar zoom para nível 1:1'
+      }
+    });
+  });
+})();
+
+(function() {
+	identify('config', 'google_maps.js');
+
+	angular.module('BuscaAtivaEscolar').config(function (uiGmapGoogleMapApiProvider) {
+		/*uiGmapGoogleMapApiProvider.configure({
+			key: 'AIzaSyBDzaqPtU-q7aHGed40wS6R2qEjVFHwvGA',
+			libraries: 'places,visualization'
+		});*/
+	});
+
+})();
+// (function () {
+//     identify('config', 'here_api.js');
+//
+//     angular.module('BuscaAtivaEscolar').config(["HereMapsConfigProvider", function (HereMapsConfigProvider) {
+//         HereMapsConfigProvider.setOptions({
+//             app_id: 'IaV356sfi2gAreQwtVsB',
+//             app_code: 'cVhEI2VX0p26k_Rdz_NpbL-zV1eo5rDkTe2BoeJcE9U',
+//             useHTTPS: true,
+//             apiVersion: '3.0',
+//             useCIT: true,
+//             mapTileConfig: {
+//                 scheme: 'reduced.day',
+//                 size: 256,
+//                 format: 'png8',
+//                 metadataQueryParams: {}
+//             }
+//         });
+//     }]);
+// })();
+//
+
+(function() {
+	identify('config', 'http.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($httpProvider) {
+		$httpProvider.defaults.headers.common = {"Content-Type": "application/json"};
+
+		$httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+		$httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+		$httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+		$httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+		$httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+	});
+
+})();
+(function() {
+	identify('config', 'local_storage.js');
+
+	angular.module('BuscaAtivaEscolar').config(function ($localStorageProvider) {
+		$localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+	});
+
+})();
+(function () {
+  identify('config', 'on_init.js');
+
+  angular
+    .module('BuscaAtivaEscolar')
+    .run(function (
+      $cookies,
+      $rootScope,
+      $state,
+      Identity,
+      Auth,
+      Config,
+      StaticData
+    ) {
+      $.material.init();
+
+      $rootScope.$on('unauthorized', function () {
+        Auth.logout();
+        $state.go('login');
+      });
+    });
+})();
+
+(function () {
+    identify('config', 'states.js');
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function ($stateProvider, $locationProvider, $urlRouterProvider) {
+
+            $locationProvider.html5Mode({
+                    enabled: true,
+                    requireBase: true
+                }
+            );
+            $urlRouterProvider.otherwise('/dashboard');
+
+            $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/login.html',
+                    controller: 'LoginCtrl',
+                    unauthenticated: true
+                })
+                .state('dashboard', {
+                    url: '/dashboard',
+                    templateUrl: '/views/dashboard.html',
+                    controller: 'DashboardCtrl'
+                })
+                .state('developer_mode', {
+                    url: '/developer_mode',
+                    templateUrl: '/views/developer/developer_dashboard.html',
+                    controller: 'DeveloperCtrl',
+                    unauthenticated: true
+
+                })
+                .state('settings', {
+                    url: '/settings?step',
+                    templateUrl: '/views/settings/manage_settings.html',
+                    controller: 'SettingsCtrl'
+                })
+                .state('settings.parameterize_group', {
+                    url: '/parameterize_group/{group_id}',
+                    templateUrl: '/views/settings/parameterize_group.html',
+                    controller: 'ParameterizeGroupCtrl'
+                })
+                .state('credits', {
+                    url: '/credits',
+                    templateUrl: '/views/static/credits.html',
+                    controller: 'CreditsCtrl',
+                    unauthenticated: true
+                })
+                .state('tenant_signup', {
+                    url: '/tenant_signup',
+                    templateUrl: '/views/tenant_signup/main.html',
+                    controller: 'TenantSignupCtrl',
+                    unauthenticated: true
+                })
+                .state('state_signup', {
+                    url: '/state_signup',
+                    templateUrl: '/views/state_signup/main.html',
+                    controller: 'StateSignupCtrl',
+                    unauthenticated: true
+                })
+
+        });
+
+})();
+
+(function() {
+	identify('config', 'toasts.js');
+
+	angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+		ngToastProvider.configure({
+			verticalPosition: 'top',
+			horizontalPosition: 'right',
+			maxNumber: 8,
+			animation: 'slide',
+			dismissButton: true,
+			timeout: 6000
+		});
+	});
+
+})();
 (function() {
 
 	angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function ($scope, $rootScope, AppDependencies) {
@@ -6181,6 +6183,226 @@ Highcharts.maps["countries/br/br-all"] = {
 		};
 	})
 })();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
+
+			this.request = function (config) {
+
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
+
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+
+					if(error && error.error === 'token_refresh_fail') {
+						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
+						$rootScope.$broadcast('unauthorized');
+					}
+
+					throw error;
+				});
+
+			};
+
+			this.responseError = function (response) {
+
+				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
+					$rootScope.$broadcast('unauthorized');
+				}
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			//console.log("[router] to=", toState, toParams);
+
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('HandleErrorResponsesInterceptor', function () {
+
+            function handleResponse(response) {
+
+                if (!response) {
+                    console.error('[interceptors.server_error] Empty response received!');
+                    return response;
+                }
+
+                if (!response.data) {
+                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
+                    return response;
+                }
+
+                // Handled by Exception interceptor
+                if (response.data.reason && response.data.reason === 'exception') return response;
+
+                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
+
+                if (acceptableErrors.indexOf(response.status) === -1) {
+                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
+                    console.log(response.data.error)
+                    if (response.data.error === 'token_invalid') {
+                        window.localStorage.clear();
+                        window.location.href = "/";
+                    }
+                    return response;
+                }
+
+                return response;
+
+            }
+
+            this.response = handleResponse;
+            this.responseError = handleResponse;
+
+        });
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function (Utils) {
+
+			function handleResponse(response) {
+
+				if(!response) return response;
+				if(!response.data) return response;
+				if(!response.data.reason) return response;
+				if(response.data.reason !== 'exception') return response;
+
+				var knownRootPaths = [
+					'/home/vagrant/projects/busca-ativa-escolar-api/',
+					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
+				];
+
+				if(response.data.exception.stack) {
+					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
+
+					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
+
+					if(messages) {
+
+						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
+
+						for(var i in messages) {
+							if(!messages.hasOwnProperty(i)) continue;
+							//console.log(messages[i]);
+						}
+
+						console.endGroup();
+					}
+
+					return response;
+				}
+
+				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
+
+			this.request = function (config) {
+
+				// Fixes weird bug with ng-file-uploader clearing the content type globally
+				//config.headers['Content-Type'] = "application/json";
+
+				if(!config.url) return config;
+
+				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
+				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
+
+				return config;
+
+			};
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
+
+			this.request = function (config) {
+
+				if(config.data && config.data.$hide_loading_feedback) return config;
+				if(config.params && config.params.$hide_loading_feedback) return config;
+
+				API.pushRequest();
+
+				return config;
+			};
+
+			this.response = function (response) {
+
+				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
+				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
+
+				API.popRequest();
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			$rootScope.previousState = fromState;
+			$rootScope.previousStateParams = fromParams;
+			$rootScope.currentState = toState;
+			$rootScope.currentStateParams = toParams;
+		}
+
+	});
+})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -6722,226 +6944,6 @@ Highcharts.maps["countries/br/br-all"] = {
             };
 
         });
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
-
-			this.request = function (config) {
-
-				// No indication sent in headers
-				if(!config.headers['X-Require-Auth']) return config;
-
-				// Auth is optional, but not logged in
-				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
-
-				// Auth is neither optional nor required (header has invalid value)
-				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
-
-				// Auth is required
-				return Identity.provideToken().then(function (access_token) {
-					config.headers.Authorization = 'Bearer ' + access_token;
-					return config;
-				}, function (error) {
-					console.error("[auth.interceptor] Token provider returned error: ", error);
-
-					if(error && error.error === 'token_refresh_fail') {
-						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
-						$rootScope.$broadcast('unauthorized');
-					}
-
-					throw error;
-				});
-
-			};
-
-			this.responseError = function (response) {
-
-				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
-					$rootScope.$broadcast('unauthorized');
-				}
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			//console.log("[router] to=", toState, toParams);
-
-			if(toState.unauthenticated) return;
-			if(Identity.isLoggedIn()) return;
-
-			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
-
-			event.preventDefault();
-			$state.go('login');
-		}
-
-	});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .service('HandleErrorResponsesInterceptor', function () {
-
-            function handleResponse(response) {
-
-                if (!response) {
-                    console.error('[interceptors.server_error] Empty response received!');
-                    return response;
-                }
-
-                if (!response.data) {
-                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
-                    return response;
-                }
-
-                // Handled by Exception interceptor
-                if (response.data.reason && response.data.reason === 'exception') return response;
-
-                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
-
-                if (acceptableErrors.indexOf(response.status) === -1) {
-                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
-                    console.log(response.data.error)
-                    if (response.data.error === 'token_invalid') {
-                        window.localStorage.clear();
-                        window.location.href = "/";
-                    }
-                    return response;
-                }
-
-                return response;
-
-            }
-
-            this.response = handleResponse;
-            this.responseError = handleResponse;
-
-        });
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('HandleExceptionResponsesInterceptor', function (Utils) {
-
-			function handleResponse(response) {
-
-				if(!response) return response;
-				if(!response.data) return response;
-				if(!response.data.reason) return response;
-				if(response.data.reason !== 'exception') return response;
-
-				var knownRootPaths = [
-					'/home/vagrant/projects/busca-ativa-escolar-api/',
-					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
-				];
-
-				if(response.data.exception.stack) {
-					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
-					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
-
-					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
-
-					if(messages) {
-
-						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
-
-						for(var i in messages) {
-							if(!messages.hasOwnProperty(i)) continue;
-							//console.log(messages[i]);
-						}
-
-						console.endGroup();
-					}
-
-					return response;
-				}
-
-				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
-
-				return response;
-
-			}
-
-			this.response = handleResponse;
-			this.responseError = handleResponse;
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
-
-			this.request = function (config) {
-
-				// Fixes weird bug with ng-file-uploader clearing the content type globally
-				//config.headers['Content-Type'] = "application/json";
-
-				if(!config.url) return config;
-
-				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
-				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
-
-				return config;
-
-			};
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
-
-			this.request = function (config) {
-
-				if(config.data && config.data.$hide_loading_feedback) return config;
-				if(config.params && config.params.$hide_loading_feedback) return config;
-
-				API.pushRequest();
-
-				return config;
-			};
-
-			this.response = function (response) {
-
-				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
-				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
-
-				API.popRequest();
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			$rootScope.previousState = fromState;
-			$rootScope.previousStateParams = fromParams;
-			$rootScope.currentState = toState;
-			$rootScope.currentStateParams = toParams;
-		}
-
-	});
 })();
 (function() {
 
