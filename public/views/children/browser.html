@@ -120,7 +120,7 @@
                 <thead style="white-space:nowrap;">
                     <tr>
                         <th>
-                            <div class="checkbox">
+                            <div class="checkbox" style="margin-bottom:0px !important;">
                                 <label>
                                     <input type="checkbox" ng-model="check_all_cases" ng-change="onCheckSelectAllCases()">
                                 </label>
@@ -186,27 +186,27 @@
 
                             <span class="label label-danger" ng-show="child.case_status == 'cancelled'">
 								<span ng-show="child.cancel_reason == 'duplicate'" uib-popover="Motivo: Caso duplicado" popover-trigger="'mouseenter'">Cancelado</span>
-                                <span ng-show="child.cancel_reason == 'death'" uib-popover="Motivo: Óbito" popover-trigger="'mouseenter'">Cancelado</span>
-                                <span ng-show="child.cancel_reason == 'not_found'" uib-popover="Motivo: Criança não foi encontrada" popover-trigger="'mouseenter'">Cancelado</span>
-                                <span ng-show="child.cancel_reason == 'wrongful_insertion'" uib-popover="Motivo: Caso inserido por engano" popover-trigger="'mouseenter'">Cancelado</span>
-                                <span ng-show="child.cancel_reason == 'rejected_alert'" uib-popover="Motivo: Alerta rejeitado" popover-trigger="'mouseenter'">Cancelado</span>
-                                <span ng-show="child.cancel_reason == 'city_transfer'" uib-popover="Motivo: Mudança de município/ estado" popover-trigger="'mouseenter'">Cancelado</span>
+                            <span ng-show="child.cancel_reason == 'death'" uib-popover="Motivo: Óbito" popover-trigger="'mouseenter'">Cancelado</span>
+                            <span ng-show="child.cancel_reason == 'not_found'" uib-popover="Motivo: Criança não foi encontrada" popover-trigger="'mouseenter'">Cancelado</span>
+                            <span ng-show="child.cancel_reason == 'wrongful_insertion'" uib-popover="Motivo: Caso inserido por engano" popover-trigger="'mouseenter'">Cancelado</span>
+                            <span ng-show="child.cancel_reason == 'rejected_alert'" uib-popover="Motivo: Alerta rejeitado" popover-trigger="'mouseenter'">Cancelado</span>
+                            <span ng-show="child.cancel_reason == 'city_transfer'" uib-popover="Motivo: Mudança de município/ estado" popover-trigger="'mouseenter'">Cancelado</span>
                             </span>
 
                             <span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
 
                             <span ng-if="child.case_status === 'in_progress'">
                                 <span class="label label-danger" ng-if="child.is_late" uib-popover="Atrasado" popover-trigger="'mouseenter'"><i class="fa fa-clock-o"></i></span>
-                                <span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'" uib-popover="Em andamento" popover-trigger="'mouseenter'"><i class="fa fa-clock-o"></i></span>
-                                <span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'" uib-popover="Em observação" popover-trigger="'mouseenter'"><i class="fa fa-search"></i></span>
-                                <span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'" uib-popover="Concluído" popover-trigger="'mouseenter'"><i class="fa fa-check"></i></span>
+                            <span class="label label-info" ng-if="!child.is_late && child.child_status === 'out_of_school'" uib-popover="Em andamento" popover-trigger="'mouseenter'"><i class="fa fa-clock-o"></i></span>
+                            <span class="label label-info" ng-if="!child.is_late && child.child_status === 'in_observation'" uib-popover="Em observação" popover-trigger="'mouseenter'"><i class="fa fa-search"></i></span>
+                            <span class="label label-success" ng-if="!child.is_late && child.child_status === 'in_school'" uib-popover="Concluído" popover-trigger="'mouseenter'"><i class="fa fa-check"></i></span>
                             </span>
 
                             <span class="label label-danger" ng-show="child.case_status == 'transferred'">Transferido</span>
 
                             <span class="label label-danger" uib-popover="Alto risco" popover-trigger="'mouseenter'" ng-if="child.risk_level === 'high'">A</span>
                             <span class="label label-warning" uib-popover="Médio risco" popover-trigger="'mouseenter'" ng-if="child.risk_level === 'medium'">M</span>
-                            <span class="label label-default" uib-popover="Baixo risco" popover-trigger="'mouseenter'"ng-if="child.risk_level === 'low'">B</span>
+                            <span class="label label-default" uib-popover="Baixo risco" popover-trigger="'mouseenter'" ng-if="child.risk_level === 'low'">B</span>
 
                         </td>
                         <td>
@@ -225,7 +225,7 @@
         <div class="panel-footer">
             <p class="text-right">
 
-                 <span class="btn btn-success" ng-show="lastOrder.date && identity.can('cases.export.all')">
+                <span class="btn btn-success" ng-show="lastOrder.date && identity.can('cases.export.all')">
                     Última solicitação feita em {{ lastOrder.date * 1000 | date:'dd/MM/yyyy | HH:mm:ss' }}
                 </span>
 
