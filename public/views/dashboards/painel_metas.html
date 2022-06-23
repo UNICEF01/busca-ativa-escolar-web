@@ -341,6 +341,6 @@
 
     <div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
 
-    <span class="badge" style="color: white; background-color: #d9534f;">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
+    <span class="badge" style="color: white; background-color: #d9534f;" ng-if="otherData.goal_box.goal > 0">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
 
 </div>
