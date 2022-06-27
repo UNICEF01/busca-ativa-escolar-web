@@ -81,7 +81,7 @@
                         </a>
                     </li>
 
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                    <li ng-if="identity.can('alerts.spawn') && identity.can('see.tools')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-wrench"></i> Ferramentas
                             <span class="caret"></span>
