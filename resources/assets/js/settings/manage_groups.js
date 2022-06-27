@@ -3,6 +3,8 @@
     angular.module('BuscaAtivaEscolar')
         .controller('ManageGroupsCtrl', function($scope, $window, $filter, ngToast, Platform, Identity, Groups, Modals) {
 
+            $scope.identity = Identity;
+
             $scope.groups = []
             $scope.getName = function(index) {
                 document.getElementById('group_for_edition_two').value = $scope.groups[index - 1].name
@@ -62,7 +64,6 @@
                     $scope.groupForEditionTwo = { id: null, name: null, parent_id: $scope.currentUser.tenant.primary_group_id };
                 });
             };
-
 
             $scope.editGroupTwo = function(group) {
                 $scope.groupForEditionTwo = angular.copy(group);
