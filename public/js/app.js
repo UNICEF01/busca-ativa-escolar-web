@@ -725,25 +725,38 @@
         );
 })();
 (function() {
-    angular.module("BuscaAtivaEscolar")
-        .controller('ChildCasesCtrl', ChildCasesCtrl)
-        .controller('ChildCaseStepCtrl', ChildCaseStepCtrl)
+    angular
+        .module("BuscaAtivaEscolar")
+        .controller("ChildCasesCtrl", ChildCasesCtrl)
+        .controller("ChildCaseStepCtrl", ChildCaseStepCtrl)
         .config(function($stateProvider) {
             $stateProvider
-                .state('child_viewer.cases', {
-                    url: '/cases',
-                    templateUrl: '/views/children/view/steps.html',
-                    controller: 'ChildCasesCtrl'
+                .state("child_viewer.cases", {
+                    url: "/cases",
+                    templateUrl: "/views/children/view/steps.html",
+                    controller: "ChildCasesCtrl",
                 })
-                .state('child_viewer.cases.view_step', {
-                    url: '/{step_type}/{step_id}',
-                    templateUrl: '/views/children/view/case_info.html',
-                    controller: 'ChildCaseStepCtrl'
-                })
+                .state("child_viewer.cases.view_step", {
+                    url: "/{step_type}/{step_id}",
+                    templateUrl: "/views/children/view/case_info.html",
+                    controller: "ChildCaseStepCtrl",
+                });
         });
 
-    function ChildCasesCtrl($q, $timeout, $scope, $state, $stateParams, ngToast, Identity, Utils, Modals, Children, CaseSteps, Decorators) {
-
+    function ChildCasesCtrl(
+        $q,
+        $timeout,
+        $scope,
+        $state,
+        $stateParams,
+        ngToast,
+        Identity,
+        Utils,
+        Modals,
+        Children,
+        CaseSteps,
+        Decorators
+    ) {
         $scope.Decorators = Decorators;
         $scope.Children = Children;
         $scope.CaseSteps = CaseSteps;
@@ -761,7 +774,7 @@
         function openCurrentCase(child) {
             $scope.openedCase = child.cases.find(function(item) {
                 if ($stateParams.case_id) return item.id === $stateParams.case_id;
-                return item.case_status === 'in_progress';
+                return item.case_status === "in_progress";
             });
 
             // Don't try to open a step; UI-Router will already open the one in the URL
@@ -769,7 +782,7 @@
             if (!$scope.openedCase) return;
 
             var stepToOpen = $scope.openedCase.steps.find(function(step) {
-                return ($scope.openedCase.current_step_id === step.id);
+                return $scope.openedCase.current_step_id === step.id;
             });
 
             $scope.openStep(stepToOpen);
@@ -785,44 +798,49 @@
         };
 
         $scope.renderStepStatusClass = function(childCase, step) {
+            var toggleClass = step.id === $scope.openStepID ? " step-open" : "";
 
-            var toggleClass = (step.id === $scope.openStepID) ? ' step-open' : '';
-
-            if (step.is_completed) return 'step-completed' + toggleClass;
-            if (childCase.current_step_id === step.id) return 'step-current' + toggleClass;
-            return 'step-pending' + toggleClass;
+            if (step.is_completed) return "step-completed" + toggleClass;
+            if (childCase.current_step_id === step.id)
+                return "step-current" + toggleClass;
+            return "step-pending" + toggleClass;
         };
 
         $scope.canOpenStep = function(step) {
             if (step.is_completed || step.id === $scope.openedCase.current_step_id) {
-                return Identity.can('cases.step.' + step.slug)
+                return Identity.can("cases.step." + step.slug);
             }
             return false;
         };
 
         $scope.canEditStep = function(step) {
-            return !step.is_completed && step.slug !== 'alerta';
+            return !step.is_completed && step.slug !== "alerta";
         };
 
         $scope.openStep = function(selectedStep) {
-
             if (!$scope.canOpenStep(selectedStep)) return false;
 
             $scope.openStepID = selectedStep.id;
 
-
-
-            $state.go('child_viewer.cases.view_step', { step_type: selectedStep.step_type, step_id: selectedStep.id })
+            $state
+                .go("child_viewer.cases.view_step", {
+                    step_type: selectedStep.step_type,
+                    step_id: selectedStep.id,
+                })
                 .then(function() {
                     $timeout(refreshGoogleMap, 1000);
                 });
-
         };
 
         $scope.canCompleteStep = function(childCase, step) {
-            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Alerta') return false;
-            if (!Identity.can('cases.step.' + step.slug)) return false;
-            return (step.id === childCase.current_step_id && !step.is_completed && !step.is_pending_assignment);
+            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Alerta")
+                return false;
+            if (!Identity.can("cases.step." + step.slug)) return false;
+            return (
+                step.id === childCase.current_step_id &&
+                !step.is_completed &&
+                !step.is_pending_assignment
+            );
         };
 
         $scope.isPendingAssignment = function(step) {
@@ -831,63 +849,72 @@
 
         $scope.hasNextStep = function(step) {
             if (!step) return false;
-            if (step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && step.report_index === 4) return false;
+            if (
+                step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" &&
+                step.report_index === 4
+            )
+                return false;
             return true;
         };
 
         $scope.cancelCase = function() {
-
             Modals.show(Modals.CaseCancel())
                 .then(function(reason) {
                     if (!reason) return $q.reject();
-                    return Children.cancelCase({ case_id: $scope.openedCase.id, reason: reason })
+                    return Children.cancelCase({
+                        case_id: $scope.openedCase.id,
+                        reason: reason,
+                    });
                 })
                 .then(function() {
-                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-                    $state.go('child_viewer.cases', { child_id: $scope.child.id }, { reload: true });
+                    ngToast.success(
+                        "A última etapa de observação foi concluída, e o caso foi encerrado!"
+                    );
+                    $state.go(
+                        "child_viewer.cases", { child_id: $scope.child.id }, { reload: true }
+                    );
                 });
-
         };
 
         $scope.reopenCase = function() {
-
             Modals.show(Modals.CaseReopen($scope.identity.getType()))
 
             .then(function(reason) {
                 if (!reason) return $q.reject();
 
-                if ($scope.identity.getType() === 'coordenador_operacional') {
-
+                if ($scope.identity.getType() === "coordenador_operacional") {
                     Children.reopenCase({
                         case_id: $scope.openedCase.id,
-                        reason: reason
+                        reason: reason,
                     }).$promise.then(function(res) {
-                        if (res.status === 'success') {
-                            ngToast.success(res.result + '! Redirecionando para o novo caso...');
+                        if (res.status === "success") {
+                            ngToast.success(
+                                res.result + "! Redirecionando para o novo caso..."
+                            );
                             setTimeout(function() {
-                                window.location = 'children/view/' + res.child_id + '/consolidated';
+                                window.location =
+                                    "children/view/" + res.child_id + "/consolidated";
                             }, 4000);
-
                         } else {
                             ngToast.danger(res.result);
                         }
                     });
                 }
 
-                if ($scope.identity.getType() === 'supervisor_institucional') {
+                if ($scope.identity.getType() === "supervisor_institucional") {
                     Children.requestReopenCase({
                         case_id: $scope.openedCase.id,
-                        reason: reason
+                        reason: reason,
                     }).$promise.then(function(res) {
-
-                        if (res.status === 'success') {
+                        if (res.status === "success") {
                             ngToast.success(res.result);
                             setTimeout(function() {
-                                window.location = 'children/view/' + $scope.child_id + '/consolidated';
+                                window.location =
+                                    "children/view/" + $scope.child_id + "/consolidated";
                             }, 3000);
                         }
 
-                        if (res.status === 'error') {
+                        if (res.status === "error") {
                             ngToast.danger(res.result);
                         }
                     });
@@ -898,31 +925,31 @@
         };
 
         $scope.transferCase = function() {
+            Modals.show(Modals.CaseTransfer($scope.identity.getType()))
+                .then(function(response) {
+                    if (!response) return $q.reject();
 
-            Modals.show(Modals.CaseTransfer($scope.identity.getType())).then(function(response) {
-                if (!response) return $q.reject();
-
-                if ($scope.identity.getType() === 'coordenador_operacional') {
-                    Children.requestTransferCase({
-                        tenant_id: response.tenant_id,
-                        case_id: $scope.openedCase.id,
-                        reason: response.reason,
-                        city_id: response.city_id
-                    }).$promise.then(function(res) {
-                        if (res.status === 'success') {
-                            ngToast.success(res.result + '! Você será redirecionado.');
-                            setTimeout(function() {
-                                window.location = 'children';
-                            }, 4000);
-
-                        } else {
-                            ngToast.danger(res.result);
-                        }
-                    });
-                } else {
-                    ngToast.warning('Você não pode realizar essa ação.');
-                }
-            }).then(function() {});
+                    if ($scope.identity.getType() === "coordenador_operacional") {
+                        Children.requestTransferCase({
+                            tenant_id: response.tenant_id,
+                            case_id: $scope.openedCase.id,
+                            reason: response.reason,
+                            city_id: response.city_id,
+                        }).$promise.then(function(res) {
+                            if (res.status === "success") {
+                                ngToast.success(res.result + "! Você será redirecionado.");
+                                setTimeout(function() {
+                                    window.location = "children";
+                                }, 4000);
+                            } else {
+                                ngToast.danger(res.result);
+                            }
+                        });
+                    } else {
+                        ngToast.warning("Você não pode realizar essa ação.");
+                    }
+                })
+                .then(function() {});
         };
 
         function refreshGoogleMap() {
@@ -935,55 +962,83 @@
         }
 
         $scope.completeStep = function(step) {
-
-            var question = 'Tem certeza que deseja prosseguir para a próxima etapa?';
-            var explanation = 'Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.';
+            var question = "Tem certeza que deseja prosseguir para a próxima etapa?";
+            var explanation =
+                "Ao progredir de etapa, a etapa atual será marcada como concluída. Os dados preenchidos serão salvos.";
 
             if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica") {
-                question = 'Tem certeza que deseja concluir a Análise Técnica?';
-                explanation = 'Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.';
+                question = "Tem certeza que deseja concluir a Análise Técnica?";
+                explanation =
+                    "Ao dizer SIM, a Análise Técnica será marcada como concluída e nenhuma informação poderá ser editada. Os dados preenchidos serão salvos.";
             }
 
-            if (step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" && step.report_index === 4) {
-                question = 'Tem certeza que deseja concluir a última etapa de observação?';
-                explanation = 'O caso será considerado concluído e os dados preenchidos serão salvos.';
+            if (
+                step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" &&
+                step.report_index === 4
+            ) {
+                question =
+                    "Tem certeza que deseja concluir a última etapa de observação?";
+                explanation =
+                    "O caso será considerado concluído e os dados preenchidos serão salvos.";
             }
 
-            Modals.show(Modals.Confirm(question, explanation)).then(function() {
-                return CaseSteps.complete({ type: step.step_type, id: step.id }).$promise;
-            }).then(function(response) {
+            Modals.show(Modals.Confirm(question, explanation))
+                .then(function() {
+                    return CaseSteps.complete({
+                        type: step.step_type,
+                        id: step.id,
+                    }).$promise;
+                })
+                .then(function(response) {
+                    if (response.messages) {
+                        ngToast.danger(
+                            "É necessário preencher todos os campos obrigatórios para concluir essa etapa."
+                        );
+                        Utils.displayValidationErrors(response);
+                        $state.go("child_viewer.cases.view_step", {
+                            step_type: step.step_type,
+                            step_id: step.id,
+                        });
+                        return;
+                    }
 
-                if (response.messages) {
-                    ngToast.danger("É necessário preencher todos os campos obrigatórios para concluir essa etapa.");
-                    Utils.displayValidationErrors(response);
-                    $state.go('child_viewer.cases.view_step', { step_type: step.step_type, step_id: step.id });
-                    return;
-                }
+                    if (response.status !== "ok") {
+                        ngToast.danger(
+                            "Ocorreu um erro ao concluir a etapa! (reason=" +
+                            response.reason +
+                            ")"
+                        );
+                        return;
+                    }
 
-                if (response.status !== "ok") {
-                    ngToast.danger("Ocorreu um erro ao concluir a etapa! (reason=" + response.reason + ")")
-                    return;
-                }
+                    if (!response.hasNext) {
+                        ngToast.success(
+                            "A última etapa de observação foi concluída, e o caso foi encerrado!"
+                        );
+                        $state.go(
+                            "child_viewer.cases", { child_id: $scope.child.id }, { reload: true }
+                        );
+                        return;
+                    }
 
-                if (!response.hasNext) {
-                    ngToast.success("A última etapa de observação foi concluída, e o caso foi encerrado!");
-                    $state.go('child_viewer.cases', { child_id: $scope.child.id }, { reload: true });
-                    return;
-                }
-
-                ngToast.success("Etapa concluída! A próxima etapa já está disponível para início");
-                $state.go('child_viewer.cases.view_step', {
-                    step_type: response.nextStep.step_type,
-                    step_id: response.nextStep.id
-                }, { reload: true });
-
-            })
+                    ngToast.success(
+                        "Etapa concluída! A próxima etapa já está disponível para início"
+                    );
+                    $state.go(
+                        "child_viewer.cases.view_step", {
+                            step_type: response.nextStep.step_type,
+                            step_id: response.nextStep.id,
+                        }, { reload: true }
+                    );
+                });
         };
 
         $scope.scopeOfCase = function() {
             if ($scope.step.assigned_user) {
-                if ($scope.step.assigned_user.type === "coordenador_estadual" ||
-                    $scope.step.assigned_user.type === "supervisor_estadual") {
+                if (
+                    $scope.step.assigned_user.type === "coordenador_estadual" ||
+                    $scope.step.assigned_user.type === "supervisor_estadual"
+                ) {
                     return "state";
                 } else {
                     return "municipality";
@@ -992,55 +1047,107 @@
         };
 
         $scope.canTransferCase = function() {
-            if (!$scope.identity.getCurrentUser().tenant_id) { return false; }
-            if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
+            if (!$scope.identity.getCurrentUser().tenant_id) {
+                return false;
+            }
+            if (
+                $scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id
+            ) {
+                return false;
+            }
             if ($scope.openedCase) {
-                if ($scope.openedCase.case_status !== 'in_progress') { return false; }
-                if ($scope.openedCase.currentStep.assigned_user) {
-                    if ($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' || $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') { return false; }
+                if ($scope.openedCase.case_status !== "in_progress") {
+                    return false;
                 }
-                if ($scope.identity.can('cases.transfer') && $scope.openedCase.currentStep.slug !== 'alerta') { return true; }
+                if ($scope.openedCase.currentStep.assigned_user) {
+                    if (
+                        $scope.openedCase.currentStep.assigned_user.type ==
+                        "coordenador_estadual" ||
+                        $scope.openedCase.currentStep.assigned_user.type ==
+                        "supervisor_estadual"
+                    ) {
+                        return false;
+                    }
+                }
+                if (
+                    $scope.identity.can("cases.transfer") &&
+                    $scope.openedCase.currentStep.slug !== "alerta"
+                ) {
+                    return true;
+                }
             }
             return false;
         };
 
         $scope.canCancelCase = function() {
             if ($scope.identity.getCurrentUser().tenant_id) {
-                if ($scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id) { return false; }
+                if (
+                    $scope.identity.getCurrentUser().tenant_id !== $scope.child.tenant_id
+                ) {
+                    return false;
+                }
             }
             if ($scope.openedCase) {
-                if ($scope.openedCase.case_status !== 'in_progress') { return false; }
+                if ($scope.openedCase.case_status !== "in_progress") {
+                    return false;
+                }
 
                 if (!$scope.openedCase.currentStep.assigned_user) {
                     return true;
                 } else {
-                    if (($scope.openedCase.currentStep.assigned_user.type == 'coordenador_estadual' ||
-                            $scope.openedCase.currentStep.assigned_user.type == 'supervisor_estadual') &&
-                        !$scope.identity.getCurrentUser().tenant_id) {
+                    if (
+                        ($scope.openedCase.currentStep.assigned_user.type ==
+                            "coordenador_estadual" ||
+                            $scope.openedCase.currentStep.assigned_user.type ==
+                            "supervisor_estadual") &&
+                        !$scope.identity.getCurrentUser().tenant_id
+                    ) {
                         return true;
                     }
 
-                    if ($scope.openedCase.currentStep.assigned_user.type != 'coordenador_estadual' &&
-                        $scope.openedCase.currentStep.assigned_user.type != 'supervisor_estadual' &&
-                        $scope.identity.getCurrentUser().tenant_id) { return true; }
+                    if (
+                        $scope.openedCase.currentStep.assigned_user.type !=
+                        "coordenador_estadual" &&
+                        $scope.openedCase.currentStep.assigned_user.type !=
+                        "supervisor_estadual" &&
+                        $scope.identity.getCurrentUser().tenant_id
+                    ) {
+                        return true;
+                    }
                 }
             }
-
         };
 
         $scope.showMessageNeedTransfer = function() {
             if ($scope.identity.getCurrentUser().tenant_id) {
-                if ($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id) {
+                if (
+                    $scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id
+                ) {
                     return true;
                 }
             }
             return false;
         };
-
     }
 
-    function ChildCaseStepCtrl($scope, $state, $stateParams, ngToast, Utils, Modals, Alerts, Schools, Cities, Children, Decorators, CaseSteps, StaticData, Tenants, Groups, Platform) {
-
+    function ChildCaseStepCtrl(
+        $scope,
+        $state,
+        $stateParams,
+        ngToast,
+        Utils,
+        Modals,
+        Alerts,
+        Schools,
+        Cities,
+        Children,
+        Decorators,
+        CaseSteps,
+        StaticData,
+        Tenants,
+        Groups,
+        Platform
+    ) {
         $scope.Decorators = Decorators;
         $scope.Children = Children;
         $scope.CaseSteps = CaseSteps;
@@ -1074,32 +1181,34 @@
         $scope.nodesGroup = [];
 
         $scope.addContact = function(id, parent) {
-            if (id || (id === undefined)) {
+            if (id || id === undefined) {
                 $scope.fields.aux.contatos[parent].push({
-                    name: '',
-                    phone: '',
-                    isResponsible: '',
-                    model: { name: 'name', phone: 'phone' }
-                })
+                    name: "",
+                    phone: "",
+                    isResponsible: "",
+                    model: { name: "name", phone: "phone" },
+                });
             } else if (id === false) {
-                $scope.fields.aux.contatos[parent] = []
+                $scope.fields.aux.contatos[parent] = [];
             }
         };
 
         $scope.removeContact = function(index, parent) {
             if (index === 0) return;
-            $scope.fields.aux.contatos[parent].splice(index, 1)
+            $scope.fields.aux.contatos[parent].splice(index, 1);
         };
 
         $scope.insertResponsible = function(parent) {
             if (parent) {
                 if ($scope.fields.aux.contatos[parent].length > 1) {
-                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent]
+                    $scope.responsible[parent] = $scope.fields.aux.contatos[parent];
                 } else {
-                    $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+                    $scope.fields.guardian_name =
+                        $scope.fields.aux.contatos[parent][0].name;
                 }
             } else {
-                $scope.fields.guardian_name = $scope.fields.aux.contatos[parent][0].name
+                $scope.fields.guardian_name =
+                    $scope.fields.aux.contatos[parent][0].name;
             }
         };
 
@@ -1107,22 +1216,25 @@
 
         $scope.getAdressByCEP = function(cep) {
             if (!cep) {
-                return
+                return;
             }
-            viaCep.get(cep).then(function(response) {
-                $scope.fields.school_address = response.logradouro;
-                $scope.fields.school_neighborhood = response.bairro;
-                $scope.fields.school_uf = response.uf;
-                $scope.fetchCities(response.localidade).then(function(value) {
-                    $scope.fields.school_city = value[0];
-                    validateSchoolWithPlace();
+            viaCep
+                .get(cep)
+                .then(function(response) {
+                    $scope.fields.school_address = response.logradouro;
+                    $scope.fields.school_neighborhood = response.bairro;
+                    $scope.fields.school_uf = response.uf;
+                    $scope.fetchCities(response.localidade).then(function(value) {
+                        $scope.fields.school_city = value[0];
+                        validateSchoolWithPlace();
+                    });
+                })
+                .catch(function() {
+                    $scope.noCEF = true;
+                    setTimeout(function() {
+                        $scope.noCEF = false;
+                    }, 1000);
                 });
-            }).catch(function() {
-                $scope.noCEF = true;
-                setTimeout(function() {
-                    $scope.noCEF = false;
-                }, 1000);
-            });
         };
 
         function validateSchoolWithPlace() {
@@ -1134,7 +1246,7 @@
                     }, 5000);
                 }
             }
-        };
+        }
 
         $scope.putStateAndCity = function(value) {
             $scope.fields.school_uf = value.uf;
@@ -1144,20 +1256,23 @@
         };
 
         $scope.checkInputParents = function(value, name) {
-            if ('mother' === name) {
-                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name
+            if ("mother" === name) {
+                $scope.fields.aux.contatos.mother.name = $scope.fields.mother_name;
             }
             if (!value) {
-                $scope.fields.aux.contatos[name].name = '';
-                $scope.fields.aux.contatos[name].phone = '';
+                $scope.fields.aux.contatos[name].name = "";
+                $scope.fields.aux.contatos[name].phone = "";
             }
         };
 
         function fetchStepData() {
-
             $scope.current_date = new Date();
 
-            $scope.step = CaseSteps.find({ type: $stateParams.step_type, id: $stateParams.step_id, with: 'fields,case' });
+            $scope.step = CaseSteps.find({
+                type: $stateParams.step_type,
+                id: $stateParams.step_id,
+                with: "fields,case",
+            });
 
             Tenants.getSettings(function(res) {
                 $scope.tenantSettings = res;
@@ -1174,31 +1289,39 @@
                         contatos: {
                             siblings: $scope.fields.aux.contatos.siblings || [],
                             grandparents: $scope.fields.aux.contatos.grandparents || [],
-                            others: $scope.fields.aux.contatos.others || []
-                        }
-                    }
+                            others: $scope.fields.aux.contatos.others || [],
+                        },
+                    };
                 }
                 if (step.fields && step.fields.place_coords) {
-                    step.fields.place_map_center = Object.assign({}, step.fields.place_coords);
+                    step.fields.place_map_center = Object.assign({},
+                        step.fields.place_coords
+                    );
                 }
 
-                var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({ id: $scope.step.case.tenant_id });
+                var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({
+                    id: $scope.step.case.tenant_id,
+                });
 
                 settingsOfTenantOfCase.$promise.then(function(res_settings) {
                     $scope.tenantSettingsOfCase = res_settings;
                 });
-
             });
-        };
+        }
 
         fetchStepData();
 
-        var dateOnlyFields = ['enrolled_at', 'report_date', 'dob', 'guardian_dob', 'reinsertion_date'];
+        var dateOnlyFields = [
+            "enrolled_at",
+            "report_date",
+            "dob",
+            "guardian_dob",
+            "reinsertion_date",
+        ];
 
         $scope.saveAndProceed = function() {
-
-
-            $scope.save()
+            $scope
+                .save()
                 .then(function() {
                     return $scope.step.$promise;
                 })
@@ -1210,17 +1333,24 @@
         $scope.areDatesEqual = function(a, b) {
             if (!a) return false;
             if (!b) return false;
-            return moment(a).startOf('day').isSame(moment(b).startOf('day'));
+            return moment(a).startOf("day").isSame(moment(b).startOf("day"));
         };
 
         $scope.isStepOpen = function(stepClassName) {
             if (!$scope.step) return false;
-            return $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName;
+            return (
+                $scope.step.step_type ===
+                "BuscaAtivaEscolar\\CaseSteps\\" + stepClassName
+            );
         };
 
         $scope.hasNextStep = function() {
             if (!$scope.step) return false;
-            if ($scope.step.step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao' && $scope.step.report_index === 4) return false;
+            if (
+                $scope.step.step_type === "BuscaAtivaEscolar\\CaseSteps\\Observacao" &&
+                $scope.step.report_index === 4
+            )
+                return false;
             return true;
         };
 
@@ -1230,12 +1360,14 @@
             if (!isEditableOnAlerts && $scope.step.slug === "alerta") return false;
             if ($scope.scopeOfCase() !== $scope.scopeOfUser()) return false;
             if ($scope.showMessageNeedTransfer()) return false;
-            return (!$scope.step.is_completed);
+            return !$scope.step.is_completed;
         };
 
         $scope.showMessageNeedTransfer = function() {
             if ($scope.identity.getCurrentUser().tenant_id) {
-                if ($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id) {
+                if (
+                    $scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id
+                ) {
                     return true;
                 }
             }
@@ -1245,31 +1377,41 @@
         $scope.canAcceptAlert = function(step, fields) {
             if (!step) return false;
             if (!step.requires_address_update) return true;
-            return fields && fields.place_address && (fields.place_address.trim().length > 0);
+            return (
+                fields && fields.place_address && fields.place_address.trim().length > 0
+            );
         };
 
         $scope.acceptAlert = function(childID) {
             var data = { id: childID };
 
-            if ($scope.step && $scope.step.slug === 'alerta' && $scope.step.requires_address_update) {
+            if (
+                $scope.step &&
+                $scope.step.slug === "alerta" &&
+                $scope.step.requires_address_update
+            ) {
                 data.place_address = $scope.fields.place_address;
             }
 
             Alerts.accept(data, function() {
                 $state.reload();
-            })
+            });
         };
 
         $scope.rejectAlert = function(childID) {
             Alerts.reject({ id: childID }, function() {
                 $state.reload();
-            })
+            });
         };
 
         $scope.canCompleteStep = function() {
             if (!$scope.step) return false;
             if (!$scope.$parent.openedCase) return false;
-            return ($scope.step.id === $scope.$parent.openedCase.current_step_id && !$scope.step.is_completed && !$scope.step.is_pending_assignment);
+            return (
+                $scope.step.id === $scope.$parent.openedCase.current_step_id &&
+                !$scope.step.is_completed &&
+                !$scope.step.is_pending_assignment
+            );
         };
 
         $scope.isPendingAssignment = function() {
@@ -1287,38 +1429,51 @@
             for (var i in data) {
                 if (!data.hasOwnProperty(i)) continue;
                 if (data[i] === null) continue;
-                if (data[i] === 'null') continue;
+                if (data[i] === "null") continue;
                 if (data[i] === undefined) continue;
                 if (("" + data[i]).trim().length <= 0) continue;
                 filtered[i] = data[i];
             }
 
             return filtered;
-        };
+        }
 
         $scope.assignUser = function() {
-
             var groupOfCase = null;
 
-            if ($scope.step.case.hasOwnProperty('group')) {
-
+            if ($scope.step.case.hasOwnProperty("group")) {
                 if ($scope.step.case.group != null) {
                     groupOfCase = $scope.step.case.group.id;
 
                     //retorna grupo do caso com os grupos pais
-                    Groups.findByIdWithParents({ id: groupOfCase }).$promise
-                        .then(function(res) {
-
+                    Groups.findByIdWithParents({ id: groupOfCase }).$promise.then(
+                        function(res) {
                             var groupOfCaseWithParents = res.data[0];
                             var groupsToMove = [];
 
-                            groupsToMove.push({ id: groupOfCaseWithParents.id, name: groupOfCaseWithParents.name, margin: 80 });
+                            groupsToMove.push({
+                                id: groupOfCaseWithParents.id,
+                                name: groupOfCaseWithParents.name,
+                                margin: 80,
+                            });
                             if (groupOfCaseWithParents.parent != null) {
-                                groupsToMove.push({ id: groupOfCaseWithParents.parent.id, name: groupOfCaseWithParents.parent.name, margin: 60 });
+                                groupsToMove.push({
+                                    id: groupOfCaseWithParents.parent.id,
+                                    name: groupOfCaseWithParents.parent.name,
+                                    margin: 60,
+                                });
                                 if (groupOfCaseWithParents.parent.parent != null) {
-                                    groupsToMove.push({ id: groupOfCaseWithParents.parent.parent.id, name: groupOfCaseWithParents.parent.parent.name, margin: 40 });
+                                    groupsToMove.push({
+                                        id: groupOfCaseWithParents.parent.parent.id,
+                                        name: groupOfCaseWithParents.parent.parent.name,
+                                        margin: 40,
+                                    });
                                     if (groupOfCaseWithParents.parent.parent.parent != null) {
-                                        groupsToMove.push({ id: groupOfCaseWithParents.parent.parent.parent.id, name: groupOfCaseWithParents.parent.parent.parent.name, margin: 20 });
+                                        groupsToMove.push({
+                                            id: groupOfCaseWithParents.parent.parent.parent.id,
+                                            name: groupOfCaseWithParents.parent.parent.parent.name,
+                                            margin: 20,
+                                        });
                                     }
                                 }
                             }
@@ -1326,40 +1481,53 @@
                             var finalGroupsOfuserToAssign = [];
                             for (let group of groupsToMove) {
                                 finalGroupsOfuserToAssign.push(group);
-                                if (group.id == $scope.identity.getCurrentUser().group.id) break;
+                                if (group.id == $scope.identity.getCurrentUser().group.id)
+                                    break;
                             }
                             $scope.groupsOfCase = finalGroupsOfuserToAssign.reverse();
                             $scope.loadModalAssignUser();
-
-                        });
-
+                        }
+                    );
                 }
-
             }
-
         };
 
         $scope.loadModalAssignUser = function() {
-
             var nodes = [];
             $scope.groupsOfCase.forEach(function(group) {
                 nodes.push(group.id);
             });
 
-            CaseSteps.assignableUsers({ type: $scope.step.step_type, id: $scope.step.id, nodes_groups: nodes }).$promise
-                .then(function(res) {
-                    if (!res.users) return ngToast.danger("Nenhum usuário pode ser atribuído para essa etapa!");
-                    return Modals.show(Modals.UserPicker('Atribuindo responsabilidade', 'Indique qual usuário deve ficar responsável por essa etapa:', res.users, $scope.groupsOfCase, true))
+            CaseSteps.assignableUsers({
+                    type: $scope.step.step_type,
+                    id: $scope.step.id,
+                    nodes_groups: nodes,
+                })
+                .$promise.then(function(res) {
+                    if (!res.users)
+                        return ngToast.danger(
+                            "Nenhum usuário pode ser atribuído para essa etapa!"
+                        );
+                    return Modals.show(
+                        Modals.UserPicker(
+                            "Atribuindo responsabilidade",
+                            "Indique qual usuário deve ficar responsável por essa etapa:",
+                            res.users,
+                            $scope.groupsOfCase,
+                            true
+                        )
+                    );
                 })
                 .then(function(user_id) {
                     return CaseSteps.assignUser({
                         type: $scope.step.step_type,
                         id: $scope.step.id,
-                        user_id: user_id
+                        user_id: user_id,
                     }).$promise;
-                }).then(function() {
+                })
+                .then(function() {
                     ngToast.success("Usuário atribuído!");
-                    $state.go('child_browser');
+                    $state.go("child_browser");
                 });
         };
 
@@ -1369,9 +1537,8 @@
             }
             if ($scope.showMessageNeedTransfer()) return false;
             if ($scope.scopeOfCase() == "state") return false;
-            if ($scope.identity.can('cases.assign')) return true;
+            if ($scope.identity.can("cases.assign")) return true;
             return false;
-
         };
 
         $scope.isCheckboxChecked = function(field, value) {
@@ -1382,7 +1549,6 @@
         };
 
         $scope.toggleCheckbox = function(field, value) {
-
             if (!$scope.fields[field]) $scope.fields[field] = []; // Ensures list exists
             var index = $scope.fields[field].indexOf(value); // Check if in list
             if (index === -1) return $scope.fields[field].push(value); // Add to list
@@ -1422,17 +1588,17 @@
         };
 
         $scope.renderSelectedCity = function(city) {
-            if (!city) return '';
-            return city.uf + ' / ' + city.name;
+            if (!city) return "";
+            return city.uf + " / " + city.name;
         };
 
         $scope.renderSelectedSchool = function(school) {
-            if (!school) return '';
-            return school.name + ' (' + school.city_name + ' / ' + school.uf + ')';
+            if (!school) return "";
+            return school.name + " (" + school.city_name + " / " + school.uf + ")";
         };
 
         function clearAuxiliaryFields(fields) {
-            var auxiliaryFields = ['place_map_center', 'place_map_geocoded_address'];
+            var auxiliaryFields = ["place_map_center", "place_map_geocoded_address"];
             var filtered = {};
 
             for (var i in fields) {
@@ -1442,27 +1608,26 @@
             }
 
             return filtered;
-        };
+        }
 
         function unpackTypeaheadField(data, name, model) {
             if (data[name]) {
-                data[name + '_id'] = model.id;
-                data[name + '_name'] = model.name;
+                data[name + "_id"] = model.id;
+                data[name + "_name"] = model.name;
             }
 
             return data;
-        };
+        }
 
         $scope.save = function() {
-
             var data = Object.assign({}, $scope.step.fields);
 
             data = Utils.prepareDateFields(data, dateOnlyFields);
 
-            data = unpackTypeaheadField(data, 'place_city', data.place_city);
-            data = unpackTypeaheadField(data, 'school_city', data.school_city);
-            data = unpackTypeaheadField(data, 'school', data.school);
-            data = unpackTypeaheadField(data, 'school_last', data.school_last);
+            data = unpackTypeaheadField(data, "place_city", data.place_city);
+            data = unpackTypeaheadField(data, "school_city", data.school_city);
+            data = unpackTypeaheadField(data, "school", data.school);
+            data = unpackTypeaheadField(data, "school_last", data.school_last);
 
             data = clearAuxiliaryFields(data);
             data = filterOutEmptyFields(data);
@@ -1476,7 +1641,13 @@
                 }
 
                 if (response.status !== "ok") {
-                    ngToast.danger("Ocorreu um erro ao salvar os dados da etapa! (status=" + response.status + ", reason=" + response.reason + ")");
+                    ngToast.danger(
+                        "Ocorreu um erro ao salvar os dados da etapa! (status=" +
+                        response.status +
+                        ", reason=" +
+                        response.reason +
+                        ")"
+                    );
                     return;
                 }
 
@@ -1485,8 +1656,7 @@
                 }
 
                 ngToast.success("Os campos da etapa foram salvos com sucesso!");
-
-            })
+            });
         };
 
         $scope.diffDaysBetweenSteps = function(a, b) {
@@ -1502,24 +1672,51 @@
             var time_for_next_step = 0;
             if ($scope.step && $scope.tenantSettings) {
                 if ($scope.step.slug == "1a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[4].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    time_for_next_step =
+                        $scope.tenantSettingsOfCase.stepDeadlines["1a_observacao"];
+                    var permission =
+                        $scope.diffDaysBetweenSteps(
+                            new Date(child.cases[0].steps[4].updated_at),
+                            $scope.current_date
+                        ) >= time_for_next_step ?
+                        true :
+                        false;
                     return permission;
-
                 }
                 if ($scope.step.slug == "2a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[5].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    time_for_next_step =
+                        $scope.tenantSettingsOfCase.stepDeadlines["2a_observacao"];
+                    var permission =
+                        $scope.diffDaysBetweenSteps(
+                            new Date(child.cases[0].steps[5].updated_at),
+                            $scope.current_date
+                        ) >= time_for_next_step ?
+                        true :
+                        false;
                     return permission;
                 }
                 if ($scope.step.slug == "3a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[6].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    time_for_next_step =
+                        $scope.tenantSettingsOfCase.stepDeadlines["3a_observacao"];
+                    var permission =
+                        $scope.diffDaysBetweenSteps(
+                            new Date(child.cases[0].steps[6].updated_at),
+                            $scope.current_date
+                        ) >= time_for_next_step ?
+                        true :
+                        false;
                     return permission;
                 }
                 if ($scope.step.slug == "4a_observacao") {
-                    time_for_next_step = $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
-                    var permission = $scope.diffDaysBetweenSteps(new Date(child.cases[0].steps[7].updated_at), $scope.current_date) >= time_for_next_step ? true : false;
+                    time_for_next_step =
+                        $scope.tenantSettingsOfCase.stepDeadlines["4a_observacao"];
+                    var permission =
+                        $scope.diffDaysBetweenSteps(
+                            new Date(child.cases[0].steps[7].updated_at),
+                            $scope.current_date
+                        ) >= time_for_next_step ?
+                        true :
+                        false;
                     return permission;
                 }
             }
@@ -1527,8 +1724,10 @@
 
         $scope.scopeOfCase = function() {
             if ($scope.step.assigned_user) {
-                if ($scope.step.assigned_user.type === "coordenador_estadual" ||
-                    $scope.step.assigned_user.type === "supervisor_estadual") {
+                if (
+                    $scope.step.assigned_user.type === "coordenador_estadual" ||
+                    $scope.step.assigned_user.type === "supervisor_estadual"
+                ) {
                     return "state";
                 } else {
                     return "municipality";
@@ -1537,20 +1736,18 @@
         };
 
         $scope.scopeOfUser = function() {
-            if ($scope.identity.getCurrentUser().type === "coordenador_estadual" ||
-                $scope.identity.getCurrentUser().type === "supervisor_estadual") {
+            if (
+                $scope.identity.getCurrentUser().type === "coordenador_estadual" ||
+                $scope.identity.getCurrentUser().type === "supervisor_estadual"
+            ) {
                 return "state";
             } else {
                 return "municipality";
             }
         };
 
-        Platform.whenReady(function() {
-
-        });
-
+        Platform.whenReady(function() {});
     }
-
 })();
 (function() {
 
@@ -1866,261 +2063,305 @@
 
 })();
 (function() {
-
-    angular.module('BuscaAtivaEscolar')
+    angular
+        .module("BuscaAtivaEscolar")
         .config(function($stateProvider) {
-            $stateProvider.state('pending_alerts', {
-                url: '/pending_alerts',
-                templateUrl: '/views/children/pending_alerts.html',
-                controller: 'PendingAlertsCtrlCtrl'
-            })
+            $stateProvider.state("pending_alerts", {
+                url: "/pending_alerts",
+                templateUrl: "/views/children/pending_alerts.html",
+                controller: "PendingAlertsCtrlCtrl",
+            });
         })
-        .controller('PendingAlertsCtrlCtrl', function($scope, Groups, Platform, Identity, Alerts, StaticData, Modals, ngToast) {
+        .controller(
+            "PendingAlertsCtrlCtrl",
+            function(
+                $scope,
+                Groups,
+                Platform,
+                Identity,
+                Alerts,
+                StaticData,
+                Modals,
+                ngToast
+            ) {
+                $scope.static = StaticData;
+                $scope.identity = Identity;
+                $scope.sendingAlert = false;
+                $scope.children = {};
+                $scope.child = {};
+                $scope.causes = {};
+                $scope.causes_filter = [];
 
-            $scope.static = StaticData;
-            $scope.identity = Identity;
-            $scope.sendingAlert = false;
-            $scope.children = {};
-            $scope.child = {};
-            $scope.causes = {};
-            $scope.causes_filter = [];
+                $scope.query = {
+                    name: null,
+                    submitter_name: null,
+                    sort: {},
+                    max: 16,
+                    page: 1,
+                    neighborhood: null,
+                    show_suspended: false,
+                    group_id: null,
+                };
 
-            $scope.query = {
-                name: null,
-                submitter_name: null,
-                sort: {},
-                max: 16,
-                page: 1,
-                neighborhood: null,
-                show_suspended: false,
-                group_id: null,
-            };
+                //checkboxes
+                $scope.check_all_alerts = false;
+                $scope.selected = {
+                    alerts: [],
+                };
+                $scope.onCheckSelectAllAlerts = function() {
+                    if ($scope.check_all_alerts) {
+                        $scope.selected.alerts = angular.copy($scope.children.data);
+                    } else {
+                        $scope.selected.alerts = [];
+                    }
+                };
+                $scope.changeAllGroups = function() {
+                    if ($scope.selected.alerts.length <= 0) {
+                        Modals.show(
+                            Modals.Alert(
+                                "Atenção",
+                                "Selecione os alertas que deseja modificar"
+                            )
+                        );
+                    } else {
+                        Modals.show(
+                                Modals.GroupPicker(
+                                    "Atribuir alertas ao grupo",
+                                    "Selecione o grupo para onde deseja encaminhar os alertas",
+                                    Identity.getCurrentUser().group,
+                                    "Atribuindo alertas ao grupo: ",
+                                    false,
+                                    null,
+                                    null,
+                                    true,
+                                    "Nenhum grupo selecionado"
+                                )
+                            )
+                            .then(function(selectedGroup) {
+                                var obj = {
+                                    newObject: selectedGroup,
+                                    alerts: $scope.selected.alerts,
+                                };
 
-            //checkboxes
-            $scope.check_all_alerts = false;
-            $scope.selected = {
-                alerts: []
-            };
-            $scope.onCheckSelectAllAlerts = function() {
-                if ($scope.check_all_alerts) {
-                    $scope.selected.alerts = angular.copy($scope.children.data);
-                } else {
-                    $scope.selected.alerts = [];
-                }
-            };
-            $scope.changeAllGroups = function() {
-                if ($scope.selected.alerts.length <= 0) {
-                    Modals.show(Modals.Alert('Atenção', 'Selecione os alertas que deseja modificar'));
-                } else {
+                                return Alerts.changeGroups(obj).$promise;
+                            })
+                            .then(function(res) {
+                                if (res.status == "ok") {
+                                    ngToast.success("Grupos editados com sucesso.");
+                                    $scope.check_all_alerts = false;
+                                    $scope.selected.alerts = [];
+                                    $scope.refresh();
+                                } else {
+                                    ngToast.danger("Ocorreu um erro ao editar os grupos.");
+                                }
+                            });
+                    }
+                };
+
+                $scope.search = {};
+
+                $scope.changeGroup = function() {
                     Modals.show(
-                        Modals.GroupPicker(
-                            'Atribuir alertas ao grupo',
-                            'Selecione o grupo para onde deseja encaminhar os alertas',
-                            Identity.getCurrentUser().group,
-                            'Atribuindo alertas ao grupo: ',
-                            false,
-                            null,
-                            null,
-                            true,
-                            'Nenhum grupo selecionado')
-                    ).then(function(selectedGroup) {
+                            Modals.GroupPicker(
+                                "Filtrar alertas que pertencem ao grupo",
+                                "Selecione o grupo que deseja filtrar",
+                                Identity.getCurrentUser().group,
+                                "Filtrando alertas do grupo: ",
+                                false,
+                                null,
+                                null,
+                                true,
+                                "Nenhum grupo selecionado"
+                            )
+                        )
+                        .then(function(selectedGroup) {
+                            $scope.selectedGroup = selectedGroup;
+                            $scope.query.group_id = $scope.selectedGroup.id;
+                        })
+                        .then(function() {});
+                };
 
-                        var obj = {
-                            newObject: selectedGroup,
-                            alerts: $scope.selected.alerts
-                        };
+                $scope.updateGroup = function() {
+                    Modals.show(
+                            Modals.GroupPicker(
+                                "Atribuir aleta ao grupo",
+                                "O alerta ficará visível para o grupo selecionado.", {
+                                    id: Identity.getCurrentUser().tenant.primary_group_id,
+                                    name: Identity.getCurrentUser().tenant.primary_group_name,
+                                },
+                                "Atribuindo grupo: ",
+                                false,
+                                null,
+                                null,
+                                true,
+                                "Nenhum grupo selecionado"
+                            )
+                        )
+                        .then(function(selectedGroup) {
+                            $scope.child.group_name = selectedGroup.name;
+                            $scope.child.group_id = selectedGroup.id;
+                            $scope.editAlert(
+                                [$scope.child.group_name, $scope.child.group_id],
+                                "groups",
+                                $scope.child.id
+                            );
+                        })
+                        .then(function() {});
+                };
 
-                        return Alerts.changeGroups(obj).$promise;
-
-                    }).then(function(res) {
-                        if (res.status == "ok") {
-                            ngToast.success("Grupos editados com sucesso.");
-                            $scope.check_all_alerts = false;
-                            $scope.selected.alerts = [];
-                            $scope.refresh();
-                        } else {
-                            ngToast.danger("Ocorreu um erro ao editar os grupos.");
-                        }
-                    });
-                }
-            }
-
-            $scope.search = {};
-
-            $scope.changeGroup = function() {
-                Modals.show(
-                    Modals.GroupPicker(
-                        'Filtrar alertas que pertencem ao grupo',
-                        'Selecione o grupo que deseja filtrar',
-                        Identity.getCurrentUser().group,
-                        'Filtrando alertas do grupo: ',
-                        false,
-                        null,
-                        null,
-                        true,
-                        'Nenhum grupo selecionado')
-                ).then(function(selectedGroup) {
-                    $scope.selectedGroup = selectedGroup;
-                    $scope.query.group_id = $scope.selectedGroup.id;
-                }).then(function() {
-
-                });
-            };
-
-            $scope.updateGroup = function() {
-                Modals.show(
-                    Modals.GroupPicker(
-                        'Atribuir aleta ao grupo',
-                        'O alerta ficará visível para o grupo selecionado.', { id: Identity.getCurrentUser().tenant.primary_group_id, name: Identity.getCurrentUser().tenant.primary_group_name },
-                        'Atribuindo grupo: ',
-                        false,
-                        null,
-                        null,
-                        true,
-                        'Nenhum grupo selecionado', )
-                ).then(function(selectedGroup) {
-                    $scope.child.group_name = selectedGroup.name
-                    $scope.child.group_id = selectedGroup.id
-                    $scope.editAlert([$scope.child.group_name, $scope.child.group_id], 'groups', $scope.child.id)
-                }).then(function() {
-
-                });
-            };
-
-            $scope.branchGroups = "carregando ...";
-
-            $scope.clikcInGroup = function(group_id) {
                 $scope.branchGroups = "carregando ...";
-                Groups.findByIdWithParents({ id: group_id }, function(res) {
-                    var groupOfuserWithParents = res.data[0];
-                    var groupsOfUser = [];
-                    groupsOfUser.push(groupOfuserWithParents.name);
-                    if (groupOfuserWithParents.parent != null) {
-                        groupsOfUser.push(groupOfuserWithParents.parent.name);
-                        if (groupOfuserWithParents.parent.parent != null) {
-                            groupsOfUser.push(groupOfuserWithParents.parent.parent.name);
-                            if (groupOfuserWithParents.parent.parent.parent != null) {
-                                groupsOfUser.push(groupOfuserWithParents.parent.parent.parent.name);
+
+                $scope.clikcInGroup = function(group_id) {
+                    $scope.branchGroups = "carregando ...";
+                    Groups.findByIdWithParents({ id: group_id }, function(res) {
+                        var groupOfuserWithParents = res.data[0];
+                        var groupsOfUser = [];
+                        groupsOfUser.push(groupOfuserWithParents.name);
+                        if (groupOfuserWithParents.parent != null) {
+                            groupsOfUser.push(groupOfuserWithParents.parent.name);
+                            if (groupOfuserWithParents.parent.parent != null) {
+                                groupsOfUser.push(groupOfuserWithParents.parent.parent.name);
+                                if (groupOfuserWithParents.parent.parent.parent != null) {
+                                    groupsOfUser.push(
+                                        groupOfuserWithParents.parent.parent.parent.name
+                                    );
+                                }
                             }
                         }
-                    }
-                    $scope.branchGroups = groupsOfUser.reverse().join(' > ');
-                });
-            }
+                        $scope.branchGroups = groupsOfUser.reverse().join(" > ");
+                    });
+                };
 
-            $scope.getAlertCauseName = function(id) {
-                if (!$scope.child) return 'err:no_child_open';
-                if (!$scope.child.alert) return 'err:no_alert_data';
-                if (!$scope.child.alert.alert_cause_id) return 'err:no_alert_cause_id';
-                var indexAlertCauses = _.findIndex($scope.causes, { id: $scope.child.alert.alert_cause_id });
-                if (!$scope.causes[indexAlertCauses]) return 'err:no_cause_with_id';
-                return $scope.causes[indexAlertCauses].label;
-            };
+                $scope.getAlertCauseName = function(id) {
+                    if (!$scope.child) return "err:no_child_open";
+                    if (!$scope.child.alert) return "err:no_alert_data";
+                    if (!$scope.child.alert.alert_cause_id)
+                        return "err:no_alert_cause_id";
+                    var indexAlertCauses = _.findIndex($scope.causes, {
+                        id: $scope.child.alert.alert_cause_id,
+                    });
+                    if (!$scope.causes[indexAlertCauses]) return "err:no_cause_with_id";
+                    return $scope.causes[indexAlertCauses].label;
+                };
 
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.query.page = 1;
-            };
+                $scope.setMaxResults = function(max) {
+                    $scope.query.max = max;
+                    $scope.query.page = 1;
+                };
 
-            $scope.reloadAlerts = function() {
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
+                $scope.reloadAlerts = function() {
+                    $scope.query.page = 1;
+                    $scope.refresh();
+                };
 
-            $scope.refresh = function() {
+                $scope.refresh = function() {
+                    $scope.child = null;
+                    $scope.isLoading = true;
 
-                $scope.child = null;
-                $scope.isLoading = true;
-
-                Alerts.getPending($scope.query).$promise
-                    .then(function(res) {
-
+                    Alerts.getPending($scope.query).$promise.then(function(res) {
                         $scope.children = res;
                         $scope.search = $scope.children;
 
                         $scope.isLoading = false;
                         $scope.check_all_alerts = false;
                         $scope.selected.alerts = [];
+                    });
+                };
 
+                $scope.preview = function(child) {
+                    $scope.child = child;
+                    $("#modalChild").modal({
+                        keyboard: false,
+                    });
+                };
+
+                $scope.close = function() {
+                    $("#modalChild").modal("hide");
+                };
+
+                $scope.canAcceptAlert = function(child) {
+                    if (!child) return false;
+                    if (!child.requires_address_update) return true;
+                    return (
+                        child.alert &&
+                        child.alert.place_address &&
+                        child.alert.place_address.trim().length > 0 &&
+                        child.alert.place_neighborhood &&
+                        child.alert.place_neighborhood.trim().length > 0
+                    );
+                };
+
+                $scope.getStringOfGroupsOfUser = function() {
+                    var groupOfuser = $scope.getGroupOfCurrentUser();
+                    var stringForTooltip = "";
+                    stringForTooltip += groupOfuser.name;
+                    groupOfuser.children.forEach(function(group) {
+                        stringForTooltip += " > " + group.name;
                     });
 
-            };
+                    return stringForTooltip;
+                };
 
-            $scope.preview = function(child) {
-                $scope.child = child
-                $('#modalChild').modal({
-                    keyboard: false,
-                });
-            };
+                $scope.accept = function(child) {
+                    if (!$scope.canAcceptAlert(child)) {
+                        return;
+                    }
+                    $scope.sendingAlert = true;
+                    Alerts.accept({
+                            id: child.id,
+                            place_address: child.alert.place_address,
+                            place_neighborhood: child.alert.place_neighborhood,
+                            group_id: child.group_id,
+                            group_name: child.group_name,
+                        },
+                        function() {
+                            $scope.refresh();
+                            $scope.child = {};
+                            $("#modalChild").modal("hide");
+                            $scope.sendingAlert = false;
+                        }
+                    );
+                };
 
-            $scope.close = function() {
-                $('#modalChild').modal('hide');
-            }
-
-            $scope.canAcceptAlert = function(child) {
-                if (!child) return false;
-                if (!child.requires_address_update) return true;
-                return child.alert &&
-                    child.alert.place_address &&
-                    (child.alert.place_address.trim().length > 0) &&
-                    child.alert.place_neighborhood &&
-                    (child.alert.place_neighborhood.trim().length > 0);
-            };
-
-            $scope.getStringOfGroupsOfUser = function() {
-                var groupOfuser = $scope.getGroupOfCurrentUser();
-                var stringForTooltip = "";
-                stringForTooltip += groupOfuser.name;
-                groupOfuser.children.forEach(function(group) {
-                    stringForTooltip += " > " + group.name;
-                });
-
-                return stringForTooltip;
-            };
-
-            $scope.accept = function(child) {
-                if (!$scope.canAcceptAlert(child)) {
-                    return;
-                }
-                $scope.sendingAlert = true;
-                Alerts.accept({ id: child.id, place_address: child.alert.place_address, place_neighborhood: child.alert.place_neighborhood, group_id: child.group_id, group_name: child.group_name }, function() {
-                    $scope.refresh();
-                    $scope.child = {};
-                    $('#modalChild').modal('hide');
-                    $scope.sendingAlert = false;
-                });
-            };
-
-            $scope.reject = function(child) {
-                Alerts.reject({ id: child.id }, function() {
-                    $scope.refresh();
-                    $scope.child = {};
-                    $('#modalChild').modal('hide');
-                });
-            };
-
-            $scope.editAlert = function(data, type, id) {
-                if (type == 'groups')
-                    Alerts.edit({ id: id, data: data, type: type }, function() {
+                $scope.reject = function(child) {
+                    Alerts.reject({ id: child.id }, function() {
                         $scope.refresh();
-                        $('#modalChild').modal('hide');
-                    })
-                else
-                    Alerts.edit({ id: id, data: data, type: type }, function() {})
-            };
+                        $scope.child = {};
+                        $("#modalChild").modal("hide");
+                    });
+                };
 
-            Platform.whenReady(function() {
-                $scope.causes = StaticData.getAlertCauses();
-                if ($scope.causes_filter.length == 0) {
-                    Object.values($scope.causes).forEach(val => $scope.causes_filter.push(({ value: val.id, displayName: val.label })));
-                    $scope.causes_filter.sort((a, b) => (a.displayName > b.displayName) ? 1 : ((b.displayName > a.displayName) ? -1 : 0))
-                }
-                $scope.selectedGroup = Identity.getCurrentUser().group;
-                $scope.refresh();
-            });
+                $scope.editAlert = function(data, type, id) {
+                    if (type == "groups")
+                        Alerts.edit({ id: id, data: data, type: type }, function() {
+                            //$scope.refresh();
+                            //$('#modalChild').modal('hide');
+                        });
+                    else Alerts.edit({ id: id, data: data, type: type }, function() {});
+                };
 
-        });
-
+                Platform.whenReady(function() {
+                    $scope.causes = StaticData.getAlertCauses();
+                    if ($scope.causes_filter.length == 0) {
+                        Object.values($scope.causes).forEach((val) =>
+                            $scope.causes_filter.push({
+                                value: val.id,
+                                displayName: val.label,
+                            })
+                        );
+                        $scope.causes_filter.sort((a, b) =>
+                            a.displayName > b.displayName ?
+                            1 :
+                            b.displayName > a.displayName ?
+                            -1 :
+                            0
+                        );
+                    }
+                    $scope.selectedGroup = Identity.getCurrentUser().group;
+                    $scope.refresh();
+                });
+            }
+        );
 })();
 (function() {
 
@@ -14913,29 +15154,293 @@ if (!Array.prototype.find) {
         });
 })();
 (function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.factory('Users', function Users(API, $resource) {
+    angular
+        .module("BuscaAtivaEscolar")
+        .factory("Users", function Users(API, $resource) {
+            var headers = API.REQUIRE_AUTH;
 
-			var headers = API.REQUIRE_AUTH;
+            return $resource(
+                API.getURI("users/:id"), { id: "@id", with: "@with" }, {
+                    myself: {
+                        url: API.getURI("users/myself"),
+                        method: "GET",
+                        headers: headers,
+                    },
+                    find: { method: "GET", headers: headers },
+                    create: { method: "POST", headers: headers },
+                    update: {
+                        method: "PUT",
+                        headers: headers,
+                        url: API.getURI("users/:id"),
+                    },
+                    search: {
+                        url: API.getURI("users/search"),
+                        method: "POST",
+                        isArray: false,
+                        headers: headers,
+                    },
+                    suspend: { method: "DELETE", headers: headers },
+                    restore: {
+                        url: API.getURI("users/:id/restore"),
+                        method: "POST",
+                        headers: headers,
+                    },
+                    reports: {
+                        url: API.getURI("users/reports"),
+                        method: "GET",
+                        headers: headers,
+                    },
+                    createReport: {
+                        url: API.getURI("users/reports/create"),
+                        method: "POST",
+                        headers: headers,
+                    },
 
-			return $resource(API.getURI('users/:id'), {id: '@id', with: '@with'}, {
-				myself: {url: API.getURI('users/myself'), method: 'GET', headers: headers},
-				find: {method: 'GET', headers: headers},
-				create: {method: 'POST', headers: headers},
-				update: {method: 'PUT', headers: headers, url: API.getURI('users/:id')},
-				search: {url: API.getURI('users/search'), method: 'POST', isArray: false, headers: headers},
-				suspend: {method: 'DELETE', headers: headers},
-				restore: {url: API.getURI('users/:id/restore'), method: 'POST', headers: headers},
-				reports: {url: API.getURI('users/reports'), method: 'GET', headers: headers},
-				createReport: {url: API.getURI('users/reports/create'), method: 'POST', headers: headers},
-				
-				updateYourself: {method: 'PUT', headers: headers, url: API.getURI('user/:id/update_yourself')},
-				sendReactivationMail: {url: API.getURI('user/:id/send_reactivation_mail'), method: 'POST', headers: headers},
+                    updateYourself: {
+                        method: "PUT",
+                        headers: headers,
+                        url: API.getURI("user/:id/update_yourself"),
+                    },
+                    sendReactivationMail: {
+                        url: API.getURI("user/:id/send_reactivation_mail"),
+                        method: "POST",
+                        headers: headers,
+                    },
+                }
+            );
+        });
+})();
+(function() {
 
-			});
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('school_browser', {
+                url: '/schools',
+                templateUrl: '/views/schools/school_browser.html',
+                controller: 'SchoolBrowserCtrl'
+            });
+        })
+        .controller('SchoolBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
 
-		});
+            $scope.check_all_schools = false;
+            $scope.identity = Identity;
+            $scope.schools = {};
+            $scope.msg_success = false;
+            $scope.msg_error = false;
+            $scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
+            $scope.query = {
+                year_educacenso: new Date().getFullYear(),
+                sort: {},
+                show_suspended: false,
+                max: 5,
+                page: 1
+            };
+            $scope.selected = {
+                schools: []
+            };
+
+            $scope.onCheckSelectAll = function() {
+                if ($scope.check_all_schools) {
+                    $scope.selected.schools = angular.copy($scope.schools.data);
+                } else {
+                    $scope.selected.schools = [];
+                }
+            };
+
+            $scope.onModifySchool = function(school) {
+                Schools.update(school).$promise.then($scope.onSaved);
+            };
+
+            $scope.onSaved = function(res) {
+                if (res.status === "ok") {
+                    ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
+                    return;
+                } else {
+                    ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
+                    $scope.refresh();
+                }
+            };
+
+            $scope.sendnotification = function() {
+
+                //remove objects without email
+                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
+                    if (school.school_email != null && school.school_email != "") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+                if (schools_to_send_notification.length > 0) {
+
+                    Modals.show(
+                            Modals.ConfirmEmail(
+                                'Confirma o envio de sms e email para as seguintes escolas?',
+                                'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+                                schools_to_send_notification
+                            )).then(function() {
+                            return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
+                        })
+                        .then(function(res) {
+                            if (res.status == "error") {
+                                ngToast.danger(res.message);
+                                $scope.msg_success = false;
+                                $scope.msg_error = true;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            } else {
+                                ngToast.warning(res.message);
+                                $scope.msg_success = true;
+                                $scope.msg_error = false;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            }
+                        });
+                } else {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+                }
+
+            };
+
+            $scope.onSelectYear = function() {
+                $scope.query.page = 1;
+                $scope.query.max = 5;
+                $scope.refresh();
+            };
+
+            $scope.refresh = function() {
+                Schools.all_educacenso($scope.query, function(res) {
+                    $scope.check_all_schools = false;
+                    $scope.selected.schools = [];
+                    $scope.schools = angular.copy(res);
+                });
+            };
+
+            $scope.setMaxResults = function(max) {
+                $scope.query.max = max;
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            Platform.whenReady(function() {
+                $scope.refresh();
+            });
+
+        });
+
+})();
+(function() {
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('school_list_frequency', {
+                url: '/frequency',
+                templateUrl: '/views/schools/school_list_frequency.html',
+                controller: 'SchoolFrequencyBrowserCtrl'
+            });
+        })
+        .controller('SchoolFrequencyBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
+
+            $scope.check_all_schools = false;
+            $scope.identity = Identity;
+            $scope.schools = {};
+            $scope.msg_success = false;
+            $scope.msg_error = false;
+            $scope.query = {
+                sort: {},
+                max: 5,
+                page: 1,
+                search: ''
+            };
+            $scope.selected = {
+                schools: []
+            };
+
+            $scope.onCheckSelectAll = function() {
+                if ($scope.check_all_schools) {
+                    $scope.selected.schools = angular.copy($scope.schools.data);
+                } else {
+                    $scope.selected.schools = [];
+                }
+            };
+
+            $scope.onModifySchool = function(school) {
+                Schools.update(school).$promise.then($scope.onSaved);
+            };
+
+            $scope.onSaved = function(res) {
+                if (res.status === "ok") {
+                    ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
+                    return;
+                } else {
+                    ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
+                    $scope.refresh();
+                }
+            };
+
+            $scope.sendnotification = function() {
+
+                //remove objects without email
+                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
+                    if (school.school_email != null && school.school_email != "") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+
+                if (schools_to_send_notification.length > 0) {
+
+                    Modals.show(
+                            Modals.ConfirmEmail(
+                                'Confirma o envio de sms e email para as seguintes escolas?',
+                                'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
+                                schools_to_send_notification
+                            )).then(function() {
+                            return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
+                        })
+                        .then(function(res) {
+                            if (res.status == "error") {
+                                ngToast.danger(res.message);
+                                $scope.msg_success = false;
+                                $scope.msg_error = true;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            } else {
+                                ngToast.warning(res.message);
+                                $scope.msg_success = true;
+                                $scope.msg_error = false;
+                                $scope.refresh();
+                                window.scrollTo(0, 0);
+                            }
+                        });
+                } else {
+                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+                }
+
+            };
+
+            $scope.refresh = function() {
+                Schools.all_schools($scope.query, function(res) {
+                    $scope.check_all_schools = false;
+                    $scope.selected.schools = [];
+                    $scope.schools = angular.copy(res);
+                });
+            };
+
+            $scope.setMaxResults = function(max) {
+                $scope.query.max = max;
+                $scope.query.page = 1;
+                $scope.refresh();
+            };
+
+            Platform.whenReady(function() {
+                $scope.refresh();
+            });
+
+        });
+
 })();
 (function() {
     angular
@@ -17407,238 +17912,6 @@ if (!Array.prototype.find) {
 function identify(namespace, file) {
 
 }
-(function() {
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
-            $stateProvider.state('school_browser', {
-                url: '/schools',
-                templateUrl: '/views/schools/school_browser.html',
-                controller: 'SchoolBrowserCtrl'
-            });
-        })
-        .controller('SchoolBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
-
-            $scope.check_all_schools = false;
-            $scope.identity = Identity;
-            $scope.schools = {};
-            $scope.msg_success = false;
-            $scope.msg_error = false;
-            $scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
-            $scope.query = {
-                year_educacenso: new Date().getFullYear(),
-                sort: {},
-                show_suspended: false,
-                max: 5,
-                page: 1
-            };
-            $scope.selected = {
-                schools: []
-            };
-
-            $scope.onCheckSelectAll = function() {
-                if ($scope.check_all_schools) {
-                    $scope.selected.schools = angular.copy($scope.schools.data);
-                } else {
-                    $scope.selected.schools = [];
-                }
-            };
-
-            $scope.onModifySchool = function(school) {
-                Schools.update(school).$promise.then($scope.onSaved);
-            };
-
-            $scope.onSaved = function(res) {
-                if (res.status === "ok") {
-                    ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
-                    return;
-                } else {
-                    ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
-                    $scope.refresh();
-                }
-            };
-
-            $scope.sendnotification = function() {
-
-                //remove objects without email
-                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
-                    if (school.school_email != null && school.school_email != "") {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-                if (schools_to_send_notification.length > 0) {
-
-                    Modals.show(
-                            Modals.ConfirmEmail(
-                                'Confirma o envio de sms e email para as seguintes escolas?',
-                                'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-                                schools_to_send_notification
-                            )).then(function() {
-                            return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
-                        })
-                        .then(function(res) {
-                            if (res.status == "error") {
-                                ngToast.danger(res.message);
-                                $scope.msg_success = false;
-                                $scope.msg_error = true;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            } else {
-                                ngToast.warning(res.message);
-                                $scope.msg_success = true;
-                                $scope.msg_error = false;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            }
-                        });
-                } else {
-                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-                }
-
-            };
-
-            $scope.onSelectYear = function() {
-                $scope.query.page = 1;
-                $scope.query.max = 5;
-                $scope.refresh();
-            };
-
-            $scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
-                    $scope.check_all_schools = false;
-                    $scope.selected.schools = [];
-                    $scope.schools = angular.copy(res);
-                });
-            };
-
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
-
-            Platform.whenReady(function() {
-                $scope.refresh();
-            });
-
-        });
-
-})();
-(function() {
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
-            $stateProvider.state('school_list_frequency', {
-                url: '/frequency',
-                templateUrl: '/views/schools/school_list_frequency.html',
-                controller: 'SchoolFrequencyBrowserCtrl'
-            });
-        })
-        .controller('SchoolFrequencyBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
-
-            $scope.check_all_schools = false;
-            $scope.identity = Identity;
-            $scope.schools = {};
-            $scope.msg_success = false;
-            $scope.msg_error = false;
-            $scope.query = {
-                sort: {},
-                max: 5,
-                page: 1,
-                search: ''
-            };
-            $scope.selected = {
-                schools: []
-            };
-
-            $scope.onCheckSelectAll = function() {
-                if ($scope.check_all_schools) {
-                    $scope.selected.schools = angular.copy($scope.schools.data);
-                } else {
-                    $scope.selected.schools = [];
-                }
-            };
-
-            $scope.onModifySchool = function(school) {
-                Schools.update(school).$promise.then($scope.onSaved);
-            };
-
-            $scope.onSaved = function(res) {
-                if (res.status === "ok") {
-                    ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
-                    return;
-                } else {
-                    ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
-                    $scope.refresh();
-                }
-            };
-
-            $scope.sendnotification = function() {
-
-                //remove objects without email
-                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
-                    if (school.school_email != null && school.school_email != "") {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
-
-                if (schools_to_send_notification.length > 0) {
-
-                    Modals.show(
-                            Modals.ConfirmEmail(
-                                'Confirma o envio de sms e email para as seguintes escolas?',
-                                'Ao confirmar o envio, as escolas selecionadas serão notificadas por email e poderão cadastrar as turmas para acompanhamento da frequência escolar.',
-                                schools_to_send_notification
-                            )).then(function() {
-                            return Schools.send_frequency_notifications(schools_to_send_notification).$promise;
-                        })
-                        .then(function(res) {
-                            if (res.status == "error") {
-                                ngToast.danger(res.message);
-                                $scope.msg_success = false;
-                                $scope.msg_error = true;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            } else {
-                                ngToast.warning(res.message);
-                                $scope.msg_success = true;
-                                $scope.msg_error = false;
-                                $scope.refresh();
-                                window.scrollTo(0, 0);
-                            }
-                        });
-                } else {
-                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
-                }
-
-            };
-
-            $scope.refresh = function() {
-                Schools.all_schools($scope.query, function(res) {
-                    $scope.check_all_schools = false;
-                    $scope.selected.schools = [];
-                    $scope.schools = angular.copy(res);
-                });
-            };
-
-            $scope.setMaxResults = function(max) {
-                $scope.query.max = max;
-                $scope.query.page = 1;
-                $scope.refresh();
-            };
-
-            Platform.whenReady(function() {
-                $scope.refresh();
-            });
-
-        });
-
-})();
 (function() {
 
     angular.module('BuscaAtivaEscolar')
