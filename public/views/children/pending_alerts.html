@@ -112,6 +112,7 @@
                                 <column-sorter on-change="refresh" model="query.sort" field="'city_name'">Município</column-sorter>
                             </th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,6 +145,7 @@
                             <td ng-click="preview(child)"><span ng-bind="child.created_at | dateFormat" uib-tooltip-html="'Data da Criação ' + (child.created_at | amCalendar)"></span></td>
                             <td ng-click="preview(child)">{{child.alert.place_neighborhood}}</td>
                             <td ng-click="preview(child)">{{child.alert.place_city_name}}</td>
+                            <td ng-click="preview(child)"><i class="fa fa-edit"></i></td>
                         </tr>
                     </tbody>
                 </table>
