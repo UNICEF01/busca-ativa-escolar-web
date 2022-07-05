@@ -806,7 +806,6 @@
                 .then(function() {
                     ngToast.success("Usuário atribuído!");
                     if ($scope.check) $state.go("child_browser");
-                    else $scope.refresh();
                 });
         };
 
