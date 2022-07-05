@@ -805,6 +805,7 @@
                         ngToast.success("Usuário atribuído!");
                         if ($scope.identity.getCurrentUser().id != $scope.new_user)
                             $state.go("child_browser");
+                        else $state.reload();
                     });
                 });
         };
