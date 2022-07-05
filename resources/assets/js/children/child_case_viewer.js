@@ -432,6 +432,7 @@
         $scope.editable = true;
         $scope.showAll = false;
         $scope.showTitle = true;
+        $scope.new_user = "";
 
         $scope.child_id = $scope.$parent.child_id;
         $scope.child = $scope.$parent.child;
@@ -795,18 +796,16 @@
                     );
                 })
                 .then(function(user_id) {
-                    if ($scope.identity.getCurrentUser().id != user_id)
-                        $scope.check = true;
-                    return CaseSteps.assignUser({
+                    $scope.new_user = user_id;
+                    CaseSteps.assignUser({
                         type: $scope.step.step_type,
                         id: $scope.step.id,
                         user_id: user_id,
-                    }).$promise;
-                })
-                .then(function() {
-                    ngToast.success("Usuário atribuído!");
-                    if ($scope.check) $state.go("child_browser");
-                    else $scope.reload();
+                    }).$promise.then(function() {
+                        ngToast.success("Usuário atribuído!");
+                        if ($scope.identity.getCurrentUser().id != $scope.new_user)
+                            $state.go("child_browser");
+                    });
                 });
         };
 
