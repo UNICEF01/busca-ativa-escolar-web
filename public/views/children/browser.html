@@ -20,12 +20,25 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-6">
                             <input class="form-control" type="text" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado">
                         </div>
                         <div class="col-md-3">
                             <button type="button" class="btn btn-raised btn-default" ng-click="changeGroup()">Selecionar grupo</button>
                             <input type="text" ng-model="query.group_id" hidden>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row row-switch">
+                                <div class="col-md-4">
+                                    <div class="material-switch pull-right">
+                                        <input id="someSwitchOptionPrimary" name="tree" ng-model="query.tree" ng-true-value="1" ng-false-value="0" type="checkbox"/>
+                                        <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 label-switch">
+                                    Grupo e subgrupos
+                                </div>
+                            </div>
                         </div>
                     </div>
 
