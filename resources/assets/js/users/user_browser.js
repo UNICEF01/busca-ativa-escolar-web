@@ -46,6 +46,10 @@
                         true;
                     $scope.refresh();
                 };
+                
+                $scope.onCheckTree = function() {
+                    $scope.refresh();
+                };
 
                 $scope.enableQuickAdd = function() {
                     $scope.quickAdd = true;
