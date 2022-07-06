@@ -35,6 +35,7 @@
                     show_suspended: false,
                     max: 16,
                     page: 1,
+                    tree: 0
                 };
 
                 $scope.info = false;
