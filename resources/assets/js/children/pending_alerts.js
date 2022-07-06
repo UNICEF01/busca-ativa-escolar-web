@@ -37,7 +37,7 @@
                     neighborhood: null,
                     show_suspended: false,
                     group_id: null,
-                    tree: 0
+                    tree: 1
                 };
 
                 //checkboxes

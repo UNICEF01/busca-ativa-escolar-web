@@ -52,7 +52,7 @@
                     tree: 1,
                     from: 1,
                     size: 16,
-                    tree: 0
+                    tree: 1
                 };
 
                 $scope.numberOfItens = 16;
