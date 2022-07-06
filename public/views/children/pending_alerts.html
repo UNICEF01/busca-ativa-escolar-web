@@ -35,12 +35,25 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <input type="text" class="form-control" id="fld-group" ng-model="selectedGroup.name" disabled placeholder="Grupo Selecionado">
                             <input type="text" ng-model="query.group_id" class="form-control" hidden>
                         </div>
                         <div class="col-md-3">
-                            <button type="button" class="btn btn-raised btn-default" style="margin: 0!important; width: 100%;" ng-click="changeGroup()">Selecionar grupo</button>
+                            <button type="button" class="btn btn-raised btn-default" style="margin: 0!important;" ng-click="changeGroup()">Selecionar grupo</button>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row row-switch">
+                                <div class="col-md-4">
+                                    <div class="material-switch pull-right">
+                                        <input id="someSwitchOptionPrimary" name="tree" ng-model="query.tree" ng-true-value="1" ng-false-value="0" type="checkbox"/>
+                                        <label for="someSwitchOptionPrimary" class="label-primary"></label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 label-switch">
+                                    Grupo e subgrupos
+                                </div>
+                            </div>
                         </div>
                     </div>
 
