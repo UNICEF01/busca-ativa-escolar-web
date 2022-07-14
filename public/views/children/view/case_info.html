@@ -337,8 +337,7 @@
         <div class="form-group col-md-6" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_year">Em qual ano foi cursado o último ano
                 escolar?*</label>
-            <input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_year">
+            <input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_year">
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
@@ -359,8 +358,7 @@
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano
                 escolar?*</label>
-            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_age">
+            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_age">
         </div>
 
         <div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
@@ -454,8 +452,7 @@
 
         <div class="form-group col-md-12" ng-show="fields.is_working">
             <label class="control-label" for="fld-work_weekly_hours">Quais as horas semanais trabalhadas?*</label>
-            <input type="number" min="0" max="200" step="1" class="form-control" id="fld-work_weekly_hours"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.work_weekly_hours">
+            <input type="number" min="0" max="200" step="1" class="form-control" id="fld-work_weekly_hours" ng-readonly="!canEditCurrentStep()" ng-model="fields.work_weekly_hours">
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
