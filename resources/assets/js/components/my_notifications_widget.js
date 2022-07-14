@@ -17,7 +17,7 @@
             scope.getAlerts = function() {
                 return alerts;
             };
-
+            
             scope.isReady = function() {
                 return isReady;
             };
