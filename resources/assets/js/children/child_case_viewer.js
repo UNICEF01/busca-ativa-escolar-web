@@ -39,6 +39,8 @@
 
         $scope.check = false;
 
+        $scope.caseIsLoaded = false;
+
         $scope.child_id = $scope.$parent.child_id;
         $scope.child = $scope.$parent.child;
 
@@ -395,11 +397,11 @@
         };
 
         $scope.showMessageNeedTransfer = function() {
-            if ($scope.identity.getCurrentUser().tenant_id) {
-                if (
-                    $scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id
-                ) {
+            if ($scope.identity.getCurrentUser().tenant_id && $scope.child.hasOwnProperty('id')) {
+                if ( ($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id)) {
                     return true;
+                } else {
+                    return false;
                 }
             }
             return false;
@@ -548,7 +550,7 @@
             $scope.step = CaseSteps.find({
                 type: $stateParams.step_type,
                 id: $stateParams.step_id,
-                with: "fields,case",
+                with: "fields,case"
             });
 
             Tenants.getSettings(function(res) {
@@ -556,6 +558,7 @@
             });
 
             $scope.step.$promise.then(function(step) {
+
                 $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
                 $scope.case = step.case;
                 $scope.$parent.openStepID = $scope.step.id;
@@ -577,12 +580,13 @@
                 }
 
                 var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({
-                    id: $scope.step.case.tenant_id,
+                    id: $scope.step.case.tenant_id
                 });
 
                 settingsOfTenantOfCase.$promise.then(function(res_settings) {
                     $scope.tenantSettingsOfCase = res_settings;
                 });
+
             });
         }
 
@@ -1027,4 +1031,5 @@
 
         Platform.whenReady(function() {});
     }
+
 })();

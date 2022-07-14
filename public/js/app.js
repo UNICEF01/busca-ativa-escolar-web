@@ -766,6 +766,8 @@
 
         $scope.check = false;
 
+        $scope.caseIsLoaded = false;
+
         $scope.child_id = $scope.$parent.child_id;
         $scope.child = $scope.$parent.child;
 
@@ -1122,11 +1124,11 @@
         };
 
         $scope.showMessageNeedTransfer = function() {
-            if ($scope.identity.getCurrentUser().tenant_id) {
-                if (
-                    $scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id
-                ) {
+            if ($scope.identity.getCurrentUser().tenant_id && $scope.child.hasOwnProperty('id')) {
+                if ( ($scope.identity.getCurrentUser().tenant_id != $scope.child.tenant_id)) {
                     return true;
+                } else {
+                    return false;
                 }
             }
             return false;
@@ -1275,7 +1277,7 @@
             $scope.step = CaseSteps.find({
                 type: $stateParams.step_type,
                 id: $stateParams.step_id,
-                with: "fields,case",
+                with: "fields,case"
             });
 
             Tenants.getSettings(function(res) {
@@ -1283,6 +1285,7 @@
             });
 
             $scope.step.$promise.then(function(step) {
+
                 $scope.fields = Utils.unpackDateFields(step.fields, dateOnlyFields);
                 $scope.case = step.case;
                 $scope.$parent.openStepID = $scope.step.id;
@@ -1304,12 +1307,13 @@
                 }
 
                 var settingsOfTenantOfCase = Tenants.getSettingsOftenantOfcase({
-                    id: $scope.step.case.tenant_id,
+                    id: $scope.step.case.tenant_id
                 });
 
                 settingsOfTenantOfCase.$promise.then(function(res_settings) {
                     $scope.tenantSettingsOfCase = res_settings;
                 });
+
             });
         }
 
@@ -1754,6 +1758,7 @@
 
         Platform.whenReady(function() {});
     }
+
 })();
 (function() {
     angular
@@ -2414,6 +2419,194 @@
             })
         })
         .controller('UserNotificationsCtrlCtrl', function() {});
+})();
+(function() {
+    identify('config', 'charts.js');
+    angular.module('BuscaAtivaEscolar').run(function() {
+        Highcharts.setOptions({
+            lang: {
+                months: [
+                    'Janeiro',
+                    'Fevereiro',
+                    'Março',
+                    'Abril',
+                    'Maio',
+                    'Junho',
+                    'Julho',
+                    'Agosto',
+                    'Setembro',
+                    'Outubro',
+                    'Novembro',
+                    'Dezembro',
+                ],
+                shortMonths: [
+                    'Jan',
+                    'Fev',
+                    'Mar',
+                    'Abr',
+                    'Mai',
+                    'Jun',
+                    'Jul',
+                    'Ago',
+                    'Set',
+                    'Out',
+                    'Nov',
+                    'Dez',
+                ],
+                weekdays: [
+                    'Domingo',
+                    'Segunda',
+                    'Terça',
+                    'Quarta',
+                    'Quinta',
+                    'Sexta',
+                    'Sábado',
+                ],
+                loading: ['Atualizando o gráfico...'],
+                contextButtonTitle: 'Exportar gráfico',
+                decimalPoint: ',',
+                thousandsSep: '.',
+                downloadJPEG: 'Baixar imagem JPEG',
+                downloadPDF: 'Baixar arquivo PDF',
+                downloadPNG: 'Baixar imagem PNG',
+                downloadSVG: 'Baixar vetor SVG',
+                printChart: 'Imprimir gráfico',
+                rangeSelectorFrom: 'De',
+                rangeSelectorTo: 'Para',
+                rangeSelectorZoom: 'Zoom',
+                resetZoom: 'Voltar zoom',
+                resetZoomTitle: 'Voltar zoom para nível 1:1'
+            }
+        });
+    });
+})();
+(function() {
+    identify('config', 'google_maps.js');
+
+    angular.module('BuscaAtivaEscolar').config(function() {});
+
+})();
+
+(function() {
+    identify('config', 'http.js');
+
+    angular.module('BuscaAtivaEscolar').config(function($httpProvider) {
+        $httpProvider.defaults.headers.common = { "Content-Type": "application/json" };
+
+        $httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
+        $httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
+        $httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
+        $httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
+        $httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
+    });
+
+})();
+(function() {
+    identify('config', 'local_storage.js');
+
+    angular.module('BuscaAtivaEscolar').config(function($localStorageProvider) {
+        $localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
+    });
+
+})();
+(function() {
+    identify('config', 'on_init.js');
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .run(function(
+
+            $rootScope,
+            $state,
+
+            Auth
+
+        ) {
+            $.material.init();
+
+            $rootScope.$on('unauthorized', function() {
+                Auth.logout();
+                $state.go('login');
+            });
+        });
+})();
+(function() {
+    identify('config', 'states.js');
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider, $locationProvider, $urlRouterProvider) {
+
+            $locationProvider.html5Mode({
+                enabled: true,
+                requireBase: true
+            });
+            $urlRouterProvider.otherwise('/dashboard');
+
+            $stateProvider
+                .state('login', {
+                    url: '/login',
+                    templateUrl: '/views/login.html',
+                    controller: 'LoginCtrl',
+                    unauthenticated: true
+                })
+                .state('dashboard', {
+                    url: '/dashboard',
+                    templateUrl: '/views/dashboard.html',
+                    controller: 'DashboardCtrl'
+                })
+                .state('developer_mode', {
+                    url: '/developer_mode',
+                    templateUrl: '/views/developer/developer_dashboard.html',
+                    controller: 'DeveloperCtrl',
+                    unauthenticated: true
+
+                })
+                .state('settings', {
+                    url: '/settings?step',
+                    templateUrl: '/views/settings/manage_settings.html',
+                    controller: 'SettingsCtrl'
+                })
+                .state('settings.parameterize_group', {
+                    url: '/parameterize_group/{group_id}',
+                    templateUrl: '/views/settings/parameterize_group.html',
+                    controller: 'ParameterizeGroupCtrl'
+                })
+                .state('credits', {
+                    url: '/credits',
+                    templateUrl: '/views/static/credits.html',
+                    controller: 'CreditsCtrl',
+                    unauthenticated: true
+                })
+                .state('tenant_signup', {
+                    url: '/tenant_signup',
+                    templateUrl: '/views/tenant_signup/main.html',
+                    controller: 'TenantSignupCtrl',
+                    unauthenticated: true
+                })
+                .state('state_signup', {
+                    url: '/state_signup',
+                    templateUrl: '/views/state_signup/main.html',
+                    controller: 'StateSignupCtrl',
+                    unauthenticated: true
+                })
+
+        });
+
+})();
+(function() {
+    identify('config', 'toasts.js');
+
+    angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
+        ngToastProvider.configure({
+            verticalPosition: 'top',
+            horizontalPosition: 'right',
+            maxNumber: 8,
+            animation: 'slide',
+            dismissButton: true,
+            timeout: 6000
+        });
+    });
+
 })();
 (function() {
 
@@ -4819,194 +5012,6 @@
 
 })();
 (function() {
-    identify('config', 'charts.js');
-    angular.module('BuscaAtivaEscolar').run(function() {
-        Highcharts.setOptions({
-            lang: {
-                months: [
-                    'Janeiro',
-                    'Fevereiro',
-                    'Março',
-                    'Abril',
-                    'Maio',
-                    'Junho',
-                    'Julho',
-                    'Agosto',
-                    'Setembro',
-                    'Outubro',
-                    'Novembro',
-                    'Dezembro',
-                ],
-                shortMonths: [
-                    'Jan',
-                    'Fev',
-                    'Mar',
-                    'Abr',
-                    'Mai',
-                    'Jun',
-                    'Jul',
-                    'Ago',
-                    'Set',
-                    'Out',
-                    'Nov',
-                    'Dez',
-                ],
-                weekdays: [
-                    'Domingo',
-                    'Segunda',
-                    'Terça',
-                    'Quarta',
-                    'Quinta',
-                    'Sexta',
-                    'Sábado',
-                ],
-                loading: ['Atualizando o gráfico...'],
-                contextButtonTitle: 'Exportar gráfico',
-                decimalPoint: ',',
-                thousandsSep: '.',
-                downloadJPEG: 'Baixar imagem JPEG',
-                downloadPDF: 'Baixar arquivo PDF',
-                downloadPNG: 'Baixar imagem PNG',
-                downloadSVG: 'Baixar vetor SVG',
-                printChart: 'Imprimir gráfico',
-                rangeSelectorFrom: 'De',
-                rangeSelectorTo: 'Para',
-                rangeSelectorZoom: 'Zoom',
-                resetZoom: 'Voltar zoom',
-                resetZoomTitle: 'Voltar zoom para nível 1:1'
-            }
-        });
-    });
-})();
-(function() {
-    identify('config', 'google_maps.js');
-
-    angular.module('BuscaAtivaEscolar').config(function() {});
-
-})();
-
-(function() {
-    identify('config', 'http.js');
-
-    angular.module('BuscaAtivaEscolar').config(function($httpProvider) {
-        $httpProvider.defaults.headers.common = { "Content-Type": "application/json" };
-
-        $httpProvider.interceptors.push('InjectAPIEndpointInterceptor');
-        $httpProvider.interceptors.push('TrackPendingRequestsInterceptor');
-        $httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
-        $httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
-        $httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-    });
-
-})();
-(function() {
-    identify('config', 'local_storage.js');
-
-    angular.module('BuscaAtivaEscolar').config(function($localStorageProvider) {
-        $localStorageProvider.setKeyPrefix('BuscaAtivaEscolar.v075.');
-    });
-
-})();
-(function() {
-    identify('config', 'on_init.js');
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .run(function(
-
-            $rootScope,
-            $state,
-
-            Auth
-
-        ) {
-            $.material.init();
-
-            $rootScope.$on('unauthorized', function() {
-                Auth.logout();
-                $state.go('login');
-            });
-        });
-})();
-(function() {
-    identify('config', 'states.js');
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider, $locationProvider, $urlRouterProvider) {
-
-            $locationProvider.html5Mode({
-                enabled: true,
-                requireBase: true
-            });
-            $urlRouterProvider.otherwise('/dashboard');
-
-            $stateProvider
-                .state('login', {
-                    url: '/login',
-                    templateUrl: '/views/login.html',
-                    controller: 'LoginCtrl',
-                    unauthenticated: true
-                })
-                .state('dashboard', {
-                    url: '/dashboard',
-                    templateUrl: '/views/dashboard.html',
-                    controller: 'DashboardCtrl'
-                })
-                .state('developer_mode', {
-                    url: '/developer_mode',
-                    templateUrl: '/views/developer/developer_dashboard.html',
-                    controller: 'DeveloperCtrl',
-                    unauthenticated: true
-
-                })
-                .state('settings', {
-                    url: '/settings?step',
-                    templateUrl: '/views/settings/manage_settings.html',
-                    controller: 'SettingsCtrl'
-                })
-                .state('settings.parameterize_group', {
-                    url: '/parameterize_group/{group_id}',
-                    templateUrl: '/views/settings/parameterize_group.html',
-                    controller: 'ParameterizeGroupCtrl'
-                })
-                .state('credits', {
-                    url: '/credits',
-                    templateUrl: '/views/static/credits.html',
-                    controller: 'CreditsCtrl',
-                    unauthenticated: true
-                })
-                .state('tenant_signup', {
-                    url: '/tenant_signup',
-                    templateUrl: '/views/tenant_signup/main.html',
-                    controller: 'TenantSignupCtrl',
-                    unauthenticated: true
-                })
-                .state('state_signup', {
-                    url: '/state_signup',
-                    templateUrl: '/views/state_signup/main.html',
-                    controller: 'StateSignupCtrl',
-                    unauthenticated: true
-                })
-
-        });
-
-})();
-(function() {
-    identify('config', 'toasts.js');
-
-    angular.module('BuscaAtivaEscolar').config(function(ngToastProvider) {
-        ngToastProvider.configure({
-            verticalPosition: 'top',
-            horizontalPosition: 'right',
-            maxNumber: 8,
-            animation: 'slide',
-            dismissButton: true,
-            timeout: 6000
-        });
-    });
-
-})();
-(function() {
 
     angular.module('BuscaAtivaEscolar').controller('CreditsCtrl', function($scope, $rootScope, AppDependencies) {
 
@@ -5977,6 +5982,24 @@
 
 	});
 
+})();
+(function() {
+    angular.module('BuscaAtivaEscolar').service('Decorators', function() {
+        var Child = {
+            parents: function(child) {
+                return (child.mother_name || '') +
+                    ((child.mother_name && child.father_name) ? ' | ' : '') +
+                    (child.father_name || '');
+            }
+        };
+
+        var Step = {};
+
+        return {
+            Child: Child,
+            Step: Step
+        };
+    })
 })();
 (function() {
     angular.module('BuscaAtivaEscolar').factory('AppDependencies', function() {
@@ -10531,24 +10554,6 @@ Highcharts.maps["countries/br/br-all"] = {
     }]
 };
 (function() {
-    angular.module('BuscaAtivaEscolar').service('Decorators', function() {
-        var Child = {
-            parents: function(child) {
-                return (child.mother_name || '') +
-                    ((child.mother_name && child.father_name) ? ' | ' : '') +
-                    (child.father_name || '');
-            }
-        };
-
-        var Step = {};
-
-        return {
-            Child: Child,
-            Step: Step
-        };
-    })
-})();
-(function() {
 
     angular.module('BuscaAtivaEscolar')
         .config(function($stateProvider) {
@@ -11417,986 +11422,6 @@ Highcharts.maps["countries/br/br-all"] = {
                 $scope.refresh();
             }
         );
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
-
-            $scope.message = message;
-            $scope.subtitle = subtitle;
-            $scope.clazz = clazz;
-            $scope.canDismiss = canDismiss;
-            $scope.period = period; //periodicidade
-            $scope.can_forward = true;
-
-            $scope.addFrequency = function() {
-                var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
-                $scope.clazz.frequencies.unshift({
-                    created_at: splitDate,
-                    qty_enrollment: 0,
-                    qty_presence: 0,
-                    classes_id: $scope.clazz.id,
-                    periodicidade: $scope.period
-                });
-            };
-
-            $scope.getPreviousDate = function() {
-                var newDate = null;
-                switch ($scope.period) {
-                    case 'Diaria':
-                        newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
-                        break;
-                    case 'Semanal':
-                        newDate = $scope.subtractAWeekOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                    case 'Quinzenal':
-                        newDate = $scope.subtractFortnightOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                    case 'Mensal':
-                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
-                        break;
-                }
-                return newDate;
-            };
-
-            $scope.getlabelNewPeriod = function() {
-                var label = '';
-                switch ($scope.period) {
-                    case 'Diaria':
-                        label = 'dia';
-                        break;
-                    case 'Semanal':
-                        label = 'semana';
-                        break;
-                    case 'Quinzenal':
-                        label = 'quinzena';
-                        break;
-                    case 'Mensal':
-                        label = 'mês';
-                        break;
-                }
-                return label;
-            };
-
-            $scope.getPeriodLabelForNewFrequency = function(date, periodicidade) {
-                date = new Date(date);
-                if (periodicidade == 'Diaria') {
-                    var splitDate = date.toISOString().substr(0, 10).split('-');
-                    return splitDate[2] + "/" + splitDate[1];
-                }
-
-                if (periodicidade == 'Semanal') {
-                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
-                }
-
-                if (periodicidade == 'Quinzenal') {
-                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
-                }
-
-                if (periodicidade == 'Mensal') {
-                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
-                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
-                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
-                }
-            };
-
-            //subtrair um dia considerando finais de semana
-            $scope.subtractDaysOfDayInstance = function(date, days) {
-                var copy = new Date(Number(date));
-                copy.setDate(date.getDate() - days);
-                if (copy.getUTCDay() == 0) //domingo
-                { copy.setDate(copy.getDate() - 2); }
-                if (copy.getUTCDay() == 6) //sabado
-                { copy.setDate(copy.getDate() - 1); }
-                return copy;
-            };
-
-            //pega a ultima sexta-feira para periodicidade semanal
-            $scope.subtractAWeekOfDayInstance = function(date) {
-                var lastFriday = new Date(Number(date));
-                if (date.getDay() == 5) {
-                    lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
-                }
-                while (lastFriday.getDay() != 5) {
-                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
-                }
-                return lastFriday;
-            };
-
-            //pega o ultimo dia 15 ou dia 1o
-            $scope.subtractFortnightOfDayInstance = function(date) {
-                var date2 = new Date(Number(date));
-                if (date.getUTCDate() > 15) {
-                    date2.setUTCDate(15);
-                } else { //se é de 1 a 15 pega ultima data do mes anterior
-                    date2 = new Date(date.getFullYear(), date.getMonth(), 0);
-                }
-                return date2;
-            };
-
-            //menos um mês completo- ultimo dia do mês anterior
-            $scope.subtractMonthOfDayInstance = function(date) {
-                return new Date(date.getFullYear(), date.getMonth(), 0);
-            };
-
-            $scope.agree = function() {
-                $scope.can_forward = false;
-                Classes.updateFrequencies($scope.clazz.frequencies).$promise
-                    .then(function() {
-                        $scope.can_forward = true;
-                        $uibModalInstance.close(true);
-                    });
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('AlertModalCtrl', function AlertModalCtrl($scope, $uibModalInstance, message, details) {
-
-            $scope.message = message;
-            $scope.details = details;
-
-            $scope.dismiss = function() {
-                $uibModalInstance.dismiss();
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $uibModalInstance) {
-
-            // TODO: receive case ID, fetch details and show
-
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
-
-
-
-            $scope.static = StaticData;
-            $scope.lang = Language;
-            $scope.reason = null;
-
-            $scope.cancelCase = function() {
-                if (!$scope.reason) return;
-                $uibModalInstance.close({ response: $scope.reason });
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            }
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance) {
-
-            $scope.reject_reason = "";
-            $scope.ok = function() {
-                if (!$scope.reason) return;
-                $uibModalInstance.close({
-                    response: {
-                        reason: $scope.reason,
-                    }
-                });
-            };
-
-            $scope.cancel = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance, $typeUser) {
-
-
-
-            $scope.step = 1;
-            $scope.reason = "";
-            $scope.typeUser = $typeUser;
-
-            $scope.ok = function() {
-                if (!$scope.reason) return;
-                $uibModalInstance.close({ response: $scope.reason });
-            };
-
-            $scope.cancel = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance, $typeUser, StaticData, Tenants) {
-
-            $scope.step = 1;
-            $scope.reason = "";
-            $scope.typeUser = $typeUser;
-            $scope.tenants = [];
-
-            $scope.defaultQuery = {
-                name: '',
-                step_name: '',
-                cause_name: '',
-                assigned_user_name: '',
-                location_full: '',
-                alert_status: ['accepted'],
-                case_status: ['in_progress'],
-                risk_level: ['low', 'medium', 'high'],
-                age_null: true,
-                age: { from: 0, to: 10000 },
-                gender: ['male', 'female', 'undefined'],
-                gender_null: true,
-                place_kind: ['rural', 'urban'],
-                place_kind_null: true,
-            };
-
-            $scope.query = angular.merge({}, $scope.defaultQuery);
-            $scope.search = {};
-            // Todo Criar um serviço para reaproveitar isso
-            $scope.getUFs = function() {
-                return StaticData.getUFs();
-            };
-
-            $scope.refresh = function() {
-                $scope.tenants = Tenants.findByUfPublic({ 'uf': $scope.query.uf });
-            };
-
-            $scope.getTenants = function() {
-                if (!$scope.tenants || !$scope.tenants.data) return [];
-                return $scope.tenants.data;
-            };
-
-            $scope.ok = function() {
-                if (!$scope.reason) return;
-                var city = _.find($scope.tenants.data, { id: $scope.query.tenant_id })
-                $uibModalInstance.close({
-                    response: {
-                        tenant_id: $scope.query.tenant_id,
-                        reason: $scope.reason,
-                        city: city
-                    }
-                });
-            };
-
-            $scope.cancel = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, message, details, canDismiss) {
-
-            $scope.message = message;
-            $scope.details = details;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $uibModalInstance, message, details, schools, canDismiss) {
-
-            $scope.message = message;
-            $scope.details = details;
-            $scope.schools = schools;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('ConfirmLargeModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, message, details, canDismiss) {
-
-            $scope.message = message;
-            $scope.details = details;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, title, message, href) {
-
-            $scope.title = title;
-            $scope.message = message;
-            $scope.href = href;
-
-            $scope.back = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $uibModalInstance, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
-
-
-
-            $scope.title = title;
-            $scope.message = message;
-            $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
-
-            $scope.file = null;
-            $scope.progress = 0;
-            $scope.isUploading = false;
-
-
-            $scope.upload = function(file) {
-                if (!uploadParameters) uploadParameters = {};
-                uploadParameters.file = file;
-
-                $scope.isUploading = true;
-
-                Upload.upload({ url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH }).then(onSuccess, onError, onProgress);
-
-            };
-
-            function onSuccess(res) {
-                if (!res.data) return onError(res);
-
-
-                $uibModalInstance.close({ response: res.data });
-                $scope.isUploading = false;
-            }
-
-            function onError(res) {
-                console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
-                $scope.isUploading = false;
-            }
-
-            function onProgress(ev) {
-                $scope.progress = (ev.loaded / ev.total);
-            }
-
-            $scope.calculateProgressWidth = function() {
-                return parseInt(100.0 * $scope.progress) + "%";
-            };
-
-            $scope.close = function() {
-                $scope.isUploading = false;
-                $uibModalInstance.dismiss(false);
-            }
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('FileUploaderTituloModalCtrl', function FileUploaderTituloModalCtrl($scope, $uibModalInstance, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
-
-            console.log("[modal] file_uploader titulo", uploadUrl, uploadParameters, title, message);
-
-            $scope.title = title;
-            $scope.message = message;
-            $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
-
-            $scope.file = null;
-            $scope.progress = 0;
-            $scope.isUploading = false;
-
-
-            $scope.upload = function(file) {
-
-                if (!uploadParameters) uploadParameters = {};
-                uploadParameters.file = file;
-                $scope.isUploading = true;
-                Upload.upload({ url: uploadUrl, data: uploadParameters, headers: API.OPTIONAL_AUTH }).then(onSuccess, onError, onProgress);
-            };
-
-            function onSuccess(res) {
-                if (!res.data) return onError(res);
-
-                console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
-                $uibModalInstance.close({ response: res.data });
-                $scope.isUploading = false;
-            }
-
-            function onError(res) {
-                console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
-                $scope.isUploading = false;
-            }
-
-            function onProgress(ev) {
-                $scope.progress = (ev.loaded / ev.total);
-            }
-
-            $scope.calculateProgressWidth = function() {
-                return parseInt(100.0 * $scope.progress) + "%";
-            };
-
-            $scope.close = function() {
-                $scope.isUploading = false;
-                $uibModalInstance.dismiss(false);
-            }
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $uibModalInstance, message, canDismiss) {
-
-            $scope.message = message;
-            $scope.canDismiss = canDismiss;
-
-            $scope.agree = function() {
-                $uibModalInstance.close(true);
-            };
-
-            $scope.disagree = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $filter, ngToast, $uibModalInstance, Groups, title, message, initialGroup, messageButton, isMovement, toBeMoved, levelOfToBeMoved, canDismiss, noGroupsMessage) {
-
-            $scope.title = title;
-            $scope.message = message;
-            $scope.canDismiss = canDismiss;
-            $scope.noGroupsMessage = noGroupsMessage;
-            $scope.messageButton = messageButton;
-
-            $scope.isMovement = isMovement;
-            $scope.groupToBeMoved = toBeMoved;
-            $scope.levelOfToBeMoved = levelOfToBeMoved;
-
-            $scope.selectedGroup = null;
-            $scope.selectedLevelGroup = null;
-
-            $scope.groupsOne = [];
-            $scope.groupsTwo = [];
-            $scope.groupsThree = [];
-            $scope.groupsFour = [];
-
-            $scope.mirrorGroupsOne = [];
-            $scope.mirrorGroupsTwo = [];
-            $scope.mirrorGroupsThree = [];
-            $scope.mirrorGroupsFour = [];
-
-            $scope.selectedTabOne = null;
-            $scope.selectedTabTwo = null;
-            $scope.selectedTabThree = null;
-            $scope.selectedTabFour = null;
-
-            $scope.refresh = function() {
-
-                $scope.groupsOne = [{
-                    id: initialGroup.id,
-                    name: initialGroup.name
-                }];
-                $scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
-
-                $scope.groupsTwo = [];
-                $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
-
-                $scope.groupsThree = [];
-                $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-
-                $scope.groupsFour = [];
-                $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-
-            };
-
-            $scope.onSelectGroup = function(number, group) {
-
-                if (number == 1) {
-                    $scope.selectedTabOne = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsTwo = res.data;
-                        $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
-                        $scope.groupsThree = [];
-                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-                        $scope.groupsFour = [];
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 2) {
-                    $scope.selectedTabTwo = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsThree = res.data;
-                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-                        $scope.groupsFour = [];
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 3) {
-                    $scope.selectedTabThree = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsFour = res.data;
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 4) {
-                    $scope.selectedTabFour = group.id;
-                }
-
-                $scope.selectedGroup = group;
-                $scope.selectedLevelGroup = number;
-
-            };
-
-            $scope.filterGroups = function(group) {
-                if (group === "two") {
-                    $scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
-                        $: $scope.searchGroupTwo
-                    });
-                }
-                if (group === "three") {
-                    $scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
-                        $: $scope.searchGroupThree
-                    });
-                }
-                if (group === "four") {
-                    $scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
-                        $: $scope.searchGroupFour
-                    });
-                }
-            };
-
-            $scope.onConfirm = function() {
-
-                if (!$scope.selectedGroup) {
-                    ngToast.danger('Você não selecionou nenhum grupo!');
-                    return;
-                }
-
-                if ($scope.isMovement) {
-
-                    if ($scope.levelOfToBeMoved == 1 || $scope.levelOfToBeMoved == 2) {
-                        ngToast.danger('Grupo selecionado não pode ser movimentado!');
-                        return;
-                    }
-
-                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup == 3) {
-                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
-                        return;
-                    }
-
-                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup == 4) {
-                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
-                        return;
-                    }
-
-                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup != 2) {
-                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
-                        return;
-                    }
-
-                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup != 3) {
-                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
-                        return;
-                    }
-
-                }
-
-                $uibModalInstance.close({ response: $scope.selectedGroup });
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-            $scope.refresh();
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
-
-            $scope.email = '';
-            $scope.password = '';
-
-            $scope.reason = reason;
-            $scope.canDismiss = canDismiss;
-
-            $scope.showPassowrd = function() {
-                var field_password = document.getElementById("fld-password");
-                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
-
-            function onLoggedIn() {
-                $uibModalInstance.close({ response: Identity.getCurrentUser() });
-            }
-
-            function onError() {
-                Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
-            }
-
-            $scope.login = function() {
-                Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            }
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, ngToast, SupportTicket, $uibModalInstance) {
-
-
-
-            $scope.isLoading = false;
-
-            $scope.ticket = {
-                name: '',
-                city_name: '',
-                phone: '',
-                email: '',
-                message: ''
-            };
-
-            $scope.submitTicket = function() {
-                $scope.isLoading = true;
-
-                SupportTicket.submit($scope.ticket, function() {
-                    $scope.isLoading = false;
-
-                    ngToast.success('Solicitação de suporte enviada com sucesso!');
-                    $uibModalInstance.close({ response: $scope.answer });
-                });
-
-                return false;
-            };
-
-            $scope.cancel = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('PromptModalCtrl', function PromptModalCtrl($scope, $uibModalInstance, question, defaultAnswer, answerPlaceholder) {
-
-
-            $scope.question = question;
-            $scope.answer = defaultAnswer;
-            $scope.placeholder = answerPlaceholder;
-
-            $scope.ok = function() {
-                $uibModalInstance.close({ response: $scope.answer });
-            };
-
-            $scope.cancel = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('RemoveGroupPickerModalCtrl', function RemoveGroupPickerModalCtrl($scope, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, messageButton, isMovement, toBeRemoved, levelOfToBeRemoved, canDismiss, noGroupsMessage) {
-
-            $scope.identity = Identity;
-            $scope.title = title;
-            $scope.message = message;
-            $scope.canDismiss = canDismiss;
-            $scope.noGroupsMessage = noGroupsMessage;
-            $scope.messageButton = messageButton;
-
-            $scope.isMovement = isMovement;
-            $scope.groupToBeRemoved = toBeRemoved;
-            $scope.levelOfToBeRemoved = levelOfToBeRemoved;
-
-            $scope.selectedGroup = null;
-            $scope.selectedLevelGroup = null;
-
-            $scope.groupsOne = [];
-            $scope.groupsTwo = [];
-            $scope.groupsThree = [];
-            $scope.groupsFour = [];
-
-            $scope.mirrorGroupsOne = [];
-            $scope.mirrorGroupsTwo = [];
-            $scope.mirrorGroupsThree = [];
-            $scope.mirrorGroupsFour = [];
-
-            $scope.selectedTabOne = null;
-            $scope.selectedTabTwo = null;
-            $scope.selectedTabThree = null;
-            $scope.selectedTabFour = null;
-
-            $scope.refresh = function() {
-
-                $scope.groupsOne = [{
-                    id: initialGroup.id,
-                    name: initialGroup.name
-                }];
-                $scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
-
-                $scope.groupsTwo = [];
-                $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
-
-                $scope.groupsThree = [];
-                $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-
-                $scope.groupsFour = [];
-                $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-
-            };
-
-            $scope.onSelectGroup = function(number, group) {
-
-                if (number == 1) {
-                    $scope.selectedTabOne = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsTwo = res.data;
-                        $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
-                        $scope.groupsThree = [];
-                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-                        $scope.groupsFour = [];
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 2) {
-                    $scope.selectedTabTwo = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsThree = res.data;
-                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
-                        $scope.groupsFour = [];
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 3) {
-                    $scope.selectedTabThree = group.id;
-                    Groups.findByParent({ id: group.id }, function(res) {
-                        $scope.groupsFour = res.data;
-                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
-                    });
-                }
-
-                if (number == 4) {
-                    $scope.selectedTabFour = group.id;
-                }
-
-                $scope.selectedGroup = group;
-                $scope.selectedLevelGroup = number;
-
-            };
-
-            $scope.filterGroups = function(group) {
-                if (group === "two") {
-                    $scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
-                        $: $scope.searchGroupTwo
-                    });
-                }
-                if (group === "three") {
-                    $scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
-                        $: $scope.searchGroupThree
-                    });
-                }
-                if (group === "four") {
-                    $scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
-                        $: $scope.searchGroupFour
-                    });
-                }
-            };
-
-            $scope.onConfirm = function() {
-
-                if (!$scope.selectedGroup) {
-                    ngToast.danger('Você não selecionou nenhum grupo!');
-                    return;
-                }
-
-                if ($scope.isMovement) {
-
-                    if ($scope.levelOfToBeRemoved == 1 || $scope.levelOfToBeRemoved == 4 || ($scope.levelOfToBeRemoved == 3 && $scope.identity.getCurrentUser().tenant.is_state) ) {
-                        ngToast.danger('Grupo selecionado não pode ser removido!');
-                        return;
-                    }
-
-                    if ($scope.levelOfToBeRemoved != $scope.selectedLevelGroup) {
-                        ngToast.danger('Não é permitido selecionar um grupo de nível diferente do que está sendo removido.');
-                        return;
-                    }
-
-                    if ($scope.groupToBeRemoved.id == $scope.selectedGroup.id) {
-                        ngToast.danger('Não é permitido selecionar o mesmo grupo');
-                        return;
-                    }
-
-                }
-                
-                $uibModalInstance.close({ response: $scope.selectedGroup });
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-            $scope.refresh();
-
-        });
-
-})();
-(function() {
-
-    angular
-        .module('BuscaAtivaEscolar')
-        .controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, ngToast, $uibModalInstance, title, message, users, caseGroups, canDismiss, noUsersMessage) {
-
-            $scope.title = title;
-            $scope.message = message;
-            $scope.canDismiss = canDismiss;
-            $scope.noUsersMessage = noUsersMessage;
-
-            $scope.selectedUser = { id: null };
-            $scope.users = users;
-            $scope.caseGroups = caseGroups;
-
-            $scope.hasUsers = function() {
-                if (!$scope.users) return false;
-                return ($scope.users.length > 0);
-            };
-
-            $scope.onSelect = function() {
-                if (!$scope.selectedUser.id) {
-                    ngToast.danger('Você não selecionou nenhum usuário!');
-                    return;
-                }
-                $uibModalInstance.close({ response: $scope.selectedUser.id });
-            };
-
-            $scope.close = function() {
-                $uibModalInstance.dismiss(false);
-            };
-
-            $scope.getGroupWithUsers = function() {
-                var groups = [];
-                $scope.caseGroups.forEach(function(group) {
-                    group.users = $scope.getUsersOfGroup(group);
-                    groups.push(group);
-                });
-                return groups;
-            };
-
-            $scope.getUsersOfGroup = function(group) {
-                var finalGroup = [];
-                $scope.users.forEach(function(user) {
-                    if (user.group.id == group.id) {
-                        finalGroup.push(user);
-                    }
-                });
-                return finalGroup;
-            };
-
-        });
-
 })();
 (function() {
 
@@ -13842,6 +12867,986 @@ if (!Array.prototype.find) {
                 $scope.refresh();
             }
         );
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('AddPeriodFrequencyModalCtrl', function AddPeriodFrequencyModalCtrl($scope, $uibModalInstance, message, subtitle, clazz, period, canDismiss, Classes) {
+
+            $scope.message = message;
+            $scope.subtitle = subtitle;
+            $scope.clazz = clazz;
+            $scope.canDismiss = canDismiss;
+            $scope.period = period; //periodicidade
+            $scope.can_forward = true;
+
+            $scope.addFrequency = function() {
+                var splitDate = $scope.getPreviousDate().toISOString().substr(0, 10) + " 00:00:00";
+                $scope.clazz.frequencies.unshift({
+                    created_at: splitDate,
+                    qty_enrollment: 0,
+                    qty_presence: 0,
+                    classes_id: $scope.clazz.id,
+                    periodicidade: $scope.period
+                });
+            };
+
+            $scope.getPreviousDate = function() {
+                var newDate = null;
+                switch ($scope.period) {
+                    case 'Diaria':
+                        newDate = $scope.subtractDaysOfDayInstance(new Date($scope.clazz.frequencies[0].created_at), 1);
+                        break;
+                    case 'Semanal':
+                        newDate = $scope.subtractAWeekOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                    case 'Quinzenal':
+                        newDate = $scope.subtractFortnightOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                    case 'Mensal':
+                        newDate = $scope.subtractMonthOfDayInstance(new Date($scope.clazz.frequencies[0].created_at));
+                        break;
+                }
+                return newDate;
+            };
+
+            $scope.getlabelNewPeriod = function() {
+                var label = '';
+                switch ($scope.period) {
+                    case 'Diaria':
+                        label = 'dia';
+                        break;
+                    case 'Semanal':
+                        label = 'semana';
+                        break;
+                    case 'Quinzenal':
+                        label = 'quinzena';
+                        break;
+                    case 'Mensal':
+                        label = 'mês';
+                        break;
+                }
+                return label;
+            };
+
+            $scope.getPeriodLabelForNewFrequency = function(date, periodicidade) {
+                date = new Date(date);
+                if (periodicidade == 'Diaria') {
+                    var splitDate = date.toISOString().substr(0, 10).split('-');
+                    return splitDate[2] + "/" + splitDate[1];
+                }
+
+                if (periodicidade == 'Semanal') {
+                    var splitDate1 = $scope.subtractDaysOfDayInstance(date, 4).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
+                }
+
+                if (periodicidade == 'Quinzenal') {
+                    var splitDate1 = $scope.subtractFortnightOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
+                }
+
+                if (periodicidade == 'Mensal') {
+                    var splitDate1 = $scope.subtractMonthOfDayInstance(date).toISOString().substr(0, 10).split('-');
+                    var splitDate2 = date.toISOString().substr(0, 10).split('-');
+                    return splitDate1[2] + "/" + splitDate1[1] + " até " + splitDate2[2] + "/" + splitDate2[1];
+                }
+            };
+
+            //subtrair um dia considerando finais de semana
+            $scope.subtractDaysOfDayInstance = function(date, days) {
+                var copy = new Date(Number(date));
+                copy.setDate(date.getDate() - days);
+                if (copy.getUTCDay() == 0) //domingo
+                { copy.setDate(copy.getDate() - 2); }
+                if (copy.getUTCDay() == 6) //sabado
+                { copy.setDate(copy.getDate() - 1); }
+                return copy;
+            };
+
+            //pega a ultima sexta-feira para periodicidade semanal
+            $scope.subtractAWeekOfDayInstance = function(date) {
+                var lastFriday = new Date(Number(date));
+                if (date.getDay() == 5) {
+                    lastFriday = $scope.subtractDaysOfDayInstance(date, 7);
+                }
+                while (lastFriday.getDay() != 5) {
+                    lastFriday = $scope.subtractDaysOfDayInstance(lastFriday, 1);
+                }
+                return lastFriday;
+            };
+
+            //pega o ultimo dia 15 ou dia 1o
+            $scope.subtractFortnightOfDayInstance = function(date) {
+                var date2 = new Date(Number(date));
+                if (date.getUTCDate() > 15) {
+                    date2.setUTCDate(15);
+                } else { //se é de 1 a 15 pega ultima data do mes anterior
+                    date2 = new Date(date.getFullYear(), date.getMonth(), 0);
+                }
+                return date2;
+            };
+
+            //menos um mês completo- ultimo dia do mês anterior
+            $scope.subtractMonthOfDayInstance = function(date) {
+                return new Date(date.getFullYear(), date.getMonth(), 0);
+            };
+
+            $scope.agree = function() {
+                $scope.can_forward = false;
+                Classes.updateFrequencies($scope.clazz.frequencies).$promise
+                    .then(function() {
+                        $scope.can_forward = true;
+                        $uibModalInstance.close(true);
+                    });
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('AlertModalCtrl', function AlertModalCtrl($scope, $uibModalInstance, message, details) {
+
+            $scope.message = message;
+            $scope.details = details;
+
+            $scope.dismiss = function() {
+                $uibModalInstance.dismiss();
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $uibModalInstance) {
+
+            // TODO: receive case ID, fetch details and show
+
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseCancelModalCtrl', function CaseCancelModalCtrl($scope, $uibModalInstance, StaticData, Language) {
+
+
+
+            $scope.static = StaticData;
+            $scope.lang = Language;
+            $scope.reason = null;
+
+            $scope.cancelCase = function() {
+                if (!$scope.reason) return;
+                $uibModalInstance.close({ response: $scope.reason });
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            }
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance) {
+
+            $scope.reject_reason = "";
+            $scope.ok = function() {
+                if (!$scope.reason) return;
+                $uibModalInstance.close({
+                    response: {
+                        reason: $scope.reason,
+                    }
+                });
+            };
+
+            $scope.cancel = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseReopenModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance, $typeUser) {
+
+
+
+            $scope.step = 1;
+            $scope.reason = "";
+            $scope.typeUser = $typeUser;
+
+            $scope.ok = function() {
+                if (!$scope.reason) return;
+                $uibModalInstance.close({ response: $scope.reason });
+            };
+
+            $scope.cancel = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseTransferModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance, $typeUser, StaticData, Tenants) {
+
+            $scope.step = 1;
+            $scope.reason = "";
+            $scope.typeUser = $typeUser;
+            $scope.tenants = [];
+
+            $scope.defaultQuery = {
+                name: '',
+                step_name: '',
+                cause_name: '',
+                assigned_user_name: '',
+                location_full: '',
+                alert_status: ['accepted'],
+                case_status: ['in_progress'],
+                risk_level: ['low', 'medium', 'high'],
+                age_null: true,
+                age: { from: 0, to: 10000 },
+                gender: ['male', 'female', 'undefined'],
+                gender_null: true,
+                place_kind: ['rural', 'urban'],
+                place_kind_null: true,
+            };
+
+            $scope.query = angular.merge({}, $scope.defaultQuery);
+            $scope.search = {};
+            // Todo Criar um serviço para reaproveitar isso
+            $scope.getUFs = function() {
+                return StaticData.getUFs();
+            };
+
+            $scope.refresh = function() {
+                $scope.tenants = Tenants.findByUfPublic({ 'uf': $scope.query.uf });
+            };
+
+            $scope.getTenants = function() {
+                if (!$scope.tenants || !$scope.tenants.data) return [];
+                return $scope.tenants.data;
+            };
+
+            $scope.ok = function() {
+                if (!$scope.reason) return;
+                var city = _.find($scope.tenants.data, { id: $scope.query.tenant_id })
+                $uibModalInstance.close({
+                    response: {
+                        tenant_id: $scope.query.tenant_id,
+                        reason: $scope.reason,
+                        city: city
+                    }
+                });
+            };
+
+            $scope.cancel = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, message, details, canDismiss) {
+
+            $scope.message = message;
+            $scope.details = details;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('ConfirmEmailModalCtrl', function ConfirmEmailModalCtrl($scope, $uibModalInstance, message, details, schools, canDismiss) {
+
+            $scope.message = message;
+            $scope.details = details;
+            $scope.schools = schools;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('ConfirmLargeModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, message, details, canDismiss) {
+
+            $scope.message = message;
+            $scope.details = details;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('DownloadLinkModalCtrl', function ConfirmModalCtrl($scope, $uibModalInstance, title, message, href) {
+
+            $scope.title = title;
+            $scope.message = message;
+            $scope.href = href;
+
+            $scope.back = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('FileUploaderModalCtrl', function FileUploaderModalCtrl($scope, $uibModalInstance, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+
+
+            $scope.title = title;
+            $scope.message = message;
+            $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+            $scope.file = null;
+            $scope.progress = 0;
+            $scope.isUploading = false;
+
+
+            $scope.upload = function(file) {
+                if (!uploadParameters) uploadParameters = {};
+                uploadParameters.file = file;
+
+                $scope.isUploading = true;
+
+                Upload.upload({ url: uploadUrl, data: uploadParameters, headers: API.REQUIRE_AUTH }).then(onSuccess, onError, onProgress);
+
+            };
+
+            function onSuccess(res) {
+                if (!res.data) return onError(res);
+
+
+                $uibModalInstance.close({ response: res.data });
+                $scope.isUploading = false;
+            }
+
+            function onError(res) {
+                console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+                $scope.isUploading = false;
+            }
+
+            function onProgress(ev) {
+                $scope.progress = (ev.loaded / ev.total);
+            }
+
+            $scope.calculateProgressWidth = function() {
+                return parseInt(100.0 * $scope.progress) + "%";
+            };
+
+            $scope.close = function() {
+                $scope.isUploading = false;
+                $uibModalInstance.dismiss(false);
+            }
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('FileUploaderTituloModalCtrl', function FileUploaderTituloModalCtrl($scope, $uibModalInstance, API, StaticData, Upload, uploadUrl, uploadParameters, title, message) {
+
+            console.log("[modal] file_uploader titulo", uploadUrl, uploadParameters, title, message);
+
+            $scope.title = title;
+            $scope.message = message;
+            $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(",");
+
+            $scope.file = null;
+            $scope.progress = 0;
+            $scope.isUploading = false;
+
+
+            $scope.upload = function(file) {
+
+                if (!uploadParameters) uploadParameters = {};
+                uploadParameters.file = file;
+                $scope.isUploading = true;
+                Upload.upload({ url: uploadUrl, data: uploadParameters, headers: API.OPTIONAL_AUTH }).then(onSuccess, onError, onProgress);
+            };
+
+            function onSuccess(res) {
+                if (!res.data) return onError(res);
+
+                console.log('[modal.file_uploader] Uploaded: ', res.config.data.file.name, 'Response: ', res.data);
+                $uibModalInstance.close({ response: res.data });
+                $scope.isUploading = false;
+            }
+
+            function onError(res) {
+                console.error('[modal.file_uploader] Error when uploading: ', res.status, 'Response: ', res);
+                $scope.isUploading = false;
+            }
+
+            function onProgress(ev) {
+                $scope.progress = (ev.loaded / ev.total);
+            }
+
+            $scope.calculateProgressWidth = function() {
+                return parseInt(100.0 * $scope.progress) + "%";
+            };
+
+            $scope.close = function() {
+                $scope.isUploading = false;
+                $uibModalInstance.dismiss(false);
+            }
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $uibModalInstance, message, canDismiss) {
+
+            $scope.message = message;
+            $scope.canDismiss = canDismiss;
+
+            $scope.agree = function() {
+                $uibModalInstance.close(true);
+            };
+
+            $scope.disagree = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('GroupPickerModalCtrl', function GroupPickerModalCtrl($scope, $filter, ngToast, $uibModalInstance, Groups, title, message, initialGroup, messageButton, isMovement, toBeMoved, levelOfToBeMoved, canDismiss, noGroupsMessage) {
+
+            $scope.title = title;
+            $scope.message = message;
+            $scope.canDismiss = canDismiss;
+            $scope.noGroupsMessage = noGroupsMessage;
+            $scope.messageButton = messageButton;
+
+            $scope.isMovement = isMovement;
+            $scope.groupToBeMoved = toBeMoved;
+            $scope.levelOfToBeMoved = levelOfToBeMoved;
+
+            $scope.selectedGroup = null;
+            $scope.selectedLevelGroup = null;
+
+            $scope.groupsOne = [];
+            $scope.groupsTwo = [];
+            $scope.groupsThree = [];
+            $scope.groupsFour = [];
+
+            $scope.mirrorGroupsOne = [];
+            $scope.mirrorGroupsTwo = [];
+            $scope.mirrorGroupsThree = [];
+            $scope.mirrorGroupsFour = [];
+
+            $scope.selectedTabOne = null;
+            $scope.selectedTabTwo = null;
+            $scope.selectedTabThree = null;
+            $scope.selectedTabFour = null;
+
+            $scope.refresh = function() {
+
+                $scope.groupsOne = [{
+                    id: initialGroup.id,
+                    name: initialGroup.name
+                }];
+                $scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
+
+                $scope.groupsTwo = [];
+                $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+
+                $scope.groupsThree = [];
+                $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+
+                $scope.groupsFour = [];
+                $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+
+            };
+
+            $scope.onSelectGroup = function(number, group) {
+
+                if (number == 1) {
+                    $scope.selectedTabOne = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsTwo = res.data;
+                        $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+                        $scope.groupsThree = [];
+                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+                        $scope.groupsFour = [];
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 2) {
+                    $scope.selectedTabTwo = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsThree = res.data;
+                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+                        $scope.groupsFour = [];
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 3) {
+                    $scope.selectedTabThree = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsFour = res.data;
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 4) {
+                    $scope.selectedTabFour = group.id;
+                }
+
+                $scope.selectedGroup = group;
+                $scope.selectedLevelGroup = number;
+
+            };
+
+            $scope.filterGroups = function(group) {
+                if (group === "two") {
+                    $scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
+                        $: $scope.searchGroupTwo
+                    });
+                }
+                if (group === "three") {
+                    $scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
+                        $: $scope.searchGroupThree
+                    });
+                }
+                if (group === "four") {
+                    $scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
+                        $: $scope.searchGroupFour
+                    });
+                }
+            };
+
+            $scope.onConfirm = function() {
+
+                if (!$scope.selectedGroup) {
+                    ngToast.danger('Você não selecionou nenhum grupo!');
+                    return;
+                }
+
+                if ($scope.isMovement) {
+
+                    if ($scope.levelOfToBeMoved == 1 || $scope.levelOfToBeMoved == 2) {
+                        ngToast.danger('Grupo selecionado não pode ser movimentado!');
+                        return;
+                    }
+
+                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup == 3) {
+                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
+                        return;
+                    }
+
+                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup == 4) {
+                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo de mesmo nível!');
+                        return;
+                    }
+
+                    if ($scope.levelOfToBeMoved == 3 && $scope.selectedLevelGroup != 2) {
+                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
+                        return;
+                    }
+
+                    if ($scope.levelOfToBeMoved == 4 && $scope.selectedLevelGroup != 3) {
+                        ngToast.danger('Grupo selecionado não pode ser movimentado para o grupo indicado!');
+                        return;
+                    }
+
+                }
+
+                $uibModalInstance.close({ response: $scope.selectedGroup });
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+            $scope.refresh();
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('LoginModalCtrl', function LoginModalCtrl($scope, $uibModalInstance, Modals, Identity, Auth, reason, canDismiss) {
+
+            $scope.email = '';
+            $scope.password = '';
+
+            $scope.reason = reason;
+            $scope.canDismiss = canDismiss;
+
+            $scope.showPassowrd = function() {
+                var field_password = document.getElementById("fld-password");
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            }
+
+            function onLoggedIn() {
+                $uibModalInstance.close({ response: Identity.getCurrentUser() });
+            }
+
+            function onError() {
+                Modals.show(Modals.Alert('Usuário ou senha incorretos', 'Por favor, verifique os dados informados e tente novamente.'));
+            }
+
+            $scope.login = function() {
+                Auth.login($scope.email, $scope.password).then(onLoggedIn, onError);
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            }
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('NewSupportTicketModalCtrl', function NewSupportTicketModalCtrl($scope, ngToast, SupportTicket, $uibModalInstance) {
+
+
+
+            $scope.isLoading = false;
+
+            $scope.ticket = {
+                name: '',
+                city_name: '',
+                phone: '',
+                email: '',
+                message: ''
+            };
+
+            $scope.submitTicket = function() {
+                $scope.isLoading = true;
+
+                SupportTicket.submit($scope.ticket, function() {
+                    $scope.isLoading = false;
+
+                    ngToast.success('Solicitação de suporte enviada com sucesso!');
+                    $uibModalInstance.close({ response: $scope.answer });
+                });
+
+                return false;
+            };
+
+            $scope.cancel = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('PromptModalCtrl', function PromptModalCtrl($scope, $uibModalInstance, question, defaultAnswer, answerPlaceholder) {
+
+
+            $scope.question = question;
+            $scope.answer = defaultAnswer;
+            $scope.placeholder = answerPlaceholder;
+
+            $scope.ok = function() {
+                $uibModalInstance.close({ response: $scope.answer });
+            };
+
+            $scope.cancel = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('RemoveGroupPickerModalCtrl', function RemoveGroupPickerModalCtrl($scope, $filter, ngToast, $uibModalInstance, Groups, Identity, title, message, initialGroup, messageButton, isMovement, toBeRemoved, levelOfToBeRemoved, canDismiss, noGroupsMessage) {
+
+            $scope.identity = Identity;
+            $scope.title = title;
+            $scope.message = message;
+            $scope.canDismiss = canDismiss;
+            $scope.noGroupsMessage = noGroupsMessage;
+            $scope.messageButton = messageButton;
+
+            $scope.isMovement = isMovement;
+            $scope.groupToBeRemoved = toBeRemoved;
+            $scope.levelOfToBeRemoved = levelOfToBeRemoved;
+
+            $scope.selectedGroup = null;
+            $scope.selectedLevelGroup = null;
+
+            $scope.groupsOne = [];
+            $scope.groupsTwo = [];
+            $scope.groupsThree = [];
+            $scope.groupsFour = [];
+
+            $scope.mirrorGroupsOne = [];
+            $scope.mirrorGroupsTwo = [];
+            $scope.mirrorGroupsThree = [];
+            $scope.mirrorGroupsFour = [];
+
+            $scope.selectedTabOne = null;
+            $scope.selectedTabTwo = null;
+            $scope.selectedTabThree = null;
+            $scope.selectedTabFour = null;
+
+            $scope.refresh = function() {
+
+                $scope.groupsOne = [{
+                    id: initialGroup.id,
+                    name: initialGroup.name
+                }];
+                $scope.mirrorGroupsOne = angular.copy($scope.groupsOne);
+
+                $scope.groupsTwo = [];
+                $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+
+                $scope.groupsThree = [];
+                $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+
+                $scope.groupsFour = [];
+                $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+
+            };
+
+            $scope.onSelectGroup = function(number, group) {
+
+                if (number == 1) {
+                    $scope.selectedTabOne = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsTwo = res.data;
+                        $scope.mirrorGroupsTwo = angular.copy($scope.groupsTwo);
+                        $scope.groupsThree = [];
+                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+                        $scope.groupsFour = [];
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 2) {
+                    $scope.selectedTabTwo = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsThree = res.data;
+                        $scope.mirrorGroupsThree = angular.copy($scope.groupsThree);
+                        $scope.groupsFour = [];
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 3) {
+                    $scope.selectedTabThree = group.id;
+                    Groups.findByParent({ id: group.id }, function(res) {
+                        $scope.groupsFour = res.data;
+                        $scope.mirrorGroupsFour = angular.copy($scope.groupsFour);
+                    });
+                }
+
+                if (number == 4) {
+                    $scope.selectedTabFour = group.id;
+                }
+
+                $scope.selectedGroup = group;
+                $scope.selectedLevelGroup = number;
+
+            };
+
+            $scope.filterGroups = function(group) {
+                if (group === "two") {
+                    $scope.mirrorGroupsTwo = $filter("filter")($scope.groupsTwo, {
+                        $: $scope.searchGroupTwo
+                    });
+                }
+                if (group === "three") {
+                    $scope.mirrorGroupsThree = $filter("filter")($scope.groupsThree, {
+                        $: $scope.searchGroupThree
+                    });
+                }
+                if (group === "four") {
+                    $scope.mirrorGroupsFour = $filter("filter")($scope.groupsFour, {
+                        $: $scope.searchGroupFour
+                    });
+                }
+            };
+
+            $scope.onConfirm = function() {
+
+                if (!$scope.selectedGroup) {
+                    ngToast.danger('Você não selecionou nenhum grupo!');
+                    return;
+                }
+
+                if ($scope.isMovement) {
+
+                    if ($scope.levelOfToBeRemoved == 1 || $scope.levelOfToBeRemoved == 4 || ($scope.levelOfToBeRemoved == 3 && $scope.identity.getCurrentUser().tenant.is_state) ) {
+                        ngToast.danger('Grupo selecionado não pode ser removido!');
+                        return;
+                    }
+
+                    if ($scope.levelOfToBeRemoved != $scope.selectedLevelGroup) {
+                        ngToast.danger('Não é permitido selecionar um grupo de nível diferente do que está sendo removido.');
+                        return;
+                    }
+
+                    if ($scope.groupToBeRemoved.id == $scope.selectedGroup.id) {
+                        ngToast.danger('Não é permitido selecionar o mesmo grupo');
+                        return;
+                    }
+
+                }
+                
+                $uibModalInstance.close({ response: $scope.selectedGroup });
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+            $scope.refresh();
+
+        });
+
+})();
+(function() {
+
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('UserPickerModalCtrl', function UserPickerModalCtrl($scope, ngToast, $uibModalInstance, title, message, users, caseGroups, canDismiss, noUsersMessage) {
+
+            $scope.title = title;
+            $scope.message = message;
+            $scope.canDismiss = canDismiss;
+            $scope.noUsersMessage = noUsersMessage;
+
+            $scope.selectedUser = { id: null };
+            $scope.users = users;
+            $scope.caseGroups = caseGroups;
+
+            $scope.hasUsers = function() {
+                if (!$scope.users) return false;
+                return ($scope.users.length > 0);
+            };
+
+            $scope.onSelect = function() {
+                if (!$scope.selectedUser.id) {
+                    ngToast.danger('Você não selecionou nenhum usuário!');
+                    return;
+                }
+                $uibModalInstance.close({ response: $scope.selectedUser.id });
+            };
+
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            };
+
+            $scope.getGroupWithUsers = function() {
+                var groups = [];
+                $scope.caseGroups.forEach(function(group) {
+                    group.users = $scope.getUsersOfGroup(group);
+                    groups.push(group);
+                });
+                return groups;
+            };
+
+            $scope.getUsersOfGroup = function(group) {
+                var finalGroup = [];
+                $scope.users.forEach(function(user) {
+                    if (user.group.id == group.id) {
+                        finalGroup.push(user);
+                    }
+                });
+                return finalGroup;
+            };
+
+        });
+
 })();
 (function() {
     angular
@@ -19053,6 +19058,566 @@ function identify(namespace, file) {
 
 })();
 (function() {
+    var app = angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('lgpd_signup', {
+                url: '/lgpd_signup/:user_id',
+                templateUrl: '/views/users/user_lgpd_signup.html',
+                controller: 'LgpdSignupCtrl',
+            })
+        })
+        .controller('LgpdSignupCtrl', function($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Utils, Identity, Users, Groups, StaticData) {
+
+            $scope.signed = false;
+            $scope.term = true;
+
+            $scope.currentState = $state.current.name;
+
+            $scope.user = {};
+            $scope.isReviewing = false;
+
+            $scope.identity = Identity;
+            $scope.static = StaticData;
+
+            $scope.groups = {};
+            $scope.quickAdd = ($stateParams.quick_add === 'true');
+
+            var permissions = {};
+            var dateOnlyFields = ['dob'];
+
+            var userTypeVisitantes = [];
+            var permissionsFormForVisitante = [];
+
+            $scope.perfilVisitante = { name: '' };
+            $scope.permissionsVisitantes = ['relatorios'];
+
+            Platform.whenReady(function() {
+                permissions = StaticData.getPermissions();
+                userTypeVisitantes = StaticData.getUserTypeVisitantes();
+                permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
+                $scope.isCreating = (!$scope.identity.getCurrentUser().id || $scope.identity.getCurrentUser().id === "new");
+
+                if (!$scope.isCreating) {
+                    $scope.user = Users.myself({ id: $scope.identity.getCurrentUser().id }, prepareUserModel);
+                } else {
+                    if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
+                        $scope.groups = {};
+                    } else {
+                        $scope.groups = Groups.find();
+                    }
+                }
+
+                if (Identity.getCurrentUser().lgpd) {
+                    $scope.signed = true;
+                }
+
+            });
+
+
+            $scope.isSuperAdmin = function() {
+                return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
+            };
+
+            $scope.isTargetUserTenantBound = function() {
+                return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
+            };
+
+            $scope.isTargetUserUFBound = function() {
+                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
+            };
+
+            $scope.canDefineUserTenant = function() {
+                // Can specify user tenant only if superadmin, and only if target user type is tenant-bound
+                if (!$scope.isSuperAdmin()) return false;
+                return $scope.isTargetUserTenantBound();
+            };
+
+            $scope.canDefineUserUF = function() {
+                // Only superusers can define user UF, and only on UF-bound user types
+                if (!$scope.isSuperAdmin()) return false;
+                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
+            };
+
+            $scope.openUser = function(user_id, is_reviewing) {
+                $scope.isCreating = false;
+                $scope.isReviewing = !!is_reviewing;
+                $scope.user = Users.find({ id: user_id }, prepareUserModel);
+            };
+
+            $scope.goBack = function() {
+                return $state.go($rootScope.previousState, $rootScope.previousStateParams);
+            };
+
+            $scope.getUserTypes = function() {
+                if (!permissions) return {};
+                if (!permissions.can_manage_types) return {};
+
+                var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function(el) {
+                    return $scope.getUserTypesVisitantes().indexOf(el) < 0;
+                });
+
+                return finalPermissions;
+            };
+
+            $scope.getUserTypesVisitantes = function() {
+                if (!permissions) return {};
+                if (!permissions.can_manage_types) return {};
+                return userTypeVisitantes;
+            };
+
+            $scope.getPermissionsFormForVisitante = function() {
+                return permissionsFormForVisitante;
+            };
+
+            $scope.save = function() {
+
+                //1 pois a API valida essa opção;
+                $scope.user.lgpd = 1;
+
+                if ($scope.user.type === "perfil_visitante") {
+                    $scope.user.type = getFinalTypeUser();
+                }
+
+                var data = Object.assign({}, $scope.user);
+                data = Utils.prepareDateFields(data, dateOnlyFields);
+                data = Utils.prepareCityFields(data, ['work_city']);
+
+                if ($scope.isCreating) {
+                    return Users.create(data).$promise.then(onSaved)
+                }
+
+                Users.updateYourself(data).$promise.then(function(res) {
+                    if (res.status === "ok") {
+                        ngToast.success('TERMO DE RESPONSABILIDADE E CONFIDENCIALIDADE Assinado com Sucesso');
+                        $localStorage.identity.current_user.lgpd = 1;
+                        $state.go('dashboard');
+                    }
+
+                    if (res.status === "error") {
+                        ngToast.danger("Ocorreu um erro, por favor procure o nosso suporte" + res.messages[0]);
+                    }
+
+                });
+
+            };
+
+            $scope.onSelectTenant = function() {
+                $scope.groups = Groups.findByTenant({ 'tenant_id': $scope.user.tenant_id });
+            }
+
+            $scope.onSelectUf = function() {
+                $scope.groups = Groups.findByUf({ 'uf': $scope.user.uf });
+            }
+
+            $scope.onSelectFunction = function() {
+                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
+                    $scope.groups = {};
+                    $scope.user.uf = null;
+                    $scope.user.tenant_id = null;
+                    $scope.perfilVisitante.name = '';
+                }
+            }
+
+            function prepareUserModel(user) {
+
+                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
+
+                    if (user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual') {
+                        $scope.groups = Groups.findByUf({ 'uf': user.uf });
+                    } else {
+                        $scope.groups = Groups.findByTenant({ 'tenant_id': user.tenant_id });
+                    }
+
+                    //perfil de visitante
+                    if (user.type.includes("visitante_")) {
+                        $scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
+                        if (user.type.includes("visitante_nacional")) {
+                            $scope.perfilVisitante.name = "visitante_nacional";
+                        }
+                        if (user.type.includes("visitante_estadual")) {
+                            $scope.perfilVisitante.name = "visitante_estadual";
+                        }
+                        $scope.user.type = "perfil_visitante";
+                    }
+
+                } else {
+                    $scope.groups = Groups.find();
+                }
+
+                return Utils.unpackDateFields(user, dateOnlyFields)
+            }
+
+            $scope.test = () => {
+                let field_password = document.getElementById("fld-gp-password");
+                field_password.onfocus = function() {
+                    document.getElementById("message").style.display = "block";
+                }
+            };
+
+            $scope.showPassowrd = function() {
+                var field_password = document.getElementById("fld-gp-password");
+
+                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
+            };
+
+            function onSaved(res) {
+                if (res.status === "ok") {
+                    ngToast.success("Dados de usuário salvos com sucesso!");
+
+                    if ($scope.quickAdd && $rootScope.previousState) return $state.go($rootScope.previousState, $rootScope.previousStateParams);
+                    if ($scope.isCreating) return $state.go('user_editor', { user_id: res.id });
+
+                    return;
+                }
+
+                if (res.messages) return Utils.displayValidationErrors(res);
+
+                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
+            }
+
+            function getFinalTypeUser() {
+                var finalType = "";
+                for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
+                    if (arraysEqual($scope.permissionsVisitantes.filter(function(obj) {
+                            return obj
+                        }), value) && key.includes($scope.perfilVisitante.name)) {
+                        finalType = key;
+                    }
+                }
+                return finalType;
+            }
+
+            function arraysEqual(_arr1, _arr2) {
+                if (!Array.isArray(_arr1) || !Array.isArray(_arr2) || _arr1.length !== _arr2.length)
+                    return false;
+                var arr1 = _arr1.concat().sort();
+                var arr2 = _arr2.concat().sort();
+                for (var i = 0; i < arr1.length; i++) {
+                    if (arr1[i] !== arr2[i])
+                        return false;
+                }
+                return true;
+            }
+
+            $scope.openTerm = function() {
+                $scope.panelTerm = !$scope.panelTerm;
+
+                console.log($scope.lastCoordinators);
+            };
+
+        });
+    app.directive('myDirective', function() {
+        return {
+            require: 'ngModel',
+            link: function(scope, element, attr, mCtrl) {
+                function myValidation(value) {
+                    const capital = document.getElementById('capital');
+                    const number = document.getElementById('number');
+                    const length = document.getElementById('length');
+                    const letter = document.getElementById('letter');
+                    const symbol = document.getElementById('symbol')
+                    const check = function(entrada) {
+                        entrada.classList.remove('invalid');
+                        entrada.classList.add('valid');
+                    }
+                    const uncheck = function(entrada) {
+                        entrada.classList.remove('valid');
+                        entrada.classList.add('invalid');
+                    }
+                    if (typeof(value) === "string") {
+                        var lowerCaseLetters = /[a-z]/g;
+                        if (value.match(lowerCaseLetters)) {
+                            check(letter)
+                        } else {
+                            uncheck(letter)
+                        }
+                        var upperCaseLetters = /[A-Z]/g;
+                        if (value.match(upperCaseLetters)) {
+                            check(capital)
+                        } else {
+                            uncheck(capital)
+                        }
+                        var numbers = /[0-9]/g;
+                        if (value.match(numbers)) {
+                            check(number)
+                        } else {
+                            uncheck(number)
+                        }
+                        var symbols = /[!@#$%&*?]/g;
+                        if (value.match(symbols)) {
+                            check(symbol)
+                        } else {
+                            uncheck(symbol)
+                        }
+                        // Validate length
+                        if (value.length >= 8 && value.length <= 16) {
+                            check(length);
+                        } else {
+                            uncheck(length);
+                        }
+                    }
+                    return value;
+                }
+                mCtrl.$parsers.push(myValidation);
+            }
+        };
+    });
+
+
+})();
+(function() {
+    angular
+        .module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('pending_tenant_signups', {
+                url: '/pending_tenant_signups',
+                templateUrl: '/views/tenants/pending_signups.html',
+                controller: 'PendingTenantSignupsCtrl',
+            });
+        })
+        .controller(
+            'PendingTenantSignupsCtrl',
+            function(
+                $scope,
+                ngToast,
+                Identity,
+                TenantSignups,
+                StaticData,
+                Config
+            ) {
+                $scope.identity = Identity;
+                $scope.static = StaticData;
+
+                $scope.signups = {};
+                $scope.signup = {};
+
+                $scope.query = {
+                    max: 16,
+                    page: 1,
+                    sort: { created_at: 'desc' },
+                    filter: { status: 'pending_approval' },
+                };
+
+                $scope.electedMayor = null;
+
+                $scope.copyText = function() {
+                    $scope.msgCopy = 'URL COPIADA';
+                    setTimeout(function() {
+                        $scope.msgCopy = '';
+                    }, 500);
+                };
+
+                $scope.onSelectType = function() {
+                    $scope.query.page = 1;
+                    $scope.refresh();
+                };
+
+                $scope.refresh = function() {
+                    $scope.signups = TenantSignups.getPending($scope.query);
+                    return $scope.signups.$promise;
+                };
+
+                $scope.export = function() {
+                    Identity.provideToken().then(function(token) {
+                        window.open(
+                            Config.getAPIEndpoint() +
+                            'signups/tenants/export?token=' +
+                            token +
+                            $scope.prepareUriToExport()
+                        );
+                    });
+                };
+
+                $scope.prepareUriToExport = function() {
+                    var uri = '';
+                    Object.keys($scope.query.filter).forEach(function(element) {
+                        uri = uri.concat(
+                            '&' + element + '=' + $scope.query.filter[element]
+                        );
+                    });
+                    return uri;
+                };
+
+                $scope.preview = function(signup) {
+                    $scope.signup = signup;
+                    if (signup.deleted_at === null) {
+                        const accepted = TenantSignups.accepted({ id: signup.id }).$promise;
+
+                        accepted.then(function(res) {
+                            if (res.status === 200) {
+                                $scope.signup = signup;
+                                if (signup.data.admin.dob.includes('-')) {
+                                    let adminDate = signup.data.admin.dob.split('-');
+                                    adminDate =
+                                        adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
+                                    signup.data.admin.dob = adminDate;
+                                }
+                                if (signup.data.mayor.dob.includes('-')) {
+                                    let mayorDate = signup.data.mayor.dob.split('-');
+                                    mayorDate =
+                                        mayorDate[2] + '/' + mayorDate[1] + '/' + mayorDate[0];
+                                    signup.data.mayor.dob = mayorDate;
+                                }
+
+                                signup.is_approved_by_manager = false;
+                                if (res.data) {
+                                    signup.is_approved_by_manager = true;
+                                }
+                            }
+                        });
+                    }
+
+                    if (signup.data.admin.dob.includes('-')) {
+                        let adminDate = signup.data.admin.dob.split('-');
+                        adminDate = adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
+                        signup.data.admin.dob = adminDate;
+                    }
+
+                    if (signup.data.coordinator.dob.includes('-')) {
+                        let coordinationDate = signup.data.coordinator.dob.split('-');
+                        coordinationDate =
+                            coordinationDate[2] +
+                            '/' +
+                            coordinationDate[1] +
+                            '/' +
+                            coordinationDate[0];
+                        signup.data.coordinator.dob = coordinationDate;
+                    }
+                    signup.is_approved_by_manager = false;
+
+                    $scope.getMayorByCPF(signup.data.mayor.cpf);
+                };
+
+                $scope.approve = function(signup) {
+                    TenantSignups.approve({ id: signup.id }, function() {
+                        $scope.refresh();
+                        $scope.signup = {};
+                    });
+                };
+
+                $scope.reject = function(signup) {
+                    TenantSignups.reject({ id: signup.id }, function() {
+                        $scope.refresh();
+                        $scope.signup = {};
+                    });
+                };
+
+                $scope.updateRegistrationData = function(type, signup) {
+                    TenantSignups.updateRegistrationData({ id: signup.id, type: type, data: signup.data[type] },
+                        function(res) {
+                            typeName = type === 'mayor' ? 'prefeito' : 'gestor';
+
+                            if (res.status !== 'ok') {
+                                ngToast.danger(
+                                    `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `
+                                );
+                                return;
+                            }
+
+                            ngToast.success(`Dados do(a) ${typeName}(a)  atualizado!`);
+                        }
+                    );
+                };
+
+                $scope.resendNotification = function(signup) {
+                    TenantSignups.resendNotification({ id: signup.id }, function() {
+                        ngToast.success('Notificação reenviada!');
+                    });
+                };
+
+                $scope.resendMail = function(signup) {
+                    TenantSignups.resendMail({ id: signup.id }, function() {
+                        ngToast.success('Notificação reenviada!');
+                    });
+                };
+
+                $scope.refresh();
+
+                $scope.getMayorByCPF = function(numberCPF) {
+                    TenantSignups.getMayorByCPF({ cpf: numberCPF }, function(res) {
+                        $scope.electedMayor = res;
+                    });
+                };
+            }
+        );
+})();
+(function() {
+
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('tenant_browser', {
+                url: '/tenants',
+                templateUrl: '/views/tenants/list.html',
+                controller: 'TenantBrowserCtrl'
+            })
+        })
+        .controller('TenantBrowserCtrl', function($scope, ngToast, Tenants, Modals, Identity, Config, Ufs) {
+
+            $scope.identity = Identity;
+            $scope.tenants = {};
+            $scope.ufs = Ufs;
+            $scope.query = {
+                show_suspended: false,
+                filter: {},
+                sort: {},
+                max: 16,
+                page: 1
+            };
+
+            $scope.showCanceledCities = function() {
+                $scope.query.show_suspended = $scope.query.show_suspended ? false : true;
+                $scope.refresh();
+            }
+
+            $scope.refresh = function() {
+                $scope.tenants = Tenants.all($scope.query);
+            };
+
+            $scope.export = function() {
+                Identity.provideToken().then(function(token) {
+                    window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token + $scope.prepareUriToExport());
+                });
+            };
+
+            $scope.prepareUriToExport = function() {
+                var uri = "";
+                Object.keys($scope.query.filter).forEach(function(element) {
+                    uri = uri.concat("&" + element + "=" + $scope.query.filter[element]);
+                });
+                uri = uri.concat("&show_suspended=" + $scope.query.show_suspended);
+                return uri;
+            };
+
+            $scope.disableTenant = function(tenant) {
+
+                Modals.show(
+                        Modals.Confirm(
+                            'Tem certeza que deseja cancelar o município: ' + tenant.name,
+                            'Ao confirmar, os acessos do município serão cancelados, e todos os dados recebidos serão arquivados, e não poderão mais ser acessados. ' +
+                            'Os alertas e lembretes não serão disparados. As estatísticas e métricas coletadas não serão apagadas'
+                        ))
+                    .then(function() {
+                        return Tenants.cancel({ id: tenant.id }).$promise;
+                    })
+                    .then(function(res) {
+                        if (res && res.status === 'ok') {
+                            ngToast.success('Município cancelado com sucesso!');
+                            $scope.refresh();
+                            return;
+                        }
+
+                        ngToast.danger('Ocorreu um erro ao cancelar o município!');
+                        console.error("[tenants.cancel] Failed to cancel tenant: ", res);
+                    })
+
+            };
+
+            $scope.refresh();
+
+        });
+
+})();
+(function() {
 
     var app = angular.module('BuscaAtivaEscolar')
         .config(function($stateProvider) {
@@ -19858,566 +20423,6 @@ function identify(namespace, file) {
             }
         };
     });
-
-})();
-(function() {
-    var app = angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
-            $stateProvider.state('lgpd_signup', {
-                url: '/lgpd_signup/:user_id',
-                templateUrl: '/views/users/user_lgpd_signup.html',
-                controller: 'LgpdSignupCtrl',
-            })
-        })
-        .controller('LgpdSignupCtrl', function($rootScope, $scope, $state, $stateParams, $localStorage, ngToast, Platform, Utils, Identity, Users, Groups, StaticData) {
-
-            $scope.signed = false;
-            $scope.term = true;
-
-            $scope.currentState = $state.current.name;
-
-            $scope.user = {};
-            $scope.isReviewing = false;
-
-            $scope.identity = Identity;
-            $scope.static = StaticData;
-
-            $scope.groups = {};
-            $scope.quickAdd = ($stateParams.quick_add === 'true');
-
-            var permissions = {};
-            var dateOnlyFields = ['dob'];
-
-            var userTypeVisitantes = [];
-            var permissionsFormForVisitante = [];
-
-            $scope.perfilVisitante = { name: '' };
-            $scope.permissionsVisitantes = ['relatorios'];
-
-            Platform.whenReady(function() {
-                permissions = StaticData.getPermissions();
-                userTypeVisitantes = StaticData.getUserTypeVisitantes();
-                permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
-                $scope.isCreating = (!$scope.identity.getCurrentUser().id || $scope.identity.getCurrentUser().id === "new");
-
-                if (!$scope.isCreating) {
-                    $scope.user = Users.myself({ id: $scope.identity.getCurrentUser().id }, prepareUserModel);
-                } else {
-                    if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
-                        $scope.groups = {};
-                    } else {
-                        $scope.groups = Groups.find();
-                    }
-                }
-
-                if (Identity.getCurrentUser().lgpd) {
-                    $scope.signed = true;
-                }
-
-            });
-
-
-            $scope.isSuperAdmin = function() {
-                return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
-            };
-
-            $scope.isTargetUserTenantBound = function() {
-                return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
-            };
-
-            $scope.isTargetUserUFBound = function() {
-                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
-            };
-
-            $scope.canDefineUserTenant = function() {
-                // Can specify user tenant only if superadmin, and only if target user type is tenant-bound
-                if (!$scope.isSuperAdmin()) return false;
-                return $scope.isTargetUserTenantBound();
-            };
-
-            $scope.canDefineUserUF = function() {
-                // Only superusers can define user UF, and only on UF-bound user types
-                if (!$scope.isSuperAdmin()) return false;
-                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
-            };
-
-            $scope.openUser = function(user_id, is_reviewing) {
-                $scope.isCreating = false;
-                $scope.isReviewing = !!is_reviewing;
-                $scope.user = Users.find({ id: user_id }, prepareUserModel);
-            };
-
-            $scope.goBack = function() {
-                return $state.go($rootScope.previousState, $rootScope.previousStateParams);
-            };
-
-            $scope.getUserTypes = function() {
-                if (!permissions) return {};
-                if (!permissions.can_manage_types) return {};
-
-                var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function(el) {
-                    return $scope.getUserTypesVisitantes().indexOf(el) < 0;
-                });
-
-                return finalPermissions;
-            };
-
-            $scope.getUserTypesVisitantes = function() {
-                if (!permissions) return {};
-                if (!permissions.can_manage_types) return {};
-                return userTypeVisitantes;
-            };
-
-            $scope.getPermissionsFormForVisitante = function() {
-                return permissionsFormForVisitante;
-            };
-
-            $scope.save = function() {
-
-                //1 pois a API valida essa opção;
-                $scope.user.lgpd = 1;
-
-                if ($scope.user.type === "perfil_visitante") {
-                    $scope.user.type = getFinalTypeUser();
-                }
-
-                var data = Object.assign({}, $scope.user);
-                data = Utils.prepareDateFields(data, dateOnlyFields);
-                data = Utils.prepareCityFields(data, ['work_city']);
-
-                if ($scope.isCreating) {
-                    return Users.create(data).$promise.then(onSaved)
-                }
-
-                Users.updateYourself(data).$promise.then(function(res) {
-                    if (res.status === "ok") {
-                        ngToast.success('TERMO DE RESPONSABILIDADE E CONFIDENCIALIDADE Assinado com Sucesso');
-                        $localStorage.identity.current_user.lgpd = 1;
-                        $state.go('dashboard');
-                    }
-
-                    if (res.status === "error") {
-                        ngToast.danger("Ocorreu um erro, por favor procure o nosso suporte" + res.messages[0]);
-                    }
-
-                });
-
-            };
-
-            $scope.onSelectTenant = function() {
-                $scope.groups = Groups.findByTenant({ 'tenant_id': $scope.user.tenant_id });
-            }
-
-            $scope.onSelectUf = function() {
-                $scope.groups = Groups.findByUf({ 'uf': $scope.user.uf });
-            }
-
-            $scope.onSelectFunction = function() {
-                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
-                    $scope.groups = {};
-                    $scope.user.uf = null;
-                    $scope.user.tenant_id = null;
-                    $scope.perfilVisitante.name = '';
-                }
-            }
-
-            function prepareUserModel(user) {
-
-                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
-
-                    if (user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual') {
-                        $scope.groups = Groups.findByUf({ 'uf': user.uf });
-                    } else {
-                        $scope.groups = Groups.findByTenant({ 'tenant_id': user.tenant_id });
-                    }
-
-                    //perfil de visitante
-                    if (user.type.includes("visitante_")) {
-                        $scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
-                        if (user.type.includes("visitante_nacional")) {
-                            $scope.perfilVisitante.name = "visitante_nacional";
-                        }
-                        if (user.type.includes("visitante_estadual")) {
-                            $scope.perfilVisitante.name = "visitante_estadual";
-                        }
-                        $scope.user.type = "perfil_visitante";
-                    }
-
-                } else {
-                    $scope.groups = Groups.find();
-                }
-
-                return Utils.unpackDateFields(user, dateOnlyFields)
-            }
-
-            $scope.test = () => {
-                let field_password = document.getElementById("fld-gp-password");
-                field_password.onfocus = function() {
-                    document.getElementById("message").style.display = "block";
-                }
-            };
-
-            $scope.showPassowrd = function() {
-                var field_password = document.getElementById("fld-gp-password");
-
-                field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            };
-
-            function onSaved(res) {
-                if (res.status === "ok") {
-                    ngToast.success("Dados de usuário salvos com sucesso!");
-
-                    if ($scope.quickAdd && $rootScope.previousState) return $state.go($rootScope.previousState, $rootScope.previousStateParams);
-                    if ($scope.isCreating) return $state.go('user_editor', { user_id: res.id });
-
-                    return;
-                }
-
-                if (res.messages) return Utils.displayValidationErrors(res);
-
-                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
-            }
-
-            function getFinalTypeUser() {
-                var finalType = "";
-                for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
-                    if (arraysEqual($scope.permissionsVisitantes.filter(function(obj) {
-                            return obj
-                        }), value) && key.includes($scope.perfilVisitante.name)) {
-                        finalType = key;
-                    }
-                }
-                return finalType;
-            }
-
-            function arraysEqual(_arr1, _arr2) {
-                if (!Array.isArray(_arr1) || !Array.isArray(_arr2) || _arr1.length !== _arr2.length)
-                    return false;
-                var arr1 = _arr1.concat().sort();
-                var arr2 = _arr2.concat().sort();
-                for (var i = 0; i < arr1.length; i++) {
-                    if (arr1[i] !== arr2[i])
-                        return false;
-                }
-                return true;
-            }
-
-            $scope.openTerm = function() {
-                $scope.panelTerm = !$scope.panelTerm;
-
-                console.log($scope.lastCoordinators);
-            };
-
-        });
-    app.directive('myDirective', function() {
-        return {
-            require: 'ngModel',
-            link: function(scope, element, attr, mCtrl) {
-                function myValidation(value) {
-                    const capital = document.getElementById('capital');
-                    const number = document.getElementById('number');
-                    const length = document.getElementById('length');
-                    const letter = document.getElementById('letter');
-                    const symbol = document.getElementById('symbol')
-                    const check = function(entrada) {
-                        entrada.classList.remove('invalid');
-                        entrada.classList.add('valid');
-                    }
-                    const uncheck = function(entrada) {
-                        entrada.classList.remove('valid');
-                        entrada.classList.add('invalid');
-                    }
-                    if (typeof(value) === "string") {
-                        var lowerCaseLetters = /[a-z]/g;
-                        if (value.match(lowerCaseLetters)) {
-                            check(letter)
-                        } else {
-                            uncheck(letter)
-                        }
-                        var upperCaseLetters = /[A-Z]/g;
-                        if (value.match(upperCaseLetters)) {
-                            check(capital)
-                        } else {
-                            uncheck(capital)
-                        }
-                        var numbers = /[0-9]/g;
-                        if (value.match(numbers)) {
-                            check(number)
-                        } else {
-                            uncheck(number)
-                        }
-                        var symbols = /[!@#$%&*?]/g;
-                        if (value.match(symbols)) {
-                            check(symbol)
-                        } else {
-                            uncheck(symbol)
-                        }
-                        // Validate length
-                        if (value.length >= 8 && value.length <= 16) {
-                            check(length);
-                        } else {
-                            uncheck(length);
-                        }
-                    }
-                    return value;
-                }
-                mCtrl.$parsers.push(myValidation);
-            }
-        };
-    });
-
-
-})();
-(function() {
-    angular
-        .module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
-            $stateProvider.state('pending_tenant_signups', {
-                url: '/pending_tenant_signups',
-                templateUrl: '/views/tenants/pending_signups.html',
-                controller: 'PendingTenantSignupsCtrl',
-            });
-        })
-        .controller(
-            'PendingTenantSignupsCtrl',
-            function(
-                $scope,
-                ngToast,
-                Identity,
-                TenantSignups,
-                StaticData,
-                Config
-            ) {
-                $scope.identity = Identity;
-                $scope.static = StaticData;
-
-                $scope.signups = {};
-                $scope.signup = {};
-
-                $scope.query = {
-                    max: 16,
-                    page: 1,
-                    sort: { created_at: 'desc' },
-                    filter: { status: 'pending_approval' },
-                };
-
-                $scope.electedMayor = null;
-
-                $scope.copyText = function() {
-                    $scope.msgCopy = 'URL COPIADA';
-                    setTimeout(function() {
-                        $scope.msgCopy = '';
-                    }, 500);
-                };
-
-                $scope.onSelectType = function() {
-                    $scope.query.page = 1;
-                    $scope.refresh();
-                };
-
-                $scope.refresh = function() {
-                    $scope.signups = TenantSignups.getPending($scope.query);
-                    return $scope.signups.$promise;
-                };
-
-                $scope.export = function() {
-                    Identity.provideToken().then(function(token) {
-                        window.open(
-                            Config.getAPIEndpoint() +
-                            'signups/tenants/export?token=' +
-                            token +
-                            $scope.prepareUriToExport()
-                        );
-                    });
-                };
-
-                $scope.prepareUriToExport = function() {
-                    var uri = '';
-                    Object.keys($scope.query.filter).forEach(function(element) {
-                        uri = uri.concat(
-                            '&' + element + '=' + $scope.query.filter[element]
-                        );
-                    });
-                    return uri;
-                };
-
-                $scope.preview = function(signup) {
-                    $scope.signup = signup;
-                    if (signup.deleted_at === null) {
-                        const accepted = TenantSignups.accepted({ id: signup.id }).$promise;
-
-                        accepted.then(function(res) {
-                            if (res.status === 200) {
-                                $scope.signup = signup;
-                                if (signup.data.admin.dob.includes('-')) {
-                                    let adminDate = signup.data.admin.dob.split('-');
-                                    adminDate =
-                                        adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
-                                    signup.data.admin.dob = adminDate;
-                                }
-                                if (signup.data.mayor.dob.includes('-')) {
-                                    let mayorDate = signup.data.mayor.dob.split('-');
-                                    mayorDate =
-                                        mayorDate[2] + '/' + mayorDate[1] + '/' + mayorDate[0];
-                                    signup.data.mayor.dob = mayorDate;
-                                }
-
-                                signup.is_approved_by_manager = false;
-                                if (res.data) {
-                                    signup.is_approved_by_manager = true;
-                                }
-                            }
-                        });
-                    }
-
-                    if (signup.data.admin.dob.includes('-')) {
-                        let adminDate = signup.data.admin.dob.split('-');
-                        adminDate = adminDate[2] + '/' + adminDate[1] + '/' + adminDate[0];
-                        signup.data.admin.dob = adminDate;
-                    }
-
-                    if (signup.data.coordinator.dob.includes('-')) {
-                        let coordinationDate = signup.data.coordinator.dob.split('-');
-                        coordinationDate =
-                            coordinationDate[2] +
-                            '/' +
-                            coordinationDate[1] +
-                            '/' +
-                            coordinationDate[0];
-                        signup.data.coordinator.dob = coordinationDate;
-                    }
-                    signup.is_approved_by_manager = false;
-
-                    $scope.getMayorByCPF(signup.data.mayor.cpf);
-                };
-
-                $scope.approve = function(signup) {
-                    TenantSignups.approve({ id: signup.id }, function() {
-                        $scope.refresh();
-                        $scope.signup = {};
-                    });
-                };
-
-                $scope.reject = function(signup) {
-                    TenantSignups.reject({ id: signup.id }, function() {
-                        $scope.refresh();
-                        $scope.signup = {};
-                    });
-                };
-
-                $scope.updateRegistrationData = function(type, signup) {
-                    TenantSignups.updateRegistrationData({ id: signup.id, type: type, data: signup.data[type] },
-                        function(res) {
-                            typeName = type === 'mayor' ? 'prefeito' : 'gestor';
-
-                            if (res.status !== 'ok') {
-                                ngToast.danger(
-                                    `Falha ao atualizar os dados do(a) ${typeName}(a): ${res.reason} `
-                                );
-                                return;
-                            }
-
-                            ngToast.success(`Dados do(a) ${typeName}(a)  atualizado!`);
-                        }
-                    );
-                };
-
-                $scope.resendNotification = function(signup) {
-                    TenantSignups.resendNotification({ id: signup.id }, function() {
-                        ngToast.success('Notificação reenviada!');
-                    });
-                };
-
-                $scope.resendMail = function(signup) {
-                    TenantSignups.resendMail({ id: signup.id }, function() {
-                        ngToast.success('Notificação reenviada!');
-                    });
-                };
-
-                $scope.refresh();
-
-                $scope.getMayorByCPF = function(numberCPF) {
-                    TenantSignups.getMayorByCPF({ cpf: numberCPF }, function(res) {
-                        $scope.electedMayor = res;
-                    });
-                };
-            }
-        );
-})();
-(function() {
-
-    angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
-            $stateProvider.state('tenant_browser', {
-                url: '/tenants',
-                templateUrl: '/views/tenants/list.html',
-                controller: 'TenantBrowserCtrl'
-            })
-        })
-        .controller('TenantBrowserCtrl', function($scope, ngToast, Tenants, Modals, Identity, Config, Ufs) {
-
-            $scope.identity = Identity;
-            $scope.tenants = {};
-            $scope.ufs = Ufs;
-            $scope.query = {
-                show_suspended: false,
-                filter: {},
-                sort: {},
-                max: 16,
-                page: 1
-            };
-
-            $scope.showCanceledCities = function() {
-                $scope.query.show_suspended = $scope.query.show_suspended ? false : true;
-                $scope.refresh();
-            }
-
-            $scope.refresh = function() {
-                $scope.tenants = Tenants.all($scope.query);
-            };
-
-            $scope.export = function() {
-                Identity.provideToken().then(function(token) {
-                    window.open(Config.getAPIEndpoint() + 'tenants/export?token=' + token + $scope.prepareUriToExport());
-                });
-            };
-
-            $scope.prepareUriToExport = function() {
-                var uri = "";
-                Object.keys($scope.query.filter).forEach(function(element) {
-                    uri = uri.concat("&" + element + "=" + $scope.query.filter[element]);
-                });
-                uri = uri.concat("&show_suspended=" + $scope.query.show_suspended);
-                return uri;
-            };
-
-            $scope.disableTenant = function(tenant) {
-
-                Modals.show(
-                        Modals.Confirm(
-                            'Tem certeza que deseja cancelar o município: ' + tenant.name,
-                            'Ao confirmar, os acessos do município serão cancelados, e todos os dados recebidos serão arquivados, e não poderão mais ser acessados. ' +
-                            'Os alertas e lembretes não serão disparados. As estatísticas e métricas coletadas não serão apagadas'
-                        ))
-                    .then(function() {
-                        return Tenants.cancel({ id: tenant.id }).$promise;
-                    })
-                    .then(function(res) {
-                        if (res && res.status === 'ok') {
-                            ngToast.success('Município cancelado com sucesso!');
-                            $scope.refresh();
-                            return;
-                        }
-
-                        ngToast.danger('Ocorreu um erro ao cancelar o município!');
-                        console.error("[tenants.cancel] Failed to cancel tenant: ", res);
-                    })
-
-            };
-
-            $scope.refresh();
-
-        });
 
 })();
 (function() {
