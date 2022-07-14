@@ -62,12 +62,13 @@
                         '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
                 });
 
-                var markers = document.getElementById("map-markes");
-                markers.style.display = "none";
             }
 
 
             function startClustering(map, data) {
+
+                var markers = document.getElementById("map-markes");
+                markers.style.display = "none";
 
                 var dataPoints = data.map(function(item) {
                     return new H.clustering.DataPoint(item.latitude, item.longitude);
@@ -97,10 +98,6 @@
 
                 map.addLayer(clusteringLayer);
             }
-
-            /**
-             * Boilerplate map initialization code starts below:
-             */
 
             var platform = new H.service.Platform({
                 apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
