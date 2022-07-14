@@ -46,7 +46,7 @@
                         true;
                     $scope.refresh();
                 };
-                
+
                 $scope.onCheckTree = function() {
                     $scope.refresh();
                 };

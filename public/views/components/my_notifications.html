@@ -1,0 +1,30 @@
+<div>
+	<table class="table table-hover" ng-show="isReady() && hasAlerts()">
+		<thead>
+			<tr>
+				<th>Nome</th>
+				<th>Etapa atual</th>
+				<th>Status</th>
+				<th>Prazo</th>
+				<th>Data de abertura</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(i, alert) in getAlerts()">
+				<td><span ng-bind="alert.name"></span></td>
+				<td><span ng-bind="alert.current_step"></span></td>
+				<td>
+					<span class="label label-success" ng-show="alert.alert_status === 'accepted'">Aceito</span>
+					<span class="label label-danger" ng-show="alert.alert_status === 'rejected'">Rejeitado</span>
+					<span class="label label-warning" ng-show="alert.alert_status === 'pending'">Pendente de aprovação</span>
+				</td>
+				<td>
+					<span class="label label-primary" ng-show="alert.deadline_status === 'normal' && alert.alert_status !== 'rejected'">No prazo</span>
+					<span class="label label-warning" ng-show="alert.deadline_status === 'late' && alert.alert_status !== 'rejected'">Em atraso</span>
+				</td>
+				<td><span ng-bind="alert.created_at | amDateFormat:'DD/MM/YYYY'" uib-tooltip-html="alert.created_at | dateFormat"></span></td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="alert alert-info" ng-show="isReady() && !hasAlerts()">Você não tem alertas abertos.</div>
+</div>
