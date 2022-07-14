@@ -15,8 +15,10 @@
 
                 $scope.comments = {};
                 $scope.message = "";
+                $scope.check = true;
 
-                $scope.refresh = function() {
+                $scope.refresh = function(value) {
+                    if (value == true) $scope.check = false;
                     $scope.comments = Children.getComments({ id: $stateParams.child_id });
                 };
 
@@ -35,21 +37,33 @@
                     $scope.message = "";
                 };
 
-                $scope.sendNotification = function(messsage) {
-                    /*let teste = messsage.message;
-                                        console.log(teste);*/
-                    Children.postNotification({
-                            tenant_id: $scope.$parent.child.tenant_id,
-                            user_id: Identity.getCurrentUser().id,
-                            children_case_id: $scope.$parent.child.current_case_id,
-                            notification: messsage.message,
-                        },
-                        function() {
-                            $scope.refresh();
-                        }
-                    );
+                $scope.checkComment = function(id) {
+                    $scope.comments = Children.checkComment({
+                        comment_id: id,
+                    }).$promise.then(function(value) {
+                        if (value.data == null) $scope.check = true;
+                        else $scope.check = false;
+                    });
+                };
 
-                    $scope.message = "";
+                $scope.sendNotification = function(message) {
+                    $scope.checkComment(message.id);
+                    console.log($scope.check);
+                    if ($scope.check == true) {
+                        Children.postNotification({
+                                tenant_id: $scope.$parent.child.tenant_id,
+                                user_id: Identity.getCurrentUser().id,
+                                comment_id: message.id,
+                                children_case_id: $scope.$parent.child.current_case_id,
+                                notification: message.message,
+                            },
+                            function() {
+                                $scope.refresh(true);
+                            }
+                        );
+
+                        $scope.message = "";
+                    }
                 };
 
                 $scope.refresh();

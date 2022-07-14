@@ -57,6 +57,11 @@
                         method: "POST",
                         headers: headers,
                     },
+                    checkComment: {
+                        url: API.getURI("notifications_cases/comment"),
+                        method: "POST",
+                        headers: headers,
+                    },
                     removeAttachment: {
                         url: API.getURI("children/:id/attachments/:attachment_id"),
                         method: "DELETE",

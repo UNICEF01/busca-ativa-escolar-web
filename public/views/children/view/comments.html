@@ -32,7 +32,7 @@
           </td>
           <td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
           <td ng-bind="comment.message"></td>
-          <td ng-if="comment.author.id == logged">
+          <td ng-if="comment.author.id == logged && check === true">
             <button
               type="button"
               ng-click="sendNotification(comment)"
