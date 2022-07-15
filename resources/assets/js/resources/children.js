@@ -52,9 +52,19 @@
                         method: "POST",
                         headers: headers,
                     },
+                    getNotification: {
+                        url: API.getURI("notifications_cases"),
+                        method: "get",
+                        headers: headers,
+                    },
                     postNotification: {
                         url: API.getURI("notifications_cases"),
                         method: "POST",
+                        headers: headers,
+                    },
+                    solvetNotification: {
+                        url: API.getURI("notifications_cases/:id"),
+                        method: "PUT",
                         headers: headers,
                     },
                     checkComment: {

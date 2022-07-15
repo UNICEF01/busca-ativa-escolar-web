@@ -1,41 +1,47 @@
 (function() {
+    angular
+        .module("BuscaAtivaEscolar")
+        .directive("myNotifications", function(Platform, Children) {
+            var notifications = [];
+            var isReady = false;
 
-    angular.module('BuscaAtivaEscolar').directive('myNotifications', function(Platform, Alerts) {
+            function refresh() {
+                Children.getNotification({}, function(data) {
+                    notifications = [data.data];
+                    isReady = true;
+                });
+            }
 
-        var alerts = [];
-        var isReady = false;
+            function init(scope) {
+                scope.getNotifications = function() {
+                    return notifications[0];
+                };
 
-        function refresh() {
-            Alerts.mine({}, function(data) {
-                alerts = data.data;
-                isReady = true;
-            });
-        }
+                scope.isReady = function() {
+                    return isReady;
+                };
 
-        function init(scope) {
+                scope.hasNotifications = function() {
+                    return notifications && notifications.length > 0;
+                };
 
-            scope.getAlerts = function() {
-                return alerts;
+                scope.solveNotification = function(id) {
+                    Children.solvetNotification({ id: id }, function(data) {
+                        notifications = [data.data];
+                        isReady = true;
+                        refresh();
+                    });
+                };
+
+                Platform.whenReady(function() {
+                    refresh();
+                });
+            }
+
+            return {
+                link: init,
+                replace: true,
+                templateUrl: "/views/components/my_notifications.html",
             };
-            
-            scope.isReady = function() {
-                return isReady;
-            };
-
-            scope.hasAlerts = function() {
-                return (alerts && alerts.length > 0);
-            };
-
-            Platform.whenReady(function() {
-                refresh();
-            });
-        }
-
-        return {
-            link: init,
-            replace: true,
-            templateUrl: '/views/components/my_notifications.html'
-        };
-    });
-
+        });
 })();
