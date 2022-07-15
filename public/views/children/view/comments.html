@@ -13,6 +13,7 @@
           <th width="15%">Usuário</th>
           <th width="10%">Grupo</th>
           <th width="50%">Anotação</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -32,11 +33,12 @@
           </td>
           <td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
           <td ng-bind="comment.message"></td>
-          <td ng-if="comment.author.id == logged && check === true">
+          <td>
             <button
+              ng-if="comment.author.id == logged && !comment.notification && comment.dateLower"
               type="button"
               ng-click="sendNotification(comment)"
-              class="btn btn-info"
+              class="btn btn-raised btn-warning"
               title="A notificação será encaminhada para os coordenadores/supervisores do grupo superior ao seu."
             >
               Notificar
