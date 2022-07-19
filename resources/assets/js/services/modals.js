@@ -557,6 +557,16 @@
 
                     return params;
                 },
+
+                CloseNotification: function() {
+                    var params = {
+                        templateUrl: '/views/modals/close_notification_case.html',
+                        controller: 'CloseNotificationModalCtrl',
+                        size: 'md'
+                    };
+                    return params;
+                }
+
             };
         });
 })();

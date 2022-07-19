@@ -22,7 +22,9 @@
                     <span ng-bind="notification.notification"></span>
                 </td>
                 <td>
-                    <button type="button" ng-click="solveNotification(notification.id)" class="btn btn-raised btn-success"></button>
+                    <a type="button" ng-click="solveNotification(notification.id)" class="btn btn-raised btn-default pull-right" title="Comentar e fechar notificação.">
+                        <i class="fa fa-ban"></i> Fechar notificação</a>
+                    </a>
                 </td>
             </tr>
         </tbody>

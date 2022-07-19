@@ -1,7 +1,7 @@
 (function() {
     angular
         .module("BuscaAtivaEscolar")
-        .directive("myNotifications", function(Platform, Children) {
+        .directive("myNotifications", function(Platform, Children, Modals) {
             var notifications = [];
             var isReady = false;
 
@@ -26,11 +26,24 @@
                 };
 
                 scope.solveNotification = function(id) {
-                    Children.solvetNotification({ id: id }, function(data) {
-                        notifications = [data.data];
-                        isReady = true;
-                        refresh();
-                    });
+
+                    Modals.show(Modals.CloseNotification())
+                        .then(function(response) {
+
+                            if (!response) return $q.reject();
+
+                            Children.solvetNotification(
+                                { id: id, annotation: response.annotation },
+                                function(data) {
+                                    notifications = [data.data];
+                                    isReady = true;
+                                    refresh();
+                                });
+
+                        })
+                        .then(function() {
+
+                        });
                 };
 
                 Platform.whenReady(function() {
@@ -41,7 +54,7 @@
             return {
                 link: init,
                 replace: true,
-                templateUrl: "/views/components/my_notifications.html",
+                templateUrl: "/views/components/my_notifications.html"
             };
         });
 })();
