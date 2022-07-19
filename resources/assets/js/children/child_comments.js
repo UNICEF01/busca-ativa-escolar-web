@@ -10,7 +10,7 @@
         })
         .controller(
             "ChildCommentsCtrl",
-            function($scope, $stateParams, Children, Identity) {
+            function($scope, $stateParams, Children, Identity, Modals) {
                 $scope.Children = Children;
                 $scope.comments = {};
                 $scope.message = "";
@@ -34,18 +34,29 @@
                 };
 
                 $scope.sendNotification = function(message) {
-                    Children.postNotification({
-                            tenant_id: $scope.$parent.child.tenant_id,
-                            user_id: Identity.getCurrentUser().id,
-                            comment_id: message.id,
-                            children_case_id: $scope.$parent.child.current_case_id,
-                            notification: message.message,
-                        },
-                        function() {
-                            $scope.refresh();
-                        }
-                    );
-                    $scope.message = "";
+
+                    Modals.show(
+
+                        Modals.Confirm(
+                            'Confirma o envio da notificação?',
+                            'Ela será encaminhada para os coordenadores/supervisores do grupo superior ao seu.'
+                        )).then(function() {
+
+                        Children.postNotification({
+                                tenant_id: $scope.$parent.child.tenant_id,
+                                user_id: Identity.getCurrentUser().id,
+                                comment_id: message.id,
+                                children_case_id: $scope.$parent.child.current_case_id,
+                                notification: message.message,
+                            },
+                            function() {
+                                $scope.refresh();
+                            }
+                        );
+
+                        $scope.message = "";
+                    });
+
                 };
                 $scope.refresh();
             }

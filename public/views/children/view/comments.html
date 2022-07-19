@@ -2,8 +2,7 @@
     <div class="col-md-12">
         <div class="clearfix">
             <h3 class="pull-left"><i class="material-icons">comment</i> Anotações</h3>
-            <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a
-      >
+            <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
     </div>
 
     <table class="table">
@@ -34,15 +33,16 @@
           <td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
           <td ng-bind="comment.message"></td>
           <td>
-            <button
+            <a
               ng-if="comment.author.id == logged && !comment.notification && comment.dateLower"
               type="button"
               ng-click="sendNotification(comment)"
-              class="btn btn-raised btn-warning"
+              class="btn btn-raised btn-default pull-right"
               title="A notificação será encaminhada para os coordenadores/supervisores do grupo superior ao seu."
             >
-              Notificar
-            </button>
+              <i class="fa fa-share-square-o"></i> Notificar</a>
+            </a>
+
           </td>
         </tr>
       </tbody>
