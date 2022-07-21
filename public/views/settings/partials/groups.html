@@ -85,13 +85,23 @@
           <a class="vertical_text list-group-item active">
             <span ng-if="!identity.getCurrentUser().tenant.is_state"
               >Busca Ativa Escolar</span
-            ><span>Secretaria Estadual de Educação</span>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
-                    <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Cadastre as diretorias/coordenadorias de ensino do seu município. Se não possuir essa divisão basta seguir para o próximo nível.">Nível 2 - Intermediário</span
+            >
+            <span ng-if="identity.getCurrentUser().tenant.is_state"
+              >Secretaria Estadual de Educação</span
+            >
+          </a>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div
+          class="text-center"
+          ng-if="!identity.getCurrentUser().tenant.is_state"
+        >
+          <span
+            class="label label-default"
+            popover-trigger="'mouseenter'"
+            uib-popover="Cadastre as diretorias/coordenadorias de ensino do seu município. Se não possuir essa divisão basta seguir para o próximo nível."
+            >Nível 2 - Intermediário</span
           >
         </div>
         <div
@@ -181,9 +191,8 @@
                     </a>
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">
-            <i class="fa fa-plus-circle"></i>
-          </span>
+                    <span class="input-group-addon"><i class="fa fa-plus-circle"></i
+          ></span>
                     <input ng-disabled="disableNewGroup(3)" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three" />
                 </div>
                 <span id="names2" style="display: none; padding-left: 20px">Nomes disponíveis:
