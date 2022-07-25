@@ -232,7 +232,7 @@
                         $scope.identity.getType() === "gestor_nacional" ||
                         $scope.identity.getType() === "superuser"
                     ) {
-                        return user.tenant_id == null ? true : false;
+                        return true;
                     }
                     if (
                         $scope.identity.getType() === "coordenador_operacional" ||
