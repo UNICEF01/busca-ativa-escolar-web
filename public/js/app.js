@@ -2943,136 +2943,135 @@
 	});
 
 })();
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .directive('metricsCountry', function (moment, Platform, Reports, Charts) {
-      function init(scope, element, attrs) {
-        scope.availableOptions = [
-          { id: 1, name: 'Ciclo Estratégia | 2021 - 2024 (Status atual)' },
-          { id: 2, name: 'Ciclo Estratégia 2014-2020 (Status em 31/12/2020)' },
-          { id: 3, name: 'Ciclo Estratégia 2014-2020 (Status em 31/12/2019)' },
-          { id: 4, name: 'Ciclo Estratégia 2014-2020 (Status em 31/12/2018)' },
-          { id: 5, name: 'Ciclo Estratégia 2014-2020 (Status em 31/12/2017)' }
-        ];
-        scope.selectedOption = {
-          id: 1,
-          name: 'Ciclo Estratégia | 2021 - 2024 (Status atual)'
-        };
+(function() {
+    angular
+        .module("BuscaAtivaEscolar")
+        .directive("metricsCountry", function(moment, Platform, Reports, Charts) {
+            function init(scope, element, attrs) {
+                scope.availableOptions = [
+                    { id: 1, name: "Ciclo Estratégia | 2021 - 2024 (Status atual)" },
+                    { id: 2, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2020)" },
+                    { id: 3, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2019)" },
+                    { id: 4, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2018)" },
+                    { id: 5, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2017)" },
+                ];
+                scope.selectedOption = {
+                    id: 1,
+                    name: "Ciclo Estratégia | 2021 - 2024 (Status atual)",
+                };
 
-        scope.stats = {};
+                scope.stats = {};
 
-        scope.stats_ciclo_2 = {
-          num_tenants: 2518,
-          num_ufs: 21,
-          num_signups: 3214,
-          num_pending_setup: 695,
-          num_alerts: 160719,
-          num_pending_alerts: 110836,
-          num_rejected_alerts: 79865,
-          num_total_alerts: 351420,
-          num_cases_in_progress: 121644,
-          num_children_reinserted: 79595,
-          num_pending_signups: 1,
-          num_pending_state_signups: 1,
-          num_children_in_school: 6050,
-          num_children_in_observation: 73545,
-          num_children_out_of_school: 48060,
-          num_children_cancelled: 32299,
-          num_children_transferred: 188,
-          num_children_interrupted: 577
-        };
+                scope.stats_ciclo_2 = {
+                    num_tenants: 2518,
+                    num_ufs: 21,
+                    num_signups: 3214,
+                    num_pending_setup: 695,
+                    num_alerts: 160719,
+                    num_pending_alerts: 110836,
+                    num_rejected_alerts: 79865,
+                    num_total_alerts: 351420,
+                    num_cases_in_progress: 121644,
+                    num_children_reinserted: 79595,
+                    num_pending_signups: 1,
+                    num_pending_state_signups: 1,
+                    num_children_in_school: 6050,
+                    num_children_in_observation: 73545,
+                    num_children_out_of_school: 48060,
+                    num_children_cancelled: 32299,
+                    num_children_transferred: 188,
+                    num_children_interrupted: 577,
+                };
 
-        scope.stats_ciclo_3 = {
-          num_tenants: 2518,
-          num_ufs: 21,
-          num_signups: 3214,
-          num_pending_setup: 695,
-          num_alerts: 55106,
-          num_pending_alerts: 88518,
-          num_rejected_alerts: 42081,
-          num_total_alerts: 185705,
-          num_cases_in_progress: 121644,
-          num_children_reinserted: 79595,
-          num_pending_signups: 1,
-          num_pending_state_signups: 1,
-          num_children_in_school: 307,
-          num_children_in_observation: 16800,
-          num_children_out_of_school: 26040,
-          num_children_cancelled: 11959,
-          num_children_transferred: 0,
-          num_children_interrupted: 0
-        };
-        scope.stats_ciclo_4 = {
-          num_tenants: 2518,
-          num_ufs: 21,
-          num_signups: 3214,
-          num_pending_setup: 695,
-          num_alerts: 5776,
-          num_pending_alerts: 24866,
-          num_rejected_alerts: 11663,
-          num_total_alerts: 42305,
-          num_cases_in_progress: 121644,
-          num_children_reinserted: 79595,
-          num_pending_signups: 1,
-          num_pending_state_signups: 1,
-          num_children_in_school: 143,
-          num_children_in_observation: 316,
-          num_children_out_of_school: 4655,
-          num_children_cancelled: 662,
-          num_children_transferred: 0,
-          num_children_interrupted: 0
-        };
+                scope.stats_ciclo_3 = {
+                    num_tenants: 2518,
+                    num_ufs: 21,
+                    num_signups: 3214,
+                    num_pending_setup: 695,
+                    num_alerts: 55106,
+                    num_pending_alerts: 88518,
+                    num_rejected_alerts: 42081,
+                    num_total_alerts: 185705,
+                    num_cases_in_progress: 121644,
+                    num_children_reinserted: 79595,
+                    num_pending_signups: 1,
+                    num_pending_state_signups: 1,
+                    num_children_in_school: 307,
+                    num_children_in_observation: 16800,
+                    num_children_out_of_school: 26040,
+                    num_children_cancelled: 11959,
+                    num_children_transferred: 0,
+                    num_children_interrupted: 0,
+                };
+                scope.stats_ciclo_4 = {
+                    num_tenants: 2518,
+                    num_ufs: 21,
+                    num_signups: 3214,
+                    num_pending_setup: 695,
+                    num_alerts: 5776,
+                    num_pending_alerts: 24866,
+                    num_rejected_alerts: 11663,
+                    num_total_alerts: 42305,
+                    num_cases_in_progress: 121644,
+                    num_children_reinserted: 79595,
+                    num_pending_signups: 1,
+                    num_pending_state_signups: 1,
+                    num_children_in_school: 143,
+                    num_children_in_observation: 316,
+                    num_children_out_of_school: 4655,
+                    num_children_cancelled: 662,
+                    num_children_transferred: 0,
+                    num_children_interrupted: 0,
+                };
 
-        scope.stats_ciclo_5 = {
-          num_tenants: 2518,
-          num_ufs: 21,
-          num_signups: 3214,
-          num_pending_setup: 695,
-          num_alerts: 114,
-          num_pending_alerts: 149,
-          num_rejected_alerts: 10,
-          num_total_alerts: 273,
-          num_cases_in_progress: 121644,
-          num_children_reinserted: 79595,
-          num_pending_signups: 1,
-          num_pending_state_signups: 1,
-          num_children_in_school: 2,
-          num_children_in_observation: 1,
-          num_children_out_of_school: 102,
-          num_children_cancelled: 9,
-          num_children_transferred: 0,
-          num_children_interrupted: 0
-        };
+                scope.stats_ciclo_5 = {
+                    num_tenants: 2518,
+                    num_ufs: 21,
+                    num_signups: 3214,
+                    num_pending_setup: 695,
+                    num_alerts: 114,
+                    num_pending_alerts: 149,
+                    num_rejected_alerts: 10,
+                    num_total_alerts: 273,
+                    num_cases_in_progress: 121644,
+                    num_children_reinserted: 79595,
+                    num_pending_signups: 1,
+                    num_pending_state_signups: 1,
+                    num_children_in_school: 2,
+                    num_children_in_observation: 1,
+                    num_children_out_of_school: 102,
+                    num_children_cancelled: 9,
+                    num_children_transferred: 0,
+                    num_children_interrupted: 0,
+                };
 
-        function refreshMetrics() {
-          return Reports.getCountryStats(function (data) {
-            if (data.status !== 'ok') {
-              ngToast.danger(
-                'Ocorreu um erro ao carregar os números gerais da plataforma. (err: ' +
-                  data.reason +
-                  ')'
-              );
-              return;
+                function refreshMetrics() {
+                    return Reports.getCountryStats(function(data) {
+                        if (data.status !== "ok") {
+                            ngToast.danger(
+                                "Ocorreu um erro ao carregar os números gerais da plataforma. (err: " +
+                                data.reason +
+                                ")"
+                            );
+                            return;
+                        }
+
+                        scope.stats = data.stats;
+                    });
+                }
+
+                Platform.whenReady(function() {
+                    refreshMetrics();
+                });
             }
 
-            scope.stats = data.stats;
-          });
-        }
-
-        Platform.whenReady(function () {
-          refreshMetrics();
+            return {
+                link: init,
+                replace: true,
+                templateUrl: "/views/components/metrics_country.html",
+            };
         });
-      }
-
-      return {
-        link: init,
-        replace: true,
-        templateUrl: '/views/components/metrics_country.html'
-      };
-    });
 })();
-
 (function() {
 
     angular.module('BuscaAtivaEscolar').directive('metricsOverview', function(moment, Platform, Reports, Report, Charts, Identity) {
@@ -6183,226 +6182,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		};
 	})
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
-
-			this.request = function (config) {
-
-				// No indication sent in headers
-				if(!config.headers['X-Require-Auth']) return config;
-
-				// Auth is optional, but not logged in
-				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
-
-				// Auth is neither optional nor required (header has invalid value)
-				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
-
-				// Auth is required
-				return Identity.provideToken().then(function (access_token) {
-					config.headers.Authorization = 'Bearer ' + access_token;
-					return config;
-				}, function (error) {
-					console.error("[auth.interceptor] Token provider returned error: ", error);
-
-					if(error && error.error === 'token_refresh_fail') {
-						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
-						$rootScope.$broadcast('unauthorized');
-					}
-
-					throw error;
-				});
-
-			};
-
-			this.responseError = function (response) {
-
-				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
-					$rootScope.$broadcast('unauthorized');
-				}
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			//console.log("[router] to=", toState, toParams);
-
-			if(toState.unauthenticated) return;
-			if(Identity.isLoggedIn()) return;
-
-			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
-
-			event.preventDefault();
-			$state.go('login');
-		}
-
-	});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .service('HandleErrorResponsesInterceptor', function () {
-
-            function handleResponse(response) {
-
-                if (!response) {
-                    console.error('[interceptors.server_error] Empty response received!');
-                    return response;
-                }
-
-                if (!response.data) {
-                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
-                    return response;
-                }
-
-                // Handled by Exception interceptor
-                if (response.data.reason && response.data.reason === 'exception') return response;
-
-                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
-
-                if (acceptableErrors.indexOf(response.status) === -1) {
-                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
-                    console.log(response.data.error)
-                    if (response.data.error === 'token_invalid') {
-                        window.localStorage.clear();
-                        window.location.href = "/";
-                    }
-                    return response;
-                }
-
-                return response;
-
-            }
-
-            this.response = handleResponse;
-            this.responseError = handleResponse;
-
-        });
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('HandleExceptionResponsesInterceptor', function (Utils) {
-
-			function handleResponse(response) {
-
-				if(!response) return response;
-				if(!response.data) return response;
-				if(!response.data.reason) return response;
-				if(response.data.reason !== 'exception') return response;
-
-				var knownRootPaths = [
-					'/home/vagrant/projects/busca-ativa-escolar-api/',
-					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
-				];
-
-				if(response.data.exception.stack) {
-					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
-					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
-
-					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
-
-					if(messages) {
-
-						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
-
-						for(var i in messages) {
-							if(!messages.hasOwnProperty(i)) continue;
-							//console.log(messages[i]);
-						}
-
-						console.endGroup();
-					}
-
-					return response;
-				}
-
-				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
-
-				return response;
-
-			}
-
-			this.response = handleResponse;
-			this.responseError = handleResponse;
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
-
-			this.request = function (config) {
-
-				// Fixes weird bug with ng-file-uploader clearing the content type globally
-				//config.headers['Content-Type'] = "application/json";
-
-				if(!config.url) return config;
-
-				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
-				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
-
-				return config;
-
-			};
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
-
-			this.request = function (config) {
-
-				if(config.data && config.data.$hide_loading_feedback) return config;
-				if(config.params && config.params.$hide_loading_feedback) return config;
-
-				API.pushRequest();
-
-				return config;
-			};
-
-			this.response = function (response) {
-
-				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
-				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
-
-				API.popRequest();
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			$rootScope.previousState = fromState;
-			$rootScope.previousStateParams = fromParams;
-			$rootScope.currentState = toState;
-			$rootScope.currentStateParams = toParams;
-		}
-
-	});
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -6944,6 +6723,226 @@ Highcharts.maps["countries/br/br-all"] = {
             };
 
         });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
+
+			this.request = function (config) {
+
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
+
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+
+					if(error && error.error === 'token_refresh_fail') {
+						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
+						$rootScope.$broadcast('unauthorized');
+					}
+
+					throw error;
+				});
+
+			};
+
+			this.responseError = function (response) {
+
+				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
+					$rootScope.$broadcast('unauthorized');
+				}
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			//console.log("[router] to=", toState, toParams);
+
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('HandleErrorResponsesInterceptor', function () {
+
+            function handleResponse(response) {
+
+                if (!response) {
+                    console.error('[interceptors.server_error] Empty response received!');
+                    return response;
+                }
+
+                if (!response.data) {
+                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
+                    return response;
+                }
+
+                // Handled by Exception interceptor
+                if (response.data.reason && response.data.reason === 'exception') return response;
+
+                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
+
+                if (acceptableErrors.indexOf(response.status) === -1) {
+                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
+                    console.log(response.data.error)
+                    if (response.data.error === 'token_invalid') {
+                        window.localStorage.clear();
+                        window.location.href = "/";
+                    }
+                    return response;
+                }
+
+                return response;
+
+            }
+
+            this.response = handleResponse;
+            this.responseError = handleResponse;
+
+        });
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function (Utils) {
+
+			function handleResponse(response) {
+
+				if(!response) return response;
+				if(!response.data) return response;
+				if(!response.data.reason) return response;
+				if(response.data.reason !== 'exception') return response;
+
+				var knownRootPaths = [
+					'/home/vagrant/projects/busca-ativa-escolar-api/',
+					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
+				];
+
+				if(response.data.exception.stack) {
+					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
+
+					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
+
+					if(messages) {
+
+						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
+
+						for(var i in messages) {
+							if(!messages.hasOwnProperty(i)) continue;
+							//console.log(messages[i]);
+						}
+
+						console.endGroup();
+					}
+
+					return response;
+				}
+
+				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
+
+			this.request = function (config) {
+
+				// Fixes weird bug with ng-file-uploader clearing the content type globally
+				//config.headers['Content-Type'] = "application/json";
+
+				if(!config.url) return config;
+
+				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
+				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
+
+				return config;
+
+			};
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
+
+			this.request = function (config) {
+
+				if(config.data && config.data.$hide_loading_feedback) return config;
+				if(config.params && config.params.$hide_loading_feedback) return config;
+
+				API.pushRequest();
+
+				return config;
+			};
+
+			this.response = function (response) {
+
+				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
+				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
+
+				API.popRequest();
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			$rootScope.previousState = fromState;
+			$rootScope.previousStateParams = fromParams;
+			$rootScope.currentState = toState;
+			$rootScope.currentStateParams = toParams;
+		}
+
+	});
 })();
 (function() {
 
