@@ -1,16 +1,6 @@
 <div class="wnd-view">
 
-    <div class="container" ng-show="currentState == 'lgpd_signup'">
-        <div class="row">
-            <div class="col-sm">
-                <p class="text-center">
-                    <img src="/images/logo_bae_signup.png" title="Busca Ativa Escolar" alt="Busca Ativa Escolar" />
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <h1 ng-if="currentState === 'lgpd_signup'" class="text-center">Revisão de dados</h1>
+    
 
     <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
 
@@ -181,66 +171,7 @@
                 </div>
             </div>
 
-            <div class="row" ng-if="currentState === 'lgpd_signup'">
-                <div class="col-md-12"><h5>Dados de acesso</h5></div>
-                <div class="form-group col-md-6">
-                    <label class="control-label" for="fld-gp-email">
-                        <i class="fa fa-envelope"></i> E-mail de acesso* </label>
-                    <input type="email" class="form-control" id="fld-gp-email" name="gp_email" required ng-model="user.email" />
-                </div>
-                <div class="form-group col-md-6">
-                    <div class="input-group">
-                        <label class="control-label" for="fld-gp-password">
-                            <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
-                        <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}" title="Senha não pode estar em branco." />
-                        <span class="input-group-btn" uib-tooltip="Exibir a senha">
-                  <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
-                  <i class="fa fa-eye"></i>
-                  </button>
-                  </span>
-                    </div>
-                    <div id="message">
-                        <p>A senha deve conter pelo menos:</p>
-                        <p id="letter" class="invalid">Uma letra <b>minúscula</b>
-                        </p>
-                        <p id="capital" class="invalid">Uma letra <b>maiúscula</b>
-                        </p>
-                        <p id="number" class="invalid">Um <b>número</b>
-                        </p>
-                        <!-- prettier-ignore -->
-                        <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?) </p>
-                        <!-- prettier-ignore -->
-                        <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div ng-show="currentState === 'lgpd_signup'">
-                <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>
-                <div>
-                    <p style="margin-top:0pt; margin-bottom:18pt;">
-                        <input type="checkbox" ng-model="checked" />&nbsp;Declaro que estou ciente dos termos deste Aviso de Privacidade.
-                    </p>
-                    <p style="margin-top:0pt; margin-bottom:18pt;">
-                        <input type="checkbox" ng-model="checked1" /> Declaro que estou ciente e concordo com a transfer&ecirc;ncia dos meus dados pessoais e dos dados pessoais da crian&ccedil;a e/ou adolescente que represento para o exterior, nos termos do cap&iacute;tulo &ldquo; <a href="#_Ref25330631" style="text-decoration:none;">
-                        <span style="color:#0563c1;">Transfer&ecirc;ncia de Dados entre Fronteiras</span>
-                    </a>&rdquo; deste Aviso de Privacidade.
-                    </p>
-                    <p style="margin-top:0pt; margin-bottom:18pt;">
-                        <input type="checkbox" ng-model="checked2" />&nbsp;Declaro que estou ciente e concordo com o tratamento dos dados pessoais do(a) crian&ccedil;a e/ou adolescente que aqui represento, ou em rela&ccedil;&atilde;o ao(&agrave;) qual sou o respons&aacute;vel legal, conforme previsto neste Aviso de Privacidade.
-                    </p>
-                </div>
-            </div>
-
-            <div class="clearfix">
-                <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary">
-                    <i class="fa fa-arrow-left"></i> Voltar </button>
-                <button ng-if="currentState !== 'lgpd_signup'" type="submit" class="btn btn-raised btn-primary pull-right">
-                    <i class="fa fa-save"></i> Salvar </button>
-                <button ng-if="currentState === 'lgpd_signup'" type="submit" ng-disabled="!checked || !checked1 || !checked2" class="btn btn-raised btn-primary pull-right">
-                    <i class="fa fa-save"></i> Salvar </button>
-            </div>
+          
         </div>
 
     </form>
