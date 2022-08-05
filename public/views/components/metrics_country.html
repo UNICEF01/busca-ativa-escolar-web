@@ -53,12 +53,12 @@
         <div class="panel-heading"><strong>Adesões pendentes</strong></div>
         <h1 class="panel-body">
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" style="padding-right: 0px;">
               <span ng-bind="stats['tenants'].num_pending_signups || 0"></span>
               <small><a ui-sref="pending_tenant_signups" uib-tooltip="Ver adesões municipais pendentes"><i
                     class="fa fa-arrow-circle-right"></i></a></small>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="padding-right: 0px;">
               <span ng-bind="stats['ufs'].num_pending_state_signups || 0"></span>
               <small><a ui-sref="pending_state_signups" uib-tooltip="Ver adesões estaduais pendentes"><i
                     class="fa fa-arrow-circle-right"></i></a></small>
