@@ -1,1 +1,216 @@
-<div ng-include="'/views/users/editor.html'"></div>
+<div class="wnd-view">
+    <div class="container" ng-show="currentState == 'lgpd_signup'">
+        <div class="row">
+            <div class="col-sm">
+                <p class="text-center">
+                    <img src="/images/logo_bae_signup.png" title="Busca Ativa Escolar" alt="Busca Ativa Escolar" />
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h1 ng-if="currentState === 'lgpd_signup'" class="text-center">Revisão de dados</h1>
+
+    <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
+
+        <div class="panel-heading clearfix">
+            <div class="pull-left" ng-show="!isCreating">
+                <h1>
+                    <i class="fa fa-user"></i> Função -
+                    {{user.type | lang:'user.type'}}
+                </h1>
+            </div>
+            <div class="pull-left" ng-show="isCreating">
+                <h1>
+                    <i class="fa fa-user-plus"></i> Cadastrar usuário
+                </h1>
+            </div>
+        </div>
+
+        <div class="panel-body">
+          
+            <div class="row" ng-if="currentState === 'lgpd_signup'">
+                <div class="form-group col-md-12" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-name">Nome*</label>
+                    <input type="text" class="form-control" id="fld-name" ng-model="user.name" required />
+                </div>
+                <div class="form-group col-md-12" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-dob">Data de nascimento*</label>
+                    <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" />
+                    <div id="message_date"><p id="error_date"></p></div>
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-cpf">CPF*</label>
+                    <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf"
+                        placeholder="000.000.000-00" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
+                    <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
+                    <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.work_mobile" placeholder="(00) 00000-0000" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
+                    <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000" />
+                </div>
+                <div class="form-group col-md-12" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-address">Endereço institucional</label>
+                    <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
+                </div>
+                <app-city-select style="margin-top: 0px !important;" uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-cep">CEP institucional</label>
+                    <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-neighborhood">Bairro</label>
+                    <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-institution">Órgão</label>
+                    <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-position">Cargo</label>
+                    <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <label class="control-label" for="fld-gp-email">
+                        <i class="fa fa-envelope"></i> E-mail de acesso* </label>
+                    <input type="email" class="form-control" id="fld-gp-email" name="gp_email" required
+                        ng-model="user.email" />
+                </div>
+                <div class="form-group col-md-6" style="margin-top: 0px !important;">
+                    <div class="input-group">
+                        <label class="control-label" for="fld-gp-password">
+                            <i class="fa fa-key"></i> Crie uma nova senha de acesso* </label>
+                        <input type="password" class="form-control" id="fld-gp-password" name="gp_password" required
+                            my-directive onfocus="add(this)" onblur="remove(this)" ng-model="user.password"
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*?]).{8,16}"
+                            title="Senha não pode estar em branco." />
+                        <span class="input-group-btn" uib-tooltip="Exibir a senha">
+                            <button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()"
+                                style="margin-top: 20px;">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                        </span>
+                    </div>
+                    <div id="message">
+                        <p>A senha deve conter pelo menos:</p>
+                        <p id="letter" class="invalid">Uma letra <b>minúscula</b>
+                        </p>
+                        <p id="capital" class="invalid">Uma letra <b>maiúscula</b>
+                        </p>
+                        <p id="number" class="invalid">Um <b>número</b>
+                        </p>
+                        <!-- prettier-ignore -->
+                        <p id="symbol" class="invalid">Um <b>caracter especial</b> (!@#$%&*?) </p>
+                        <!-- prettier-ignore -->
+                        <p id="length" class="invalid">Deve ter entre <b>8 e 16 caracteres</b>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="currentState === 'lgpd_signup'">
+                <div ng-include="'/views/initial_admin_setup/term_lgpd.html'"></div>
+                <div>
+                    <p style="margin-top:0pt; margin-bottom:18pt;">
+                        <input type="checkbox" ng-model="checked" />&nbsp;Declaro que estou ciente dos termos deste
+                        Aviso de Privacidade.
+                    </p>
+                    <p style="margin-top:0pt; margin-bottom:18pt;">
+                        <input type="checkbox" ng-model="checked1" /> Declaro que estou ciente e concordo com a
+                        transfer&ecirc;ncia dos meus dados pessoais e dos dados pessoais da crian&ccedil;a e/ou
+                        adolescente que represento para o exterior, nos termos do cap&iacute;tulo &ldquo; <a
+                            href="#_Ref25330631" style="text-decoration:none;">
+                            <span style="color:#0563c1;">Transfer&ecirc;ncia de Dados entre Fronteiras</span>
+                        </a>&rdquo; deste Aviso de Privacidade.
+                    </p>
+                    <p style="margin-top:0pt; margin-bottom:18pt;">
+                        <input type="checkbox" ng-model="checked2" />&nbsp;Declaro que estou ciente e concordo com o
+                        tratamento dos dados pessoais do(a) crian&ccedil;a e/ou adolescente que aqui represento, ou em
+                        rela&ccedil;&atilde;o ao(&agrave;) qual sou o respons&aacute;vel legal, conforme previsto neste
+                        Aviso de Privacidade.
+                    </p>
+                </div>
+            </div>
+
+            <div class="clearfix">
+                <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary">
+                    <i class="fa fa-arrow-left"></i> Voltar </button>
+                <button ng-if="currentState !== 'lgpd_signup'" type="submit"
+                    class="btn btn-raised btn-primary pull-right">
+                    <i class="fa fa-save"></i> Salvar </button>
+                <button ng-if="currentState === 'lgpd_signup'" type="submit"
+                    ng-disabled="!checked || !checked1 || !checked2" class="btn btn-raised btn-primary pull-right">
+                    <i class="fa fa-save"></i> Salvar </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script>
+    function add(x) {
+        document.getElementById('message').style.display = 'block';
+    }
+    function remove(x) {
+        document.getElementById('message').style.display = 'none';
+    }
+</script>
+<style>
+    #message {
+        font-size: 12px;
+        display: none;
+        color: #000;
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    #message p {
+        padding: 0px 0px 0px 30px;
+        font-size: 12px;
+        margin: 0px;
+    }
+
+    #message_date {
+        font-size: 12px;
+        display: none;
+        color: #000;
+        position: relative;
+        padding: 0px;
+        margin: 0px;
+    }
+
+    #message_date p {
+        padding: 0px;
+        font-size: 12px;
+        margin: 0px;
+    }
+
+    /* Add a green text color and a checkmark when the requirements are right */
+    .valid {
+        color: green;
+    }
+
+    .valid:before {
+        position: relative;
+        left: -10px;
+        content: '✔';
+    }
+
+    /* Add a red text color and an "x" icon when the requirements are wrong */
+    .invalid {
+        color: red;
+    }
+
+    .invalid:before {
+        position: relative;
+        left: -10px;
+        content: '✖';
+    }
+</style>
