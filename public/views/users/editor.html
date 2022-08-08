@@ -22,12 +22,12 @@
 
             <div class="row">
 
-                <div class="form-group {{currentState !== 'lgpd_signup' ? 'col-md-6' : 'col-md-12'}}">
+                <div class="form-group col-md-6">
                     <label class="control-label" for="fld-name">Nome*</label>
                     <input type="text" class="form-control" id="fld-name" ng-model="user.name" required />
                 </div>
 
-                <div ng-show="currentState !== 'lgpd_signup'">
+                <div>
                     <div class="form-group col-md-6">
                         <label class="control-label" for="fld-type">Função ocupada no sistema*</label>
                         <select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunctionFunction()" required></select>
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div ng-show="currentState !== 'lgpd_signup'">
+            <div>
                 <div class="row">
                     <div class="col-md-12">
                         <h5>Dados de acesso</h5>
@@ -170,7 +170,12 @@
                     <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
                 </div>
             </div>
-
+            <div class="clearfix">
+                <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary">
+                  <i class="fa fa-arrow-left"></i> Voltar </button>
+                <button type="submit" class="btn btn-raised btn-primary pull-right">
+                  <i class="fa fa-save"></i> Salvar </button>
+              </div>
           
         </div>
 
