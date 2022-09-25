@@ -190,7 +190,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="input-group">
+                <div class="input-group" ng-if="!identity.getCurrentUser().tenant.is_state" >
                     <span class="input-group-addon"><i class="fa fa-plus-circle"></i
           ></span>
                     <input ng-disabled="disableNewGroup(3)" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three" />
