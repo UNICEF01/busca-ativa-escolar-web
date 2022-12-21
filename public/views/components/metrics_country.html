@@ -86,7 +86,7 @@
         <h1 class="panel-body">
           <div class="row">
             <div class="col-md-12 text-center">
-              <span style="color: #5cb85c; font-size: 40px;" ng-bind="stats['cases']._enrollment "></span>
+              <span style="color: #5cb85c; font-size: 40px;" ng-bind="stats['cases'].enrollment "></span>
               <small>
                 <i class="fa fa-info-circle" uib-tooltip="em andamento/ dentro da escola + concluídos"
                   style="color: #5cb85c"></i>
@@ -101,21 +101,21 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Alertas | Total: {{stats['alerts'].
-            _total|| 0}}</strong>
+            total|| 0}}</strong>
         </div>
 
         <h1 class="panel-body" style="min-height: 174px; padding-top: 10%;">
           <div class="row">
             <div class="col-md-4">
-              <span ng-bind="stats['alerts']._approved || 0"></span>
+              <span ng-bind="stats['alerts'].approved || 0"></span>
             </div>
 
             <div class="col-md-4">
-              <span ng-bind="stats['alerts']._pending  || 0"></span>
+              <span ng-bind="stats['alerts'].pending  || 0"></span>
             </div>
 
             <div class="col-md-4">
-              <span ng-bind="stats['alerts']._rejected  || 0"></span>
+              <span ng-bind="stats['alerts'].rejected  || 0"></span>
             </div>
 
             <div class="col-md-4">
@@ -143,21 +143,21 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Casos | Total: <span ng-bind="stats['cases']._total || 0"></span></strong>
+          <strong>Casos | Total: <span ng-bind="stats['cases'].total || 0"></span></strong>
         </div>
 
         <h1 class="panel-body">
           <div class="row">
             <div class="col-md-4">
-              <span ng-bind="stats['cases']._in_school || 0"></span>
+              <span ng-bind="stats['cases'].in_school || 0"></span>
             </div>
 
             <div class="col-md-4">
-              <span ng-bind="stats['cases']._out_of_school || 0"></span>
+              <span ng-bind="stats['cases'].out_of_school || 0"></span>
             </div>
 
             <div class="col-md-4">
-              <span ng-bind="stats['cases']._in_observation || 0"></span>
+              <span ng-bind="stats['cases'].in_observation || 0"></span>
             </div>
 
             <div class="col-md-4">
@@ -184,17 +184,17 @@
 
             <div class="col-md-4">
               <div style="margin-top: 20px;">
-                <span ng-bind="stats['cases']._cancelled || 0"></span>
+                <span ng-bind="stats['cases'].cancelled || 0"></span>
               </div>
             </div>
             <div class="col-md-4">
               <div style="margin-top: 20px;">
-                <span ng-bind="stats['cases']._transferred || 0"></span>
+                <span ng-bind="stats['cases'].transferred || 0"></span>
               </div>
             </div>
             <div class="col-md-4">
               <div style="margin-top: 20px;">
-                <span ng-bind="stats['cases']._interrupted || 0"></span>
+                <span ng-bind="stats['cases'].interrupted || 0"></span>
               </div>
             </div>
 
