@@ -1,7 +1,7 @@
-(function() {
+(function () {
     angular
         .module("BuscaAtivaEscolar")
-        .directive("metricsCountry", function(moment, Platform, Reports, Charts) {
+        .directive("metricsCountry", function (moment, Platform, Reports, Charts, ngToast) {
             function init(scope, element, attrs) {
                 scope.availableOptions = [
                     { id: 1, name: "Ciclo Estratégia | 2021 - 2024 (Status atual)" },
@@ -101,12 +101,10 @@
                 };
 
                 function refreshMetrics() {
-                    return Reports.getCountryStats(function(data) {
+                    return Reports.getCountryStats(function (data) {
                         if (data.status !== "ok") {
                             ngToast.danger(
-                                "Ocorreu um erro ao carregar os números gerais da plataforma. (err: " +
-                                data.reason +
-                                ")"
+                                "Ocorreu um erro ao carregar os números gerais da plataforma"
                             );
                             return;
                         }
@@ -115,7 +113,7 @@
                     });
                 }
 
-                Platform.whenReady(function() {
+                Platform.whenReady(function () {
                     refreshMetrics();
                 });
             }
