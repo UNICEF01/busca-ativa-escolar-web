@@ -1,18 +1,18 @@
-(function() {
+(function () {
     angular
-        .module('BuscaAtivaEscolar')
-        .directive('metricsCountry', function(Platform, Reports) {
-            function init(scope) {
+        .module("BuscaAtivaEscolar")
+        .directive("metricsCountry", function (moment, Platform, Reports, Charts, ngToast) {
+            function init(scope, element, attrs) {
                 scope.availableOptions = [
-                    { id: 1, name: 'Ciclo Estratégia | 2021 - 2024 (Status atual)' },
-                    { id: 2, name: 'Ciclo Estratégia 2017-2020 (Status em 31/12/2020)' },
-                    { id: 3, name: 'Ciclo Estratégia 2017-2020 (Status em 31/12/2019)' },
-                    { id: 4, name: 'Ciclo Estratégia 2017-2020 (Status em 31/12/2018)' },
-                    { id: 5, name: 'Ciclo Estratégia 2017-2020 (Status em 31/12/2017)' }
+                    { id: 1, name: "Ciclo Estratégia | 2021 - 2024 (Status atual)" },
+                    { id: 2, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2020)" },
+                    { id: 3, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2019)" },
+                    { id: 4, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2018)" },
+                    { id: 5, name: "Ciclo Estratégia 2017-2020 (Status em 31/12/2017)" },
                 ];
                 scope.selectedOption = {
                     id: 1,
-                    name: 'Ciclo Estratégia | 2021 - 2024 (Status atual)'
+                    name: "Ciclo Estratégia | 2021 - 2024 (Status atual)",
                 };
 
                 scope.stats = {};
@@ -28,14 +28,14 @@
                     num_total_alerts: 351420,
                     num_cases_in_progress: 121644,
                     num_children_reinserted: 79595,
-                    num_pending_signups: 10,
-                    num_pending_state_signups: 10,
+                    num_pending_signups: 1,
+                    num_pending_state_signups: 1,
                     num_children_in_school: 6050,
                     num_children_in_observation: 73545,
                     num_children_out_of_school: 48060,
                     num_children_cancelled: 32299,
                     num_children_transferred: 188,
-                    num_children_interrupted: 577
+                    num_children_interrupted: 577,
                 };
 
                 scope.stats_ciclo_3 = {
@@ -56,7 +56,7 @@
                     num_children_out_of_school: 26040,
                     num_children_cancelled: 11959,
                     num_children_transferred: 0,
-                    num_children_interrupted: 0
+                    num_children_interrupted: 0,
                 };
                 scope.stats_ciclo_4 = {
                     num_tenants: 2518,
@@ -76,7 +76,7 @@
                     num_children_out_of_school: 4655,
                     num_children_cancelled: 662,
                     num_children_transferred: 0,
-                    num_children_interrupted: 0
+                    num_children_interrupted: 0,
                 };
 
                 scope.stats_ciclo_5 = {
@@ -97,16 +97,14 @@
                     num_children_out_of_school: 102,
                     num_children_cancelled: 9,
                     num_children_transferred: 0,
-                    num_children_interrupted: 0
+                    num_children_interrupted: 0,
                 };
 
                 function refreshMetrics() {
-                    return Reports.getCountryStats(function(data) {
-                        if (data.status !== 'ok') {
+                    return Reports.getCountryStats(function (data) {
+                        if (data.status !== "ok") {
                             ngToast.danger(
-                                'Ocorreu um erro ao carregar os números gerais da plataforma. (err: ' +
-                                data.reason +
-                                ')'
+                                "Ocorreu um erro ao carregar os números gerais da plataforma"
                             );
                             return;
                         }
@@ -115,7 +113,7 @@
                     });
                 }
 
-                Platform.whenReady(function() {
+                Platform.whenReady(function () {
                     refreshMetrics();
                 });
             }
@@ -123,7 +121,7 @@
             return {
                 link: init,
                 replace: true,
-                templateUrl: '/views/components/metrics_country.html'
+                templateUrl: "/views/components/metrics_country.html",
             };
         });
 })();

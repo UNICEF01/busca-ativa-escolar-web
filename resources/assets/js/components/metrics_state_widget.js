@@ -1,12 +1,12 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').directive('metricsState', function(Platform, Reports, ngToast) {
+    angular.module('BuscaAtivaEscolar').directive('metricsState', function (moment, Platform, Reports, ngToast, Identity) {
 
         function init(scope) {
             scope.stats = {};
 
             function refreshMetrics() {
-                return Reports.getStateStats(function(data) {
+                return Reports.getStateStats({ uf: Identity.getCurrentUser()["uf"] }, function (data) {
                     if (data.status !== 'ok') {
                         ngToast.danger('Ocorreu um erro ao carregar os números gerais da plataforma. (err: ' + data.reason + ')');
                         return;
@@ -16,7 +16,7 @@
                 });
             }
 
-            Platform.whenReady(function() {
+            Platform.whenReady(function () {
                 refreshMetrics();
             });
         }

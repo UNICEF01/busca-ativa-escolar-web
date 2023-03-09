@@ -1,6 +1,6 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function(Platform, Report, Identity) {
+    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (Platform, Report, Identity) {
 
         function init(scope, attrs) {
 
@@ -9,12 +9,12 @@
             function refreshMetrics() {
 
                 if (attrs.ibgeId && attrs.uf) {
-                    Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function(data) {
+                    Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function (data) {
                         metrics = data._data;
                         metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
                     });
                 } else {
-                    Report.getStatusCity({ city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf }, function(data) {
+                    Report.getStatusCity({ city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf }, function (data) {
                         metrics = data._data;
                         metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
                     });
@@ -22,18 +22,18 @@
 
             }
 
-            scope.getMetrics = function() {
+            scope.getMetrics = function () {
                 return metrics;
             };
 
-            Platform.whenReady(function() {
+            Platform.whenReady(function () {
                 refreshMetrics();
             });
 
-            scope.$watch('objectToInjectInMetrics', function(value) {
+            scope.$watch('objectToInjectInMetrics', function (value) {
                 if (value) {
                     scope.Obj = value;
-                    scope.Obj.invoke = function(ibgeId) {
+                    scope.Obj.invoke = function (ibgeId) {
                         attrs.ibgeId = ibgeId;
                         refreshMetrics();
                     }
