@@ -38,7 +38,7 @@
 
                 <ul class="nav navbar-nav">
                     <li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
-                    <!--<li ng-show="identity.can('alerts.spawn')"> <a ui-sref="child_create_from_alert"> <i class="fa fa-bell"></i> Criar alerta</a></li>-->
+
                     <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bell"></i>
@@ -54,7 +54,25 @@
                         </ul>
                     </li>
 
-                    <li ng-show="identity.can('cases.view')" ui-sref-active="active"><a ui-sref="child_browser"><i class="fa fa-list"></i> Casos</a></li>
+                    <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+
+                            Casos
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a ui-sref="child_browser">
+                                    <i class="fa fa-bell-o" aria-hidden="true"> </i> Casos
+                                </a>
+                            </li>
+                            <li>
+                                <a ui-sref="user_notifications">
+                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"> </i> Minhas notificações
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                     <li ng-show="identity.can('reports.view')" ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
 

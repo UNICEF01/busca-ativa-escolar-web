@@ -1,7 +1,7 @@
-(function() {
+(function () {
     angular
         .module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
+        .config(function ($stateProvider) {
             $stateProvider.state('checks', {
                 url: '/checks',
                 templateUrl: '/views/children/checks.html',
@@ -10,7 +10,7 @@
         })
         .controller(
             'CheckRequestCtrl',
-            function(
+            function (
                 $scope,
                 Children,
                 Decorators,
@@ -25,7 +25,7 @@
                 $scope.query = angular.merge({}, $scope.defaultQuery);
                 $scope.requests = {};
 
-                $scope.refresh = function() {
+                $scope.refresh = function () {
                     $scope.requests = Children.requests();
                 };
 
@@ -62,15 +62,15 @@
                     DTColumnDefBuilder.newColumnDef([0]).withOption('type', 'date'),
                 ];
 
-                $scope.aprove = function(child) {
+                $scope.aprove = function (child) {
                     if (child.type_request === 'reopen') {
                         Children.reopenCase({
                             case_id: child.child.current_case_id,
                             reason: 'request',
-                        }).$promise.then(function(res) {
+                        }).$promise.then(function (res) {
                             if (res.status !== 'error') {
                                 ngToast.success(res.result);
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location =
                                         'children/view/' + res.child_id + '/consolidated';
                                 }, 4000);
@@ -84,10 +84,10 @@
                     if (child.type_request === 'transfer') {
                         Children.transferCase({
                             case_id: child.child.current_case_id,
-                        }).$promise.then(function(res) {
+                        }).$promise.then(function (res) {
                             if (res.status !== 'error') {
                                 ngToast.success(res.result);
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     window.location =
                                         'children/view/' + res.child_id + '/consolidated';
                                 }, 4000);
@@ -97,19 +97,19 @@
                         });
                     }
                 };
-                $scope.reject = function(child) {
+                $scope.reject = function (child) {
                     Modals.show(Modals.CaseReject($scope.identity.getType()))
-                        .then(function(response) {
+                        .then(function (response) {
                             if (!response) return $q.reject();
 
                             if ($scope.identity.getType() === 'coordenador_operacional') {
                                 Children.reject({
                                     id: child.id,
                                     reject_reason: response.reason,
-                                }).$promise.then(function(res) {
+                                }).$promise.then(function (res) {
                                     if (res.status !== 'error') {
                                         ngToast.success(res.result);
-                                        setTimeout(function() {
+                                        setTimeout(function () {
                                             window.location = 'checks';
                                         }, 4000);
                                     } else {
@@ -120,7 +120,7 @@
                                 ngToast.warning('Você não pode realizar essa ação.');
                             }
                         })
-                        .then(function() {});
+                        .then(function () { });
                 };
 
             }

@@ -7,8 +7,7 @@
         <div class="panel panel-default animated fadeInUp">
             <div class="panel-heading">
                 <h4><i class="material-icons">beenhere</i>Status do município: <b ng-bind="renderTenantName()"></b>
-                    <button type="button" class="btn btn-primary btn-sm pull-right" data-html2canvas-ignore
-                            ng-click="chartWithContentDownload()">
+                    <button type="button" class="btn btn-primary btn-sm pull-right" data-html2canvas-ignore ng-click="chartWithContentDownload()">
                         <span class="glyphicon glyphicon-print"></span> Baixar Painel
                     </button>
                 </h4>
@@ -22,10 +21,10 @@
                                 <div class="border"></div>
                                 <div class="number">{{$index + 1}}</div>
                             </div>
-                            <span class="animated fadeIn">
-                    {{ item.name }}<br>
-                    <small>{{item.info | dtFormat }}</small>
-                    </span>
+                            <span class="animated fadeIn" uib-tooltip="{{item.tooltiptext}}">
+                                {{ item.name }} <br>
+                                <small>{{item.info | dtFormat }}</small>
+                            </span>
 
                         </a>
                     </div>
@@ -143,12 +142,13 @@
             <div class="col-md-12">
                 <h3 align="center">Visão geral da estratégia <br>
                     <small>{{identity.getCurrentUser().tenant.name}}</small>
-                </h3> <br/>
+                </h3> <br />
             </div>
 
             <div class="col-md-6">
                 <div class="panel panel-default animated fadeInUp">
-                    <div class="panel-heading"><h4><i class="fa fa-bell"></i> Alertas</h4>
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-bell"></i> Alertas</h4>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-3">
@@ -181,12 +181,15 @@
 
             <div class="col-md-6">
                 <div class="panel panel-default animated fadeInUp">
-                    <div class="panel-heading"><h4><i class="fa fa-list"></i> Casos por etapa em andamento</h4>
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-list"></i> Casos por etapa em andamento</h4>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h5><b>No prazo</b></h5></div>
+                                <div class="panel-heading">
+                                    <h5><b>No prazo</b></h5>
+                                </div>
                                 <ul>
                                     <li>Pesquisa ( {{ otherData.cases_box.steps_on_time.pesquisa || 0}} )</li>
                                     <li>Análise Técnica ( {{ otherData.cases_box.steps_on_time.analise_tecnica || 0}}
@@ -202,7 +205,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h5><b>Em atraso</b></h5></div>
+                                <div class="panel-heading">
+                                    <h5><b>Em atraso</b></h5>
+                                </div>
                                 <ul>
                                     <li>Pesquisa ( {{ otherData.cases_box.steps_late.pesquisa || 0}} )</li>
                                     <li>Análise Técnica ( {{ otherData.cases_box.steps_late.analise_tecnica || 0}} )
@@ -283,9 +288,9 @@
                                 </div>
 
                                 <div>
-                                    <span class="badge" style="color: white; background-color: #d9534f;">O município realizou menos de 20% (vinte por cento) de (re)matrículas</span><br/>
-                                    <span class="badge" style="color: white; background-color: #f0ad4e;">O município realizou de 20% a 49% de (re)matrículas</span><br/>
-                                    <span class="badge" style="color: white; background-color: #5cb85c;">O município realizou de 50% a 99% de (re)matrículas</span><br/>
+                                    <span class="badge" style="color: white; background-color: #d9534f;">O município realizou menos de 20% (vinte por cento) de (re)matrículas</span><br />
+                                    <span class="badge" style="color: white; background-color: #f0ad4e;">O município realizou de 20% a 49% de (re)matrículas</span><br />
+                                    <span class="badge" style="color: white; background-color: #5cb85c;">O município realizou de 50% a 99% de (re)matrículas</span><br />
                                     <span class="badge" style="color: white; background-color: #28ACE2;">O município realizou 100% de (re)matrículas</span>
                                 </div>
 
@@ -319,9 +324,7 @@
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
-                                <div class="panel-footer"
-                                     ng-style="percentualAtingido <= 19 && {'color': 'white', 'background-color': '#d9534f'} || percentualAtingido <= 49 && {'color': 'white', 'background-color': '#f0ad4e'} || percentualAtingido < 100 && {'color': 'white', 'background-color': '#5cb85c'} || percentualAtingido >= 100 && {'color': 'white', 'background-color': '#28ACE2'}"
-                                     style="min-height: 100px;">
+                                <div class="panel-footer" ng-style="percentualAtingido <= 19 && {'color': 'white', 'background-color': '#d9534f'} || percentualAtingido <= 49 && {'color': 'white', 'background-color': '#f0ad4e'} || percentualAtingido < 100 && {'color': 'white', 'background-color': '#5cb85c'} || percentualAtingido >= 100 && {'color': 'white', 'background-color': '#28ACE2'}" style="min-height: 100px;">
                                     <small>Total de novas (re)matrículas realizadas até o momento, válidas para o cumprimento das metas do Selo edição 21/24</small>
                                 </div>
                             </div>
@@ -341,6 +344,6 @@
 
     <div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
 
-    <span class="badge" style="color: white; background-color: #d9534f;" ng-if="otherData.goal_box.goal > 0">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
+    <span class="badge" style="color: white; background-color: #d9534f;" ng-if="otherData.goal_box.goal > 0">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br />
 
 </div>

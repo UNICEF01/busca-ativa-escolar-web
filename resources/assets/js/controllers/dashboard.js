@@ -1,6 +1,6 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
+    angular.module('BuscaAtivaEscolar').controller('DashboardCtrl', function ($scope, moment, Platform, Identity, StaticData, Tenants, Reports, Graph, Config) {
 
         $scope.identity = Identity;
         $scope.static = StaticData;
@@ -10,16 +10,16 @@
         $scope.otherData = {};
 
         $scope.listeners = {
-            click: function() {},
-            mousemove: function() {},
-            mouseleave: function() {},
-            mouseenter: function() {},
-            drag: function() {},
-            dragstart: function() {},
-            dragend: function() {},
-            mapviewchange: function() {},
-            mapviewchangestart: function() {},
-            mapviewchangeend: function() {}
+            click: function () { },
+            mousemove: function () { },
+            mouseleave: function () { },
+            mouseenter: function () { },
+            drag: function () { },
+            dragstart: function () { },
+            dragend: function () { },
+            mapviewchange: function () { },
+            mapviewchangestart: function () { },
+            mapviewchangeend: function () { }
         };
 
         $scope.ufs_selo = { data: [] };
@@ -71,7 +71,7 @@
             },
             "events": {
 
-                "entityClick": function(e) {
+                "entityClick": function (e) {
                     if ($scope.fusionmap_scope_table == "maps/brazil") {
                         if (e.data.value > 0) {
                             $scope.fusionmap_scope_table = "maps/" + e.data.label.split(" ").join("").toLowerCase();
@@ -84,12 +84,12 @@
                         }
                     }
                 },
-                "entityRollover": function(evt) {
+                "entityRollover": function (evt) {
                     if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ddd";
                     }
                 },
-                "entityRollout": function(evt) {
+                "entityRollout": function (evt) {
                     if ($scope.fusionmap_scope_table == "maps/brazil") {
                         document.getElementById('state_' + evt.data.id).style.backgroundColor = "#ffffff";
                     }
@@ -117,18 +117,18 @@
         $scope.show_option_municipio = false;
 
         $scope.schema = [{
-                "name": "Date",
-                "type": "date",
-                "format": "%Y-%m-%d"
-            },
-            {
-                "name": "Rematricula",
-                "type": "string"
-            },
-            {
-                "name": "Unemployment",
-                "type": "number"
-            }
+            "name": "Date",
+            "type": "date",
+            "format": "%Y-%m-%d"
+        },
+        {
+            "name": "Rematricula",
+            "type": "string"
+        },
+        {
+            "name": "Unemployment",
+            "type": "number"
+        }
         ];
 
         $scope.dataSource = {
@@ -141,7 +141,7 @@
             series: "Rematricula",
             yaxis: [{
                 format: {
-                    formatter: function(obj) {
+                    formatter: function (obj) {
                         var val = null;
                         if (obj.type === "axis") {
                             val = obj.value
@@ -193,17 +193,17 @@
             }
         };
 
-        $scope.getUFs = function() {
+        $scope.getUFs = function () {
             return StaticData.getUFs();
         };
 
-        $scope.getTablevaluesFormFusionMap = function() {
+        $scope.getTablevaluesFormFusionMap = function () {
             return $scope.fusion_map_config.dataSource.data;
         };
 
-        $scope.initFusionChartMap = function() {
-            FusionCharts.ready(function() {
-                Reports.getDataMapFusionChart(function(data) {
+        $scope.initFusionChartMap = function () {
+            FusionCharts.ready(function () {
+                Reports.getDataMapFusionChart(function (data) {
 
                     $scope.fusionmap_scope_city.id = null;
                     $scope.fusionmap_scope_table = "maps/brazil";
@@ -227,8 +227,8 @@
             });
         };
 
-        $scope.initFusionChartMapState = function(uf, scope_table) {
-            Reports.getDataMapFusionChart({ uf: uf }, function(data) {
+        $scope.initFusionChartMapState = function (uf, scope_table) {
+            Reports.getDataMapFusionChart({ uf: uf }, function (data) {
 
                 $scope.fusionmap_scope_city.id = null;
                 $scope.fusion_map_config.type = scope_table;
@@ -252,22 +252,22 @@
             });
         };
 
-        $scope.initFusionChartMapCity = function() {
+        $scope.initFusionChartMapCity = function () {
             $scope.injectedObjectDirectiveCaseMaps.invoke($scope.fusionmap_scope_city.id);
             $scope.objectToInjectInMetrics.invoke($scope.fusionmap_scope_city.id, $scope.fusionmap_scope_uf);
         };
 
-        $scope.initFusionChart = function() {
+        $scope.initFusionChart = function () {
 
-            Identity.provideToken().then(function(token) {
+            Identity.provideToken().then(function (token) {
 
-                var jsonify = function(res) {
+                var jsonify = function (res) {
                     return res.json();
                 };
 
                 var dataDaily = fetch(Config.getAPIEndpoint() + 'reports/data_rematricula_daily?uf=' + $scope.query_evolution_graph.uf + '&tenant_id=' + $scope.query_evolution_graph.tenant_id + '&selo=' + $scope.query_evolution_graph.selo + '&token=' + token).then(jsonify);
 
-                Promise.all([dataDaily]).then(function(res) {
+                Promise.all([dataDaily]).then(function (res) {
 
                     const data = res[0];
 
@@ -281,7 +281,7 @@
                     }
 
                     const fusionTable = new FusionCharts.DataStore().createDataTable(
-                        data_final.map(function(x) {
+                        data_final.map(function (x) {
                             return [
                                 x.date,
                                 x.tipo,
@@ -291,7 +291,7 @@
 
                         $scope.schema
                     );
-                    $scope.$apply(function() {
+                    $scope.$apply(function () {
 
                         if (data.selo == $scope.selo_unicef_participa && data.goal > 0) {
                             $scope.dataSource.yaxis[0].Max = data.goal;
@@ -330,7 +330,7 @@
             });
         };
 
-        $scope.initSelectsOfFusionChart = function() {
+        $scope.initSelectsOfFusionChart = function () {
             if (Identity.isUserType("coordenador_operacional") ||
                 Identity.isUserType("supervisor_institucional") ||
                 Identity.isUserType("gestor_politico")) {
@@ -356,25 +356,25 @@
             }
         };
 
-        $scope.initTenants = function() {
+        $scope.initTenants = function () {
             if ($scope.uf_profiles_type.includes($scope.identity.getType())) {
                 $scope.tenants = Tenants.findByUfPublic({ 'uf': $scope.identity.getCurrentUser().uf });
             }
         };
 
-        $scope.initUfs = function() {
+        $scope.initUfs = function () {
             $scope.ufs_selo = Reports.getUfsBySelo({ selo: $scope.query_evolution_graph.selo });
         };
 
-        $scope.getUfsSelo = function() {
+        $scope.getUfsSelo = function () {
             return $scope.ufs_selo.data;
         };
 
-        $scope.getTenantsSelo = function() {
+        $scope.getTenantsSelo = function () {
             return $scope.tenants_selo.data;
         };
 
-        $scope.onSelectSelo = function() {
+        $scope.onSelectSelo = function () {
             $scope.query_evolution_graph.tenant_id = '';
             if (!Identity.isUserType("coordenador_estadual") && !Identity.isUserType("gestor_estadual")) {
                 $scope.query_evolution_graph.uf = '';
@@ -386,7 +386,7 @@
             $scope.initFusionChart();
         };
 
-        $scope.onSelectUf = function() {
+        $scope.onSelectUf = function () {
             $scope.query_evolution_graph.tenant_id = '';
             $scope.tenants_selo = Reports.getTenantsBySelo({
                 selo: $scope.query_evolution_graph.selo,
@@ -395,17 +395,17 @@
             $scope.initFusionChart();
         };
 
-        $scope.onSelectCity = function() {
+        $scope.onSelectCity = function () {
             $scope.initFusionChart();
         };
 
-        $scope.refresh = function() {
+        $scope.refresh = function () {
             if (($scope.query.uf !== undefined) && ($scope.query.tenant_id !== undefined)) {
                 $scope.tenants = Graph.getReinsertEvolution({ 'uf': $scope.query.uf });
             }
         };
 
-        $scope.getTenants = function() {
+        $scope.getTenants = function () {
             if (!$scope.tenants || !$scope.tenants.data) return [];
             return $scope.tenants.data;
         };
@@ -415,14 +415,14 @@
         $scope.showInfo = '';
 
         $scope.steps = [
-            { name: 'Adesão', info: '' },
-            { name: 'Configuração', info: '' },
-            { name: '1º Alerta', info: '' },
-            { name: '1º Caso', info: '' },
-            { name: '1ª (Re)matrícula', info: '' }
+            { name: 'Adesão', info: '', tooltiptext: '' },
+            { name: 'Configuração', info: '', tooltiptext: 'Configuração: definição de grupos, usuários e customização de prioridades (menu: configurações > customização)' },
+            { name: '1º Alerta', info: '', tooltiptext: '' },
+            { name: '1º Caso', info: '', tooltiptext: '' },
+            { name: '1ª (Re)matrícula', info: '', tooltiptext: '' }
         ];
 
-        $scope.chartWithContentDownload = function() {
+        $scope.chartWithContentDownload = function () {
             window.scrollTo(0, 100);
 
             var cloneDom = $("#regua").clone(true);
@@ -432,7 +432,7 @@
                 var nodesToRecover = [];
                 var nodesToRemove = [];
                 var svgElem = cloneDom.find('svg'); //divReport is the ID of the DOM that needs to be intercepted into pictures
-                svgElem.each(function(node) {
+                svgElem.each(function (node) {
                     var parentNode = node.parentNode;
                     var svg = node.outerHTML.trim();
 
@@ -458,7 +458,7 @@
                 $("#regua_print").append(cloneDom);
 
                 html2canvas(cloneDom, {
-                    onrendered: function(canvas) {
+                    onrendered: function (canvas) {
                         var data = canvas.toDataURL("image/png");
                         var docDefinition = {
                             content: [{
@@ -478,9 +478,9 @@
             }
         };
 
-        $scope.initStatusBar = function() {
+        $scope.initStatusBar = function () {
 
-            Reports.getStatusBar(function(data) {
+            Reports.getStatusBar(function (data) {
 
                 var meta = data.goal_box && data.goal_box.goal || 0;
 
@@ -522,19 +522,19 @@
 
         };
 
-        $scope.initTenantsSelo = function() {
+        $scope.initTenantsSelo = function () {
             $scope.tenants_selo = Reports.getTenantsBySelo({
                 selo: $scope.query_evolution_graph.selo,
                 uf: $scope.identity.getCurrentUser().uf
             });
         };
 
-        $scope.stateCountChange = function() {
+        $scope.stateCountChange = function () {
             $scope.stateCount = isNaN($scope.stateCount) ? 2 : $scope.stateCount;
             init();
         };
 
-        $scope.setCurrent = function(state) {
+        $scope.setCurrent = function (state) {
             for (var i = 0; i < $scope.states.length; i++) {
                 $scope.states[i].isCurrent = false;
             }
@@ -574,12 +574,12 @@
                 { sigla: 'SE', id: '026', state: 'Sergipe' },
                 { sigla: 'TO', id: '027', state: 'Tocantins' }
             ];
-            return states.filter(function(e) {
+            return states.filter(function (e) {
                 return e.sigla == sigla;
             })[0];
         }
 
-        $scope.handleMaps = function() {
+        $scope.handleMaps = function () {
             var cloudering = document.getElementById("map");
             var markers = document.getElementById("map-markes");
             if (cloudering.style.display === "none") {
@@ -593,7 +593,7 @@
             }
         };
 
-        Platform.whenReady(function() {
+        Platform.whenReady(function () {
             $scope.ready = true;
 
             if (Identity.getCurrentUser().type == "gestor_nacional") {
