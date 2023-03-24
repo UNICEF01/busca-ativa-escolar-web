@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
@@ -9,13 +9,13 @@
 			});
 		})
 		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-                   
+
 			$scope.check_all_schools = false;
 			$scope.identity = Identity;
 			$scope.schools = {};
 			$scope.msg_success = false;
 			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022, 2023];
 			$scope.query = {
 				year_educacenso: new Date().getFullYear(),
 				sort: {},
@@ -26,42 +26,42 @@
 			$scope.selected = {
 				schools: []
 			};
-			
-			$scope.onCheckSelectAll = function(){
-				if( $scope.check_all_schools ){
+
+			$scope.onCheckSelectAll = function () {
+				if ($scope.check_all_schools) {
 					$scope.selected.schools = angular.copy($scope.schools.data);
-				}else{
+				} else {
 					$scope.selected.schools = [];
 				}
 			};
 
-            $scope.onModifySchool = function(school){
+			$scope.onModifySchool = function (school) {
 				Schools.update(school).$promise.then($scope.onSaved);
 			};
-			
-			$scope.onSaved = function(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+
+			$scope.onSaved = function (res) {
+				if (res.status === "ok") {
+					ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
 					return;
-				}else{
-					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+				} else {
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
 					$scope.refresh();
 				}
 			};
 
-			$scope.sendnotification = function(){
+			$scope.sendnotification = function () {
 
 				//remove objects without email
-				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					if(school.school_email != null && school.school_email != ""){
+				var schools_to_send_notification = $scope.selected.schools.filter(function (school) {
+					if (school.school_email != null && school.school_email != "") {
 						return true;
-					}else{
+					} else {
 						return false;
 					}
 				});
 
-				if(schools_to_send_notification.length > 0){
-					
+				if (schools_to_send_notification.length > 0) {
+
 					Modals.show(
 						Modals.ConfirmEmail(
 							'Confirma o envio de sms e email para as seguintes escolas?',
@@ -71,13 +71,13 @@
 							return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
 						})
 						.then(function (res) {
-							if(res.status == "error"){
+							if (res.status == "error") {
 								ngToast.danger(res.message);
 								$scope.msg_success = false;
 								$scope.msg_error = true;
 								$scope.refresh();
 								window.scrollTo(0, 0);
-							}else{
+							} else {
 								ngToast.warning(res.message);
 								$scope.msg_success = true;
 								$scope.msg_error = false;
@@ -85,34 +85,34 @@
 								window.scrollTo(0, 0);
 							}
 						});
-				}else{
+				} else {
 					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
 				}
 
 			};
 
-			$scope.onSelectYear = function() {
+			$scope.onSelectYear = function () {
 				$scope.query.page = 1;
 				$scope.query.max = 5;
 				$scope.refresh();
 			};
 
-			$scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
+			$scope.refresh = function () {
+				Schools.all_educacenso($scope.query, function (res) {
 					$scope.check_all_schools = false;
 					$scope.selected.schools = [];
 					$scope.schools = angular.copy(res);
 				});
 			};
 
-			$scope.setMaxResults = function(max) {
+			$scope.setMaxResults = function (max) {
 				$scope.query.max = max;
 				$scope.query.page = 1;
 				$scope.refresh();
 			};
-			
-			Platform.whenReady(function() {
-                $scope.refresh();
+
+			Platform.whenReady(function () {
+				$scope.refresh();
 			});
 
 		});

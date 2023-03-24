@@ -999,7 +999,6 @@
             return !$scope.step.is_completed && !!$scope.step.is_pending_assignment;
         };
 
-        
         $scope.fillWithCurrentDate = function (field) {
             $scope.fields[field] = moment(new Date().toISOString().substring(0, 10));
         };
@@ -3162,10 +3161,10 @@
 	});
 
 })();
-(function() {
+(function () {
     angular
         .module("BuscaAtivaEscolar")
-        .directive("metricsCountry", function(moment, Platform, Reports, Charts) {
+        .directive("metricsCountry", function (moment, Platform, Reports, Charts, ngToast) {
             function init(scope, element, attrs) {
                 scope.availableOptions = [
                     { id: 1, name: "Ciclo Estratégia | 2021 - 2024 (Status atual)" },
@@ -3265,12 +3264,10 @@
                 };
 
                 function refreshMetrics() {
-                    return Reports.getCountryStats(function(data) {
+                    return Reports.getCountryStats(function (data) {
                         if (data.status !== "ok") {
                             ngToast.danger(
-                                "Ocorreu um erro ao carregar os números gerais da plataforma. (err: " +
-                                data.reason +
-                                ")"
+                                "Ocorreu um erro ao carregar os números gerais da plataforma"
                             );
                             return;
                         }
@@ -3279,7 +3276,7 @@
                     });
                 }
 
-                Platform.whenReady(function() {
+                Platform.whenReady(function () {
                     refreshMetrics();
                 });
             }
@@ -6183,226 +6180,6 @@ Highcharts.maps["countries/br/br-all"] = {
 		};
 	})
 })();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
-
-			this.request = function (config) {
-
-				// No indication sent in headers
-				if(!config.headers['X-Require-Auth']) return config;
-
-				// Auth is optional, but not logged in
-				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
-
-				// Auth is neither optional nor required (header has invalid value)
-				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
-
-				// Auth is required
-				return Identity.provideToken().then(function (access_token) {
-					config.headers.Authorization = 'Bearer ' + access_token;
-					return config;
-				}, function (error) {
-					console.error("[auth.interceptor] Token provider returned error: ", error);
-
-					if(error && error.error === 'token_refresh_fail') {
-						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
-						$rootScope.$broadcast('unauthorized');
-					}
-
-					throw error;
-				});
-
-			};
-
-			this.responseError = function (response) {
-
-				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
-					$rootScope.$broadcast('unauthorized');
-				}
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			//console.log("[router] to=", toState, toParams);
-
-			if(toState.unauthenticated) return;
-			if(Identity.isLoggedIn()) return;
-
-			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
-
-			event.preventDefault();
-			$state.go('login');
-		}
-
-	});
-})();
-(function () {
-    angular
-        .module('BuscaAtivaEscolar')
-        .service('HandleErrorResponsesInterceptor', function () {
-
-            function handleResponse(response) {
-
-                if (!response) {
-                    console.error('[interceptors.server_error] Empty response received!');
-                    return response;
-                }
-
-                if (!response.data) {
-                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
-                    return response;
-                }
-
-                // Handled by Exception interceptor
-                if (response.data.reason && response.data.reason === 'exception') return response;
-
-                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
-
-                if (acceptableErrors.indexOf(response.status) === -1) {
-                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
-                    console.log(response.data.error)
-                    if (response.data.error === 'token_invalid') {
-                        window.localStorage.clear();
-                        window.location.href = "/";
-                    }
-                    return response;
-                }
-
-                return response;
-
-            }
-
-            this.response = handleResponse;
-            this.responseError = handleResponse;
-
-        });
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('HandleExceptionResponsesInterceptor', function (Utils) {
-
-			function handleResponse(response) {
-
-				if(!response) return response;
-				if(!response.data) return response;
-				if(!response.data.reason) return response;
-				if(response.data.reason !== 'exception') return response;
-
-				var knownRootPaths = [
-					'/home/vagrant/projects/busca-ativa-escolar-api/',
-					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
-				];
-
-				if(response.data.exception.stack) {
-					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
-					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
-
-					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
-
-					if(messages) {
-
-						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
-
-						for(var i in messages) {
-							if(!messages.hasOwnProperty(i)) continue;
-							//console.log(messages[i]);
-						}
-
-						console.endGroup();
-					}
-
-					return response;
-				}
-
-				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
-
-				return response;
-
-			}
-
-			this.response = handleResponse;
-			this.responseError = handleResponse;
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
-
-			this.request = function (config) {
-
-				// Fixes weird bug with ng-file-uploader clearing the content type globally
-				//config.headers['Content-Type'] = "application/json";
-
-				if(!config.url) return config;
-
-				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
-				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
-
-				return config;
-
-			};
-
-		});
-
-})();
-(function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
-
-			this.request = function (config) {
-
-				if(config.data && config.data.$hide_loading_feedback) return config;
-				if(config.params && config.params.$hide_loading_feedback) return config;
-
-				API.pushRequest();
-
-				return config;
-			};
-
-			this.response = function (response) {
-
-				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
-				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
-
-				API.popRequest();
-
-				return response;
-			};
-
-		});
-
-})();
-(function() {
-	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
-		$rootScope.$on('$stateChangeStart', handleStateChange);
-
-		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
-
-			$rootScope.previousState = fromState;
-			$rootScope.previousStateParams = fromParams;
-			$rootScope.currentState = toState;
-			$rootScope.currentStateParams = toParams;
-		}
-
-	});
-})();
 (function () {
 
     angular.module('BuscaAtivaEscolar')
@@ -6944,6 +6721,226 @@ Highcharts.maps["countries/br/br-all"] = {
             };
 
         });
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('AddAuthorizationHeadersInterceptor', function ($q, $rootScope, Identity) {
+
+			this.request = function (config) {
+
+				// No indication sent in headers
+				if(!config.headers['X-Require-Auth']) return config;
+
+				// Auth is optional, but not logged in
+				if(config.headers['X-Require-Auth'] === 'auth-optional' && !Identity.isLoggedIn()) return config;
+
+				// Auth is neither optional nor required (header has invalid value)
+				if(config.headers['X-Require-Auth'] !== 'auth-optional' && config.headers['X-Require-Auth'] !== 'auth-required') return config;
+
+				// Auth is required
+				return Identity.provideToken().then(function (access_token) {
+					config.headers.Authorization = 'Bearer ' + access_token;
+					return config;
+				}, function (error) {
+					console.error("[auth.interceptor] Token provider returned error: ", error);
+
+					if(error && error.error === 'token_refresh_fail') {
+						console.warn("[auth.interceptor] Token refresh failed, likely due to expiration; requesting re-login");
+						$rootScope.$broadcast('unauthorized');
+					}
+
+					throw error;
+				});
+
+			};
+
+			this.responseError = function (response) {
+
+				if (response.status === 401 || response.data && response.data.error === 'token_refresh_fail') {
+					$rootScope.$broadcast('unauthorized');
+				}
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			//console.log("[router] to=", toState, toParams);
+
+			if(toState.unauthenticated) return;
+			if(Identity.isLoggedIn()) return;
+
+			//console.log("[router.guard] Trying to access authenticated state, but currently logged out. Redirecting...");
+
+			event.preventDefault();
+			$state.go('login');
+		}
+
+	});
+})();
+(function () {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('HandleErrorResponsesInterceptor', function () {
+
+            function handleResponse(response) {
+
+                if (!response) {
+                    console.error('[interceptors.server_error] Empty response received!');
+                    return response;
+                }
+
+                if (!response.data) {
+                    console.error('[interceptors.server_error] Response missing decoded data: ', response);
+                    return response;
+                }
+
+                // Handled by Exception interceptor
+                if (response.data.reason && response.data.reason === 'exception') return response;
+
+                var acceptableErrors = [200, 206, 201, 204, 202, 301, 304, 302, 303, 307, 308, 100];
+
+                if (acceptableErrors.indexOf(response.status) === -1) {
+                    console.error('[interceptors.server_error] Error #' + response.status + ': ', response.data, response);
+                    console.log(response.data.error)
+                    if (response.data.error === 'token_invalid') {
+                        window.localStorage.clear();
+                        window.location.href = "/";
+                    }
+                    return response;
+                }
+
+                return response;
+
+            }
+
+            this.response = handleResponse;
+            this.responseError = handleResponse;
+
+        });
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('HandleExceptionResponsesInterceptor', function (Utils) {
+
+			function handleResponse(response) {
+
+				if(!response) return response;
+				if(!response.data) return response;
+				if(!response.data.reason) return response;
+				if(response.data.reason !== 'exception') return response;
+
+				var knownRootPaths = [
+					'/home/vagrant/projects/busca-ativa-escolar-api/',
+					'/home/forge/api.busca-ativa-escolar.dev.lqdi.net/'
+				];
+
+				if(response.data.exception.stack) {
+					console.error('[interceptors.api_exception] [debug=on] API error: ', response.data.exception.message);
+					console.warn('[interceptors.api_exception] [debug=on] Original HTTP call: ', response.config.method, response.config.url, response.config.data);
+
+					var messages = Utils.renderCallStack(response.data.exception.stack, knownRootPaths);
+
+					if(messages) {
+
+						console.group('[interceptors.api_exception] [debug=on] Error stack below: ');
+
+						for(var i in messages) {
+							if(!messages.hasOwnProperty(i)) continue;
+							//console.log(messages[i]);
+						}
+
+						console.endGroup();
+					}
+
+					return response;
+				}
+
+				//console.log('[interceptors.api_exception] [debug=off] API error: ', response.data.exception);
+
+				return response;
+
+			}
+
+			this.response = handleResponse;
+			this.responseError = handleResponse;
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('InjectAPIEndpointInterceptor', function ($q, $rootScope, Config) {
+
+			this.request = function (config) {
+
+				// Fixes weird bug with ng-file-uploader clearing the content type globally
+				//config.headers['Content-Type'] = "application/json";
+
+				if(!config.url) return config;
+
+				config.url = config.url.replace(/@@API@@/g, Config.getAPIEndpoint());
+				config.url = config.url.replace(/@@TOKEN@@/g, Config.getTokenEndpoint());
+
+				return config;
+
+			};
+
+		});
+
+})();
+(function() {
+	angular
+		.module('BuscaAtivaEscolar')
+		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
+
+			this.request = function (config) {
+
+				if(config.data && config.data.$hide_loading_feedback) return config;
+				if(config.params && config.params.$hide_loading_feedback) return config;
+
+				API.pushRequest();
+
+				return config;
+			};
+
+			this.response = function (response) {
+
+				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
+				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
+
+				API.popRequest();
+
+				return response;
+			};
+
+		});
+
+})();
+(function() {
+	angular.module('BuscaAtivaEscolar').run(function ($rootScope, $state, Identity) {
+		$rootScope.$on('$stateChangeStart', handleStateChange);
+
+		function handleStateChange(event, toState, toParams, fromState, fromParams, options) {
+
+			$rootScope.previousState = fromState;
+			$rootScope.previousStateParams = fromParams;
+			$rootScope.currentState = toState;
+			$rootScope.currentStateParams = toParams;
+		}
+
+	});
 })();
 (function() {
 
@@ -9026,58 +9023,6 @@ if (!Array.prototype.find) {
   angular
     .module('BuscaAtivaEscolar')
     .config(function ($stateProvider) {
-      $stateProvider.state('user_preferences', {
-        url: '/user_preferences',
-        templateUrl: '/views/preferences/manage_user_preferences.html',
-        controller: 'ManageUserPreferencesCtrl',
-      });
-    })
-    .controller(
-      'ManageUserPreferencesCtrl',
-      function (
-        $scope,
-        ngToast,
-        Identity,
-        UserPreferences,
-        PasswordReset,
-        StaticData
-      ) {
-        $scope.static = StaticData;
-        $scope.settings = {};
-
-        $scope.refresh = function () {
-          UserPreferences.get({}, function (res) {
-            $scope.settings = res.settings;
-          });
-        };
-
-        $scope.save = function () {
-          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
-        };
-
-        $scope.resetPassword = function () {
-          $scope.true = false;
-
-          PasswordReset.begin(
-            { email: Identity.getCurrentUser().email },
-            function (res) {
-              $scope.isLoading = false;
-              ngToast.success(
-                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
-              );
-            }
-          );
-        };
-
-        $scope.refresh();
-      }
-    );
-})();
-
-(function () {
-  angular
-    .module('BuscaAtivaEscolar')
-    .config(function ($stateProvider) {
       $stateProvider.state('reports', {
         url: '/reports',
         templateUrl: '/views/reports/reports.html',
@@ -9803,6 +9748,58 @@ if (!Array.prototype.find) {
         });
 
 })();
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .config(function ($stateProvider) {
+      $stateProvider.state('user_preferences', {
+        url: '/user_preferences',
+        templateUrl: '/views/preferences/manage_user_preferences.html',
+        controller: 'ManageUserPreferencesCtrl',
+      });
+    })
+    .controller(
+      'ManageUserPreferencesCtrl',
+      function (
+        $scope,
+        ngToast,
+        Identity,
+        UserPreferences,
+        PasswordReset,
+        StaticData
+      ) {
+        $scope.static = StaticData;
+        $scope.settings = {};
+
+        $scope.refresh = function () {
+          UserPreferences.get({}, function (res) {
+            $scope.settings = res.settings;
+          });
+        };
+
+        $scope.save = function () {
+          UserPreferences.update({ settings: $scope.settings }, $scope.refresh);
+        };
+
+        $scope.resetPassword = function () {
+          $scope.true = false;
+
+          PasswordReset.begin(
+            { email: Identity.getCurrentUser().email },
+            function (res) {
+              $scope.isLoading = false;
+              ngToast.success(
+                'Solicitação de troca realizada com sucesso! Verifique em seu e-mail o link para troca de senha.'
+              );
+            }
+          );
+        };
+
+        $scope.refresh();
+      }
+    );
+})();
+
 (function() {
 	angular
 		.module('BuscaAtivaEscolar')
@@ -10520,7 +10517,7 @@ if (!Array.prototype.find) {
 
 		});
 })();
-(function() {
+(function () {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
@@ -10531,13 +10528,13 @@ if (!Array.prototype.find) {
 			});
 		})
 		.controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
-                   
+
 			$scope.check_all_schools = false;
 			$scope.identity = Identity;
 			$scope.schools = {};
 			$scope.msg_success = false;
 			$scope.msg_error = false;
-			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
+			$scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022, 2023];
 			$scope.query = {
 				year_educacenso: new Date().getFullYear(),
 				sort: {},
@@ -10548,42 +10545,42 @@ if (!Array.prototype.find) {
 			$scope.selected = {
 				schools: []
 			};
-			
-			$scope.onCheckSelectAll = function(){
-				if( $scope.check_all_schools ){
+
+			$scope.onCheckSelectAll = function () {
+				if ($scope.check_all_schools) {
 					$scope.selected.schools = angular.copy($scope.schools.data);
-				}else{
+				} else {
 					$scope.selected.schools = [];
 				}
 			};
 
-            $scope.onModifySchool = function(school){
+			$scope.onModifySchool = function (school) {
 				Schools.update(school).$promise.then($scope.onSaved);
 			};
-			
-			$scope.onSaved = function(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados da escola "+res.updated.name+" salvos com sucesso!");
+
+			$scope.onSaved = function (res) {
+				if (res.status === "ok") {
+					ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
 					return;
-				}else{
-					ngToast.danger("Ocorreu um erro ao salvar a escola!: "+res.message, res.status);
+				} else {
+					ngToast.danger("Ocorreu um erro ao salvar a escola!: " + res.message, res.status);
 					$scope.refresh();
 				}
 			};
 
-			$scope.sendnotification = function(){
+			$scope.sendnotification = function () {
 
 				//remove objects without email
-				var schools_to_send_notification = $scope.selected.schools.filter(function(school){
-					if(school.school_email != null && school.school_email != ""){
+				var schools_to_send_notification = $scope.selected.schools.filter(function (school) {
+					if (school.school_email != null && school.school_email != "") {
 						return true;
-					}else{
+					} else {
 						return false;
 					}
 				});
 
-				if(schools_to_send_notification.length > 0){
-					
+				if (schools_to_send_notification.length > 0) {
+
 					Modals.show(
 						Modals.ConfirmEmail(
 							'Confirma o envio de sms e email para as seguintes escolas?',
@@ -10593,13 +10590,13 @@ if (!Array.prototype.find) {
 							return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
 						})
 						.then(function (res) {
-							if(res.status == "error"){
+							if (res.status == "error") {
 								ngToast.danger(res.message);
 								$scope.msg_success = false;
 								$scope.msg_error = true;
 								$scope.refresh();
 								window.scrollTo(0, 0);
-							}else{
+							} else {
 								ngToast.warning(res.message);
 								$scope.msg_success = true;
 								$scope.msg_error = false;
@@ -10607,34 +10604,34 @@ if (!Array.prototype.find) {
 								window.scrollTo(0, 0);
 							}
 						});
-				}else{
+				} else {
 					Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
 				}
 
 			};
 
-			$scope.onSelectYear = function() {
+			$scope.onSelectYear = function () {
 				$scope.query.page = 1;
 				$scope.query.max = 5;
 				$scope.refresh();
 			};
 
-			$scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
+			$scope.refresh = function () {
+				Schools.all_educacenso($scope.query, function (res) {
 					$scope.check_all_schools = false;
 					$scope.selected.schools = [];
 					$scope.schools = angular.copy(res);
 				});
 			};
 
-			$scope.setMaxResults = function(max) {
+			$scope.setMaxResults = function (max) {
 				$scope.query.max = max;
 				$scope.query.page = 1;
 				$scope.refresh();
 			};
-			
-			Platform.whenReady(function() {
-                $scope.refresh();
+
+			Platform.whenReady(function () {
+				$scope.refresh();
 			});
 
 		});
