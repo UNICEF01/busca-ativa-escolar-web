@@ -1,21 +1,21 @@
-(function() {
+(function () {
 
     angular.module('BuscaAtivaEscolar')
-        .config(function($stateProvider) {
+        .config(function ($stateProvider) {
             $stateProvider.state('school_browser', {
                 url: '/schools',
                 templateUrl: '/views/schools/school_browser.html',
                 controller: 'SchoolBrowserCtrl'
             });
         })
-        .controller('SchoolBrowserCtrl', function($scope, Schools, ngToast, Modals, Identity, Platform) {
+        .controller('SchoolBrowserCtrl', function ($scope, Schools, ngToast, $state, Modals, Identity, Config, Ufs, Platform) {
 
             $scope.check_all_schools = false;
             $scope.identity = Identity;
             $scope.schools = {};
             $scope.msg_success = false;
             $scope.msg_error = false;
-            $scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022];
+            $scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022, 2023];
             $scope.query = {
                 year_educacenso: new Date().getFullYear(),
                 sort: {},
@@ -27,7 +27,7 @@
                 schools: []
             };
 
-            $scope.onCheckSelectAll = function() {
+            $scope.onCheckSelectAll = function () {
                 if ($scope.check_all_schools) {
                     $scope.selected.schools = angular.copy($scope.schools.data);
                 } else {
@@ -35,11 +35,11 @@
                 }
             };
 
-            $scope.onModifySchool = function(school) {
+            $scope.onModifySchool = function (school) {
                 Schools.update(school).$promise.then($scope.onSaved);
             };
 
-            $scope.onSaved = function(res) {
+            $scope.onSaved = function (res) {
                 if (res.status === "ok") {
                     ngToast.success("Dados da escola " + res.updated.name + " salvos com sucesso!");
                     return;
@@ -49,10 +49,10 @@
                 }
             };
 
-            $scope.sendnotification = function() {
+            $scope.sendnotification = function () {
 
                 //remove objects without email
-                var schools_to_send_notification = $scope.selected.schools.filter(function(school) {
+                var schools_to_send_notification = $scope.selected.schools.filter(function (school) {
                     if (school.school_email != null && school.school_email != "") {
                         return true;
                     } else {
@@ -63,14 +63,14 @@
                 if (schools_to_send_notification.length > 0) {
 
                     Modals.show(
-                            Modals.ConfirmEmail(
-                                'Confirma o envio de sms e email para as seguintes escolas?',
-                                'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
-                                schools_to_send_notification
-                            )).then(function() {
+                        Modals.ConfirmEmail(
+                            'Confirma o envio de sms e email para as seguintes escolas?',
+                            'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+                            schools_to_send_notification
+                        )).then(function () {
                             return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
                         })
-                        .then(function(res) {
+                        .then(function (res) {
                             if (res.status == "error") {
                                 ngToast.danger(res.message);
                                 $scope.msg_success = false;
@@ -91,27 +91,27 @@
 
             };
 
-            $scope.onSelectYear = function() {
+            $scope.onSelectYear = function () {
                 $scope.query.page = 1;
                 $scope.query.max = 5;
                 $scope.refresh();
             };
 
-            $scope.refresh = function() {
-                Schools.all_educacenso($scope.query, function(res) {
+            $scope.refresh = function () {
+                Schools.all_educacenso($scope.query, function (res) {
                     $scope.check_all_schools = false;
                     $scope.selected.schools = [];
                     $scope.schools = angular.copy(res);
                 });
             };
 
-            $scope.setMaxResults = function(max) {
+            $scope.setMaxResults = function (max) {
                 $scope.query.max = max;
                 $scope.query.page = 1;
                 $scope.refresh();
             };
 
-            Platform.whenReady(function() {
+            Platform.whenReady(function () {
                 $scope.refresh();
             });
 
