@@ -438,7 +438,7 @@
 
         $scope.fetchCities = function (query) {
           var data = { name: query, $hide_loading_feedback: true };
-          if ($scope.filters.place_uf) data.uf = $scope.filters.place_uf;
+          if ($scope.filters.uf) data.uf = $scope.filters.uf;
           if ($scope.isUFScoped()) data.uf = Identity.getCurrentUser().uf;
 
           return Cities.search(data).$promise.then(function (res) {
