@@ -1,51 +1,51 @@
 <div>
 
     <h3>
-        <i class="material-icons">insert_chart</i> Casos: {{getMetrics().cases._total}} | (Re)matrículas: {{getMetrics().cases._enrollment}}
+        <i class="material-icons">insert_chart</i> Casos: {{getMetrics().cases.total}} | (Re)matrículas: {{getMetrics().cases.enrollment}}
     </h3>
 
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._in_school || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.in_school || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Casos concluídos: caso finalizado com sucesso após a 4ª observação" class="fa fa-info-circle"></i> Concluídos</div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._out_of_school || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.out_of_school || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Casos em andamento: de pesquisa até (re)matrícula" class="fa fa-info-circle"></i> Em andamento/ Fora da escola</div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._in_observation || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.in_observation || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Estudantes (re)matriculados: de 1ª à 4ª observação" class="fa fa-info-circle"></i> Em andamento/ Dentro da escola</div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._cancelled || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.cancelled || 0"></h1>
                 <div class="panel-footer"><i uib-tooltip="Caso cancelado: em qualquer etapa do processo" class="fa fa-info-circle"></i> Cancelados</div>
             </div>
         </div>
 
     </div>
 
-    <h3><i class="material-icons">insert_chart</i> Alterações | Total: {{getMetrics().cases._alteration}}
+    <h3><i class="material-icons">insert_chart</i> Alterações | Total: {{getMetrics().cases.alteration}}
     </h3>
 
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._transferred || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.transferred || 0"></h1>
                 <div class="panel-footer"> <i uib-tooltip="Casos que foram transferidos para outros municípios que fizeram adesão à Busca Ativa Escolar" class="fa fa-info-circle"></i> Transferências</div>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="panel panel-default">
-                <h1 class="panel-body" ng-bind="getMetrics().cases._interrupted || 0"></h1>
+                <h1 class="panel-body" ng-bind="getMetrics().cases.interrupted || 0"></h1>
                 <div class="panel-footer"> <i uib-tooltip="Estudantes que evadiram durante as etapas de observação e cujo o caso original foi interrompido e caso correlato foi criado na etapa de pesquisa" class="fa fa-info-circle"></i> Interrupções</div>
             </div>
         </div>
