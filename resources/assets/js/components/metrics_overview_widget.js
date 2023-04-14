@@ -1,6 +1,6 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (Platform, Report, Identity) {
+    angular.module('BuscaAtivaEscolar').directive('metricsOverview', function (moment, Platform, Reports, Report, Charts, Identity) {
 
         function init(scope, attrs) {
 
@@ -10,16 +10,13 @@
 
                 if (attrs.ibgeId && attrs.uf) {
                     Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function (data) {
-                        metrics = data._data;
-                        metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
+                        metrics = data.stats;
                     });
                 } else {
                     Report.getStatusCity({ city: Identity.getCurrentUser().tenant.city.name, uf: Identity.getCurrentUser().tenant.city.uf }, function (data) {
-                        metrics = data._data;
-                        metrics.cases._alteration = parseInt(metrics.cases._interrupted) + parseInt(metrics.cases._transferred);
+                        metrics = data.stats;
                     });
                 }
-
             }
 
             scope.getMetrics = function () {
