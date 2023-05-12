@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
 	angular.module('BuscaAtivaEscolar')
 		.config(function ($stateProvider) {
@@ -20,9 +20,9 @@
 
 			$scope.alert = {};
 
-			$scope.fetchCities = function(query) {
-				var data = {name: query, $hide_loading_feedback: true};
-				if($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
+			$scope.fetchCities = function (query) {
+				var data = { name: query, $hide_loading_feedback: true };
+				if ($scope.alert.place_uf) data.uf = $scope.alert.place_uf;
 
 				//console.log("[create_alert] Looking for cities: ", data);
 
@@ -31,12 +31,12 @@
 				});
 			};
 
-			$scope.renderSelectedCity = function(city) {
-				if(!city) return '';
+			$scope.renderSelectedCity = function (city) {
+				if (!city) return '';
 				return city.uf + ' / ' + city.name;
 			};
 
-			$scope.createAlert = function() {
+			$scope.createAlert = function () {
 
 				$scope.disableCreateAlertButton = true;
 
@@ -48,13 +48,13 @@
 				data.place_city_name = data.place_city ? data.place_city.name : null;
 
 				Children.spawnFromAlert(data).$promise.then(function (res) {
-					if(res.messages) {
+					if (res.messages) {
 						console.warn("[create_alert] Failed validation: ", res.messages);
 						$scope.disableCreateAlertButton = false;
 						return Utils.displayValidationErrors(res);
 					}
 
-					if(!res || !res.child_id) {
+					if (!res || !res.child_id) {
 						ngToast.danger('Ocorreu um erro ao registrar o alerta!');
 						$scope.disableCreateAlertButton = false;
 						return;
@@ -64,12 +64,12 @@
 
 					$scope.disableCreateAlertButton = false;
 
-					if(Identity.getType() === 'agente_comunitario') {
+					if (Identity.getType() === 'agente_comunitario') {
 						$state.go('dashboard');
 						return;
 					}
 
-					$state.go('child_viewer', {child_id: res.child_id});
+					$state.go('child_viewer', { child_id: res.child_id });
 				});
 			}
 

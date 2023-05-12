@@ -1,4 +1,4 @@
-(function() {
+(function () {
 	angular
 		.module('BuscaAtivaEscolar')
 		.factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
@@ -45,8 +45,8 @@
 			}
 
 			function getUserTypes() { return (data.UserType) ? data.UserType : []; }
-			function getAlertCauses() {	return (data.AlertCause) ? orderMotives(data.AlertCause) : [];}
-			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : [];}
+			function getAlertCauses() { return (data.AlertCause) ? orderMotives(data.AlertCause) : []; }
+			function getVisibleAlertCauses() { return (data.VisibleAlertCause) ? orderMotives(data.VisibleAlertCause) : []; }
 			function getCaseCauses() { return (data.CaseCause) ? data.CaseCause : []; }
 			function getVisibleCaseCauses() { return (data.VisibleCaseCause) ? orderMotives(data.VisibleCaseCause) : []; }
 			function getGenders() { return (data.Gender) ? data.Gender : []; }
@@ -74,20 +74,22 @@
 			function getTypesWithUFScope() { return (data.UsersWithUFScope) ? data.UsersWithUFScope : []; }
 			function getAPIEndpoints() { return (data.APIEndpoints) ? data.APIEndpoints : []; }
 			function getCaseCancelReasons() { return (data.CaseCancelReasons) ? data.CaseCancelReasons : []; }
-			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types: ['image/jpeg', 'image/png']; }
+			function getAllowedMimeTypes() { return (data.Config) ? data.Config.uploads.allowed_mime_types : ['image/jpeg', 'image/png']; }
 			function getPermissions() { return (data.Permissions) ? data.Permissions : {}; }
 
 			function getUserTypeVisitantes() { return (data.UserTypeVisitantes) ? data.UserTypeVisitantes : []; }
-			
+
 			function getPermissionsFormForVisitante() { return (data.PermissionsFormForVisitante) ? data.PermissionsFormForVisitante : []; }
 
 			function getCurrentUF() {
 				var user = Identity.getCurrentUser();
-				if(!user) return null;
-				if(!user.uf) return null;
+				if (!user) return null;
+				if (!user.uf) return null;
 
 				return getUFByCode(user.uf);
 			}
+
+			function getNationalities() { return (data.Nationality) ? data.Nationality : []; }
 
 			return {
 				fetchLatestVersion: fetchLatestVersion,
@@ -121,7 +123,8 @@
 				getDataFile: getDataFile,
 				getPermissions: getPermissions,
 				getUserTypeVisitantes: getUserTypeVisitantes,
-				getPermissionsFormForVisitante: getPermissionsFormForVisitante
+				getPermissionsFormForVisitante: getPermissionsFormForVisitante,
+				getNationalities: getNationalities
 			};
 
 		})

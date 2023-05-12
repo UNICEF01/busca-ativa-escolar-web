@@ -98,7 +98,7 @@
 
 							<div ng-show="child.alert_status=='rejected'" class="alert alert-danger"><strong>Alerta rejeitado!</strong> Este alerta foi rejeitado e não pode ser mais aprovado.</div>
 
-							<i class="material-icons">person</i> <strong>Informações da criança ou adolescente</strong><br/>
+							<i class="material-icons">person</i> <strong>Informações da criança ou adolescente</strong><br />
 
 							<div>
 								<div class="row">
@@ -147,7 +147,7 @@
 								<p><span ng-bind="getAlertCauseName()"></span></p>
 							</div>
 
-							<br/>
+							<br />
 
 							<i class="material-icons">person</i> <strong>Dados do responsável</strong>
 
@@ -186,7 +186,7 @@
 								</div>
 							</div>
 
-							<br/>
+							<br />
 
 							<i class="material-icons">map</i> <strong>Dados de localização</strong>
 
@@ -194,13 +194,17 @@
 
 							<div ng-show="child.requires_address_update || child.alert.place_address || child.alert.place_cep">
 								<div class="row">
-									<div class="form-group col-md-6" ng-show="child.requires_address_update || child.alert.place_address">
+									<div class="form-group col-md-4" ng-show="child.requires_address_update || child.alert.place_address">
 										<label class="control-label"><strong>Endereço</strong></label>
 										<p><input type="text" class="form-control" required ng-model="child.alert.place_address" placeholder="Indique o endereço do alerta..." /></p>
 									</div>
-									<div class="form-group col-md-6" ng-show="child.requires_address_update || child.alert.place_neighborhood">
+									<div class="form-group col-md-4" ng-show="child.requires_address_update || child.alert.place_neighborhood">
 										<label class="control-label"><strong>Bairro</strong></label>
 										<p><input type="text" class="form-control" required ng-model="child.alert.place_neighborhood" placeholder="Indique o bairro..." /></p>
+									</div>
+									<div class="form-group col-md-4" ng-show="child.alert.nationality" class="form-group col-md-6">
+										<label class="control-label"><strong>Nacionalidade</strong></label>
+										<p><span ng-bind="child.alert.nationality"></span></p>
 									</div>
 								</div>
 							</div>
@@ -244,7 +248,7 @@
 								</div>
 							</div>
 
-							<br/>
+							<br />
 
 							<div>
 								<strong>Observação</strong>
@@ -259,7 +263,7 @@
 					<button class="btn btn-raised" ng-show="sendingAlert"><i class="fa fa-warning"></i> Aguarde ...</button>
 					<button type="submit" class="btn btn-raised no-animate btn-success" ng-click="accept(child)" ng-show="canAcceptAlert(child) && child.alert_status != 'rejected' && !sendingAlert"><i class="fa fa-check"></i> Aceitar alerta</button>
 					<button type="button" class="btn btn-raised btn-danger" ng-click="reject(child)" ng-show="child.alert_status != 'rejected' && !sendingAlert"><i class="fa fa-ban"></i> Rejeitar alerta</button>
-					<br/><br/>
+					<br /><br />
 					<button type="button" class="btn btn-default" data-dismiss="modal">Fechar janela</button>
 				</div>
 			</div>

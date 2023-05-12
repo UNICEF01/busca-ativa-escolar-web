@@ -7,25 +7,24 @@
             <div style="display: inline-block; vertical-align: middle;" uib-tooltip="Usuário responsável pela etapa">
 
                 <div ng-if="step.assigned_user.deleted_at == null">
-                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
+                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br />
                     <small>{{step.assigned_user.type | lang:'user.type'}}</small>
                 </div>
 
                 <div ng-if="step.assigned_user.deleted_at != null" class="text-danger">
-                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br/>
+                    <strong><i class="fa fa-user"></i> {{step.assigned_user.name}}</strong><br />
                     <small>{{step.assigned_user.type | lang:'user.type'}} - DESATIVADO</small>
                 </div>
 
-                <br/>
+                <br />
 
             </div>
             <div style="display: inline-block; vertical-align: middle; margin-left: 20px;">
-                <a ng-show="identity.can('cases.assign')" class="btn btn-xs btn-info btn-raised"
-                   ng-click="assignUser()">Alterar</a>
+                <a ng-show="identity.can('cases.assign')" class="btn btn-xs btn-info btn-raised" ng-click="assignUser()">Alterar</a>
             </div>
         </div>
     </div>
-    <hr/>
+    <hr />
 </div>
 
 <script type="text/ng-template" id="city_item.html">
@@ -42,17 +41,15 @@
     </a>
 </script>
 
-<div class="alert alert-warning" ng-show="scopeOfCase()=='state'">Caso sob a supervisão do estado.</div> <br/>
+<div class="alert alert-warning" ng-show="scopeOfCase()=='state'">Caso sob a supervisão do estado.</div> <br />
 
 <div ng-show="isPendingAssignment() && identity.can('cases.assign') " class="alert alert-warning">
     <h3><i class="fa fa-user-times"></i> Essa etapa está pendente de atribuição!</h3>
     <p>Não há nenhum usuário responsável por essa etapa!</p>
-    <a ng-show="identity.can('cases.assign')" class="btn btn-raised btn-default" ng-click="assignUser()"><i
-            class="fa fa-user-plus"></i> Atribuir responsável</a>
+    <a ng-show="identity.can('cases.assign')" class="btn btn-raised btn-default" ng-click="assignUser()"><i class="fa fa-user-plus"></i> Atribuir responsável</a>
 </div>
 
-<div ng-show="isPendingAssignment() && isStepOpen('GestaoDoCaso') && identity.getType() === 'tecnico_verificador'"
-     class="alert alert-success">
+<div ng-show="isPendingAssignment() && isStepOpen('GestaoDoCaso') && identity.getType() === 'tecnico_verificador'" class="alert alert-success">
     <h3><i class="fa fa-check"></i> Obrigada por sua colaboração! </h3>
     <p>A gestão do caso agora está sob a responsabilidade do(a) Supervisor(a) Institucional.</p>
 </div>
@@ -62,52 +59,43 @@
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-alert-name">Nome da criança ou adolescente*</label>
-            <input type="text" class="form-control" id="fld-alert-name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.name">
+            <input type="text" class="form-control" id="fld-alert-name" ng-readonly="!canEditCurrentStep()" ng-model="fields.name">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-gender">Sexo</label>
-            <select id="fld-alert-gender" class="form-control" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
+            <select id="fld-alert-gender" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-raca">Raça / Etnia</label>
-            <select type="text" class="form-control" id="fld-alert-raca" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
+            <select type="text" class="form-control" id="fld-alert-raca" ng-disabled="!canEditCurrentStep()" ng-model="fields.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
         </div>
 
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-dob">Data de nascimento (dd/mm/aaaa)</label>
-            <input type="tel" ui-date-mask class="form-control" id="fld-alert-dob" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.dob" placeholder="dd/mm/yyyy">
+            <input type="tel" ui-date-mask class="form-control" id="fld-alert-dob" ng-readonly="!canEditCurrentStep()" ng-model="fields.dob" placeholder="dd/mm/yyyy">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-rg">RG</label>
-            <input type="tel" class="form-control" id="fld-alert-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.rg">
+            <input type="tel" class="form-control" id="fld-alert-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.rg">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-cpf">CPF</label>
-            <input type="tel" class="form-control" id="fld-alert-cpf" ui-br-cpf-mask=""
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.cpf" placeholder="000.000.000-00">
+            <input type="tel" class="form-control" id="fld-alert-cpf" ui-br-cpf-mask="" ng-readonly="!canEditCurrentStep()" ng-model="fields.cpf" placeholder="000.000.000-00">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-codnis">NIS (Número de Identificação Social)</label>
-            <input type="tel" class="form-control" id="fld-alert-codnis" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.nis">
+            <input type="tel" class="form-control" id="fld-alert-codnis" ng-readonly="!canEditCurrentStep()" ng-model="fields.nis">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-codcns">CNS (Cartão Nacional do SUS)</label>
-            <input type="tel" class="form-control" id="fld-alert-codcns" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.cns">
+            <input type="tel" class="form-control" id="fld-alert-codcns" ng-readonly="!canEditCurrentStep()" ng-model="fields.cns">
         </div>
         <div class="form-group col-md-12">
-            <label class="control-label">Por que a criança ou adolescente está fora da escola?* <br/>Selecione o
+            <label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o
                 principal motivo identificada:</label>
             <div class="radio" ng-repeat="alert_cause in static.getAlertCauses()">
                 <label>
-                    <input name="alert_cause_{{alert_cause.id}}" ng-value="alert_cause.id" type="radio"
-                           ng-disabled="!canEditCurrentStep()" ng-model="fields.alert_cause_id"> {{alert_cause.label}}
+                    <input name="alert_cause_{{alert_cause.id}}" ng-value="alert_cause.id" type="radio" ng-disabled="!canEditCurrentStep()" ng-model="fields.alert_cause_id"> {{alert_cause.label}}
                 </label>
             </div>
         </div>
@@ -119,38 +107,32 @@
     <div class="panel-body">
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-mother-name">Nome da mãe ou responsável*</label>
-            <input type="text" class="form-control" id="fld-alert-mother-name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.mother_name">
+            <input type="text" class="form-control" id="fld-alert-mother-name" ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_name">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-father-name">Nome do pai ou responsável</label>
-            <input type="text" class="form-control" id="fld-alert-father-name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.father_name">
+            <input type="text" class="form-control" id="fld-alert-father-name" ng-readonly="!canEditCurrentStep()" ng-model="fields.father_name">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-mother-rg">RG da mãe ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-mother-rg" ui-br-rg-mask
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_rg">
+            <input type="tel" class="form-control" id="fld-alert-mother-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_rg">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-father-rg">RG do pai ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-father-rg" ui-br-rg-mask
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.father_rg">
+            <input type="tel" class="form-control" id="fld-alert-father-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.father_rg">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-mother-phone">Telefone da mãe ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-mother-phone" ui-br-phone-number ng-minlength="12"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_phone" placeholder="(00) 00000-0000">
+            <input type="tel" class="form-control" id="fld-alert-mother-phone" ui-br-phone-number ng-minlength="12" ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_phone" placeholder="(00) 00000-0000">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-father-phone">Telefone do pai ou responsável</label>
-            <input type="tel" class="form-control" id="fld-alert-father-phone" ui-br-phone-number ng-minlength="12"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.father_phone" placeholder="(00) 00000-0000">
+            <input type="tel" class="form-control" id="fld-alert-father-phone" ui-br-phone-number ng-minlength="12" ng-readonly="!canEditCurrentStep()" ng-model="fields.father_phone" placeholder="(00) 00000-0000">
         </div>
     </div>
 </div>
@@ -160,48 +142,31 @@
     <div class="panel-body">
         <div class="form-group col-md-8">
             <label class="control-label" for="fld-alert-address">Endereço*</label>
-            <input type="text" class="form-control" id="fld-alert-address"
-                   ng-readonly="!canEditCurrentStep(step.requires_address_update)" ng-model="fields.place_address">
+            <input type="text" class="form-control" id="fld-alert-address" ng-readonly="!canEditCurrentStep(step.requires_address_update)" ng-model="fields.place_address">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-alert-cep">CEP</label>
-            <input type="tel" class="form-control" id="fld-alert-cep" ui-br-cep-mask ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_cep" placeholder="00000-000">
+            <input type="tel" class="form-control" id="fld-alert-cep" ui-br-cep-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.place_cep" placeholder="00000-000">
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-reference">Referência geográfica</label>
-            <input type="text" class="form-control" id="fld-alert-reference" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_reference">
+            <input type="text" class="form-control" id="fld-alert-reference" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_reference">
+        </div>
+        <div class="form-grouo col-md-6">
+            <label class="control-label" for="fld-nationality">Nacionalidade</label>
+            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.nationality" ng-options="n.slug as n.label for n in static.getNationalities()"></select>
         </div>
         <div class="form-group col-md-5">
             <label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
-            <input type="text" class="form-control" id="fld-alert-neighborhood" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_neighborhood">
+            <input type="text" class="form-control" id="fld-alert-neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_neighborhood">
         </div>
         <div class="form-group col-md-2">
             <label class="control-label" for="fld-alert-uf">UF*</label>
-            <select class="form-control" id="fld-alert-uf" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.place_uf"
-                    ng-options="uf.code as uf.code for uf in static.getUFs()| orderObjectBy:'code'"></select>
+            <select class="form-control" id="fld-alert-uf" ng-disabled="!canEditCurrentStep()" ng-model="fields.place_uf" ng-options="uf.code as uf.code for uf in static.getUFs()| orderObjectBy:'code'"></select>
         </div>
         <div class="form-group col-md-5 clearfix">
             <label class="control-label" for="fld-alert-city">Município*</label>
-            <input type="text" id="fld-alert-city"
-                   class="form-control"
-                   ng-model="fields.place_city"
-                   ng-readonly="!canEditCurrentStep()"
-
-                   uib-typeahead="city for city in fetchCities($viewValue)"
-                   typeahead-editable="false"
-                   typeahead-no-results="alertaNoCitiesFound"
-                   typeahead-loading="alertaCitiesLoading"
-                   typeahead-focus-first="true"
-                   typeahead-template-url="city_item.html"
-                   typeahead-wait-ms="400"
-                   typeahead-min-length="3"
-                   typeahead-input-formatter="renderSelectedCity($model)"
-
-            >
+            <input type="text" id="fld-alert-city" class="form-control" ng-model="fields.place_city" ng-readonly="!canEditCurrentStep()" uib-typeahead="city for city in fetchCities($viewValue)" typeahead-editable="false" typeahead-no-results="alertaNoCitiesFound" typeahead-loading="alertaCitiesLoading" typeahead-focus-first="true" typeahead-template-url="city_item.html" typeahead-wait-ms="400" typeahead-min-length="3" typeahead-input-formatter="renderSelectedCity($model)">
 
             <div ng-show="alertaCitiesLoading">
                 <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
@@ -224,17 +189,13 @@
 
 <div class="panel panel-default" ng-show="isStepOpen('Alerta')">
     <div class="panel-body">
-        <div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at"
-                                                                ng-bind="child.created_at | amTimeAgo"></strong> <span
-                ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'"
-                                                      ng-bind="child.submitter.name"></strong></span></div>
+        <div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
     </div>
     <div class="panel-footer" ng-show="child.alert_status === 'pending' && identity.can('alerts.pending')">
         <div class="btn no-animate btn-warning" ng-show="!canAcceptAlert(step, fields)"><i class="fa fa-warning"></i>
             Endereço não informado!
         </div>
-        <a class="btn btn-raised no-animate btn-success" ng-show="canAcceptAlert(step, fields)"
-           ng-click="acceptAlert(child.id)"><i class="fa fa-check"></i> Aceitar</a>
+        <a class="btn btn-raised no-animate btn-success" ng-show="canAcceptAlert(step, fields)" ng-click="acceptAlert(child.id)"><i class="fa fa-check"></i> Aceitar</a>
         <a class="btn btn-raised btn-danger" ng-click="rejectAlert(child.id)"><i class="fa fa-ban"></i> Rejeitar</a>
     </div>
 </div>
@@ -244,53 +205,43 @@
     <div class="panel-body">
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-name">Nome da criança ou adolescente*</label>
-            <input type="text" class="form-control" id="fld-name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.name">
+            <input type="text" class="form-control" id="fld-name" ng-readonly="!canEditCurrentStep()" ng-model="fields.name">
         </div>
         <div class="form-grouo col-md-4">
             <label class="control-label" for="fld-gender">Sexo*</label>
-            <select id="fld-gender" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.gender"
-                    ng-options="n.slug as n.label for n in static.getGenders()"></select>
+            <select id="fld-gender" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.gender" ng-options="n.slug as n.label for n in static.getGenders()"></select>
         </div>
         <div class="form-grouo col-md-4">
             <label class="control-label" for="fld-raca">Raça / Etnia*</label>
-            <select id="fld-raca" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.race"
-                    ng-options="n.slug as n.label for n in static.getRaces()"></select>
+            <select id="fld-raca" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-dob">Data de nascimento (dd/mm/aaaa)*</label>
-            <input type="text" ui-date-mask class="form-control" id="fld-dob" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.dob" placeholder="dd/mm/yyyy">
+            <input type="text" ui-date-mask class="form-control" id="fld-dob" ng-readonly="!canEditCurrentStep()" ng-model="fields.dob" placeholder="dd/mm/yyyy">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-rg">RG</label>
-            <input type="tel" class="form-control" id="fld-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.rg">
+            <input type="tel" class="form-control" id="fld-rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.rg">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-cpf">CPF</label>
-            <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.cpf" placeholder="000.000.000-00">
+            <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.cpf" placeholder="000.000.000-00">
         </div>
 
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-cpf">CNS (Cartão Nacional do SUS) </label>
-            <input type="tel" class="form-control" id="fld-cns" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.cns">
+            <input type="tel" class="form-control" id="fld-cns" ng-readonly="!canEditCurrentStep()" ng-model="fields.cns">
         </div>
 
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-codnis">NIS (Número de Identificação Social)</label>
-            <input type="tel" class="form-control" id="fld-codnis" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.nis">
+            <input type="tel" class="form-control" id="fld-codnis" ng-readonly="!canEditCurrentStep()" ng-model="fields.nis">
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <hr />
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -303,78 +254,52 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-has_been_in_school-yes">Já frequentou a escola alguma vez?*</label>
             <div class="radio">
-                <label><input id="fld-has_been_in_school-yes" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.has_been_in_school" ng-value="1" name="has_been_in_school" value="yes"
-                              type="radio"> Sim</label>
+                <label><input id="fld-has_been_in_school-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.has_been_in_school" ng-value="1" name="has_been_in_school" value="yes" type="radio"> Sim</label>
             </div>
             <div class="radio">
-                <label><input id="fld-has_been_in_school-no" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.has_been_in_school" ng-value="0" name="has_been_in_school" value="no"
-                              type="radio"> Não</label>
+                <label><input id="fld-has_been_in_school-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.has_been_in_school" ng-value="0" name="has_been_in_school" value="no" type="radio"> Não</label>
             </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="!fields.has_been_in_school">
             <label class="control-label" for="fld-reason_not_enrolled">Qual a justificativa de não ter
                 frequentado?*</label>
-            <input type="text" class="form-control" id="fld-reason_not_enrolled" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.reason_not_enrolled">
+            <input type="text" class="form-control" id="fld-reason_not_enrolled" ng-readonly="!canEditCurrentStep()" ng-model="fields.reason_not_enrolled">
         </div>
 
         <div class="form-group col-md-6" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_grade">Qual o último ano que frequentou?*</label>
-            <select id="fld-school_last_grade" class="form-control" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.school_last_grade"
-                    ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+            <select id="fld-school_last_grade" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_grade" ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
         </div>
 
         <div class="form-group col-md-6" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_year">Em qual ano foi cursado o último ano
                 escolar?*</label>
-            <input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_year">
+            <input type="number" min="1990" max="2100" step="1" class="form-control" id="fld-school_last_year" string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_year">
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_status-completed">Qual o status do último ano
                 escolar?*</label>
             <div class="radio">
-                <label><input id="fld-school_last_status-completed" name="school_last_status"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="completed"
-                              type="radio"> Completo</label>
+                <label><input id="fld-school_last_status-completed" name="school_last_status" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="completed" type="radio"> Completo</label>
             </div>
             <div class="radio">
-                <label><input id="fld-school_last_status-pending" name="school_last_status"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="pending"
-                              type="radio"> Incompleto</label>
+                <label><input id="fld-school_last_status-pending" name="school_last_status" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_last_status" value="pending" type="radio"> Incompleto</label>
             </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano
                 escolar?*</label>
-            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_age">
+            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age" string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_age">
         </div>
 
         <div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last">Qual a última escola cursada?*</label>
             <!--input type="text" class="form-control" id="fld-school_last_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_name"-->
 
-            <input type="text" id="fld-school_last"
-                   class="form-control"
-                   ng-model="fields.school_last"
-
-                   uib-typeahead="school for school in fetchSchools($viewValue, null, null)"
-                   typeahead-editable="false"
-                   typeahead-no-results="pesquisaNoSchoolsFound"
-                   typeahead-loading="pesquisaSchoolsLoading"
-                   typeahead-focus-first="true"
-                   typeahead-template-url="school_item.html"
-                   typeahead-wait-ms="400"
-                   typeahead-min-length="3"
-                   typeahead-input-formatter="renderSelectedSchool($model)"
-            >
+            <input type="text" id="fld-school_last" class="form-control" ng-model="fields.school_last" uib-typeahead="school for school in fetchSchools($viewValue, null, null)" typeahead-editable="false" typeahead-no-results="pesquisaNoSchoolsFound" typeahead-loading="pesquisaSchoolsLoading" typeahead-focus-first="true" typeahead-template-url="school_item.html" typeahead-wait-ms="400" typeahead-min-length="3" typeahead-input-formatter="renderSelectedSchool($model)">
 
             <div ng-show="pesquisaSchoolsLoading">
                 <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
@@ -387,17 +312,14 @@
 
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_address">Endereço da última escola cursada*</label>
-            <input type="text" class="form-control" id="fld-school_last_address" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.school_last_address">
+            <input type="text" class="form-control" id="fld-school_last_address" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_address">
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -411,54 +333,45 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-is_working-yes">Esta criança ou adolescente está trabalhando?*</label>
             <div class="radio">
-                <label><input id="fld-is_working-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_working"
-                              ng-value="1" name="is_working" value="yes" type="radio" checked> Sim</label>
+                <label><input id="fld-is_working-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_working" ng-value="1" name="is_working" value="yes" type="radio" checked> Sim</label>
             </div>
             <div class="radio">
-                <label><input id="is_working-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_working"
-                              ng-value="0" name="is_working" value="no" type="radio"> Não</label>
+                <label><input id="is_working-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_working" ng-value="0" name="is_working" value="no" type="radio"> Não</label>
             </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.is_working">
             <label class="control-label" for="fld-work_activity">Qual a atividade econômica?*</label>
-            <select ng-disabled="!canEditCurrentStep()" ng-model="fields.work_activity" class="form-control"
-                    id="fld-work_activity" ng-options="n.slug as n.label for n in static.getWorkActivities()"></select>
+            <select ng-disabled="!canEditCurrentStep()" ng-model="fields.work_activity" class="form-control" id="fld-work_activity" ng-options="n.slug as n.label for n in static.getWorkActivities()"></select>
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.work_activity === 'other'">
             <label class="control-label" for="fld-work_activity_other">Especifique a atividade econômica no campo
                 abaixo*</label>
-            <input type="text" class="form-control" id="fld-work_activity_other" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.work_activity_other">
+            <input type="text" class="form-control" id="fld-work_activity_other" ng-readonly="!canEditCurrentStep()" ng-model="fields.work_activity_other">
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.is_working">
             <label class="control-label" for="fld-work_is_paid-yes">O trabalho é remunerado?*</label>
             <div class="radio">
-                <label><input id="fld-work_is_paid-yes" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.work_is_paid" ng-value="1" name="work_is_paid" value="yes" type="radio">
+                <label><input id="fld-work_is_paid-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.work_is_paid" ng-value="1" name="work_is_paid" value="yes" type="radio">
                     Sim</label>
             </div>
             <div class="radio">
-                <label><input id="work_is_paid-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.work_is_paid"
-                              ng-value="0" name="work_is_paid" value="no" type="radio"> Não</label>
+                <label><input id="work_is_paid-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.work_is_paid" ng-value="0" name="work_is_paid" value="no" type="radio"> Não</label>
             </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="fields.is_working">
             <label class="control-label" for="fld-work_weekly_hours">Quais as horas semanais trabalhadas?*</label>
-            <input type="number" min="0" max="200" step="1" class="form-control" id="fld-work_weekly_hours"
-                   string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.work_weekly_hours">
+            <input type="number" min="0" max="200" step="1" class="form-control" id="fld-work_weekly_hours" string-to-number ng-readonly="!canEditCurrentStep()" ng-model="fields.work_weekly_hours">
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -471,57 +384,43 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_has_mother">Quais são os familiares presentes?*</label>
             <div class="checkbox">
-                <label><input ng-change="checkInputParents(fields.parents_has_father, 'father')"
-                              id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
+                <label><input ng-change="checkInputParents(fields.parents_has_father, 'father')" id="fld-parents_has_father" name="parents_has_father" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_father" ng-true-value="1" type="checkbox"> Pai</label>
             </div>
 
-            <div class="clearfix"
-                 ng-if="(fields.parents_has_father && canEditCurrentStep()) || (fields.aux.contatos.father && !canEditCurrentStep())">
+            <div class="clearfix" ng-if="(fields.parents_has_father && canEditCurrentStep()) || (fields.aux.contatos.father && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
                     <label>
                         <small>Nome:</small>
-                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.father.name">
+                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.father.name">
                 </div>
                 <div class="col-md-6">
                     <label>
                         <small>Telefone:</small>
-                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.father.phone" ui-br-phone-number ng-minlength="12">
+                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.father.phone" ui-br-phone-number ng-minlength="12">
                 </div>
             </div>
 
             <div class="checkbox">
-                <label><input ng-change="checkInputParents(fields.parents_has_mother, 'mother')"
-                              id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
+                <label><input ng-change="checkInputParents(fields.parents_has_mother, 'mother')" id="fld-parents_has_mother" name="parents_has_mother" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_mother" ng-true-value="1" type="checkbox"> Mãe</label>
             </div>
-            <div class="clearfix"
-                 ng-if="(fields.parents_has_mother && canEditCurrentStep()) || (fields.aux.contatos.mother && !canEditCurrentStep())">
+            <div class="clearfix" ng-if="(fields.parents_has_mother && canEditCurrentStep()) || (fields.aux.contatos.mother && !canEditCurrentStep())">
                 <div class="col-md-6 pl-0">
                     <label>
                         <small>Nome:</small>
-                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                   ng-model="fields.aux.contatos.mother.name">
+                    </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.mother.name">
                 </div>
                 <div class="col-md-6">
                     <label>
                         <small>Telefone:</small>
-                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                                    ng-model="fields.aux.contatos.mother.phone" ui-br-phone-number ng-minlength="12">
+                    </label> <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.mother.phone" ui-br-phone-number ng-minlength="12">
                 </div>
             </div>
 
             <div class="checkbox">
-                <label><input id="fld-parents_has_siblings" name="parents_has_siblings"
-                              ng-change="addContact(fields.parents_has_brother,'siblings')"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother"
-                              ng-true-value="1" type="checkbox"> Irmãos</label>
+                <label><input id="fld-parents_has_siblings" name="parents_has_siblings" ng-change="addContact(fields.parents_has_brother,'siblings')" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_brother" ng-true-value="1" type="checkbox"> Irmãos</label>
             </div>
 
-            <div class="clearfix"
-                 ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings.length > 0 && !canEditCurrentStep())">
+            <div class="clearfix" ng-if="(fields.parents_has_brother && canEditCurrentStep()) || (fields.aux.contatos.siblings.length > 0 && !canEditCurrentStep())">
                 <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'siblings')">
                     <small>Incluir contato</small>
                     </span></button>
@@ -532,19 +431,15 @@
                         <label>
                             <small>Nome:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                               ng-model="fields.aux.contatos.siblings[$index][item.model.name]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.siblings[$index][item.model.name]">
                     </div>
                     <div class="col-md-6">
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
-                               ng-minlength="12"
-                               ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12" ng-model="fields.aux.contatos.siblings[$index][item.model.phone]">
                     </div>
-                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
-                            ng-click="removeContact($index,'siblings')">
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0" ng-click="removeContact($index,'siblings')">
                         <small>Remover</small>
                         </span></button>
                     <div class="clearfix"></div>
@@ -552,13 +447,9 @@
             </div>
 
             <div class="checkbox">
-                <label><input id="fld-parents_has_grandparents" name="parents_has_grandparents"
-                              ng-change="addContact(fields.parents_has_grandparents,'grandparents')"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents"
-                              ng-true-value="1" type="checkbox"> Avós</label>
+                <label><input id="fld-parents_has_grandparents" name="parents_has_grandparents" ng-change="addContact(fields.parents_has_grandparents,'grandparents')" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_has_grandparents" ng-true-value="1" type="checkbox"> Avós</label>
             </div>
-            <div class="clearfix"
-                 ng-if="fields.parents_has_grandparents">
+            <div class="clearfix" ng-if="fields.parents_has_grandparents">
                 <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'grandparents')">
                     <small>Incluir contato</small>
                     </span></button>
@@ -569,31 +460,24 @@
                         <label>
                             <small>Nome:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                               ng-model="fields.aux.contatos.grandparents[$index][item.model.name]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.grandparents[$index][item.model.name]">
                     </div>
                     <div class="col-md-6">
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
-                               ng-minlength="12"
-                               ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12" ng-model="fields.aux.contatos.grandparents[$index][item.model.phone]">
                     </div>
-                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
-                            ng-click="removeContact($index,'grandparents')">
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0" ng-click="removeContact($index,'grandparents')">
                         <small>Remover</small>
                         </span></button>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <div class="checkbox">
-                <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()"
-                              ng-change="addContact(fields.parents_has_others,'others')"
-                              ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros</label>
+                <label><input id="fld-parents_has_others" name="parents_has_others" ng-disabled="!canEditCurrentStep()" ng-change="addContact(fields.parents_has_others,'others')" ng-model="fields.parents_has_others" ng-true-value="1" type="checkbox"> Outros</label>
             </div>
-            <div class="clearfix"
-                 ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.others && !canEditCurrentStep())">
+            <div class="clearfix" ng-if="(fields.parents_has_others && canEditCurrentStep()) || (fields.aux.contatos.others && !canEditCurrentStep())">
                 <button class="btn btn-raised btn-success pull-right" ng-click="addContact(undefined, 'others')">
                     <small>Incluir contato</small>
                     </span></button>
@@ -604,19 +488,15 @@
                         <label>
                             <small>Nome:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
-                               ng-model="fields.aux.contatos.others[$index][item.model.name]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.aux.contatos.others[$index][item.model.name]">
                     </div>
                     <div class="col-md-6">
                         <label>
                             <small>Telefone:</small>
                         </label>
-                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number
-                               ng-minlength="12"
-                               ng-model="fields.aux.contatos.others[$index][item.model.phone]">
+                        <input type="text" class="form-control" ng-disabled="!canEditCurrentStep()" ui-br-phone-number ng-minlength="12" ng-model="fields.aux.contatos.others[$index][item.model.phone]">
                     </div>
-                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0"
-                            ng-click="removeContact($index,'others')">
+                    <button class="btn btn-raised btn-danger btn-sm pull-right" ng-show="$index != 0" ng-click="removeContact($index,'others')">
                         <small>Remover</small>
                         </span></button>
                     <div class="clearfix"></div>
@@ -626,58 +506,37 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-parents_who_is_guardian-father">Quem é o responsável?*</label>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian"
-                              ng-change="fields.guardian_name = fields.aux.contatos.father.name"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="father" type="radio"> Pai</label>
+                <label><input id="fld-parents_who_is_guardian-father" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.aux.contatos.father.name" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="father" type="radio"> Pai</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian"
-                              ng-change="fields.guardian_name = fields.mother_name"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="mother" type="radio"> Mãe</label>
+                <label><input id="fld-parents_who_is_guardian-mother" name="parents_who_is_guardian" ng-change="fields.guardian_name = fields.mother_name" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="mother" type="radio"> Mãe</label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian"
-                              ng-change="insertResponsible('siblings')"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="siblings" type="radio"> Irmãos
+                <label><input id="fld-parents_who_is_guardian-siblings" name="parents_who_is_guardian" ng-change="insertResponsible('siblings')" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="siblings" type="radio"> Irmãos
                     <div ng-if="fields.parents_has_brother">
                         <small ng-show="responsible.siblings">Escolha o responsável:</small>
                         <div ng-repeat="item in responsible.siblings">
-                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
-                                                               ng-model="responsibleValue"
-                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name" ng-model="responsibleValue" ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
                         </div>
                     </div>
                 </label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian"
-                              ng-change="insertResponsible('grandparents')"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="grandparents" type="radio"> Avós
+                <label><input id="fld-parents_who_is_grandparents" name="parents_who_is_guardian" ng-change="insertResponsible('grandparents')" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="grandparents" type="radio"> Avós
                     <div ng-show="fields.parents_has_grandparents">
                         <small ng-show="responsible.grandparents">Escolha o responsável:</small>
                         <div ng-repeat="item in responsible.grandparents">
-                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
-                                                               ng-model="responsibleValue"
-                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name" ng-model="responsibleValue" ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
                         </div>
                     </div>
                 </label>
             </div>
             <div class="radio">
-                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian"
-                              ng-change="insertResponsible('others')"
-                              ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian"
-                              value="other" type="radio"> Outros
+                <label><input id="fld-parents_who_is_guardian-other" name="parents_who_is_guardian" ng-change="insertResponsible('others')" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_who_is_guardian" value="other" type="radio"> Outros
                     <div ng-if="fields.parents_has_others">
                         <small ng-show="responsible.others">Escolha o responsável:</small>
                         <div ng-repeat="item in responsible.others">
-                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name"
-                                                               ng-model="responsibleValue"
-                                                               ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
+                            <label class="radio-inline"><input type="radio" name="optradio" ng-value="item.name" ng-model="responsibleValue" ng-change="fields.guardian_name = responsibleValue">{{item.name}}</label>
                         </div>
                     </div>
                 </label>
@@ -686,73 +545,59 @@
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-mother_name">Nome completo da mãe*</label>
-            <input type="text" class="form-control" id="fld-mother_name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.mother_name">
+            <input type="text" class="form-control" id="fld-mother_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.mother_name">
         </div>
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-guardian_name">Nome completo do responsável*</label>
-            <input type="text" class="form-control" id="fld-guardian_name" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.guardian_name">
+            <input type="text" class="form-control" id="fld-guardian_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_name">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_rg">RG do responsável</label>
-            <input type="text" class="form-control" id="fld-guardian_rg" ui-br-rg-mask
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_rg">
+            <input type="text" class="form-control" id="fld-guardian_rg" ui-br-rg-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_rg">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_cpf">CPF do responsável</label>
-            <input type="tel" class="form-control" id="fld-guardian_cpf" ui-br-cpf-mask
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_cpf" placeholder="000.000.000-00">
+            <input type="tel" class="form-control" id="fld-guardian_cpf" ui-br-cpf-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_cpf" placeholder="000.000.000-00">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_dob">Data de nascimento do responsável (dd/mm/aaaa)</label>
-            <input type="text" ui-date-mask class="form-control" id="fld-guardian_dob"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_dob" placeholder="dd/mm/yyyy">
+            <input type="text" ui-date-mask class="form-control" id="fld-guardian_dob" ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_dob" placeholder="dd/mm/yyyy">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_phone">Contato do responsável</label>
-            <input type="text" class="form-control" id="fld-guardian_phone" ui-br-phone-number ng-minlength="12"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_phone" placeholder="(00) 00000-0000">
+            <input type="text" class="form-control" id="fld-guardian_phone" ui-br-phone-number ng-minlength="12" ng-readonly="!canEditCurrentStep()" ng-model="fields.guardian_phone" placeholder="(00) 00000-0000">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_race">Raça ou etnia do responsável</label>
-            <select class="form-control" id="fld-guardian_race" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.guardian_race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
+            <select class="form-control" id="fld-guardian_race" ng-disabled="!canEditCurrentStep()" ng-model="fields.guardian_race" ng-options="n.slug as n.label for n in static.getRaces()"></select>
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_schooling">Escolaridade do responsável</label>
-            <select class="form-control" id="fld-guardian_schooling" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.guardian_schooling"
-                    ng-options="n.slug as n.label for n in static.getSchoolingLevels()"></select>
+            <select class="form-control" id="fld-guardian_schooling" ng-disabled="!canEditCurrentStep()" ng-model="fields.guardian_schooling" ng-options="n.slug as n.label for n in static.getSchoolingLevels()"></select>
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-guardian_job">Ocupação do responsável</label>
-            <input type="text" class="form-control" id="fld-guardian_job" ng-disabled="!canEditCurrentStep()"
-                   ng-model="fields.guardian_job">
+            <input type="text" class="form-control" id="fld-guardian_job" ng-disabled="!canEditCurrentStep()" ng-model="fields.guardian_job">
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-parents_income">Renda familiar per capita</label>
-            <select type="text" class="form-control" id="fld-parents_income" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.parents_income"
-                    ng-options="n.slug as n.label for n in static.getIncomeRanges()"></select>
+            <select type="text" class="form-control" id="fld-parents_income" ng-disabled="!canEditCurrentStep()" ng-model="fields.parents_income" ng-options="n.slug as n.label for n in static.getIncomeRanges()"></select>
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
 
@@ -768,15 +613,7 @@
 
             <div class="radio" ng-repeat="(key, cause) in static.getVisibleCaseCauses()">
                 <label>
-                    <input name="case_cause_{{cause.id}}"
-                           ng-disabled="!canEditCurrentStep()"
-                           ng-model="checkboxes[cause.id]"
-                           ng-checked="isCheckboxChecked('case_cause_ids', cause.id)"
-                           ng-click="toggleCheckbox('case_cause_ids', cause.id)"
-                           ng-true-value="1"
-                           ng-false-value="0"
-                           type="checkbox"
-                    >
+                    <input name="case_cause_{{cause.id}}" ng-disabled="!canEditCurrentStep()" ng-model="checkboxes[cause.id]" ng-checked="isCheckboxChecked('case_cause_ids', cause.id)" ng-click="toggleCheckbox('case_cause_ids', cause.id)" ng-true-value="1" ng-false-value="0" type="checkbox">
                     {{cause.label}}
                 </label>
             </div>
@@ -786,23 +623,17 @@
             <label class="control-label" for="fld-handicapped_at_sus-yes">A criança ou adolescente é atendida pelo SUS
                 (Sistema Único de Saúde)?*</label>
             <div class="radio">
-                <label><input id="fld-handicapped_at_sus-yes" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="1" value="yes"
-                              type="radio"> Sim</label>
+                <label><input id="fld-handicapped_at_sus-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="1" value="yes" type="radio"> Sim</label>
             </div>
             <div class="radio">
-                <label><input id="fld-handicapped_at_sus-no" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="0" value="no"
-                              type="radio"> Não</label>
+                <label><input id="fld-handicapped_at_sus-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.handicapped_at_sus" name="handicapped_at_sus" ng-value="0" value="no" type="radio"> Não</label>
             </div>
         </div>
 
         <div class="form-group col-md-12" ng-show="isHandicapped()">
             <label class="control-label" for="fld-handicapped_reason_not_enrolled">Por qual motivo a matrícula não foi
                 realizada?*</label>
-            <select type="text" class="form-control" id="fld-handicapped_reason_not_enrolled"
-                    ng-disabled="!canEditCurrentStep()" ng-model="fields.handicapped_reason_not_enrolled"
-                    ng-options="n.slug as n.label for n in static.getHandicappedRejectReasons()"></select>
+            <select type="text" class="form-control" id="fld-handicapped_reason_not_enrolled" ng-disabled="!canEditCurrentStep()" ng-model="fields.handicapped_reason_not_enrolled" ng-options="n.slug as n.label for n in static.getHandicappedRejectReasons()"></select>
         </div>
     </div>
 </div>
@@ -812,34 +643,29 @@
     <div class="panel-body">
         <div class="form-group col-md-8">
             <label class="control-label" for="fld-place_address">Endereço*</label>
-            <input type="text" class="form-control" id="fld-place_address" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_address">
+            <input type="text" class="form-control" id="fld-place_address" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_address">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-place_cep">CEP</label>
-            <input type="tel" ui-br-cep-mask class="form-control" id="fld-place_cep" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_cep" placeholder="00000-000">
+            <input type="tel" ui-br-cep-mask class="form-control" id="fld-place_cep" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_cep" placeholder="00000-000">
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label class="control-label" for="fld-place_reference">Referência geográfica</label>
-            <input type="text" class="form-control" id="fld-place_reference" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_reference">
+            <input type="text" class="form-control" id="fld-place_reference" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_reference">
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label class="control-label" for="fld-place_neighborhood">Bairro*</label>
-            <input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.place_neighborhood">
+            <input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_neighborhood">
         </div>
-
-        <!--<app-city-select model="fields" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>-->
-
-        <app-city-select model="fields" city="fields.place_city" is-uf-required="true"
-                         is-city-required="true"></app-city-select>
+        <div class="form-grouo col-md-4">
+            <label class="control-label" for="fld-nationality">Nacionalidade</label>
+            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.nationality" ng-options="n.slug as n.label for n in static.getNationalities()"></select>
+        </div>
+        <app-city-select model="fields" city="fields.place_city" is-uf-required="true" is-city-required="true"></app-city-select>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-place_kind">Tipo da localização*</label>
-            <select type="text" class="form-control" id="fld-place_kind" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.place_kind">
+            <select type="text" class="form-control" id="fld-place_kind" ng-disabled="!canEditCurrentStep()" ng-model="fields.place_kind">
                 <option value="urban">Urbana</option>
                 <option value="rural">Rural</option>
             </select>
@@ -847,8 +673,7 @@
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-place_is_quilombola">Comunidade quilombola*</label>
-            <select type="text" class="form-control" id="fld-place_is_quilombola" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.place_is_quilombola">
+            <select type="text" class="form-control" id="fld-place_is_quilombola" ng-disabled="!canEditCurrentStep()" ng-model="fields.place_is_quilombola">
                 <option ng-value="1">Sim</option>
                 <option ng-value="0">Não</option>
             </select>
@@ -876,16 +701,14 @@
             </div>
         </div>
 
-        <hr/>
+        <hr />
 
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 iniciar Análise Técnica</a>
         </div>
     </div>
@@ -913,17 +736,14 @@
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-analysis_details">Detalhamento da análise*</label>
-            <textarea style="height: 100px" class="form-control" id="fld-analysis_details"
-                      ng-readonly="!canEditCurrentStep()" ng-model="fields.analysis_details"></textarea>
+            <textarea style="height: 100px" class="form-control" id="fld-analysis_details" ng-readonly="!canEditCurrentStep()" ng-model="fields.analysis_details"></textarea>
         </div>
 
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <hr />
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 enviar para o(a) supervisor(a) institucional</a>
         </div>
 
@@ -936,18 +756,15 @@
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-actions_description">Descreva as atividades realizadas*</label>
-            <textarea style="height: 200px" class="form-control" id="fld-actions_description"
-                      ng-readonly="!canEditCurrentStep()" ng-model="fields.actions_description"></textarea>
+            <textarea style="height: 200px" class="form-control" id="fld-actions_description" ng-readonly="!canEditCurrentStep()" ng-model="fields.actions_description"></textarea>
         </div>
 
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 concluir etapa</a>
         </div>
 
@@ -964,11 +781,8 @@
                     (dd/mm/aaaa)*</label>
 
                 <div class="clearfix">
-                    <input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date"
-                           ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date"
-                           style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
-                    <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
-                            ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
+                    <input type="text" ui-date-mask class="form-control" id="fld-enroll-reinsertion_date" ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                    <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
                     </button>
                 </div>
             </div>
@@ -976,44 +790,26 @@
 
         <div class="form-group col-md-3">
             <label class="control-label" for="fld-enroll-school_cep">CEP</label>
-            <input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_cep"
-                   ng-change="getAdressByCEP(fields.school_cep)" placeholder="00000-000">
+            <input type="tel" ui-br-cep-mask class="form-control" id="fld-enroll-school_cep" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_cep" ng-change="getAdressByCEP(fields.school_cep)" placeholder="00000-000">
             <span ng-show="noCEF" class="alert-color"><small>CEP não encontrado!</small></span>
         </div>
 
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-enroll-school_address">Endereço*</label>
-            <input type="text" class="form-control" id="fld-enroll-school_address" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.school_address">
+            <input type="text" class="form-control" id="fld-enroll-school_address" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_address">
         </div>
 
         <div class="form-group col-md-3">
             <label class="control-label" for="fld-enroll-school_neighborhood">Bairro*</label>
-            <input type="text" class="form-control" id="fld-enroll-school_neighborhood"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_neighborhood">
+            <input type="text" class="form-control" id="fld-enroll-school_neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_neighborhood">
         </div>
         <div class="form-group col-md-2">
             <label class="control-label" for="fld-enroll-school_uf">UF*</label>
-            <select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.school_uf"
-                    ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
+            <select class="form-control" id="fld-enroll-school_uf" ng-disabled="!canEditCurrentStep()" ng-model="fields.school_uf" ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
         </div>
         <div class="form-group col-md-4 clearfix">
             <label class="control-label" for="fld-enroll-school_city">Município*</label>
-            <input type="text" id="fld-enroll-school_city"
-                   class="form-control"
-                   ng-model="fields.school_city"
-                   ng-readonly="!canEditCurrentStep()"
-                   uib-typeahead="city for city in fetchCities($viewValue)"
-                   typeahead-editable="false"
-                   typeahead-no-results="schoolNoCitiesFound"
-                   typeahead-focus-first="true"
-                   typeahead-template-url="city_item.html"
-                   typeahead-min-length="3"
-                   typeahead-input-formatter="renderSelectedCity($model)"
-
-            >
+            <input type="text" id="fld-enroll-school_city" class="form-control" ng-model="fields.school_city" ng-readonly="!canEditCurrentStep()" uib-typeahead="city for city in fetchCities($viewValue)" typeahead-editable="false" typeahead-no-results="schoolNoCitiesFound" typeahead-focus-first="true" typeahead-template-url="city_item.html" typeahead-min-length="3" typeahead-input-formatter="renderSelectedCity($model)">
             <div ng-show="schoolCitiesLoading">
                 <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
             </div>
@@ -1025,51 +821,33 @@
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-enroll-school_contact_name">Nome do contato da gestão da
                 escola*</label>
-            <input type="text" class="form-control" id="fld-enroll-school_contact_name"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_name">
+            <input type="text" class="form-control" id="fld-enroll-school_contact_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_name">
         </div>
 
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-enroll-school_contact_email">E-mail do contato</label>
-            <input type="email" class="form-control" id="fld-enroll-school_contact_email"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_email">
+            <input type="email" class="form-control" id="fld-enroll-school_contact_email" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_email">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-enroll-school_contact_position">Cargo</label>
-            <input type="text" class="form-control" id="fld-enroll-school_contact_position"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_position">
+            <input type="text" class="form-control" id="fld-enroll-school_contact_position" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_contact_position">
         </div>
         <div class="form-group col-md-4">
             <label class="control-label" for="fld-enroll-school_phone">Telefone da escola*</label>
-            <input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-enroll-school_phone"
-                   ng-readonly="!canEditCurrentStep()" ng-model="fields.school_phone" placeholder="(00) 00000-0000">
+            <input type="tel" ui-br-phone-number ng-minlength="12" class="form-control" id="fld-enroll-school_phone" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_phone" placeholder="(00) 00000-0000">
         </div>
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-enroll-school_email">E-mail da escola</label>
-            <input type="email" class="form-control" id="fld-enroll-school_email" ng-readonly="!canEditCurrentStep()"
-                   ng-model="fields.school_email">
+            <input type="email" class="form-control" id="fld-enroll-school_email" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_email">
         </div>
 
         <div class="form-group col-md-12 clearfix">
             <label class="control-label" for="fld-enroll-school">Nome da escola*</label>
             <!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_name"-->
-            <input type="text" id="fld-enroll-school"
-                   class="form-control"
-                   ng-model="fields.school"
-                   uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)"
-                   typeahead-editable="false"
-                   typeahead-no-results="rematriculaNoSchoolsFound"
-                   typeahead-loading="rematriculaSchoolsLoading"
-                   typeahead-focus-first="true"
-                   typeahead-template-url="school_item.html"
-                   typeahead-wait-ms="400"
-                   typeahead-min-length="3"
-                   typeahead-input-formatter="renderSelectedSchool($model)"
-                   typeahead-on-select="putStateAndCity(fields.school)"
-            >
+            <input type="text" id="fld-enroll-school" class="form-control" ng-model="fields.school" uib-typeahead="school for school in fetchSchools($viewValue, fields.school_uf, fields.school_city)" typeahead-editable="false" typeahead-no-results="rematriculaNoSchoolsFound" typeahead-loading="rematriculaSchoolsLoading" typeahead-focus-first="true" typeahead-template-url="school_item.html" typeahead-wait-ms="400" typeahead-min-length="3" typeahead-input-formatter="renderSelectedSchool($model)" typeahead-on-select="putStateAndCity(fields.school)">
 
             <small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão
-                divergentes</b></small>
+                    divergentes</b></small>
 
             <div ng-show="rematriculaSchoolsLoading">
                 <i class="fa fa-refresh rotate-icon"></i> Buscando escolas...
@@ -1083,26 +861,21 @@
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-reinsertion_grade">Escolha abaixo em que etapa de ensino e série que a
                 criança ou adolescente foi (re)matriculada*</label>
-            <select id="fld-reinsertion_grade" class="form-control" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.reinsertion_grade"
-                    ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+            <select id="fld-reinsertion_grade" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.reinsertion_grade" ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
         </div>
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-observations">Observações sobre a (re)matrícula</label>
-            <textarea style="height: 100px" class="form-control" id="fld-observations"
-                      ng-readonly="!canEditCurrentStep()" ng-model="fields.observations"></textarea>
+            <textarea style="height: 100px" class="form-control" id="fld-observations" ng-readonly="!canEditCurrentStep()" ng-model="fields.observations"></textarea>
         </div>
 
-        <hr/>
+        <hr />
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
+            <hr />
 
-            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && hasNextStep() && step.child_status!='cancelled'">Salvar e
                 concluir etapa</a>
         </div>
 
@@ -1116,11 +889,8 @@
         <div class="form-group col-md-6">
             <label for="fld-obs-reinsertion_date" class="control-label">Data da (re)matrícula</label>
             <div class="clearfix">
-                <input type="text" ui-date-mask class="form-control" id="fld-obs-reinsertion_date"
-                       ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date"
-                       style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
-                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
-                        ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
+                <input type="text" ui-date-mask class="form-control" id="fld-obs-reinsertion_date" ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('reinsertion_date')" style="float: left; width: 25%">Hoje
                 </button>
                 <small>Data original: {{fields.reinsertion_date_original | amDateFormat:'DD/MM/YYYY'}}</small>
             </div>
@@ -1129,39 +899,29 @@
         <div class="form-group col-md-6">
             <label class="control-label" for="fld-obs-report_date">Data de registro do relatório (dd/mm/aaaa)*</label>
             <div class="clearfix">
-                <input type="text" ui-date-mask class="form-control" id="fld-obs-report_date"
-                       ng-readonly="!canEditCurrentStep()" ng-model="fields.report_date"
-                       style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
-                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()"
-                        ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje
+                <input type="text" ui-date-mask class="form-control" id="fld-obs-report_date" ng-readonly="!canEditCurrentStep()" ng-model="fields.report_date" style="float: left; width: 70%;" placeholder="dd/mm/yyyy">
+                <button type="button" class="btn btn-sm btn-raised btn-default" ng-hide="!canEditCurrentStep()" ng-click="fillWithCurrentDate('report_date')" style="float: left; width: 25%">Hoje
                 </button>
             </div>
         </div>
 
-        <div class="form-group col-md-12"
-             ng-show="!areDatesEqual(fields.reinsertion_date, fields.reinsertion_date_original)">
+        <div class="form-group col-md-12" ng-show="!areDatesEqual(fields.reinsertion_date, fields.reinsertion_date_original)">
             <label class="control-label" for="fld-obs-reinsertion_date_change_reason">Descreva o motivo da mudança na
                 data de rematrícula*</label>
-            <textarea style="height: 60px" class="form-control" id="fld-obs-reinsertion_date_change_reason"
-                      ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date_change_reason"></textarea>
+            <textarea style="height: 60px" class="form-control" id="fld-obs-reinsertion_date_change_reason" ng-readonly="!canEditCurrentStep()" ng-model="fields.reinsertion_date_change_reason"></textarea>
         </div>
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-obs-is_child_still_in_school-yes">A criança ou adolescente continua na
                 escola?*</label>
             <div class="radio">
-                <label><input id="fld-obs-is_child_still_in_school-yes" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.is_child_still_in_school" ng-value="1"
-                              name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
+                <label><input id="fld-obs-is_child_still_in_school-yes" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_child_still_in_school" ng-value="1" name="obs-is_child_still_in_school" value="yes" type="radio" checked> Sim</label>
             </div>
             <div class="radio">
-                <label><input id="fld-obs-is_child_still_in_school-no" ng-disabled="!canEditCurrentStep()"
-                              ng-model="fields.is_child_still_in_school" ng-value="0"
-                              name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
+                <label><input id="fld-obs-is_child_still_in_school-no" ng-disabled="!canEditCurrentStep()" ng-model="fields.is_child_still_in_school" ng-value="0" name="obs-is_child_still_in_school" value="no" type="radio"> Não</label>
             </div>
 
-            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()"
-               ng-show="canCompleteStep() && step.child_status!='cancelled' && fields.is_child_still_in_school !== undefined && fields.is_child_still_in_school==0">Interromper/
+            <a class="btn btn-raised btn-warning pull-right" ng-click="reopenCase()" ng-show="canCompleteStep() && step.child_status!='cancelled' && fields.is_child_still_in_school !== undefined && fields.is_child_still_in_school==0">Interromper/
                 Reabrir</a>
 
 
@@ -1175,24 +935,20 @@
 
         <div class="form-group col-md-12">
             <label class="control-label" for="fld-obs-observations">Observações gerais</label>
-            <textarea style="height: 100px" class="form-control" id="fld-obs-observations"
-                      ng-readonly="!canEditCurrentStep()" ng-model="fields.observations"></textarea>
+            <textarea style="height: 100px" class="form-control" id="fld-obs-observations" ng-readonly="!canEditCurrentStep()" ng-model="fields.observations"></textarea>
         </div>
 
         <div class="form-group col-md-12" ng-show="canEditCurrentStep() && !canUpdateStepObservation(child)">
             <div class="alert alert-warning">
-                <strong>Atenção</strong><br/>
+                <strong>Atenção</strong><br />
                 A {{step.name}} só poderá ser cadastrada após o prazo definido nas configurações do município.
             </div>
         </div>
 
         <div ng-show="editable && canEditCurrentStep()">
-            <hr/>
-            <a class="btn btn-raised btn-info"
-               ng-show="canEditCurrentStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'"
-               ng-click="save()">Salvar</a>
-            <a class="btn btn-info" ng-click="saveAndProceed()"
-               ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e
+            <hr />
+            <a class="btn btn-raised btn-info" ng-show="canEditCurrentStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'" ng-click="save()">Salvar</a>
+            <a class="btn btn-info" ng-click="saveAndProceed()" ng-show="canCompleteStep() && canUpdateStepObservation(child) && step.child_status!='cancelled'">Salvar e
                 concluir etapa</a>
         </div>
 
