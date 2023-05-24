@@ -5,33 +5,33 @@
 	<div class="panel-body">
 
 		<p>
-			Aqui você poderá personalizar, de acordo com cada motivo de evasão escolar, a prioridade de tratamento no sistema, e quais grupos de trabalho serão notificados e poderão interagir com os alertas e casos.
+			Aqui você poderá personalizar, de acordo com cada motivo de evasão escolar, a prioridade de tratamento no sistema
 		</p>
 
 		<table class="table parameterization-grid">
 			<tbody ng-repeat="(i, cause) in static.getAlertCauses()">
-			<tr>
-				<td>{{cause.label}}</td>
-				<td>
-					<div class="col-md-4 text-center">
-						<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
-							<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
-						</label>
-					</div>
+				<tr>
+					<td>{{cause.label}}</td>
+					<td>
+						<div class="col-md-4 text-center">
+							<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
+								<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
+							</label>
+						</div>
 
-					<div class="col-md-4 text-center">
-						<label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
-							<input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'" ng-model="settings.alertPriorities[cause.id]"  type="radio" /> <span class="label label-warning">Média</span>
-						</label>
-					</div>
+						<div class="col-md-4 text-center">
+							<label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
+								<input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-warning">Média</span>
+							</label>
+						</div>
 
-					<div class="col-md-4 text-center">
-						<label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
-							<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
-						</label>
-					</div>
-				</td>
-			</tr>
+						<div class="col-md-4 text-center">
+							<label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
+								<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
+							</label>
+						</div>
+					</td>
+				</tr>
 			</tbody>
 		</table>
 	</div>

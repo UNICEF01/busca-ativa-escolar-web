@@ -1,6 +1,6 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function(Children) {
+    angular.module('BuscaAtivaEscolar').directive('casesMapMarkes', function (Children) {
 
         function init(scope, attrs) {
 
@@ -17,7 +17,7 @@
                 marker.setData(html);
                 group.addObject(marker);
 
-                marker.addEventListener('pointerleave', function(evt) {
+                marker.addEventListener('pointerleave', function (evt) {
                     scope.bubble.close();
                 }, false);
 
@@ -35,7 +35,7 @@
 
                 // add 'tap' event listener, that opens info bubble, to the group
                 scope.bubble;
-                group.addEventListener('tap', function(evt) {
+                group.addEventListener('tap', function (evt) {
                     // event target is the marker itself, group is a parent event target
                     // for all objects that it contains
                     scope.bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
@@ -47,7 +47,7 @@
                 }, false);
 
 
-                angular.forEach(coordinates, function(value, key) {
+                angular.forEach(coordinates, function (value, key) {
                     addMarkerToGroup(group, { lat: value.latitude, lng: value.longitude },
                         '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
                 });
@@ -61,13 +61,13 @@
             // initialize communication with the platform
             // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
-                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
+                apikey: 'mY7QwygLG_ITu-lmlZd8ybewn1FsoK7LM6cUFlpRJTI'
             });
             var defaultLayers = platform.createDefaultLayers();
 
-            var refresh = function() {
+            var refresh = function () {
 
-                Children.getMap({ city_id: attrs.cityId }, function(data) {
+                Children.getMap({ city_id: attrs.cityId }, function (data) {
 
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
@@ -77,10 +77,10 @@
                     // initialize a map - this map is centered over Europe
                     var map = new H.Map(document.getElementById('map-markes'),
                         defaultLayers.vector.normal.map, {
-                            center: { lat: scope.mapCenter.latitude, lng: scope.mapCenter.longitude },
-                            zoom: 7,
-                            pixelRatio: window.devicePixelRatio || 1
-                        });
+                        center: { lat: scope.mapCenter.latitude, lng: scope.mapCenter.longitude },
+                        zoom: 7,
+                        pixelRatio: window.devicePixelRatio || 1
+                    });
 
 
 
@@ -114,7 +114,7 @@
                 });
             };
 
-            scope.$watch('status', function() {
+            scope.$watch('status', function () {
                 refresh();
             });
 

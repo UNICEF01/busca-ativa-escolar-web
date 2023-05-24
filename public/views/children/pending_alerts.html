@@ -28,9 +28,8 @@
                     <div class="row">
                         <div class="col-md-3">
                             <select name="cars" class="form-control" ng-model="query.alert_cause_id">
-                                <option value=""  selected >Motivo do Alerta...</option>
-                                <option ng-repeat="case in causes_filter"
-                                        value="{{case.value}}">
+                                <option value="" selected>Motivo do Alerta...</option>
+                                <option ng-repeat="case in causes_filter" value="{{case.value}}">
                                     {{case.displayName}}
                                 </option>
                             </select>
@@ -46,7 +45,7 @@
                             <div class="row row-switch">
                                 <div class="col-md-4">
                                     <div class="material-switch pull-right">
-                                        <input id="someSwitchOptionPrimary" name="tree" ng-model="query.tree" ng-true-value="1" ng-false-value="0" type="checkbox"/>
+                                        <input id="someSwitchOptionPrimary" name="tree" ng-model="query.tree" ng-true-value="1" ng-false-value="0" type="checkbox" />
                                         <label for="someSwitchOptionPrimary" class="label-primary"></label>
                                     </div>
                                 </div>
@@ -146,7 +145,7 @@
                             </td>
                             <td>
                                 <span uib-popover="{{branchGroups}}" popover-title="{{child.group_name}}" popover-trigger="'outsideClick'" ng-click="clikcInGroup(child.group_id)">
-                                <a href="#">{{child.group_name}}</a>
+                                    <a href="#">{{child.group_name}}</a>
                                 </span>
                             </td>
                             </td>
@@ -188,7 +187,7 @@
                         <form ng-show="child && child.id" ng-submit="accept(child)">
                             <div class="alert alert-primary">Alerta enviado <strong uib-tooltip-html="child.created_at" ng-bind="child.created_at | amTimeAgo"></strong> <span ng-show="child.submitter">por <strong uib-tooltip-html="child.submitter.type | lang:'user.type'" ng-bind="child.submitter.name"></strong></span></div>
                             <div ng-show="child.alert_status=='rejected'" class="alert alert-danger"><strong>Alerta rejeitado!</strong> Este alerta foi rejeitado e não pode ser mais aprovado.</div>
-                            <i class="material-icons">person</i> <strong>Informações da criança ou adolescente</strong><br/>
+                            <i class="material-icons">person</i> <strong>Informações da criança ou adolescente</strong><br />
                             <div>
                                 <div class="row">
                                     <div class="form-group col-md-6">
@@ -229,7 +228,7 @@
                                 <label class="control-label"><strong>Por que a criança ou adolescente está fora da escola?</strong></label>
                                 <p><span ng-bind="getAlertCauseName()"></span></p>
                             </div>
-                            <br/>
+                            <br />
                             <i class="material-icons">person</i> <strong>Dados do responsável</strong>
                             <div ng-show="child.alert.mother_name || child.alert.father_name || child.alert.mother_rg || child.alert.father_rg">
                                 <div class="row">
@@ -263,7 +262,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <i class="material-icons">map</i> <strong>Dados de localização</strong>
                             <div ng-show="!canAcceptAlert(child)" class="alert alert-warning"><strong>Endereço do alerta pendente!</strong> Antes de prosseguir, dialogue com a escola para entender melhor a situação desse caso.</div>
                             <div ng-show="child.requires_address_update || child.alert.place_address || child.alert.place_cep">
@@ -276,8 +275,7 @@
                                     </div>
                                     <div class="form-group col-md-6 " ng-show="child.requires_address_update || child.alert.place_neighborhood ">
                                         <label class="control-label "><strong>Bairro</strong></label>
-                                        <p><input type="text" ng-blur="editAlert(child.alert.place_neighborhood, 'place_neighborhood', child.id)" class="form-control " required ng-model="child.alert.place_neighborhood " placeholder="Indique o bairro... "
-                                            /></p>
+                                        <p><input type="text" ng-blur="editAlert(child.alert.place_neighborhood, 'place_neighborhood', child.id)" class="form-control " required ng-model="child.alert.place_neighborhood " placeholder="Indique o bairro... " /></p>
                                     </div>
                                 </div>
                             </div>
@@ -317,7 +315,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <br/>
+                            <br />
                             <div>
                                 <strong>Observação</strong>
                                 <p ng-bind="child.alert.observation "></p>
@@ -332,7 +330,7 @@
                     <button class="btn btn-raised " ng-show="sendingAlert "><i class="fa fa-warning "></i> Aguarde ...</button>
                     <button type="submit " class="btn btn-raised no-animate btn-success " ng-click="accept(child) " ng-show="canAcceptAlert(child) && child.alert_status !='rejected' && !sendingAlert "><i class="fa fa-check "></i> Aceitar alerta</button>
                     <button type="button " class="btn btn-raised btn-danger " ng-click="reject(child) " ng-show="child.alert_status !='rejected' && !sendingAlert "><i class="fa fa-ban "></i> Rejeitar alerta</button>
-                    <br/><br/>
+                    <br /><br />
                     <button type="button " ng-click="close()" class="btn btn-default " data-dismiss="modal ">Fechar janela</button>
                 </div>
             </div>
@@ -340,16 +338,16 @@
     </div>
 </div>
 <script>
-    $(document).ready(function() {
-        $('#openBtn').click(function() {
+    $(document).ready(function () {
+        $('#openBtn').click(function () {
             $('#myModal').modal({
                 show: true
             })
         });
-        $(document).on('show.bs.modal', '.modal', function(event) {
+        $(document).on('show.bs.modal', '.modal', function (event) {
             var zIndex = 1040 + (10 * $('.modal:visible').length);
             $(this).css('z-index', zIndex);
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
             }, 0);
         });

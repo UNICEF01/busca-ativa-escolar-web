@@ -153,9 +153,13 @@
             <label class="control-label" for="fld-alert-cep">CEP</label>
             <input type="tel" class="form-control" id="fld-alert-cep" ui-br-cep-mask ng-readonly="!canEditCurrentStep()" ng-model="fields.place_cep" placeholder="00000-000">
         </div>
-        <div class="form-group col-md-12">
+        <div class="form-group col-md-6">
             <label class="control-label" for="fld-alert-reference">Referência geográfica</label>
             <input type="text" class="form-control" id="fld-alert-reference" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_reference">
+        </div>
+        <div class="form-grouo col-md-6">
+            <label class="control-label" for="fld-nationality">Nacionalidade</label>
+            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.nationality" ng-options="n.slug as n.label for n in static.getNationalities()"></select>
         </div>
         <div class="form-group col-md-5">
             <label class="control-label" for="fld-alert-neighborhood">Bairro*</label>
@@ -200,7 +204,7 @@
         <a class="btn btn-raised btn-danger" ng-click="rejectAlert(child.id)"><i class="fa fa-ban"></i> Rejeitar</a>
     </div>
 </div>
-<!-- Pessquisa -->
+<!-- Pesquisa -->
 <div class="panel panel-default" ng-show="showAll || isStepOpen('Pesquisa')">
     <div class="panel-heading"><i class="material-icons">person</i> Dados da criança ou adolescente</div>
     <div class="panel-body">
@@ -655,17 +659,18 @@
             <label class="control-label" for="fld-place_cep">CEP</label>
             <input type="tel" ui-br-cep-mask class="form-control" id="fld-place_cep" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_cep" placeholder="00000-000">
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label class="control-label" for="fld-place_reference">Referência geográfica</label>
             <input type="text" class="form-control" id="fld-place_reference" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_reference">
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label class="control-label" for="fld-place_neighborhood">Bairro*</label>
             <input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()" ng-model="fields.place_neighborhood">
         </div>
-
-        <!--<app-city-select model="fields" uf-field="'place_uf'" city-field="'place_city'" is-uf-required="true" is-city-required="true"></app-city-select>-->
-
+        <div class="form-grouo col-md-4">
+            <label class="control-label" for="fld-nationality">Nacionalidade</label>
+            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()" ng-model="fields.nationality" ng-options="n.slug as n.label for n in static.getNationalities()"></select>
+        </div>
         <app-city-select model="fields" city="fields.place_city" is-uf-required="true" is-city-required="true"></app-city-select>
 
         <div class="form-group col-md-6">

@@ -1,31 +1,33 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').directive('recentActivity', function(Platform, Tenants) {
+    angular.module('BuscaAtivaEscolar').directive('recentActivity', function (Platform, Tenants) {
 
         var log = [];
         var isReady = false;
 
         function refresh() {
-            return Tenants.getRecentActivity({ max: 9 }, function(data) {
-                log = data.data;
-                isReady = true;
-            });
+            //Desativando o retorno da atualizacoes recentes...
+            //Componente também nao está sendo importado
+            // return Tenants.getRecentActivity({ max: 9 }, function(data) {
+            //     log = data.data;
+            //     isReady = true;
+            // });
         }
 
         function init(scope) {
-            scope.getActivity = function() {
+            scope.getActivity = function () {
                 return log;
             };
 
-            scope.isReady = function() {
+            scope.isReady = function () {
                 return isReady;
             };
 
-            scope.hasRecentActivity = function() {
+            scope.hasRecentActivity = function () {
                 return (log && log.length > 0);
             };
 
-            Platform.whenReady(function() {
+            Platform.whenReady(function () {
                 refresh();
             });
         }

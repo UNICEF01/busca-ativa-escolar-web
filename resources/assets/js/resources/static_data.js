@@ -1,4 +1,4 @@
-(function() {
+(function () {
     angular
         .module('BuscaAtivaEscolar')
         .factory('StaticData', function StaticData(API, Identity, $rootScope, $http) {
@@ -74,7 +74,7 @@
             function getUFsDropdown() {
                 var dropdown = [];
 
-                angular.forEach(data.UFsByCode, function(uf) {
+                angular.forEach(data.UFsByCode, function (uf) {
                     dropdown.push(uf);
                 });
 
@@ -109,6 +109,8 @@
                 return getUFByCode(user.uf);
             }
 
+            function getNationalities() { return (data.Nationality) ? data.Nationality : []; }
+
             return {
                 fetchLatestVersion: fetchLatestVersion,
                 refresh: refresh,
@@ -141,11 +143,12 @@
                 getDataFile: getDataFile,
                 getPermissions: getPermissions,
                 getUserTypeVisitantes: getUserTypeVisitantes,
-                getPermissionsFormForVisitante: getPermissionsFormForVisitante
+                getPermissionsFormForVisitante: getPermissionsFormForVisitante,
+                getNationalities: getNationalities
             };
 
         })
-        .run(function(StaticData) {
+        .run(function (StaticData) {
             StaticData.refresh();
         });
 })();

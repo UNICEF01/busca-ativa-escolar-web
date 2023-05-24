@@ -40,6 +40,12 @@
 						<label class="control-label" for="fld-codcns">CNS (Cartão Nacional do SUS)</label>
 						<input type="tel" class="form-control" id="fld-codcns" ng-model="alert.cns" maxlength="15">
 					</div>
+
+					<div class="form-grouo col-md-4">
+						<label class="control-label" for="fld-nationality">Nacionalidade</label>
+						<select id="fld-nationality" class="form-control" ng-model="alert.nationality" ng-options="n.slug as n.label for n in static.getNationalities()" required></select>
+					</div>
+
 					<div class="form-group col-md-12">
 						<label class="control-label">Por que a criança ou adolescente está fora da escola?* <br />Selecione o principal motivo identificado:</label>
 						<div class="radio" ng-repeat="alertCause in static.getVisibleAlertCauses()">

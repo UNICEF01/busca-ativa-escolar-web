@@ -1,6 +1,6 @@
-(function() {
+(function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMap', function(Children) {
+    angular.module('BuscaAtivaEscolar').directive('casesMap', function (Children) {
 
         function init(scope, attrs) {
 
@@ -12,7 +12,7 @@
                     viewModel2 = secondMap.getViewModel();
 
                 // set up view change listener on interactive map
-                firstMap.addEventListener('mapviewchange', function() {
+                firstMap.addEventListener('mapviewchange', function () {
                     // on every view change take a "snapshot" of a current geo data for
                     // interactive map and set this values to the second, non-interactive, map
                     viewModel2.setLookAtData(viewModel1.getLookAtData());
@@ -25,7 +25,7 @@
                 marker.setData(html);
                 group.addObject(marker);
 
-                group.addEventListener('pointerleave', function() {
+                group.addEventListener('pointerleave', function () {
                     if (scope.bubble !== undefined) {
                         scope.bubble.close();
                     }
@@ -41,7 +41,7 @@
                 // add 'tap' event listener, that opens info bubble, to the group
                 scope.bubble = '';
 
-                group.addEventListener('tap', function(evt) {
+                group.addEventListener('tap', function (evt) {
 
                     if (scope.bubble) {
                         scope.bubble.close();
@@ -57,7 +57,7 @@
                     scope.ui.addBubble(scope.bubble);
                 }, false);
 
-                angular.forEach(coordinates, function(value, key) {
+                angular.forEach(coordinates, function (value, key) {
                     addMarkerToGroup(group, { lat: value.latitude, lng: value.longitude },
                         '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
                 });
@@ -70,7 +70,7 @@
                 var markers = document.getElementById("map-markes");
                 markers.style.display = "none";
 
-                var dataPoints = data.map(function(item) {
+                var dataPoints = data.map(function (item) {
                     return new H.clustering.DataPoint(item.latitude, item.longitude);
                 });
 
@@ -83,7 +83,7 @@
 
                 var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
 
-                var locations = data.map(function(item) {
+                var locations = data.map(function (item) {
                     return new H.map.Marker({ lat: item.latitude, lng: item.longitude });
                 });
                 var group = new H.map.Group();
@@ -100,14 +100,14 @@
             }
 
             var platform = new H.service.Platform({
-                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
+                apikey: 'mY7QwygLG_ITu-lmlZd8ybewn1FsoK7LM6cUFlpRJTI'
             });
             var defaultLayers = platform.createDefaultLayers();
             var defaultLayersSync = platform.createDefaultLayers();
 
 
-            var refresh = function() {
-                Children.getMap({ city_id: attrs.cityId }, function(data) {
+            var refresh = function () {
+                Children.getMap({ city_id: attrs.cityId }, function (data) {
 
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
@@ -117,10 +117,10 @@
 
                     scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
-                            center: { lat: -13.5013846, lng: -51.901559 },
-                            zoom: 5,
-                            pixelRatio: window.devicePixelRatio || 1
-                        });
+                        center: { lat: -13.5013846, lng: -51.901559 },
+                        zoom: 5,
+                        pixelRatio: window.devicePixelRatio || 1
+                    });
 
                     var mapTileService = platform.getMapTileService({
 
@@ -145,10 +145,10 @@
 
                     var mapMarkSync = new H.Map(document.getElementById('map-markes'),
                         defaultLayersSync.vector.normal.map, {
-                            center: { lat: -13.5013846, lng: -51.901559 },
-                            zoom: 5,
-                            pixelRatio: window.devicePixelRatio || 1
-                        });
+                        center: { lat: -13.5013846, lng: -51.901559 },
+                        zoom: 5,
+                        pixelRatio: window.devicePixelRatio || 1
+                    });
                     var mapTileServiceSync = platform.getMapTileService({
 
                     });
@@ -176,10 +176,10 @@
 
             refresh();
 
-            scope.$watch('objectToInject', function(value) {
+            scope.$watch('objectToInject', function (value) {
                 if (value) {
                     scope.Obj = value;
-                    scope.Obj.invoke = function(city_id) {
+                    scope.Obj.invoke = function (city_id) {
                         attrs.cityId = city_id;
                         refresh();
                     }

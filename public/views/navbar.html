@@ -90,12 +90,12 @@
 
                     <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()" ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
 
-                    <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">
+                    <!-- <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">
                         <a ui-sref="school_list_frequency">
                             <i class="fa fa-bar-chart" aria-hidden="true"></i>
                             Frequências
                         </a>
-                    </li>
+                    </li> -->
 
                     <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -116,12 +116,12 @@
                                     Solicitações <span ng-if="pending_requests > 0" style="background-color: #953b39;" class="badge" ng-bind="pending_requests"></span>
                                 </a>
                             </li>
-                            <li ng-show="identity.manageImports()">
+                            <!-- <li ng-show="identity.manageImports()">
                                 <a ui-sref="school_list_frequency">
                                     <i class="fa fa-bar-chart" aria-hidden="true"></i>
                                     Frequências
                                 </a>
-                            </li>
+                            </li> -->
 
                         </ul>
                     </li>
