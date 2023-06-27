@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-default manage_groups">
   <div class="panel-heading">
     <h3>
       <strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong>
@@ -26,60 +26,6 @@
     </div>
     <hr />
     <div class="row">
-      <style>
-        .vertical_text {
-          writing-mode: tb-rl;
-          transform: rotate(-180deg);
-          height: 350px;
-          text-align: center;
-        }
-
-        .selectgroup {
-          height: 300px;
-          overflow-y: scroll;
-          overflow-x: hidden;
-          margin-left: 20px;
-          scrollbar-width: thin;
-          scrollbar-color: #666666 transparent;
-        }
-
-        /* chrome */
-
-        .selectgroup::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        .selectgroup::-webkit-scrollbar-track {
-          background: #ffffff;
-        }
-
-        .selectgroup::-webkit-scrollbar-thumb {
-          background-color: #666666;
-          border-radius: 20px;
-          border: 3px solid #666666;
-        }
-
-        .buttonx {
-          background: none !important;
-          border: none;
-          /*padding: 0!important;*/
-          padding-left: 10%;
-          /*optional*/
-          font-family: arial, sans-serif;
-          /*input has OS specific font-family*/
-          color: #069;
-          text-decoration: underline;
-          cursor: pointer;
-        }
-
-        #principal_group {
-          padding-top: 62px;
-        }
-
-        #principal_group {
-          padding-top: 62px;
-        }
-      </style>
       <div class="col-md-1">
         <div class="text-center">
           <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Todos os alertas e casos sem responsáveis atribuídos permanecem nesse nível.">Nível 1 - Master</span>
@@ -105,11 +51,11 @@
           <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
         </div>
         <div class="selectgroup">
-          <a href="#!" ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group.id)">
+          <span ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
-                <span class="badge label label-primary" ng-click="editGroupTwo(group)" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
+                <span class="badge label label-primary" ng-click="editGroupTwo(group); $event.stopPropagation();" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
                   <i class="fa fa-edit"></i>
                 </span>
                 <span class="badge label label-danger" ng-click="removeGroup(2, group)" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
@@ -117,7 +63,7 @@
                 </span>
               </div>
             </div>
-          </a>
+          </span>
         </div>
         <div class="input-group">
           <span class="input-group-addon">
@@ -125,13 +71,17 @@
           </span>
           <input type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionTwo.name" ng-enter="updateGroupTwo()" id="group_for_edition_two" ng-disabled="disableNewGroup(2)" />
         </div>
-        <span id="names" style="display: none; padding-left: 20px">Nomes disponíveis:
-        </span>
-        <div ng-repeat="group in groups">
-          <button class="buttonx" ng-click="getName($index + 1)">
-            {{group.name}}
-          </button>
+
+        <div class="sugestion_names" ng-show="groups.length > 0">
+          <span class="label label-warning">O nome digitado já está em uso.</span>
+          <br />Veja as sugestões de nomes:
+          <div class="list_itens">
+            <div ng-repeat="group in groups" class="list-group-item">
+              <a href="#!" ng-click="getName($index + 1)">{{group.name}}</a>
+            </div>
+          </div>
         </div>
+
       </div>
       <div class="col-md-4">
         <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
@@ -147,14 +97,14 @@
           <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
         </div>
         <div class="selectgroup">
-          <a href="#!" ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group.id)">
+          <span ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
                 <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3) && userCanMovGroup(3, group)">
                   <i class="fa fa-arrows"></i>
                 </span>
-                <span class="badge label label-primary" ng-click="editGroupThree(group)" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
+                <span class="badge label label-primary" ng-click="editGroupThree(group); $event.stopPropagation();" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
                   <i class="fa fa-edit"></i>
                 </span>
                 <span class="badge label label-danger" ng-click="removeGroup(3, group)" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
@@ -162,19 +112,23 @@
                 </span>
               </div>
             </div>
-          </a>
+          </span>
         </div>
         <div class="input-group" ng-if="!identity.getCurrentUser().tenant.is_state">
           <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
           <input ng-disabled="disableNewGroup(3)" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three" />
         </div>
-        <span id="names2" style="display: none; padding-left: 20px">Nomes disponíveis:
-        </span>
-        <div ng-repeat="group in groups2">
-          <button class="buttonx" ng-click="getName2($index + 1)">
-            {{group.name}}
-          </button>
+
+        <div class="sugestion_names" ng-show="groups2.length > 0">
+          <span class="label label-warning">O nome digitado já está em uso.</span>
+          <br />Veja as sugestões de nomes:
+          <div class="list_itens">
+            <div ng-repeat="group in groups2" class="list-group-item">
+              <a href="#!" ng-click="getName2($index + 1)">{{group.name}}</a>
+            </div>
+          </div>
         </div>
+
       </div>
       <div class="col-md-4">
         <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
@@ -190,7 +144,7 @@
           <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
         </div>
         <div class="selectgroup">
-          <a href="#!" ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group.id)">
+          <span ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
@@ -205,7 +159,7 @@
                 </span>
               </div>
             </div>
-          </a>
+            </a>
         </div>
       </div>
     </div>

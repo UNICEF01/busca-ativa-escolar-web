@@ -1,0 +1,55 @@
+.manage_groups {
+
+    .list-group-item-action {
+        cursor: pointer;
+    }
+
+    .vertical_text {
+        writing-mode: tb-rl;
+        transform: rotate(-180deg);
+        height: 350px;
+        text-align: center;
+    }
+
+    .selectgroup {
+        height: 300px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        margin-left: 20px;
+        scrollbar-width: thin;
+        scrollbar-color: #666666 transparent;
+    }
+
+    .sugestion_names {
+        margin-left: 20px;
+
+        .list_itens {
+            margin-top: 20px;
+        }
+    }
+
+    /* chrome */
+
+    .selectgroup::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .selectgroup::-webkit-scrollbar-track {
+        background: #ffffff;
+    }
+
+    .selectgroup::-webkit-scrollbar-thumb {
+        background-color: #666666;
+        border-radius: 20px;
+        border: 3px solid #666666;
+    }
+
+    #principal_group {
+        padding-top: 62px;
+    }
+
+    #principal_group {
+        padding-top: 62px;
+    }
+
+}
