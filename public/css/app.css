@@ -60,7 +60,7 @@
 }
 #app-navbar .navbar-brand {
   padding: 0;
-  background-image: url('../images/logo_bae_header_v2.png?1657110335');
+  background-image: url('../images/logo_bae_header_v2.png?1657111882');
   background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
@@ -231,7 +231,7 @@
   right: 0;
   width: 60px;
   height: 60px;
-  background-image: url('../images/ico_forbidden.png?1657110335');
+  background-image: url('../images/ico_forbidden.png?1657111882');
   background-size: auto;
   background-position: center center;
   background-repeat: no-repeat;
@@ -3926,6 +3926,50 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   opacity: 0.6;
 }
 
+.manage_groups {
+  /* chrome */
+}
+.manage_groups .list-group-item-action {
+  cursor: pointer;
+}
+.manage_groups .vertical_text {
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  height: 350px;
+  text-align: center;
+}
+.manage_groups .selectgroup {
+  height: 300px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-left: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #666666 transparent;
+}
+.manage_groups .sugestion_names {
+  margin-left: 20px;
+}
+.manage_groups .sugestion_names .list_itens {
+  margin-top: 20px;
+}
+.manage_groups .selectgroup::-webkit-scrollbar {
+  width: 8px;
+}
+.manage_groups .selectgroup::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+.manage_groups .selectgroup::-webkit-scrollbar-thumb {
+  background-color: #666666;
+  border-radius: 20px;
+  border: 3px solid #666666;
+}
+.manage_groups #principal_group {
+  padding-top: 62px;
+}
+.manage_groups #principal_group {
+  padding-top: 62px;
+}
+
 .form-control.ng-invalid {
   background-image: linear-gradient(#d9534f, #d9534f), linear-gradient(#d2d2d2, #d2d2d2) !important;
 }
@@ -3987,7 +4031,9 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   color: #777 !important;
 }
 
-.form-group .checkbox label, .form-group .radio label, .form-group label {
+.form-group .checkbox label,
+.form-group .radio label,
+.form-group label {
   color: #777 !important;
 }
 
