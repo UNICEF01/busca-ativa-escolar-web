@@ -118,6 +118,7 @@
                                 $scope.refresh();
                             }
                         },
+
                         function (err) {
                             ngToast.danger("Ocorreu um erro ao salvar os grupos!");
                             $scope.refresh();
