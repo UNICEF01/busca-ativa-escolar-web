@@ -1,47 +1,56 @@
 <div class="modal-template" id="md-user-picker">
-	    <h3 class="pl-title">{{title || 'Enviar arquivo:'}}</h3>
-		<div class="pl-message" ng-show="message">{{message}}</div>
-        <div class="drag-area" ng-show="!isUploading" ngf-drop="upload($file)"
-			ngf-select="upload($file)"
-			ngf-model="file"
-			ngf-multiple="false"
-			ngf-accept="allowedMimeTypes"
-			ngf-drag-over-class="'file-valid'">
-<div ng-show="isUploading">
-	
-	<p>Fazendo upload do arquivo, aguarde...</p>
-	<div class="progress" style="height: 30px; width: 80%;">
-		<div class="progress-bar progress-bar-info" role="progressbar" style="overflow: hidden; text-align: center; display: flex; justify-content: center; align-items: center; width: {{calculateProgressWidth()}}">
-			<span>{{calculateProgressWidth()}}</span>
-		</div>
-		<div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
-			<span>Erro: @{{file.error}}</span>
-		</div>
-	</div>
-</div>
-			<div ng-show="!isUploading">
+    <h3 class="pl-title">{{title || 'Enviar arquivo:'}}</h3>
+    <div class="pl-message" ng-show="message">{{message}}</div>
+    <div class="drag-area" ngf-drop="upload($file)" ngf-select="upload($file)"
+        ngf-model="file" ngf-multiple="false" ngf-accept="allowedMimeTypes" ngf-drag-over-class="'file-valid'">
 
-				<div class="icon">
-					<i class="fa fa-cloud-upload" aria-hidden="true"></i>
-				</div>
-				<span class="header"><strong>Arraste o arquivo </strong>que deseja enviar</span>
-				<br>
-				<span class="header">ou <span class="button"><strong>clique</strong></span> para procurá-lo em seu computador</span>
-				<br>
-				<span class="support">Arquivo suportado: CSV</span>
-			</div>
+        <div ng-show="uploadingFile">
+            <p>Fazendo upload do arquivo, aguarde...</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-info" role="progressbar"
+                    style="overflow: hidden; text-align: center; display: flex; justify-content: center; align-items: center; width: {{calculateProgressWidth()}}">
+                    <span>{{calculateProgressWidth()}}</span>
+                </div>
+                <div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
+                    <span>Erro: @{{file.error}}</span>
+                </div>
+            </div>
         </div>
-        <div class="modal-button">
-			<div>
-				<button class="button-anexar-cancel" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
-			</div>
-			<div>
-				<button class="button-anexar" type="button" ng-click="onSelect()">Anexar</button>
-			</div>
+
+        <div ng-show="!uploadingFile">
+            <div class="icon">
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            </div>
+            <span class="header"><strong>Arraste o arquivo </strong>que deseja enviar</span>
+            <br>
+            <span class="header">ou <span class="button"><strong>Clique aqui</strong></span> para procurá-lo em seu computador</span>
+            <br>
+            <span class="support">Arquivo suportado: CSV</span>
         </div>
+    </div>
+    <div class="modal-button">
+        <div>
+            <button class="button-anexar-cancel" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
+        </div>
+        <div>
+            <!-- <button class="button-anexar" type="button" ng-click="onSelect()">Anexar</button> -->
+        </div>
+    </div>
 </div>
+
 
 <style>
+
+.progress {
+	height: 30px;
+	width: 200%;
+	margin-left: -50%;
+    border-radius: 2rem;
+}
+
+.progress .progress-bar {
+	border-radius: 2rem;
+}
 
 .pl-title {
 	padding-left: 1.5rem;
@@ -54,7 +63,7 @@
 }
 
 .drag-area {
-	height: 30rem;
+	height: 20rem;
     border: 3px dashed #e0eafc;
     display: flex;
     align-items: center;
@@ -67,7 +76,7 @@
 
 .drag-area .icon {
   font-size: 50px;
-  color: #1683ff;
+  color: #0C5E8E;
 }
 
 .drag-area .header {
@@ -88,7 +97,7 @@
 .drag-area .button {
   font-size: 16px;
   font-weight: 500;
-  color: #1683ff;
+  color: #0C5E8E;
   cursor: pointer;
 }
 
@@ -99,7 +108,7 @@
 }
 
 .modal-button {
-    display: inline-flex;
+    display: hidden;
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -107,7 +116,7 @@
 }
 
 .button-anexar {
-	background-color:#1683ff;
+	background-color:#0C5E8E;
     border: none;
     color: white;
     padding: 6px;
