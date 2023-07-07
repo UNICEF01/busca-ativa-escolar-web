@@ -1,39 +1,145 @@
 <div class="modal-template" id="md-user-picker">
-	<div class="modal-header">
-		<h3 class="modal-title">{{title || 'Enviar arquivo:'}}</h3>
-	</div>
-	<div class="modal-body">
-		<div ng-show="message" style="margin-bottom: 15px;">{{message}}</div>
-		<div class="block">
+    <h3 class="pl-title">{{title || 'Enviar arquivo:'}}</h3>
+    <div class="pl-message" ng-show="message">{{message}}</div>
+    <div class="drag-area" ngf-drop="upload($file)" ngf-select="upload($file)"
+        ngf-model="file" ngf-multiple="false" ngf-accept="allowedMimeTypes" ngf-drag-over-class="'file-valid'">
 
-			<div class="file-drop-area"
-			     ngf-drop="upload($file)"
-			     ngf-select="upload($file)"
-			     ngf-model="file"
+        <div ng-show="uploadingFile">
+            <p>Fazendo upload do arquivo, aguarde...</p>
+            <div class="progress">
+                <div class="progress-bar progress-bar-info" role="progressbar"
+                    style="overflow: hidden; text-align: center; display: flex; justify-content: center; align-items: center; width: {{calculateProgressWidth()}}">
+                    <span>{{calculateProgressWidth()}}</span>
+                </div>
+                <div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
+                    <span>Erro: @{{file.error}}</span>
+                </div>
+            </div>
+        </div>
 
-			     ngf-multiple="false"
-			     ngf-accept="allowedMimeTypes"
-			     ngf-drag-over-class="'file-valid'"
-
-			     style="width: 100%; height: 300px; padding: 20px"
-			>
-				<p ng-show="!isUploading"><strong>Arraste o arquivo </strong>que deseja enviar aqui, ou <strong>clique</strong> para procurá-lo em seu computador</p>
-
-				<div class="progress" ng-show="isUploading" style="height: 30px;">
-					<div class="progress-bar progress-bar-info" role="progressbar" style="overflow: hidden; text-align: center; width: {{calculateProgressWidth()}}">
-						<span>{{calculateProgressWidth()}}</span>
-					</div>
-					<div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
-						<span>Erro: @{{file.error}}</span>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
-		<button class="btn btn-primary btn-raised" type="button" ng-click="onSelect()">Anexar</button>
-	</div>
+        <div ng-show="!uploadingFile">
+            <div class="icon">
+                <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+            </div>
+            <span class="header"><strong>Arraste o arquivo </strong>que deseja enviar</span>
+            <br>
+            <span class="header">ou <span class="button"><strong>Clique aqui</strong></span> para procurá-lo em seu computador</span>
+            <br>
+            <span class="support">Arquivo suportado: CSV</span>
+        </div>
+    </div>
+    <div class="modal-button">
+        <div>
+            <button class="button-anexar-cancel" type="button" ng-show="canDismiss" ng-click="close()">Cancelar</button>
+        </div>
+        <div>
+            <!-- <button class="button-anexar" type="button" ng-click="onSelect()">Anexar</button> -->
+        </div>
+    </div>
 </div>
+
+
+<style>
+
+.progress {
+	height: 30px;
+	width: 200%;
+	margin-left: -50%;
+    border-radius: 2rem;
+}
+
+.progress .progress-bar {
+	border-radius: 2rem;
+}
+
+.pl-title {
+	padding-left: 1.5rem;
+    padding-top: 2rem;
+}
+.pl-message {
+	padding-left: 1.5rem;
+    margin-top: -0.5rem;
+    padding-bottom: 1rem;
+}
+
+.drag-area {
+	height: 20rem;
+    border: 3px dashed #e0eafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 1rem 0.5rem 1rem;
+    text-align: center;
+    border-radius: 1rem;
+}
+
+.drag-area .icon {
+  font-size: 50px;
+  color: #0C5E8E;
+}
+
+.drag-area .header {
+  font-size: 16px;
+  font-weight: 500;
+  color: #34495e;
+  
+  margin-left: 5rem;
+    margin-right: 5rem;
+}
+
+.drag-area .support {
+  font-size: 12px;
+  color: gray;
+  margin: 10px 0 15px 0;
+}
+
+.drag-area .button {
+  font-size: 16px;
+  font-weight: 500;
+  color: #0C5E8E;
+  cursor: pointer;
+}
+
+.drag-area img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.modal-button {
+    display: hidden;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem 0.5rem 1rem;
+}
+
+.button-anexar {
+	background-color:#0C5E8E;
+    border: none;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 3px 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 10rem;
+}
+
+.button-anexar-cancel {
+	background-color: #ff5959;
+    border: none;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 3px 1px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 10rem;
+}
+</style>
