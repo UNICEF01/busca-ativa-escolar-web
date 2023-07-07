@@ -7,3 +7,5 @@ doc/.sass-cache
 doc/.jekyll-metadata
 environment.js
 resources/assets/js/services/keys.js
+public/.DS_Store
+public/vendor/.DS_Store
