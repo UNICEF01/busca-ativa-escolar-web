@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "bootstrap": "^3.3.7",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "laravel-elixir": "^5.0.0",
     "laravel-elixir-bower": "*",
     "laravel-elixir-sass-compass": "*",
