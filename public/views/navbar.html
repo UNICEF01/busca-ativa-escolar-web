@@ -104,12 +104,12 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li ng-show="identity.manageImports()" ui-sref-active="active">
+                            <!-- <li ng-show="identity.manageImports()" ui-sref-active="active">
                                 <a ui-sref="school_browser">
                                     <i class="fa fa-university"></i>
                                     Escolas
                                 </a>
-                            </li>
+                            </li> -->
                             <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')" ui-sref-active="active">
                                 <a ui-sref="checks">
                                     <i class="fa fa-exclamation-circle"></i>
