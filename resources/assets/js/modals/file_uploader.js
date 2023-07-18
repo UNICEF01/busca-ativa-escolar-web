@@ -12,11 +12,19 @@
         uploadUrl,
         uploadParameters,
         title,
-        message
+        message,
+        fileExtension
       ) {
         $scope.title = title;
         $scope.message = message;
-        $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(',');
+        $scope.fileExtension = fileExtension;
+
+        if (uploadParameters.type == 'school_csv') {
+          $scope.allowedMimeTypes = 'text/csv';
+          $scope.fileExtension = 'CSV';
+        } else {
+          $scope.allowedMimeTypes = StaticData.getAllowedMimeTypes().join(',');
+        }
 
         $scope.file = null;
         $scope.progress = 0;
