@@ -8,10 +8,98 @@
     </h2>
   </div>
 
-  <form name="userLogin" class="col-md-12" ng-submit="login()">
+  <div ng-if="isBeforeJuly25" class="col-md-12">
     <div class="row">
       <div class="col-md-8 center-block" style="float: none">
         <div class="panel panel-default">
+          <div class="panel-heading">Acesso Suspenso</div>
+          <div class="panel-body text-center">
+            <p>O login no sistema está temporariamente suspenso devido à atualização da plataforma.</p>
+            <p>Por favor, aguarde até que o lançamento da atualização seja concluído.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <form ng-if="!isBeforeJuly25" name="userLogin" class="col-md-12" ng-submit="login()">
+    <div class="row">
+      <div class="col-md-8 center-block" style="float: none">
+        <div class="panel panel-default">
+          <div class="panel-heading">Acessar</div>
+          <div class="panel-body">
+            <p>Bem-vindo(a) à Busca Ativa Escolar.</p>
+            <p>
+              Preencha os campos a seguir com seu e-mail cadastrado e senha.
+            </p>
+
+            <div class="form-group">
+              <label for="fld-email" class="control-label"
+                ><i class="fa fa-envelope"></i> E-mail:</label
+              >
+              <input
+                id="fld-email"
+                class="form-control"
+                type="email"
+                name="email"
+                ng-model="email"
+              />
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <label for="fld-password" class="control-label"
+                  ><i class="fa fa-key"></i> Senha:</label
+                >
+                <input
+                  id="fld-password"
+                  class="form-control"
+                  type="password"
+                  name="password"
+                  ng-model="password"
+                />
+                <span class="input-group-btn" uib-tooltip="Exibir a senha">
+                  <button
+                    type="button"
+                    class="btn btn-fab btn-fab-mini"
+                    ng-click="showPassowrd()"
+                    style="margin-top: 20px;"
+                  >
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer clearfix">
+            <div class="row">
+              <div class="col-lg-6">
+                <a type="button" class="btn btn-primary" ui-sref="tenant_signup"
+                  ><i class="fa fa-edit"></i> Adesão/Readesão de município</a
+                >
+                <a type="button" class="btn btn-primary" href="{{endpoints.readesaoURL}}"
+                  ><i class="fa fa-edit"></i> Adesão/Readesão de estado</a
+                >
+              </div>
+              <div class="col-lg-6 text-right">
+                <a
+                  type="button"
+                  class="btn btn-primary"
+                  ui-sref="forgot_password"
+                  ><i class="fa fa-question-circle"></i> Esqueci minha senha</a
+                >
+                <button
+                  ng-show="!isLoading"
+                  type="submit"
+                  class="btn btn-primary btn-raised pull-right"
+                >
+                  <i class="fa fa-sign-in"></i> Entrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div ng-show="false" class="panel panel-default">
           <div class="panel-heading">Acessar</div>
           <div class="panel-body">
             <p>Bem-vindo(a) à Busca Ativa Escolar.</p>
@@ -139,4 +227,5 @@
       </div>
     </div>
   </form>
+  
 </div>
