@@ -139,36 +139,13 @@
                             </span>
                             <span class="caret"></span>
                         </a>
-                        <ul uib-dropdown-menu class="dropdown-menu" style="min-width: 270px">
-                            <li ng-show="identity.can('notifications')"><a ng-click="toggleNotifications($event)"><i class="fa fa-envelope-o"></i> Notificações</a></li>
-
-                            <li ng-show="identity.can('notifications')" class="notification-center" uib-collapse="!showNotifications">
-                                <div ng-show="!notifications.hasUnread()" class="alert alert-info">Nenhuma notificação
-                                    recente.
-                                </div>
-                                <div ng-show="notifications.isLoading()" class="text-center" style="padding: 15px 0"><i class="fa fa-refresh rotate-icon"></i></div>
-
-                                <div ng-repeat="(i, notification) in notifications.getUnread()" ng-click="notifications.open(notification)" class="navbar-notification alert alert-{{notification.data.type}}">
-                                    <button ng-click="notifications.markAsRead(notification)" type="button" class="close" data-dismiss="alert" aria-label="Esconder"><span aria-hidden="true">&times;</span></button>
-                                    {{notification.data.title}}
-                                </div>
+                        <ul uib-dropdown-menu class="dropdown-menu">
+                            <li>
+                                <a ui-sref="user_preferences"><i class="fa fa-cog"></i> Preferências</a>
                             </li>
-
-                            <li><a target="_blank" href="https://buscaativaescolar.org.br/#down"><i class="fa fa-download"></i> Downloads</a></li>
-                            <li ng-show="false"><a ui-sref="developer_mode"><i class="fa fa-code"></i> Área do
-                                    desenvolvedor</a>
+                            <li >
+                                <a  ng-click="auth.logout()"><i class="fa fa-sign-out"></i> Sair</a>
                             </li>
-
-                            <li role="separator" class="divider over-split-btn"></li>
-
-                            <li class="has-split-btn" ng-if="identity.can('preferences')">
-                                <a class="col-md-7 split-btn" ui-sref="user_preferences"><i class="fa fa-cog"></i>
-                                    Preferências</a>
-                                <a class="col-md-5 split-btn" ng-click="auth.logout()"><i class="fa fa-sign-out"></i>
-                                    Sair</a>
-                            </li>
-
-                            <li ng-if="!identity.can('preferences')"><a ng-click="auth.logout()"><i class="fa fa-sign-out"></i> Sair</a></li>
                         </ul>
                     </li>
 
