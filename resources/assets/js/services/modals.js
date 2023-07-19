@@ -397,7 +397,13 @@
           };
         },
 
-        FileUploader: function (title, message, uploadUrl, uploadParameters) {
+        FileUploader: function (
+          title,
+          message,
+          uploadUrl,
+          uploadParameters,
+          fileExtension
+        ) {
           return {
             templateUrl: '/views/modals/file_uploader.html',
             controller: 'FileUploaderModalCtrl',
@@ -414,6 +420,9 @@
               },
               uploadParameters: function () {
                 return uploadParameters;
+              },
+              fileExtension: function () {
+                return fileExtension;
               },
             },
           };

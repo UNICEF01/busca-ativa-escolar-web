@@ -1,21 +1,22 @@
-(function() {
+(function () {
     angular.module('BuscaAtivaEscolar')
-        .controller('ImportXLSChildrenCtrl', function($scope, Modals, API, Tenants, ngToast) {
+        .controller('ImportXLSChildrenCtrl', function ($scope, Modals, API, Tenants, ngToast) {
 
             $scope.jobs = null;
 
-            $scope.refresh = function() {
-                Tenants.getXlsChildrenJobs(function(res) {
+            $scope.refresh = function () {
+                Tenants.getXlsChildrenJobs(function (res) {
                     $scope.jobs = res.data;
                 });
             };
 
-            $scope.beginImport = function() {
+            $scope.beginImport = function (type) {
                 Modals.show(Modals.FileUploader(
                     'Enviar planilha com casos',
                     'Selecione a planilha com os dados das crianças/ adolescentes a serem importados. O arquivo precisar estar exatamente igual ao exemplo disponível aqui na plataforma. ',
-                    API.getURI('settings/import/xls')
-                )).then(function(file) {
+                    API.getURI('settings/import/xls'),
+                    { type: type }
+                )).then(function (file) {
 
                     if (file.status == "error") {
 
