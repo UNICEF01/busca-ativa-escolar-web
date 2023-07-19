@@ -140,7 +140,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul uib-dropdown-menu class="dropdown-menu">
-                            <li>
+                            <li ng-show="identity.can('preferences')">
                                 <a ui-sref="user_preferences"><i class="fa fa-cog"></i> Preferências</a>
                             </li>
                             <li >

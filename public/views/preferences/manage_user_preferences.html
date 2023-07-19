@@ -1,14 +1,15 @@
-<div>
+<div class="col-md-8 center-block" style="float: none">
 	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="fa fa-cog"></i> Minhas preferências</h3>
-		</div>		
-		<div class="panel-body">
-			<form ng-submit="resetPassword()" ng-show="identity.can('preferences')">
-				<h4><i class="fa fa-key"></i> Alterar senha</h4>
-				<p>Clique no botão abaixo para trocar sua senha. Você receberá um e-mail com um link para completar a troca.</p>
-				<button type="submit" class="btn btn-warning btn-raised"><i class="fa fa-refresh"></i> Trocar senha</button>
-			</form>
-		</div>		
+	  <div class="panel-heading">
+		<h4><i class="fa fa-cog"></i> Minhas preferências</h4>
+	  </div>
+	  <div class="panel-body text-left">
+		<h4><i class="fa fa-key"></i> Alterar senha</h4>
+		<p>Clique no botão abaixo para trocar sua senha. Você receberá um e-mail com um link para completar a troca.</p>
+		<button ng-click="resetPassword()" class="btn btn-warning btn-raised btn-sm">
+		  <i class="fa fa-refresh"></i> Trocar senha
+		</button>
+	  </div>
 	</div>
-</div>
+  </div>
+  
