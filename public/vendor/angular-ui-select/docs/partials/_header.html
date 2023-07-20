@@ -9,13 +9,13 @@
       For Firefox 3.6, you will also need to include jQuery and ECMAScript 5 shim
     -->
     <!--[if lt IE 9]>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
-      <script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/2.2.0/es5-shim.js"></script>
+    <script>
         document.createElement('ui-select');
         document.createElement('ui-select-match');
         document.createElement('ui-select-choices');
-      </script>
+    </script>
     <![endif]-->
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>
@@ -29,10 +29,10 @@
 
     <!-- themes -->
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.5/select2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.default.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap2.css"> -->
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">--> 
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.8.5/css/selectize.bootstrap3.css">-->
 
     <style>
         body {
@@ -47,16 +47,18 @@
         .selectize-control > .selectize-dropdown {
             top: 36px;
         }
+
         /* Some additional styling to demonstrate that append-to-body helps achieve the proper z-index layering. */
         .select-box {
-          background: #fff;
-          position: relative;
-          z-index: 1;
+            background: #fff;
+            position: relative;
+            z-index: 1;
         }
+
         .alert-info.positioned {
-          margin-top: 1em;
-          position: relative;
-          z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
+            margin-top: 1em;
+            position: relative;
+            z-index: 10000; /* The select2 dropdown has a z-index of 9999 */
         }
     </style>
 </head>

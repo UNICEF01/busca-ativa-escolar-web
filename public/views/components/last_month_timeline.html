@@ -1,54 +1,63 @@
 <div class="chart-container">
 
-	<div class="panel panel-default">
-		<div class="panel-heading">Selecione um intervalo</div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Selecione um intervalo</div>
 
-		<div class="panel-body">
+        <div class="panel-body">
 
-			<div class="row text-center">
+            <div class="row text-center">
 
-				<form class="form-inline">
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">Data inicial</div>
-							<input style="text-align: center;" class="form-control" ng-model="firstDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close" show-button-bar="false">
-							<div class="input-group-addon">
-								<i class="glyphicon glyphicon-calendar" ng-click="openStartDate()" style="cursor: pointer;"></i>
-							</div>
-						</div>
-					</div>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Data inicial</div>
+                            <input style="text-align: center;" class="form-control" ng-model="firstDate"
+                                   ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}"
+                                   is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close"
+                                   show-button-bar="false">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar" ng-click="openStartDate()"
+                                   style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+                    </div>
 
-					<div class="form-group">
-						<div class="input-group">
-							<div class="input-group-addon">Data final</div>
-							<input style="text-align: center;" class="form-control" ng-model="finalDate" ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" is-open="popupFinish.opened" datepicker-options="dateOptionsFinish" close-text="Close" show-button-bar="false">
-							<div class="input-group-addon">
-								<i class="glyphicon glyphicon-calendar" ng-click="openFinishDate()" style="cursor: pointer;"></i>
-							</div>
-						</div>
-					</div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-addon">Data final</div>
+                            <input style="text-align: center;" class="form-control" ng-model="finalDate"
+                                   ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}"
+                                   is-open="popupFinish.opened" datepicker-options="dateOptionsFinish"
+                                   close-text="Close" show-button-bar="false">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-calendar" ng-click="openFinishDate()"
+                                   style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+                    </div>
 
-					<button type="submit" class="btn btn-primary" ng-disabled="!firstDate || !finalDate" ng-click="fetchTimelineData()">
-						<i class="glyphicon glyphicon-search"></i>
-					</button>
-				</form>
+                    <button type="submit" class="btn btn-primary" ng-disabled="!firstDate || !finalDate"
+                            ng-click="fetchTimelineData()">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </form>
 
-			</div>
+            </div>
 
-			<br/><br/>
+            <br/><br/>
 
-			<highchart
-					ng-show="isReady()"
-					id="timeline-chart"
-					config="getTimelineConfig()"
-					style="display: block; width: 95%; height: 400px;"
-			></highchart>
+            <highchart
+                    ng-show="isReady()"
+                    id="timeline-chart"
+                    config="getTimelineConfig()"
+                    style="display: block; width: 95%; height: 400px;"
+            ></highchart>
 
-			<!--<div class="alert alert-warning" ng-show="!hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>-->
+            <!--<div class="alert alert-warning" ng-show="!hasEnoughData()">Não há estatísticas diárias o suficiente para exibir a evolução da busca ativa.</div>-->
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 
 </div>

@@ -1,35 +1,35 @@
 <div class="row">
-  <div class="col-md-4">
-    <div ng-include="'/views/logo.html'"></div>
-  </div>
-  <div class="col-md-8 text-right">
-    <h2 style="margin-top: 50px;">
-      <i class="fa fa-sign-in"></i> 1ª Etapa - Inscrever um novo município
-    </h2>
-  </div>
+    <div class="col-md-4">
+        <div ng-include="'/views/logo.html'"></div>
+    </div>
+    <div class="col-md-8 text-right">
+        <h2 style="margin-top: 50px;">
+            <i class="fa fa-sign-in"></i> 1ª Etapa - Inscrever um novo município
+        </h2>
+    </div>
 </div>
 
 <div ng-include="'/views/tenant_signup/header.html'"></div>
 
 <div class="steps">
-  <div
-    ng-show="step == 1"
-    ng-include="'/views/tenant_signup/step_1.html'"
-  ></div>
-  <div
-    ng-show="step == 2"
-    ng-include="'/views/tenant_signup/step_2.html'"
-  ></div>
-  <div
-    ng-show="step == 3"
-    ng-include="'/views/tenant_signup/step_3.html'"
-  ></div>
-  <div
-    ng-show="step == 4"
-    ng-include="'/views/tenant_signup/step_4.html'"
-  ></div>
-  <div
-    ng-show="step == 5"
-    ng-include="'/views/tenant_signup/submitted.html'"
-  ></div>
+    <div
+            ng-show="step == 1"
+            ng-include="'/views/tenant_signup/step_1.html'"
+    ></div>
+    <div
+            ng-show="step == 2"
+            ng-include="'/views/tenant_signup/step_2.html'"
+    ></div>
+    <div
+            ng-show="step == 3"
+            ng-include="'/views/tenant_signup/step_3.html'"
+    ></div>
+    <div
+            ng-show="step == 4"
+            ng-include="'/views/tenant_signup/step_4.html'"
+    ></div>
+    <div
+            ng-show="step == 5"
+            ng-include="'/views/tenant_signup/submitted.html'"
+    ></div>
 </div>

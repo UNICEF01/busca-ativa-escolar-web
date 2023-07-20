@@ -1,167 +1,204 @@
 <div class="panel panel-default manage_groups">
-  <div class="panel-heading">
-    <h3>
-      <strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong>
-      <i class="fa fa-users"></i> Organização de grupos por níveis
-    </h3>
-  </div>
-  <form name="$parent.$parent.groupsEdit" class="panel-body">
-    <div class="row">
-      <div class="col-md-12" ng-if="!identity.getCurrentUser().tenant.is_state">
-        <p>
-          Aqui você poderá criar e visualizar grupos participantes da estratégia em até quatro níveis de gestão.<br />
-          <strong>Nível 1</strong> - Master: grupo padrão do sistema que reúne alertas e casos que ainda não têm responsáveis atribuídos. <br />
-          <strong>Nível 2</strong> - Intermediário (opcional): grupos criados com base nas regionais/coordenadorias/diretorias de ensino, caso o município opte por implementar a estratégia de forma descentralizada; não é obrigatório preenchê-lo. <br />
-          <strong>Nível 3</strong> - secretarias/órgãos: grupo para cadastro das secretarias e demais órgãos participantes; por padrão do sistema já estão cadastradas algumas secretarias e órgãos mais usuais, que podem ser alterados ou excluídos. <br />
-          <strong>Nível 4</strong> - Escolas: relação das escolas do município, as quais poderão ser reagrupadas caso opte-se pela criação de grupos no nível 2.
-
-        </p>
-      </div>
-      <div class="col-md-12" ng-if="identity.getCurrentUser().tenant.is_state">
-        <p>
-          É possível criar grupos participantes da estratégia em até quatro níveis de gestão. Nível 1 - Master: grupo padrão do sistema que reúne alertas e casos que ainda não têm responsáveis atribuídos. Nível 2 - Intermediário: grupos criados com base nas regionais/coordenadorias/diretorias
-          de ensino. Nível 3 - Municípios: relaciona todos os municípios do estado que devem ser reagrupados em cada regional/coordenadoria/diretoria de ensino. Nível 4 - Escolas: relação das escolas estaduais presentes em cada município.
-        </p>
-      </div>
+    <div class="panel-heading">
+        <h3>
+            <strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong>
+            <i class="fa fa-users"></i> Organização de grupos por níveis
+        </h3>
     </div>
-    <hr />
-    <div class="row">
-      <div class="col-md-1">
-        <div class="text-center">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Todos os alertas e casos sem responsáveis atribuídos permanecem nesse nível.">Nível 1 - Master</span>
+    <form name="$parent.$parent.groupsEdit" class="panel-body">
+        <div class="row">
+            <div class="col-md-12" ng-if="!identity.getCurrentUser().tenant.is_state">
+                <p>
+                    Aqui você poderá criar e visualizar grupos participantes da estratégia em até quatro níveis de
+                    gestão.<br/>
+                    <strong>Nível 1</strong> - Master: grupo padrão do sistema que reúne alertas e casos que ainda não
+                    têm responsáveis atribuídos. <br/>
+                    <strong>Nível 2</strong> - Intermediário (opcional): grupos criados com base nas
+                    regionais/coordenadorias/diretorias de ensino, caso o município opte por implementar a estratégia de
+                    forma descentralizada; não é obrigatório preenchê-lo. <br/>
+                    <strong>Nível 3</strong> - secretarias/órgãos: grupo para cadastro das secretarias e demais órgãos
+                    participantes; por padrão do sistema já estão cadastradas algumas secretarias e órgãos mais usuais,
+                    que podem ser alterados ou excluídos. <br/>
+                    <strong>Nível 4</strong> - Escolas: relação das escolas do município, as quais poderão ser
+                    reagrupadas caso opte-se pela criação de grupos no nível 2.
+
+                </p>
+            </div>
+            <div class="col-md-12" ng-if="identity.getCurrentUser().tenant.is_state">
+                <p>
+                    É possível criar grupos participantes da estratégia em até quatro níveis de gestão. Nível 1 -
+                    Master: grupo padrão do sistema que reúne alertas e casos que ainda não têm responsáveis atribuídos.
+                    Nível 2 - Intermediário: grupos criados com base nas regionais/coordenadorias/diretorias
+                    de ensino. Nível 3 - Municípios: relaciona todos os municípios do estado que devem ser reagrupados
+                    em cada regional/coordenadoria/diretoria de ensino. Nível 4 - Escolas: relação das escolas estaduais
+                    presentes em cada município.
+                </p>
+            </div>
         </div>
-        <div id="principal_group">
-          <a class="vertical_text list-group-item active">
-            <span ng-if="!identity.getCurrentUser().tenant.is_state">Busca Ativa Escolar</span>
-            <span ng-if="identity.getCurrentUser().tenant.is_state">Secretaria Estadual de Educação</span>
-          </a>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Cadastre as diretorias/coordenadorias de ensino do seu município. Se não possuir essa divisão basta seguir para o próximo nível.">Nível 2 - Intermediário</span>
-        </div>
-        <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Cadastre as regionais/coordenadorias/ diretorias de ensino do estado. ">Nível 2 - Intermediário</span>
-        </div>
-        <div class="input-group">
+        <hr/>
+        <div class="row">
+            <div class="col-md-1">
+                <div class="text-center">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Todos os alertas e casos sem responsáveis atribuídos permanecem nesse nível.">Nível 1 - Master</span>
+                </div>
+                <div id="principal_group">
+                    <a class="vertical_text list-group-item active">
+                        <span ng-if="!identity.getCurrentUser().tenant.is_state">Busca Ativa Escolar</span>
+                        <span ng-if="identity.getCurrentUser().tenant.is_state">Secretaria Estadual de Educação</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Cadastre as diretorias/coordenadorias de ensino do seu município. Se não possuir essa divisão basta seguir para o próximo nível.">Nível 2 - Intermediário</span>
+                </div>
+                <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Cadastre as regionais/coordenadorias/ diretorias de ensino do estado. ">Nível 2 - Intermediário</span>
+                </div>
+                <div class="input-group">
           <span class="input-group-addon">
             <i class="fa fa-search"></i>
           </span>
-          <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
-        </div>
-        <div class="selectgroup">
-          <span ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group.id)">
+                    <input ng-model="$parent.searchGroupTwo" ng-keyup="filterGroups('two')"
+                           ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar"/>
+                </div>
+                <div class="selectgroup">
+          <span ng-repeat="group in mirrorGroupsTwo track by group.id" class="list-group-item list-group-item-action"
+                ng-class="{'active': group.id == selectedTabTwo}" ng-click="onSelectGroup(2, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
-                <span class="badge label label-primary" ng-click="editGroupTwo(group); $event.stopPropagation();" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
+                <span class="badge label label-primary" ng-click="editGroupTwo(group); $event.stopPropagation();"
+                      ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
                   <i class="fa fa-edit"></i>
                 </span>
-                <span class="badge label label-danger" ng-click="removeGroup(2, group)" ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
+                <span class="badge label label-danger" ng-click="removeGroup(2, group)"
+                      ng-if="canEditGroup(2, group) && userCanEditGroup(2, group)">
                   <i class="fa fa-close"></i>
                 </span>
               </div>
             </div>
           </span>
-        </div>
-        <div class="input-group">
+                </div>
+                <div class="input-group">
           <span class="input-group-addon">
             <i class="fa fa-plus-circle"></i>
           </span>
-          <input type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionTwo.name" ng-enter="updateGroupTwo()" id="group_for_edition_two" ng-disabled="disableNewGroup(2)" />
-        </div>
+                    <input type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionTwo.name"
+                           ng-enter="updateGroupTwo()" id="group_for_edition_two" ng-disabled="disableNewGroup(2)"/>
+                </div>
 
-        <div class="sugestion_names" ng-show="groups.length > 0">
-          <span class="label label-warning">O nome digitado já está em uso.</span>
-          <br />Veja as sugestões de nomes:
-          <div class="list_itens">
-            <div ng-repeat="group in groups" class="list-group-item">
-              <a href="#!" ng-click="getName($index + 1)">{{group.name}}</a>
+                <div class="sugestion_names" ng-show="groups.length > 0">
+                    <span class="label label-warning">O nome digitado já está em uso.</span>
+                    <br/>Veja as sugestões de nomes:
+                    <div class="list_itens">
+                        <div ng-repeat="group in groups" class="list-group-item">
+                            <a href="#!" ng-click="getName($index + 1)">{{group.name}}</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-md-4">
-        <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Apresenta, por padrão do sistema, algumas secretarias e órgãos já cadastrados, mas que podem ser excluídos ou modificados, bem como novos inseridos. Se for utilizar o nível 2, relacione essas secretarias/órgãos a cada diretoria/coordenadoria. A Secretaria Municipal de Educação  é obrigatoriamente nesse nível e, para acessar o nível 4, das escolas, é necessário clicar sobre ela. ">Nível 3 - Secretarias/ Órgãos</span>
-        </div>
-        <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Reagrupe os municípios jurisdicionados a cada  regional/coordenadoria/ diretoria de ensino do estado.">Nível 3 - Municípios</span>
-        </div>
-        <div class="input-group">
+            <div class="col-md-4">
+                <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Apresenta, por padrão do sistema, algumas secretarias e órgãos já cadastrados, mas que podem ser excluídos ou modificados, bem como novos inseridos. Se for utilizar o nível 2, relacione essas secretarias/órgãos a cada diretoria/coordenadoria. A Secretaria Municipal de Educação  é obrigatoriamente nesse nível e, para acessar o nível 4, das escolas, é necessário clicar sobre ela. ">Nível 3 - Secretarias/ Órgãos</span>
+                </div>
+                <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Reagrupe os municípios jurisdicionados a cada  regional/coordenadoria/ diretoria de ensino do estado.">Nível 3 - Municípios</span>
+                </div>
+                <div class="input-group">
           <span class="input-group-addon">
             <i class="fa fa-search"></i>
           </span>
-          <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')" ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
-        </div>
-        <div class="selectgroup">
-          <span ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group.id)">
+                    <input ng-model="$parent.searchGroupThree" ng-keyup="filterGroups('three')"
+                           ng-disabled="!selectedTabTwo" ng-model-options="{debounce:100}" type="text"
+                           class="form-control" placeholder="Filtrar"/>
+                </div>
+                <div class="selectgroup">
+          <span ng-repeat="group in mirrorGroupsThree track by group.id" class="list-group-item list-group-item-action"
+                ng-class="{'active': group.id == selectedTabThree}" ng-click="onSelectGroup(3, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
-                <span class="badge label label-primary" ng-click="movGroup(3, group)" ng-if="canMovGroup(3) && userCanMovGroup(3, group)">
+                <span class="badge label label-primary" ng-click="movGroup(3, group)"
+                      ng-if="canMovGroup(3) && userCanMovGroup(3, group)">
                   <i class="fa fa-arrows"></i>
                 </span>
-                <span class="badge label label-primary" ng-click="editGroupThree(group); $event.stopPropagation();" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
+                <span class="badge label label-primary" ng-click="editGroupThree(group); $event.stopPropagation();"
+                      ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
                   <i class="fa fa-edit"></i>
                 </span>
-                <span class="badge label label-danger" ng-click="removeGroup(3, group)" ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
+                <span class="badge label label-danger" ng-click="removeGroup(3, group)"
+                      ng-if="canEditGroup(3, group) && userCanEditGroup(3, group)">
                   <i class="fa fa-close"></i>
                 </span>
               </div>
             </div>
           </span>
-        </div>
-        <div class="input-group" ng-if="!identity.getCurrentUser().tenant.is_state">
-          <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
-          <input ng-disabled="disableNewGroup(3)" type="text" class="form-control" placeholder="Novo" ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()" id="group_for_edition_three" />
-        </div>
+                </div>
+                <div class="input-group" ng-if="!identity.getCurrentUser().tenant.is_state">
+                    <span class="input-group-addon"><i class="fa fa-plus-circle"></i></span>
+                    <input ng-disabled="disableNewGroup(3)" type="text" class="form-control" placeholder="Novo"
+                           ng-model="groupForEditionThree.name" ng-enter="updateGroupThree()"
+                           id="group_for_edition_three"/>
+                </div>
 
-        <div class="sugestion_names" ng-show="groups2.length > 0">
-          <span class="label label-warning">O nome digitado já está em uso.</span>
-          <br />Veja as sugestões de nomes:
-          <div class="list_itens">
-            <div ng-repeat="group in groups2" class="list-group-item">
-              <a href="#!" ng-click="getName2($index + 1)">{{group.name}}</a>
+                <div class="sugestion_names" ng-show="groups2.length > 0">
+                    <span class="label label-warning">O nome digitado já está em uso.</span>
+                    <br/>Veja as sugestões de nomes:
+                    <div class="list_itens">
+                        <div ng-repeat="group in groups2" class="list-group-item">
+                            <a href="#!" ng-click="getName2($index + 1)">{{group.name}}</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-md-4">
-        <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover=" Relaciona todas as escolas do município e está vinculado à Secretaria Municipal de Educação, no nível 3. Se o município não quiser trabalhar com este nível, basta não cadastrar usuários  relacionados às escolas.">Nível 4 - Escolas</span>
-        </div>
-        <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
-          <span class="label label-default" popover-trigger="'mouseenter'" uib-popover="Relaciona todas as escolas estaduais presentes em cada município do estado.">Nível 4 - Escolas</span>
-        </div>
-        <div class="input-group">
+            <div class="col-md-4">
+                <div class="text-center" ng-if="!identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover=" Relaciona todas as escolas do município e está vinculado à Secretaria Municipal de Educação, no nível 3. Se o município não quiser trabalhar com este nível, basta não cadastrar usuários  relacionados às escolas.">Nível 4 - Escolas</span>
+                </div>
+                <div class="text-center" ng-if="identity.getCurrentUser().tenant.is_state">
+                    <span class="label label-default" popover-trigger="'mouseenter'"
+                          uib-popover="Relaciona todas as escolas estaduais presentes em cada município do estado.">Nível 4 - Escolas</span>
+                </div>
+                <div class="input-group">
           <span class="input-group-addon">
             <i class="fa fa-search"></i>
           </span>
-          <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')" ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text" class="form-control" placeholder="Filtrar" />
-        </div>
-        <div class="selectgroup">
-          <span ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action" ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group.id)">
+                    <input ng-model="$parent.searchGroupFour" ng-keyup="filterGroups('four')"
+                           ng-disabled="!selectedTabThree" ng-model-options="{debounce:100}" type="text"
+                           class="form-control" placeholder="Filtrar"/>
+                </div>
+                <div class="selectgroup">
+          <span ng-repeat="group in mirrorGroupsFour track by group.id" class="list-group-item list-group-item-action"
+                ng-class="{'active': group.id == selectedTabFour}" ng-click="onSelectGroup(4, group.id)">
             <div class="row">
               <div class="col-md-7">{{group.name}}</div>
               <div class="col-md-5">
-                <span class="badge label label-primary" ng-click="movGroup(4, group)" ng-if="canMovGroup(4) && userCanMovGroup(4, group)">
+                <span class="badge label label-primary" ng-click="movGroup(4, group)"
+                      ng-if="canMovGroup(4) && userCanMovGroup(4, group)">
                   <i class="fa fa-arrows"></i>
                 </span>
-                <span class="badge label label-primary" ng-click="editGroupFour(group)" ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)">
+                <span class="badge label label-primary" ng-click="editGroupFour(group)"
+                      ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)">
                   <i class="fa fa-edit"></i>
                 </span>
-                <span class="badge label label-danger" ng-click="removeGroup(4, group)" ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)">
+                <span class="badge label label-danger" ng-click="removeGroup(4, group)"
+                      ng-if="canEditGroup(4, group) && userCanEditGroup(4, group)">
                   <i class="fa fa-close"></i>
                 </span>
               </div>
             </div>
-            </a>
+              </a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </form>
+    </form>
 </div>

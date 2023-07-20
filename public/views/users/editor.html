@@ -1,6 +1,5 @@
 <div class="wnd-view">
 
-    
 
     <form name="userEdit" class="panel panel-default" autocomplete="off" ng-submit="save()">
 
@@ -24,13 +23,15 @@
 
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-name">Nome*</label>
-                    <input type="text" class="form-control" id="fld-name" ng-model="user.name" required />
+                    <input type="text" class="form-control" id="fld-name" ng-model="user.name" required/>
                 </div>
 
                 <div>
                     <div class="form-group col-md-6">
                         <label class="control-label" for="fld-type">Função ocupada no sistema*</label>
-                        <select class="form-control" id="fld-type" ng-model="user.type" ng-options="n as (n | lang:'user.type') for n in getUserTypes()" ng-change="onSelectFunctionFunction()" required></select>
+                        <select class="form-control" id="fld-type" ng-model="user.type"
+                                ng-options="n as (n | lang:'user.type') for n in getUserTypes()"
+                                ng-change="onSelectFunctionFunction()" required></select>
                     </div>
                 </div>
 
@@ -39,21 +40,23 @@
             <div class="row" ng-if="user.type=='perfil_visitante'" class="row">
                 <div class="col-md-6">
                     <h5>Perfil de visitante</h5>
-                    <br />
+                    <br/>
                     <div>
                         <div class="form-check">
-                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name" value="visitante_nacional" id="visitante_nacional" required />
+                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name"
+                                   value="visitante_nacional" id="visitante_nacional" required/>
                             <label class="form-check-label" for="visitante_nacional"> Visitante nacional </label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name" value="visitante_estadual" id="visitante_estadual" />
+                            <input type="radio" name="perfil_visitante" ng-model="perfilVisitante.name"
+                                   value="visitante_estadual" id="visitante_estadual"/>
                             <label class="form-check-label" for="visitante_estadual"> Visitante estadual </label>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <h5>Permissões de visualização</h5>
-                    <br />
+                    <br/>
                     <div>
                         <table class="table table-hover table-bordered">
                             <tr>
@@ -66,10 +69,14 @@
                             </tr>
                             <tr>
                                 <td align="center">
-                                    <input class="form-check-input" ng-model="permissionsVisitantes[0]" ng-true-value="'relatorios'" ng-false-value="" type="checkbox" id="inlineCheckbox1" disabled />
+                                    <input class="form-check-input" ng-model="permissionsVisitantes[0]"
+                                           ng-true-value="'relatorios'" ng-false-value="" type="checkbox"
+                                           id="inlineCheckbox1" disabled/>
                                 </td>
                                 <td align="center">
-                                    <input class="form-check-input" ng-model="permissionsVisitantes[1]" ng-true-value="'usuarios'" ng-false-value="" type="checkbox" id="inlineCheckbox2" />
+                                    <input class="form-check-input" ng-model="permissionsVisitantes[1]"
+                                           ng-true-value="'usuarios'" ng-false-value="" type="checkbox"
+                                           id="inlineCheckbox2"/>
                                 </td>
                             </tr>
                         </table>
@@ -80,8 +87,10 @@
             <div ng-if="canDefineUserTenant() || canDefineUserUF()">
                 <div class="row" ng-if="canDefineUserUF() || perfilVisitante.name == 'visitante_estadual'">
                     <div class="form-group col-md-12">
-                        <label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal* </label>
-                        <select class="form-control" id="fld-uf" ng-model="user.uf" ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
+                        <label class="control-label" for="fld-uf"><i class="fa fa-university"></i> Unidade Federal*
+                        </label>
+                        <select class="form-control" id="fld-uf" ng-model="user.uf"
+                                ng-options="n.code as n.name for n in static.getUFs() | orderObjectBy:'name'"></select>
                     </div>
                 </div>
             </div>
@@ -94,16 +103,20 @@
                     <div class="form-group col-md-12">
                         <label class="control-label" for="fld-email">
                             <i class="fa fa-envelope"></i> E-mail de acesso* </label>
-                        <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required ng-model="user.email" />
+                        <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required
+                               ng-model="user.email"/>
                     </div>
 
                     <div class="form-group col-md-12" ng-if="canSeeGroupsOptions">
                         <div class="row">
                             <div class="form-group col-md-9">
-                                <input type="text" class="form-control" id="fld-group" ng-model="user.group_name" disabled>
+                                <input type="text" class="form-control" id="fld-group" ng-model="user.group_name"
+                                       disabled>
                             </div>
                             <div class="form-group col-md-3">
-                                <button class="btn btn-raised btn-default" type="button" ng-click="changeGroup()">Selecionar grupo</button>
+                                <button class="btn btn-raised btn-default" type="button" ng-click="changeGroup()">
+                                    Selecionar grupo
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -115,14 +128,16 @@
                 <div class="col-md-12"><h5>Dados pessoais</h5></div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-dob">Data de nascimento*</label>
-                    <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" />
+                    <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob"
+                           placeholder="dd/mm/yyyy"/>
                     <div id="message_date">
                         <p id="error_date"></p>
                     </div>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-cpf">CPF*</label>
-                    <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf" placeholder="000.000.000-00" />
+                    <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf"
+                           placeholder="000.000.000-00"/>
                 </div>
             </div>
 
@@ -130,15 +145,18 @@
                 <div class="col-md-12"><h5>Contatos</h5></div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-                    <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" />
+                    <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12"
+                           ng-model="user.work_phone" placeholder="(00) 00000-0000"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-                    <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.work_mobile" placeholder="(00) 00000-0000" />
+                    <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12"
+                           ng-model="user.work_mobile" placeholder="(00) 00000-0000"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-personal-mobile">Telefone celular pessoal</label>
-                    <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000" />
+                    <input type="text" class="form-control" id="fld-personal-mobile" ui-br-phone-number
+                           ng-minlength="12" ng-model="user.personal_mobile" placeholder="(00) 00000-0000"/>
                 </div>
             </div>
 
@@ -146,16 +164,18 @@
                 <div class="col-md-12"><h5>Endereço institucional</h5></div>
                 <div class="form-group col-md-12">
                     <label class="control-label" for="fld-address">Endereço institucional</label>
-                    <input type="text" class="form-control" id="fld-address" ng-model="user.work_address" />
+                    <input type="text" class="form-control" id="fld-address" ng-model="user.work_address"/>
                 </div>
-                <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false" is-city-required="false"></app-city-select>
+                <app-city-select uf="user.work_uf" city="user.work_city" on-select="onCitySelect" is-uf-required="false"
+                                 is-city-required="false"></app-city-select>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-cep">CEP institucional</label>
-                    <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep" placeholder="00000-000" />
+                    <input type="text" class="form-control" id="fld-cep" ui-br-cep-mask ng-model="user.work_cep"
+                           placeholder="00000-000"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-neighborhood">Bairro</label>
-                    <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood" />
+                    <input type="text" class="form-control" id="fld-neighborhood" ng-model="user.work_neighborhood"/>
                 </div>
             </div>
 
@@ -163,20 +183,22 @@
                 <div class="col-md-12"><h5>Dados organizacionais</h5></div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-institution">Órgão</label>
-                    <input type="text" class="form-control" id="fld-institution" ng-model="user.institution" />
+                    <input type="text" class="form-control" id="fld-institution" ng-model="user.institution"/>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="control-label" for="fld-position">Cargo</label>
-                    <input type="text" class="form-control" id="fld-position" ng-model="user.position" />
+                    <input type="text" class="form-control" id="fld-position" ng-model="user.position"/>
                 </div>
             </div>
             <div class="clearfix">
                 <button type="button" ng-show="quickAdd" ng-click="goBack()" class="btn btn-primary">
-                  <i class="fa fa-arrow-left"></i> Voltar </button>
+                    <i class="fa fa-arrow-left"></i> Voltar
+                </button>
                 <button type="submit" class="btn btn-raised btn-primary pull-right">
-                  <i class="fa fa-save"></i> Salvar </button>
-              </div>
-          
+                    <i class="fa fa-save"></i> Salvar
+                </button>
+            </div>
+
         </div>
 
     </form>
@@ -186,6 +208,7 @@
     function add(x) {
         document.getElementById('message').style.display = 'block';
     }
+
     function remove(x) {
         document.getElementById('message').style.display = 'none';
     }
@@ -199,11 +222,13 @@
         padding: 0px;
         margin: 0px;
     }
+
     #message p {
         padding: 0px 0px 0px 30px;
         font-size: 12px;
         margin: 0px;
     }
+
     #message_date {
         font-size: 12px;
         display: none;
@@ -212,24 +237,29 @@
         padding: 0px;
         margin: 0px;
     }
+
     #message_date p {
         padding: 0px;
         font-size: 12px;
         margin: 0px;
     }
+
     /* Add a green text color and a checkmark when the requirements are right */
     .valid {
         color: green;
     }
+
     .valid:before {
         position: relative;
         left: -10px;
         content: '✔';
     }
+
     /* Add a red text color and an "x" icon when the requirements are wrong */
     .invalid {
         color: red;
     }
+
     .invalid:before {
         position: relative;
         left: -10px;

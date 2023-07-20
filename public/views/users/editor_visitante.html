@@ -37,16 +37,18 @@
                     <div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
+                                   value="option1">
                             <label class="form-check-label" for="exampleRadios1">
                                 Visitante nacional
                             </label>
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
+                                   value="option2">
                             <label class="form-check-label" for="exampleRadios2">
-                                Visitante  estadual
+                                Visitante estadual
                             </label>
                         </div>
 
@@ -65,19 +67,25 @@
 
                         <table class="table table-hover table-bordered">
                             <tr>
-                                <td align="center"><label class="form-check-label" for="inlineCheckbox1">Relatórios</label></td>
-                                <td align="center"><label class="form-check-label" for="inlineCheckbox2">Usuários</label></td>
-                                <td align="center"><label class="form-check-label" for="inlineCheckbox3">Casos</label></td>
+                                <td align="center"><label class="form-check-label"
+                                                          for="inlineCheckbox1">Relatórios</label></td>
+                                <td align="center"><label class="form-check-label"
+                                                          for="inlineCheckbox2">Usuários</label></td>
+                                <td align="center"><label class="form-check-label" for="inlineCheckbox3">Casos</label>
+                                </td>
                             </tr>
                             <tr>
                                 <td align="center">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" disabled checked>
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"
+                                           disabled checked>
                                 </td>
                                 <td align="center">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                           value="option2">
                                 </td>
                                 <td align="center">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                           value="option3">
                                 </td>
                             </tr>
                         </table>
@@ -85,7 +93,6 @@
                     </div>
 
                 </div>
-
 
 
             </div>
@@ -119,19 +126,23 @@
                     <h5>Dados de acesso</h5>
                 </div>
                 <div class="col-md-6">
-                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey" ng-show="user.tenant_id" type="button"><i class="fa fa-key"></i> Alterar senha</button>
+                    <button class="btn btn-xs btn-raised btn-info pull-right" ng-click="showInputKey = !showInputKey"
+                            ng-show="user.tenant_id" type="button"><i class="fa fa-key"></i> Alterar senha
+                    </button>
                 </div>
             </div>
 
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-email"><i class="fa fa-envelope"></i> E-mail de acesso*</label>
-                <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required ng-model="user.email">
+                <input type="email" autocomplete="new-password" class="form-control" id="fld-email" required
+                       ng-model="user.email">
             </div>
 
             <div class="form-group col-md-6" ng-show="showInputKey || !user.tenant_id">
                 <div class="input-group">
                     <label class="control-label" for="fld-password"><i class="fa fa-key"></i> Senha de acesso*</label>
-                    <input type="password" autocomplete="new-password" class="form-control" id="fld-password" ng-model="user.password">
+                    <input type="password" autocomplete="new-password" class="form-control" id="fld-password"
+                           ng-model="user.password">
                     <span class="input-group-btn" uib-tooltip="Exibir a senha">
 						<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()">
 							<i class="fa fa-eye"></i>
@@ -150,11 +161,13 @@
 
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-dob">Data de nascimento*</label>
-                <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob" placeholder="dd/mm/yyyy" required>
+                <input type="tel" class="form-control" id="fld-dob" ui-date-mask ng-model="user.dob"
+                       placeholder="dd/mm/yyyy" required>
             </div>
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-cpf">CPF*</label>
-                <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf" placeholder="000.000.000-00" required>
+                <input type="tel" class="form-control" id="fld-cpf" ui-br-cpf-mask ng-model="user.cpf"
+                       placeholder="000.000.000-00" required>
             </div>
 
             <hr/>
@@ -167,11 +180,13 @@
 
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-work-phone">Telefone fixo institucional*</label>
-                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12" ng-model="user.work_phone" placeholder="(00) 00000-0000" required>
+                <input type="text" class="form-control" id="fld-work-phone" ui-br-phone-number ng-minlength="12"
+                       ng-model="user.work_phone" placeholder="(00) 00000-0000" required>
             </div>
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-work-mobile">Telefone celular institucional</label>
-                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12" ng-pattern='^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
+                <input type="text" class="form-control" id="fld-work-mobile" ui-br-phone-number ng-minlength="12"
+                       ng-pattern='^(?:0|\(?\+33\)?\s?|0033\s?)[1-79](?:[\.\-\s]?\d\d){4}$
 '
                        ng-model="user.work_mobile" placeholder="(00) 00000-0000">
             </div>

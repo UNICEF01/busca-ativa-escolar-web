@@ -1,53 +1,53 @@
 <div class="dashboard dashboard-super-administrador">
-  <div class="row">
-    <div class="col-md-12">
-      <h3>
-        <i class="material-icons">timeline</i> Números gerais da estratégia no
-        estado
-      </h3>
-      <span>Valores se referem à data de: <span id="greeting"></span></span>
-      <metrics-state></metrics-state>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                <i class="material-icons">timeline</i> Números gerais da estratégia no
+                estado
+            </h3>
+            <span>Valores se referem à data de: <span id="greeting"></span></span>
+            <metrics-state></metrics-state>
+        </div>
     </div>
-  </div>
 
-  <div
-    ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"
-  ></div>
+    <div
+            ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"
+    ></div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <h3><i class="material-icons">info_outline</i> Motivos dos casos</h3>
-      <causes-chart></causes-chart>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><i class="material-icons">info_outline</i> Motivos dos casos</h3>
+            <causes-chart></causes-chart>
+        </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <h3>
-        <i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar
-        (30 dias)
-      </h3>
-      <last-month-timeline></last-month-timeline>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>
+                <i class="material-icons">timeline</i> Evolução da Busca Ativa Escolar
+                (30 dias)
+            </h3>
+            <last-month-timeline></last-month-timeline>
+        </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <h3><i class="material-icons">map</i> Mapa de casos</h3>
-      <span>Valores se referem à data de: <span id="greetings"></span>
+    <div class="row">
+        <div class="col-md-12">
+            <h3><i class="material-icons">map</i> Mapa de casos</h3>
+            <span>Valores se referem à data de: <span id="greetings"></span>
       <cases-map></cases-map>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-  var date = new Date();
-  date = date.setDate(date.getDate() - 1);
-  console.log(date);
-  document.getElementById('greeting').innerHTML = new Date(
-    date
-  ).toLocaleDateString();
-  document.getElementById('greetings').innerHTML = new Date(
-    date
-  ).toLocaleDateString();
+    var date = new Date();
+    date = date.setDate(date.getDate() - 1);
+    console.log(date);
+    document.getElementById('greeting').innerHTML = new Date(
+        date
+    ).toLocaleDateString();
+    document.getElementById('greetings').innerHTML = new Date(
+        date
+    ).toLocaleDateString();
 </script>

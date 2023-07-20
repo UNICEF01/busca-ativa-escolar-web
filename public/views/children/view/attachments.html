@@ -1,34 +1,40 @@
-<div> 
-	<div class="clearfix">
-		<h3 class="pull-left"><i class="material-icons">attach_file</i> Anexos</h3>
-		<a ng-click="uploadAttachment()" class="btn btn-raised btn-primary pull-right"><i class="fa fa-upload"></i> Anexar arquivo</a>
-		<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
-	</div>
-	<div class="col-md-12">
-		<hr />
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Data</th>
-					<th>Nome do arquivo</th>
-					<th>Tipo</th>
-					<th>Descrição</th>
-					<th class="text-center">Opções</th>
-				</tr>
-			</thead>
-			<tbody>
-			<tr ng-repeat="attachment in attachments.data">
-				<td><span ng-bind="attachment.created_at | amCalendar" uib-tooltip-html="attachment.created_at | amTimeAgo"></span></td>
-				<td><span ng-bind="attachment.file_name"></span></td>
-				<td><span ng-bind="attachment.mime_type | lang:'mime_types'"></span></td>
-				<td><span ng-bind="attachment.description"></span></td>
-				<td class="text-center">
-					<a class="btn btn-xs btn-raised btn-success" href="{{attachment.url}}" target="_blank"><i class="fa fa-download"></i> Download</a>
-					<a ng-show="identity.can('cases.manage')" ng-click="removeAttachment(attachment)" class="btn btn-xs btn-raised btn-danger" href="" target="_blank"><i class="fa fa-close"></i> Remover</a>
-				</td>
-			</tr>
-			</tbody>
-		</table>
-	</div>
+<div>
+    <div class="clearfix">
+        <h3 class="pull-left"><i class="material-icons">attach_file</i> Anexos</h3>
+        <a ng-click="uploadAttachment()" class="btn btn-raised btn-primary pull-right"><i class="fa fa-upload"></i>
+            Anexar arquivo</a>
+        <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i>
+            Atualizar</a>
+    </div>
+    <div class="col-md-12">
+        <hr/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Nome do arquivo</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th class="text-center">Opções</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="attachment in attachments.data">
+                <td><span ng-bind="attachment.created_at | amCalendar"
+                          uib-tooltip-html="attachment.created_at | amTimeAgo"></span></td>
+                <td><span ng-bind="attachment.file_name"></span></td>
+                <td><span ng-bind="attachment.mime_type | lang:'mime_types'"></span></td>
+                <td><span ng-bind="attachment.description"></span></td>
+                <td class="text-center">
+                    <a class="btn btn-xs btn-raised btn-success" href="{{attachment.url}}" target="_blank"><i
+                            class="fa fa-download"></i> Download</a>
+                    <a ng-show="identity.can('cases.manage')" ng-click="removeAttachment(attachment)"
+                       class="btn btn-xs btn-raised btn-danger" href="" target="_blank"><i class="fa fa-close"></i>
+                        Remover</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 

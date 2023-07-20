@@ -1,18 +1,23 @@
 <div>
-	<div ng-show="isReady() && hasRecentActivity()" class="panel panel-default">
-		<div class="panel-body">
-			<div class="list-group" ng-repeat="(i, entry) in getActivity()">
-				<div class="list-group-item timeline-item">
-					<div class="row">
-						<div class="col-lg-6"><i class="fa fa-user"></i> <strong uib-tooltip-html="entry.user.type | lang:'user.type'" ng-bind="entry.user.name"></strong><br /></div>
-						<div class="col-lg-6 card-detail-text"><span ng-bind="entry.created_at | amTimeAgo" uib-tooltip-html="entry.created_at | amCalendar"></span></div>
-					</div>
-					<div class="row">
-						<p class="col-md-12 list-group-item-text" ng-bind="entry.message"></p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="alert alert-info" ng-show="isReady() && !hasRecentActivity()">Nenhuma atividade recente na plataforma.</div>
+    <div ng-show="isReady() && hasRecentActivity()" class="panel panel-default">
+        <div class="panel-body">
+            <div class="list-group" ng-repeat="(i, entry) in getActivity()">
+                <div class="list-group-item timeline-item">
+                    <div class="row">
+                        <div class="col-lg-6"><i class="fa fa-user"></i> <strong
+                                uib-tooltip-html="entry.user.type | lang:'user.type'"
+                                ng-bind="entry.user.name"></strong><br/></div>
+                        <div class="col-lg-6 card-detail-text"><span ng-bind="entry.created_at | amTimeAgo"
+                                                                     uib-tooltip-html="entry.created_at | amCalendar"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="col-md-12 list-group-item-text" ng-bind="entry.message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-info" ng-show="isReady() && !hasRecentActivity()">Nenhuma atividade recente na plataforma.
+    </div>
 </div>

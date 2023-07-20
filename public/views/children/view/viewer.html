@@ -4,106 +4,106 @@
             <div class="row">
                 <div class="col-md-10">
                     <h1>
-                        <i class="fa fa-folder"></i> {{child.name}} <br /><small>{{child.mother_name}}</small
-            >
-          </h1>
-        </div>
+                        <i class="fa fa-folder"></i> {{child.name}} <br/><small>{{child.mother_name}}</small
+                    >
+                    </h1>
+                </div>
 
-        <div class="col-md-2 text-right">
-          <div
-            class="btn btn-raised btn-default btn-fab"
-            ng-show="child.gender"
-            uib-tooltip-html="child.gender | lang:'child.gender'"
-          >
-            <i
-              class="material-icons fa {{child.gender | lang:'child.gender_icon'}}"
-            ></i>
-          </div>
-        </div>
-      </div>
+                <div class="col-md-2 text-right">
+                    <div
+                            class="btn btn-raised btn-default btn-fab"
+                            ng-show="child.gender"
+                            uib-tooltip-html="child.gender | lang:'child.gender'"
+                    >
+                        <i
+                                class="material-icons fa {{child.gender | lang:'child.gender_icon'}}"
+                        ></i>
+                    </div>
+                </div>
+            </div>
 
-      <div class="row">
-        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-2">
           <span
-            class="label label-warning"
-            ng-show="child.child_status === 'out_of_school'"
-            >Fora da Escola</span
+                  class="label label-warning"
+                  ng-show="child.child_status === 'out_of_school'"
+          >Fora da Escola</span
           >
-          <span
-            class="label label-primary"
-            ng-show="child.child_status === 'in_observation'"
-            >Em observação</span
-          >
-          <span
-            class="label label-success"
-            ng-show="child.child_status === 'in_school'"
-            >Dentro da Escola</span
-          >
-        </div>
+                    <span
+                            class="label label-primary"
+                            ng-show="child.child_status === 'in_observation'"
+                    >Em observação</span
+                    >
+                    <span
+                            class="label label-success"
+                            ng-show="child.child_status === 'in_school'"
+                    >Dentro da Escola</span
+                    >
+                </div>
 
-        <div class="col-md-10 text-right">
+                <div class="col-md-10 text-right">
           <span ng-show="canAssignGroup()">
             <a
-              ng-show="child.currentCase.group"
-              class="btn btn-lg btn-info btn-raised"
-              ng-click="assignGroup() "
+                    ng-show="child.currentCase.group"
+                    class="btn btn-lg btn-info btn-raised"
+                    ng-click="assignGroup() "
             >
               <span>
                 <span ng-show="!child.currentCase.group.deleted_at"
-                  ><i class="material-icons fa fa-edit"></i>
+                ><i class="material-icons fa fa-edit"></i>
                   <strong>Grupo:</strong> {{child.currentCase.group.name}}</span
                 >
                 <span
-                  ng-show="child.currentCase.group.deleted_at"
-                  style="color: #d9534f"
-                  ><i class="material-icons fa fa-edit"></i>
+                        ng-show="child.currentCase.group.deleted_at"
+                        style="color: #d9534f"
+                ><i class="material-icons fa fa-edit"></i>
                   <strong>Grupo removido:</strong>
                   {{child.currentCase.group.name}}</span
                 >
               </span>
             </a>
             <a
-              ng-show="!child.currentCase.group "
-              class="btn btn-lg btn-info btn-raised"
-              ng-click="assignGroup()"
+                    ng-show="!child.currentCase.group "
+                    class="btn btn-lg btn-info btn-raised"
+                    ng-click="assignGroup()"
             >
               <i class="material-icons fa fa-edit"></i> <span>Sem grupo</span>
             </a>
           </span>
-          <a
-            class="btn {{child.risk_level | lang:'risk_level.btn_class'}} btn-raised"
-            >{{child.risk_level | lang:'risk_level'}}</a
-          >
-          <a
-            class="btn btn-info btn-raised"
-            ui-sref="child_viewer.cases.view_step({step_type: child.cases[0].currentStep.step_type, step_id: child.cases[0].currentStep.id})"
-            >{{child.cases[0].currentStep.name}}</a
-          >
+                    <a
+                            class="btn {{child.risk_level | lang:'risk_level.btn_class'}} btn-raised"
+                    >{{child.risk_level | lang:'risk_level'}}</a
+                    >
+                    <a
+                            class="btn btn-info btn-raised"
+                            ui-sref="child_viewer.cases.view_step({step_type: child.cases[0].currentStep.step_type, step_id: child.cases[0].currentStep.id})"
+                    >{{child.cases[0].currentStep.name}}</a
+                    >
+                </div>
+            </div>
         </div>
-      </div>
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item uib-tab" ui-sref-active="active">
+                <a ui-sref=".consolidated"
+                ><i class="fa fa-info-circle"></i> Informações consolidadas</a
+                >
+            </li>
+            <li class="nav-item uib-tab" ui-sref-active="active">
+                <a ui-sref=".cases"><i class="fa fa-tasks"></i> Evolução do Caso</a>
+            </li>
+            <li class="nav-item uib-tab" ui-sref-active="active">
+                <a ui-sref=".activity_log"><i class="fa fa-history"></i> Histórico</a>
+            </li>
+            <li class="nav-item uib-tab" ui-sref-active="active">
+                <a ui-sref=".comments"><i class="fa fa-comments"></i> Anotações</a>
+            </li>
+            <li class="nav-item uib-tab" ui-sref-active="active">
+                <a ui-sref=".attachments"><i class="fa fa-paperclip"></i> Anexos</a>
+            </li>
+            <!--li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".assigned_users"><i class="fa fa-users"></i> Responsáveis</a></li-->
+        </ul>
+
+        <div class="panel-body" ui-view></div>
     </div>
-
-    <ul class="nav nav-tabs">
-      <li class="nav-item uib-tab" ui-sref-active="active">
-        <a ui-sref=".consolidated"
-          ><i class="fa fa-info-circle"></i> Informações consolidadas</a
-        >
-      </li>
-      <li class="nav-item uib-tab" ui-sref-active="active">
-        <a ui-sref=".cases"><i class="fa fa-tasks"></i> Evolução do Caso</a>
-      </li>
-      <li class="nav-item uib-tab" ui-sref-active="active">
-        <a ui-sref=".activity_log"><i class="fa fa-history"></i> Histórico</a>
-      </li>
-      <li class="nav-item uib-tab" ui-sref-active="active">
-        <a ui-sref=".comments"><i class="fa fa-comments"></i> Anotações</a>
-      </li>
-      <li class="nav-item uib-tab" ui-sref-active="active">
-        <a ui-sref=".attachments"><i class="fa fa-paperclip"></i> Anexos</a>
-      </li>
-      <!--li class="nav-item uib-tab" ui-sref-active="active"><a ui-sref=".assigned_users"><i class="fa fa-users"></i> Responsáveis</a></li-->
-    </ul>
-
-    <div class="panel-body" ui-view></div>
-  </div>
 </div>

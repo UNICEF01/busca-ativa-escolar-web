@@ -17,14 +17,18 @@
                     <th>Motivo da rejeição</th>
                     <th>Tipo</th>
                     <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'">Ações</th>
-                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" >Data de aceitação/rejeição</th>
+                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'">Data de
+                        aceitação/rejeição
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
                     <td>
-                        <i class="fa fa-refresh" ng-show="child.type_request === 'reopen'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
-                        <i class="fa fa-share-square-o" ng-show="child.type_request === 'transfer'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                        <i class="fa fa-refresh" ng-show="child.type_request === 'reopen'"
+                           uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                        <i class="fa fa-share-square-o" ng-show="child.type_request === 'transfer'"
+                           uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
                     </td>
                     <td>
                         <b>{{child.created_at | dateFormatBr}}</b>
@@ -72,21 +76,30 @@
                     </td>
                     <td>
                         <span>{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
-                        <small ng-if="child.status === 'requested'" class="label label-default">Status: Solicitado</small>
+                        <small ng-if="child.status === 'requested'" class="label label-default">Status:
+                            Solicitado</small>
                         <small ng-if="child.status === 'approved'" class="label label-success">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'" class="label label-danger">Status: Rejeitado</small>
 
-                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Pesquisa'" class="label label-default">Etapa: Pesquisa</small>
-                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica'" class="label label-default">Etapa: Análise Técnica</small>
-                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\GestaoDoCaso'" class="label label-default">Etapa: Gestão do Caso</small>
-                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Rematricula'" class="label label-default">Etapa: (Re)matrícula</small>
-                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao'" class="label label-default">Etapa: Observação</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Pesquisa'"
+                               class="label label-default">Etapa: Pesquisa</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica'"
+                               class="label label-default">Etapa: Análise Técnica</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\GestaoDoCaso'"
+                               class="label label-default">Etapa: Gestão do Caso</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Rematricula'"
+                               class="label label-default">Etapa: (Re)matrícula</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao'"
+                               class="label label-default">Etapa: Observação</small>
 
                     </td>
                     <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'">
                         <div ng-show="child.status === 'requested'">
-                            <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised" uib-tooltip="Aprovar">Aprovar</button>
-                            <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised" uib-tooltip="Rejeitar">Rejeitar</i></button>
+                            <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
+                                    uib-tooltip="Aprovar">Aprovar
+                            </button>
+                            <button ng-click="reject(child)" class="btn btn-danger btn-sm btn-raised"
+                                    uib-tooltip="Rejeitar">Rejeitar</i></button>
                         </div>
                         <p ng-show="child.status !== 'requested'">Concluído</p>
                     </td>

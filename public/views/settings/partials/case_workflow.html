@@ -1,42 +1,51 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-random"></i> Customização</h3>
-	</div>
-	<div class="panel-body">
+    <div class="panel-heading">
+        <h3><strong ng-show="!$parent.isEditing">{{getCurrentStep()}}.</strong> <i class="fa fa-random"></i>
+            Customização</h3>
+    </div>
+    <div class="panel-body">
 
-		<p>
-			Aqui você poderá personalizar, de acordo com cada motivo de evasão escolar, a prioridade de tratamento no sistema
-		</p>
+        <p>
+            Aqui você poderá personalizar, de acordo com cada motivo de evasão escolar, a prioridade de tratamento no
+            sistema
+        </p>
 
-		<table class="table parameterization-grid">
-			<tbody ng-repeat="(i, cause) in static.getAlertCauses()">
-				<tr>
-					<td>{{cause.label}}</td>
-					<td>
-						<div class="col-md-4 text-center">
-							<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
-								<input id="rd-cause-priority-high-{{i}}" ng-value="'high'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-danger">Alta</span>
-							</label>
-						</div>
+        <table class="table parameterization-grid">
+            <tbody ng-repeat="(i, cause) in static.getAlertCauses()">
+            <tr>
+                <td>{{cause.label}}</td>
+                <td>
+                    <div class="col-md-4 text-center">
+                        <label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
+                            <input id="rd-cause-priority-high-{{i}}" ng-value="'high'"
+                                   ng-model="settings.alertPriorities[cause.id]" type="radio"/> <span
+                                class="label label-danger">Alta</span>
+                        </label>
+                    </div>
 
-						<div class="col-md-4 text-center">
-							<label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
-								<input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-warning">Média</span>
-							</label>
-						</div>
+                    <div class="col-md-4 text-center">
+                        <label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
+                            <input id="rd-cause-priority-medium-{{i}}" ng-value="'medium'"
+                                   ng-model="settings.alertPriorities[cause.id]" type="radio"/> <span
+                                class="label label-warning">Média</span>
+                        </label>
+                    </div>
 
-						<div class="col-md-4 text-center">
-							<label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
-								<input id="rd-cause-priority-low-{{i}}" ng-value="'low'" ng-model="settings.alertPriorities[cause.id]" type="radio" /> <span class="label label-default">Baixa</span>
-							</label>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+                    <div class="col-md-4 text-center">
+                        <label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
+                            <input id="rd-cause-priority-low-{{i}}" ng-value="'low'"
+                                   ng-model="settings.alertPriorities[cause.id]" type="radio"/> <span
+                                class="label label-default">Baixa</span>
+                        </label>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-	<div class="panel-footer clearfix">
-		<button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i class="fa fa-save"></i></button>
-	</div>
+    <div class="panel-footer clearfix">
+        <button ng-click="save()" type="button" class="btn btn-success btn-raised pull-right">Salvar <i
+                class="fa fa-save"></i></button>
+    </div>
 </div>

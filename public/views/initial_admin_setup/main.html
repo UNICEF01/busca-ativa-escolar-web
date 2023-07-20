@@ -1,22 +1,24 @@
 <div class="row">
-	<div class="col-md-4">
-		<div ng-include="'/views/logo.html'"></div>
-</div>
-	<div class="col-md-8 text-right">
-		<h2 style="margin-top: 50px;"><i class="fa fa-cog"></i> 2ª Etapa - Inscrever município: {{signup.city.name}}</h2>
-		<p>Bem-vindo(a) <b>{{signup.data.admin.name}}</b></p>
-	</div>
+    <div class="col-md-4">
+        <div ng-include="'/views/logo.html'"></div>
+    </div>
+    <div class="col-md-8 text-right">
+        <h2 style="margin-top: 50px;"><i class="fa fa-cog"></i> 2ª Etapa - Inscrever município: {{signup.city.name}}
+        </h2>
+        <p>Bem-vindo(a) <b>{{signup.data.admin.name}}</b></p>
+    </div>
 </div>
 
 <div ng-show="ready && signup.id" ng-include="'/views/initial_admin_setup/header.html'"></div>
 
 <div class="steps" ng-show="ready && signup.id">
-	<div ng-show="step == 3" ng-include="'/views/initial_admin_setup/review_gestor_politico.html'"></div>
-	<div ng-show="step == 4" ng-include="'/views/initial_admin_setup/name_gestor_operacional.html'"></div>
-	<div ng-show="step == 5" ng-include="'/views/initial_admin_setup/setup_completed.html'"></div>
+    <div ng-show="step == 3" ng-include="'/views/initial_admin_setup/review_gestor_politico.html'"></div>
+    <div ng-show="step == 4" ng-include="'/views/initial_admin_setup/name_gestor_operacional.html'"></div>
+    <div ng-show="step == 5" ng-include="'/views/initial_admin_setup/setup_completed.html'"></div>
 </div>
 
 <div class="alert alert-danger" ng-show="ready && !signup.id">
-	<strong>Município já cadastrado!</strong>
-	O processo de cadastro do município já foi realizado! Verifique em seu e-mail o usuário e senha de acesso ao seu ambiente.
+    <strong>Município já cadastrado!</strong>
+    O processo de cadastro do município já foi realizado! Verifique em seu e-mail o usuário e senha de acesso ao seu
+    ambiente.
 </div>

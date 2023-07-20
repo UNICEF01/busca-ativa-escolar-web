@@ -1,157 +1,172 @@
 <div>
-	<div class="col-md-12">
-		<div class="row">
-			<div class="title-bar">
-				<h3 class="pull-left icon-fix"><i class="fa fa-upload"></i> Importações</h3>
-				<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
-			</div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="title-bar">
+                <h3 class="pull-left icon-fix"><i class="fa fa-upload"></i> Importações</h3>
+                <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i>
+                    Atualizar</a>
+            </div>
 
-		</div>
+        </div>
 
-		<div class="row row-buttons">
-			<div class="col-md-4">
-			  <div class="text-center">
-				<a class="btn btn-default btn-raised btn-sm dashboard-btn button-align" ng-click="newImport('school_csv')">
-				  <div class="btn-icon" style="float: left;"><i class="fa fa-graduation-cap"></i></div>
-				  <div class="btn-label" style="margin-left: 1rem;">Importar escolas</div>
-				</a>
-			  </div>
-			</div>
-		  
-			<div class="col-md-4">
-			  <div class="text-center">
-				<a class="btn disabled btn-default btn-raised btn-sm dashboard-btn button-align" ng-click="newImport('cities')">
-				  <div class="btn-icon" style="float: left;"><i class="fa fa-university"></i></div>
-				  <div class="btn-label" style="margin-left: 1rem;">Importar cidades</div>
-				</a>
-			  </div>
-			</div>
-		  
-			<div class="col-md-4">
-			  <div class="text-center">
-				<a class="btn disabled btn-default btn-raised btn-sm dashboard-btn button-align" ng-click="newImport('prefilled_cases')">
-				  <div class="btn-icon" style="float: left;"><i class="fa fa-archive"></i></div>
-				  <div class="btn-label" style="margin-left: 1rem;">Importar casos do MEC</div>
-				</a>
-			  </div>
-			</div>
-		  </div>
-		  
-		  <div class="table-responsive mt-2 mb-2">
-			<table class="table table-no-border">
-			  <thead>
-				<tr class="text-center">
-				  <th class="text-center">Data</th>
-				  <th class="text-center">Cidade</th>
-				  <th class="text-center">Tipo</th>
-				  <th class="text-center">Arquivo</th>
-				  <th class="text-center">Progresso</th>
-				  <th class="text-center">Status</th>
-				  <th class="text-center">Opções</th>
-				</tr>
-			  </thead>
-			  <tbody>
-				<tr ng-repeat="job in jobs">
-				  <td class="text-center"><span ng-bind="job.created_at | amCalendar" uib-tooltip-html="job.created_at | amTimeAgo"></span></td>
-				  <td class="text-center"><span ng-bind="job.tenant.name"></span></td>
-				  <td class="text-center"><span ng-bind="job.type"></span></td>
-				  <td class="file-cell word-wrap"><span ng-bind="job.path"></span></td>
-				  <td class="text-center">
-					<span class="label label-primary" ng-show="job.status === 'pending'"><i class="fa fa-question-circle"></i> Pronto para processar</span>
-					<span class="label label-warning" ng-show="job.status === 'processing'"><img src="/images/btn_warn_loading.gif" /> Processando</span>
-					<span class="label label-success" ng-show="job.status === 'completed'"><i class="fa fa-check-circle"></i> Processado</span>
-					<span class="label label-danger" ng-show="job.status === 'failed'"><i class="fa fa-exclamation-circle"></i> Falhou</span>
-				  </td>
-				  <td class="text-center"><span >{{renderProgress(job)}}</span><span class="no-wrap"> ({{job.offset}} / {{job.total_records}})</span></td>
-				  <td class="text-center">
-					<a ng-click="processJob(job)" ng-show="job.status === 'pending'" class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-cog"></i> Processar</a>
-					<a ng-click="processJob(job)" ng-show="job.status === 'failed'" class="btn btn-xs btn-raised btn-primary" target="_blank"><i class="fa fa-refresh"></i> Tentar novamente</a>
-					<a ng-click="processJob(job)" ng-show="job.status === 'processing'" class="btn btn-xs btn-raised btn-primary" target="_blank"><i class="fa fa-refresh"></i> Tentar novamente</a>
-				  </td>
-				</tr>
-			  </tbody>
-			</table>
-		  </div>
-		  
+        <div class="row row-buttons">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <a class="btn btn-default btn-raised btn-sm dashboard-btn button-align"
+                       ng-click="newImport('school_csv')">
+                        <div class="btn-icon" style="float: left;"><i class="fa fa-graduation-cap"></i></div>
+                        <div class="btn-label" style="margin-left: 1rem;">Importar escolas</div>
+                    </a>
+                </div>
+            </div>
 
-		<app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <a class="btn disabled btn-default btn-raised btn-sm dashboard-btn button-align"
+                       ng-click="newImport('cities')">
+                        <div class="btn-icon" style="float: left;"><i class="fa fa-university"></i></div>
+                        <div class="btn-label" style="margin-left: 1rem;">Importar cidades</div>
+                    </a>
+                </div>
+            </div>
 
-	</div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <a class="btn disabled btn-default btn-raised btn-sm dashboard-btn button-align"
+                       ng-click="newImport('prefilled_cases')">
+                        <div class="btn-icon" style="float: left;"><i class="fa fa-archive"></i></div>
+                        <div class="btn-label" style="margin-left: 1rem;">Importar casos do MEC</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive mt-2 mb-2">
+            <table class="table table-no-border">
+                <thead>
+                <tr class="text-center">
+                    <th class="text-center">Data</th>
+                    <th class="text-center">Cidade</th>
+                    <th class="text-center">Tipo</th>
+                    <th class="text-center">Arquivo</th>
+                    <th class="text-center">Progresso</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Opções</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="job in jobs">
+                    <td class="text-center"><span ng-bind="job.created_at | amCalendar"
+                                                  uib-tooltip-html="job.created_at | amTimeAgo"></span></td>
+                    <td class="text-center"><span ng-bind="job.tenant.name"></span></td>
+                    <td class="text-center"><span ng-bind="job.type"></span></td>
+                    <td class="file-cell word-wrap"><span ng-bind="job.path"></span></td>
+                    <td class="text-center">
+                        <span class="label label-primary" ng-show="job.status === 'pending'"><i
+                                class="fa fa-question-circle"></i> Pronto para processar</span>
+                        <span class="label label-warning" ng-show="job.status === 'processing'"><img
+                                src="/images/btn_warn_loading.gif"/> Processando</span>
+                        <span class="label label-success" ng-show="job.status === 'completed'"><i
+                                class="fa fa-check-circle"></i> Processado</span>
+                        <span class="label label-danger" ng-show="job.status === 'failed'"><i
+                                class="fa fa-exclamation-circle"></i> Falhou</span>
+                    </td>
+                    <td class="text-center"><span>{{renderProgress(job)}}</span><span class="no-wrap"> ({{job.offset}} / {{job.total_records}})</span>
+                    </td>
+                    <td class="text-center">
+                        <a ng-click="processJob(job)" ng-show="job.status === 'pending'"
+                           class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-cog"></i> Processar</a>
+                        <a ng-click="processJob(job)" ng-show="job.status === 'failed'"
+                           class="btn btn-xs btn-raised btn-primary" target="_blank"><i class="fa fa-refresh"></i>
+                            Tentar novamente</a>
+                        <a ng-click="processJob(job)" ng-show="job.status === 'processing'"
+                           class="btn btn-xs btn-raised btn-primary" target="_blank"><i class="fa fa-refresh"></i>
+                            Tentar novamente</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <app-paginator collection="search" query="query" on-refresh="refresh"></app-paginator>
+
+    </div>
 </div>
 
 <style>
-.no-wrap {
-	white-space: nowrap;
-}
+    .no-wrap {
+        white-space: nowrap;
+    }
 
-.word-wrap {
-	word-wrap: break-word;
-}
+    .word-wrap {
+        word-wrap: break-word;
+    }
 
-.mt-2 {
-	margin-top: 2rem !important;
-}
+    .mt-2 {
+        margin-top: 2rem !important;
+    }
 
-.mb-2 {
-	margin-bottom: 2rem !important;
-}
+    .mb-2 {
+        margin-bottom: 2rem !important;
+    }
 
-.title-bar {
-	padding-left: 2rem;
-	padding-right: 2rem;
-	background-color: #0C5E8E;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	color: white;
-	border-radius: 4px;
-}
+    .title-bar {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        background-color: #0C5E8E;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+        border-radius: 4px;
+    }
 
-.icon-fix {
-	margin: 0;
-}
+    .icon-fix {
+        margin: 0;
+    }
 
-.button-align {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+    .button-align {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-.row-buttons {
-	margin-top: 1rem;
-}
+    .row-buttons {
+        margin-top: 1rem;
+    }
 
-.table-no-border,
-.table-no-border th,
-.table-no-border td {
-	border: none !important;
-	background-color: #FFFFFF !important;
-}
+    .table-no-border,
+    .table-no-border th,
+    .table-no-border td {
+        border: none !important;
+        background-color: #FFFFFF !important;
+    }
 
-.table-responsive .table-no-border tbody tr {
-	margin-bottom: 15px;
-}
+    .table-responsive .table-no-border tbody tr {
+        margin-bottom: 15px;
+    }
 
-.table-no-border tbody tr {
-	border-bottom: 1px solid #ececec;
-	border-radius: 15px;
-	padding: 10px;
-	background-color: #f9f9f9;
-}
+    .table-no-border tbody tr {
+        border-bottom: 1px solid #ececec;
+        border-radius: 15px;
+        padding: 10px;
+        background-color: #f9f9f9;
+    }
 
-.table-no-border tbody tr:last-child {
-	border-bottom: none;
-}
+    .table-no-border tbody tr:last-child {
+        border-bottom: none;
+    }
 
-.table-no-border tbody tr td {
-	padding: 10px;
-	vertical-align: middle;
-}
+    .table-no-border tbody tr td {
+        padding: 10px;
+        vertical-align: middle;
+    }
 
-.table-responsive .table-no-border td.file-cell {
-	max-width: 200px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
+    .table-responsive .table-no-border td.file-cell {
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
 </style>

@@ -1,36 +1,37 @@
 .container {
-  max-width: 730px;
+    max-width: 730px;
 }
 
 h1, h2, h3 {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
 
 h2 {
-  margin: .5em 0 .2em;
-  padding: 0;
+    margin: .5em 0 .2em;
+    padding: 0;
 }
 
 textarea {
-  height: 6em;
-  width: 100%;
-  display: block;
-  -webkit-appearance: none;
-  padding: .3em;
-  font-family: monospace;
+    height: 6em;
+    width: 100%;
+    display: block;
+    -webkit-appearance: none;
+    padding: .3em;
+    font-family: monospace;
 }
 
 .group {
-  padding: 1em;
+    padding: 1em;
 }
+
 .result {
-  padding: 1em;
-  border: 1px solid #eee;
-  margin-bottom: 2em;
-  overflow: auto;
+    padding: 1em;
+    border: 1px solid #eee;
+    margin-bottom: 2em;
+    overflow: auto;
 }
 
 
 .dark {
-  background: #333;
+    background: #333;
 }
