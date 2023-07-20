@@ -39,7 +39,7 @@
                 <ul class="nav navbar-nav">
                     <li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
 
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-bell"></i>
                             Alertas
@@ -54,7 +54,7 @@
                         </ul>
                     </li>
 
-                    <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                    <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 
                             Casos
@@ -97,7 +97,7 @@
                         </a>
                     </li> -->
 
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)" ui-sref-active="active">
+                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown ui-sref-active="active">
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-wrench"></i>
                             Ferramentas
@@ -130,7 +130,7 @@
 
                 <ul class="nav navbar-nav navbar-right logged-user" ng-show="platform.isReady()">
 
-                    <li class="dropdown" uib-dropdown on-toggle="onMenuToggle(open)">
+                    <li class="dropdown" uib-dropdown>
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user-circle-o"></i>
                             <span class="user-details">
