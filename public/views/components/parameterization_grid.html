@@ -1,34 +1,38 @@
 <table class="table parameterization-grid">
-	<tbody ng-repeat="(i, cause) in causes">
-	<tr class="active">
-		<th>{{cause.name}}</th>
-		<th colspan="2">
-			<div class="col-md-4 text-center">
-				<label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
-					<input name="rd-cause-priority-{{i}}" id="rd-cause-priority-high-{{i}}" value="high" ng-checked="cause.priority==1" type="radio" /> <span class="label label-danger">Alta</span>
-				</label>
-			</div>
+    <tbody ng-repeat="(i, cause) in causes">
+    <tr class="active">
+        <th>{{cause.name}}</th>
+        <th colspan="2">
+            <div class="col-md-4 text-center">
+                <label for="rd-cause-priority-high-{{i}}" uib-tooltip="Alta prioridade">
+                    <input name="rd-cause-priority-{{i}}" id="rd-cause-priority-high-{{i}}" value="high"
+                           ng-checked="cause.priority==1" type="radio"/> <span class="label label-danger">Alta</span>
+                </label>
+            </div>
 
-			<div class="col-md-4 text-center">
-				<label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
-					<input name="rd-cause-priority-{{i}}" id="rd-cause-priority-medium-{{i}}" value="medium"  ng-checked="cause.priority==2" type="radio" /> <span class="label label-warning">Média</span>
-				</label>
-			</div>
+            <div class="col-md-4 text-center">
+                <label for="rd-cause-priority-medium-{{i}}" uib-tooltip="Média prioridade">
+                    <input name="rd-cause-priority-{{i}}" id="rd-cause-priority-medium-{{i}}" value="medium"
+                           ng-checked="cause.priority==2" type="radio"/> <span class="label label-warning">Média</span>
+                </label>
+            </div>
 
-			<div class="col-md-4 text-center">
-				<label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
-					<input name="rd-cause-priority-{{i}}" id="rd-cause-priority-low-{{i}}" value="low" ng-checked="cause.priority==3" type="radio" /> <span class="label label-default">Baixa</span>
-				</label>
-			</div>
-		</th>
-	</tr>
-	<tr ng-repeat="(j, group) in groups track by j">
-		<td width="70%"><label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; color: black;">{{group.name}}</label></td>
-		<td width="30%">
-			<label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip="Visualiza">
-				<input id="chk-group-view-{{i}}-{{j}}" type="checkbox"  />  Visualiza e notifica <i class="fa fa-eye"></i>
-			</label>
-		</td>
-	</tr>
-	</tbody>
+            <div class="col-md-4 text-center">
+                <label for="rd-cause-priority-low-{{i}}" uib-tooltip="Baixa prioridade">
+                    <input name="rd-cause-priority-{{i}}" id="rd-cause-priority-low-{{i}}" value="low"
+                           ng-checked="cause.priority==3" type="radio"/> <span class="label label-default">Baixa</span>
+                </label>
+            </div>
+        </th>
+    </tr>
+    <tr ng-repeat="(j, group) in groups track by j">
+        <td width="70%"><label for="chk-group-view-{{i}}-{{j}}"
+                               style="width: 100%; color: black;">{{group.name}}</label></td>
+        <td width="30%">
+            <label for="chk-group-view-{{i}}-{{j}}" style="width: 100%; text-align: center;" uib-tooltip="Visualiza">
+                <input id="chk-group-view-{{i}}-{{j}}" type="checkbox"/> Visualiza e notifica <i class="fa fa-eye"></i>
+            </label>
+        </td>
+    </tr>
+    </tbody>
 </table>

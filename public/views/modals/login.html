@@ -1,32 +1,36 @@
 <div class="modal-template" id="md-login">
-	<div class="modal-header">
-		<h3 class="modal-title"><i class="fa fa-lock"></i> Login</h3>
-	</div>
-	<div class="modal-body">
-		<p ng-show="!reason">É necessário realizar login para continuar. Por favor, entre com seus dados de acesso abaixo:</p>
-		<p ng-show="reason">{{reason}}</p>
+    <div class="modal-header">
+        <h3 class="modal-title"><i class="fa fa-lock"></i> Login</h3>
+    </div>
+    <div class="modal-body">
+        <p ng-show="!reason">É necessário realizar login para continuar. Por favor, entre com seus dados de acesso
+            abaixo:</p>
+        <p ng-show="reason">{{reason}}</p>
 
-		<div class="form-group">
-			<label for="fld-email" class="control-label"><i class="fa fa-envelope"></i> E-mail: </label>
-			<input id="fld-email" class="form-control" type="email" ng-model="email" />
-		</div>
+        <div class="form-group">
+            <label for="fld-email" class="control-label"><i class="fa fa-envelope"></i> E-mail: </label>
+            <input id="fld-email" class="form-control" type="email" ng-model="email"/>
+        </div>
 
-		<div class="form-group">
-			<div class="input-group">
-				<label for="fld-password" class="control-label"><i class="fa fa-key"></i> Senha: </label>
-				<input id="fld-password" class="form-control" type="password" ng-model="password" />
+        <div class="form-group">
+            <div class="input-group">
+                <label for="fld-password" class="control-label"><i class="fa fa-key"></i> Senha: </label>
+                <input id="fld-password" class="form-control" type="password" ng-model="password"/>
 
-				<span class="input-group-btn" uib-tooltip="Exibir a senha">
-					<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()" style="margin-top: 20px;">
+                <span class="input-group-btn" uib-tooltip="Exibir a senha">
+					<button type="button" class="btn btn-fab btn-fab-mini" ng-click="showPassowrd()"
+                            style="margin-top: 20px;">
 						<i class="fa fa-eye"></i>
 					</button>
 				</span>
-			</div>
-		</div>
+            </div>
+        </div>
 
-	</div>
-	<div class="modal-footer clearfix">
-		<button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="dismiss()"><i class="fa fa-arrow-left"></i> Voltar</button>
-		<button class="btn btn-primary" type="button" ng-click="login()">Entrar <i class="fa fa-sign-in"></i></button>
-	</div>
+    </div>
+    <div class="modal-footer clearfix">
+        <button class="btn btn-default" type="button" ng-show="canDismiss" ng-click="dismiss()"><i
+                class="fa fa-arrow-left"></i> Voltar
+        </button>
+        <button class="btn btn-primary" type="button" ng-click="login()">Entrar <i class="fa fa-sign-in"></i></button>
+    </div>
 </div>

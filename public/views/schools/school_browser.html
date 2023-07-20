@@ -1,151 +1,168 @@
 <div>
     <div class="panel panel-default">
-        
+
         <div class="panel-heading clearfix">
             <h3 class="pull-left">Escolas localizadas no Educacenso</h3>
         </div>
 
         <div class="panel-body">
 
-                <p>
-                    Essa é a relação de escolas localizadas no processo de importação dos dados do Educacenso. Preencha os campos de e-mail e celular para notificá-las a fim de que estas acessem a lista de alunos que em algum momento estiveram ali matriculados e que, por algum motivo, não foram localizados a partir da comparação entre censos escolares de diferentes anos.
-                </p>
+            <p>
+                Essa é a relação de escolas localizadas no processo de importação dos dados do Educacenso. Preencha os
+                campos de e-mail e celular para notificá-las a fim de que estas acessem a lista de alunos que em algum
+                momento estiveram ali matriculados e que, por algum motivo, não foram localizados a partir da comparação
+                entre censos escolares de diferentes anos.
+            </p>
 
-                <br/>   
-                
-                <div class="alert alert-warning" ng-show="msg_success">Mensagens encaminhadas para fila de envio</div>
-                <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
+            <br/>
 
-                <div class="row">
-                        
-                    <div class="form-group col-md-2">
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()"> Selecionar todas
-                            </label>
-                        </div>
-                    </div>
+            <div class="alert alert-warning" ng-show="msg_success">Mensagens encaminhadas para fila de envio</div>
+            <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
 
-                    <div class="form-group col-md-5">
-                        <label class="container_year_educacenso">
-                            <select ng-model="query.year_educacenso" ng-options="option for option in avaliable_years_educacenso track by option" ng-change="onSelectYear()">
-                            </select> Ano de importação do Educacenso
+            <div class="row">
+
+                <div class="form-group col-md-2">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="check_all_schools" ng-change="onCheckSelectAll()">
+                            Selecionar todas
                         </label>
                     </div>
-                    
-                    <div class="form-group col-md-5">
-                        <div class="clearfix" style="margin-top: 10px;">
-                            <ul class="nav nav-pills adm-max-results-filter">
-                                <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
-                                <li ng-class="{active: query.max==15}"><a ng-click="setMaxResults(15)">15</a></li>
-                                <li ng-class="{active: query.max==30}"><a ng-click="setMaxResults(30)">30</a></li>
-                                <li ng-class="{active: query.max==60}"><a ng-click="setMaxResults(60)">60</a></li>
-                                <li ng-class="{active: query.max==100}"><a ng-click="setMaxResults(100)">100</a></li>
-                                <li><a><strong>Quantidade por página</strong></a></li>
-                            </ul>
-                        </div>
+                </div>
+
+                <div class="form-group col-md-5">
+                    <label class="container_year_educacenso">
+                        <select ng-model="query.year_educacenso"
+                                ng-options="option for option in avaliable_years_educacenso track by option"
+                                ng-change="onSelectYear()">
+                        </select> Ano de importação do Educacenso
+                    </label>
+                </div>
+
+                <div class="form-group col-md-5">
+                    <div class="clearfix" style="margin-top: 10px;">
+                        <ul class="nav nav-pills adm-max-results-filter">
+                            <li ng-class="{active: query.max==5}"><a ng-click="setMaxResults(5)">5</a></li>
+                            <li ng-class="{active: query.max==15}"><a ng-click="setMaxResults(15)">15</a></li>
+                            <li ng-class="{active: query.max==30}"><a ng-click="setMaxResults(30)">30</a></li>
+                            <li ng-class="{active: query.max==60}"><a ng-click="setMaxResults(60)">60</a></li>
+                            <li ng-class="{active: query.max==100}"><a ng-click="setMaxResults(100)">100</a></li>
+                            <li><a><strong>Quantidade por página</strong></a></li>
+                        </ul>
                     </div>
-                        
-                </div>  
-                
-                <hr>
-            
-                <div class="container-scholls">
+                </div>
 
-                    <div class="row">
+            </div>
 
-                        <div class="form-group col-md-1">
-                            
-                        </div>
-                    
-                        <div class="form-group col-md-2">
-                            <strong>Escola</strong><br/>
-                        </div>
-                    
-                        <div class="form-group  col-md-2">
-                            <strong>Celular</strong>
-                        </div>
-                    
-                        <div class="form-group  col-md-3">
-                            <strong for="exampleInputEmail">Email*</strong>
-                        </div>
-                    
-                        <div class="form-group  col-md-2">
-                            <div class="span_status_title">
-                                <strong>Status Emails <span class="badge" uib-tooltip="Status dos emails encaminhados para as escolas">?</span></strong>
-                            </div>
-                        </div>
+            <hr>
 
-                        <div class="form-group  col-md-2">
-                            <div class="span_status_title">
-                                <strong title="">Status <span class="badge" uib-tooltip="Quantidade de crianças com endereços completos / Quantidade de crianças encontradas no Educacenso">?</span></strong><br/>
-                                <small>Preenchimento do endereço</small>
-                            </div>
-                        </div>
-                    
+            <div class="container-scholls">
+
+                <div class="row">
+
+                    <div class="form-group col-md-1">
+
                     </div>
 
-                    <div class="row" ng-repeat="(i, school) in schools.data">
+                    <div class="form-group col-md-2">
+                        <strong>Escola</strong><br/>
+                    </div>
 
-                        <div class="form-group col-md-1 text-center">
-                            <div class="checkbox">
-                                <label>
-                                    <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
-                                </label>
-                            </div>
+                    <div class="form-group  col-md-2">
+                        <strong>Celular</strong>
+                    </div>
+
+                    <div class="form-group  col-md-3">
+                        <strong for="exampleInputEmail">Email*</strong>
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        <div class="span_status_title">
+                            <strong>Status Emails <span class="badge"
+                                                        uib-tooltip="Status dos emails encaminhados para as escolas">?</span></strong>
                         </div>
+                    </div>
 
-                        <div class="form-group col-md-2">
-                            <strong>{{school.name}}</strong><br/>
-                            <small>COD INEP: {{school.id}}</small><br/>
-                            <small>{{school.city_name}}/ {{school.uf}}</small>
+                    <div class="form-group  col-md-2">
+                        <div class="span_status_title">
+                            <strong title="">Status <span class="badge"
+                                                          uib-tooltip="Quantidade de crianças com endereços completos / Quantidade de crianças encontradas no Educacenso">?</span></strong><br/>
+                            <small>Preenchimento do endereço</small>
                         </div>
-
-                        <div class="form-group  col-md-2">
-                            <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular" placeholder="Celular" ng-blur="onModifySchool(school)" ng-model="school.school_cell_phone">
-                        </div>
-
-                        <div class="form-group  col-md-3">
-                            <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"  ng-blur="onModifySchool(school)" ng-model="school.school_email">
-                        </div>
-
-                        <div class="form-group  col-md-2">
-                            <div class="span_status">
-                                <div ng-show="school.emailJob.length > 0">
-                                    <div ng-repeat="(j, email) in school.emailJob">
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='pending'"><strong>{{j+1}}º </strong>Pendente</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='accepted'"><strong>{{j+1}}º </strong>Encaminhado</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='rejected'"><strong>{{j+1}}º </strong>Rejeitado</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='delivered'"><strong>{{j+1}}º </strong>Entregue</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='failed'"><strong>{{j+1}}º </strong>Erro</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='opened'"><strong>{{j+1}}º </strong>Lido</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='clicked'"><strong>{{j+1}}º </strong>Lido</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='unsubscribed'"><strong>{{j+1}}º </strong>Cancelado</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='complained'"><strong>{{j+1}}º </strong>Denunciado</small>
-                                        <small ng-show="email.type === 'school_educacenso_email' && email.status==='stored'"><strong>{{j+1}}º </strong>Salvo</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group  col-md-2">
-                            <div class="span_status">
-                                <span>{{school.count_with_cep}} / {{school.count_children}}</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group  col-md-12"><hr></div>
-
                     </div>
 
                 </div>
 
-                <app-paginator collection="schools" query="query" on-refresh="refresh"></app-paginator>
+                <div class="row" ng-repeat="(i, school) in schools.data">
+
+                    <div class="form-group col-md-1 text-center">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" checklist-model="selected.schools" checklist-value="school">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <strong>{{school.name}}</strong><br/>
+                        <small>COD INEP: {{school.id}}</small><br/>
+                        <small>{{school.city_name}}/ {{school.uf}}</small>
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        <input ui-br-phone-number type="text" class="form-control" id="exampleInputCelular"
+                               placeholder="Celular" ng-blur="onModifySchool(school)"
+                               ng-model="school.school_cell_phone">
+                    </div>
+
+                    <div class="form-group  col-md-3">
+                        <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email"
+                               ng-blur="onModifySchool(school)" ng-model="school.school_email">
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        <div class="span_status">
+                            <div ng-show="school.emailJob.length > 0">
+                                <div ng-repeat="(j, email) in school.emailJob">
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='pending'"><strong>{{j + 1}}º </strong>Pendente</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='accepted'"><strong>{{j + 1}}º </strong>Encaminhado</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='rejected'"><strong>{{j + 1}}º </strong>Rejeitado</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='delivered'"><strong>{{j + 1}}º </strong>Entregue</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='failed'"><strong>{{j + 1}}º </strong>Erro</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='opened'"><strong>{{j + 1}}º </strong>Lido</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='clicked'"><strong>{{j + 1}}º </strong>Lido</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='unsubscribed'"><strong>{{j + 1}}º </strong>Cancelado</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='complained'"><strong>{{j + 1}}º </strong>Denunciado</small>
+                                    <small ng-show="email.type === 'school_educacenso_email' && email.status==='stored'"><strong>{{j + 1}}º </strong>Salvo</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group  col-md-2">
+                        <div class="span_status">
+                            <span>{{school.count_with_cep}} / {{school.count_children}}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group  col-md-12">
+                        <hr>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <app-paginator collection="schools" query="query" on-refresh="refresh"></app-paginator>
 
         </div>
 
         <div class="panel-footer">
-            <p class="text-right"><button class="btn btn-primary btn-raised" ng-click="sendnotification()"><i class="fa fa-envelope"></i> Enviar mensagens/ SMS</button></p>
+            <p class="text-right">
+                <button class="btn btn-primary btn-raised" ng-click="sendnotification()"><i class="fa fa-envelope"></i>
+                    Enviar mensagens/ SMS
+                </button>
+            </p>
         </div>
     </div>
 </div>

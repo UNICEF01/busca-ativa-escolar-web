@@ -1,114 +1,16 @@
-<div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="fa fa-cog"></i> Minhas preferências</h3>
-		</div>
-		<div class="panel-body">
-
-			<form ng-submit="resetPassword()" ng-show="identity.can('preferences')">
-				<h4><i class="fa fa-key"></i> Alterar senha</h4>
-				<p>Clique no botão abaixo para trocar sua senha. Você receberá um e-mail com um link para completar a troca.</p>
-
-				<button type="submit" class="btn btn-warning btn-raised"><i class="fa fa-refresh"></i> Trocar senha</button>
-
-			</form>
-
-			<hr />
-
-			<form ng-submit="save()" ng-show="identity.can('preferences')">
-				<h4><i class="fa fa-envelope"></i> Notificações</h4>
-				<p>Quais tipos de notificações você deseja receber?</p>
-
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Origem</th>
-							<th>Não receber</th>
-							<th>Via sistema</th>
-							<th>Via sistema + E-mail</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Casos dos quais sou responsável</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_me" ng-value="'none'" ng-model="settings.notifications.assigned_to_me" readonly />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_me" ng-value="'system'" ng-model="settings.notifications.assigned_to_me" />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_me" ng-value="'all'" ng-model="settings.notifications.assigned_to_me" />
-									</label>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Casos atribuidos ao meu grupo</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_group" ng-value="'none'" readonly ng-model="settings.notifications.assigned_to_group" />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_group" ng-value="'system'" ng-model="settings.notifications.assigned_to_group" />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="assigned_to_group" ng-value="'all'" ng-model="settings.notifications.assigned_to_group" />
-									</label>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Todos os casos do município</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="all_cases" ng-value="'none'" ng-model="settings.notifications.all_cases" />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="all_cases" ng-value="'system'" ng-model="settings.notifications.all_cases" />
-									</label>
-								</div>
-							</td>
-							<td>
-								<div class="radio radio-primary">
-									<label style="width: 100%">
-										<input type="radio" name="all_cases" ng-value="'all'" ng-model="settings.notifications.all_cases" />
-									</label>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-				<button type="submit" class="btn btn-primary btn-raised"><i class="fa fa-save"></i> Salvar</button>
-
-			</form>
-
-
-		</div>
-	</div>
+<div class="col-md-8 center-block" style="float: none">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4><i class="fa fa-cog"></i> Minhas preferências</h4>
+        </div>
+        <div class="panel-body text-left">
+            <h4><i class="fa fa-key"></i> Alterar senha</h4>
+            <p>Clique no botão abaixo para trocar sua senha. Você receberá um e-mail com um link para completar a
+                troca.</p>
+            <button ng-click="resetPassword()" class="btn btn-warning btn-raised btn-sm">
+                <i class="fa fa-refresh"></i> Trocar senha
+            </button>
+        </div>
+    </div>
 </div>
+  

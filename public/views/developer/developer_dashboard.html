@@ -1,88 +1,98 @@
 <div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3><i class="fa fa-code"></i> Área do Desenvolvedor</h3>
-		</div>
-		<div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3><i class="fa fa-code"></i> Área do Desenvolvedor</h3>
+        </div>
+        <div class="panel-body">
 
-			<div class="col-md-12">
-				<div class="panel panel-primary">
-					<div class="panel-heading">REST Client</div>
-					<div class="panel-body clearfix">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">REST Client</div>
+                    <div class="panel-body clearfix">
 
-						<div class="col-md-6">
-							<h3>Request</h3>
+                        <div class="col-md-6">
+                            <h3>Request</h3>
 
-							<div class="form-group clearfix">
-								<div class="form-group col-md-10">
-									<select class="form-control" ng-model="rest.endpoint" ng-options="n as n.name for n in static.getAPIEndpoints()"></select>
-								</div>
-								<div class="form-group col-md-2">
-									<label for="chk-require-auth" uib-tooltip="Authenticate as current user?">
-										<input id="chk-require-auth" ng-model="rest.requireAuth" ng-true-value="1" ng-false-value="0" type="checkbox" />
-										<i class="fa fa-key"></i>
-									</label>
-								</div>
-							</div>
+                            <div class="form-group clearfix">
+                                <div class="form-group col-md-10">
+                                    <select class="form-control" ng-model="rest.endpoint"
+                                            ng-options="n as n.name for n in static.getAPIEndpoints()"></select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="chk-require-auth" uib-tooltip="Authenticate as current user?">
+                                        <input id="chk-require-auth" ng-model="rest.requireAuth" ng-true-value="1"
+                                               ng-false-value="0" type="checkbox"/>
+                                        <i class="fa fa-key"></i>
+                                    </label>
+                                </div>
+                            </div>
 
-							<div class="form-group">
-								<div class="ace_editor" ng-model="rest.request" ui-ace="{mode: 'json'}"></div>
-							</div>
+                            <div class="form-group">
+                                <div class="ace_editor" ng-model="rest.request" ui-ace="{mode: 'json'}"></div>
+                            </div>
 
-							<div class="form-group clearfix">
-								<button class="btn btn-success pull-right" ng-click="rest.sendRequest();" type="button">Send</button>
-							</div>
-						</div>
+                            <div class="form-group clearfix">
+                                <button class="btn btn-success pull-right" ng-click="rest.sendRequest();" type="button">
+                                    Send
+                                </button>
+                            </div>
+                        </div>
 
-						<div class="col-md-6">
-							<h3>Response</h3>
-							<json-formatter open="1" json="rest.response"></json-formatter>
-						</div>
+                        <div class="col-md-6">
+                            <h3>Response</h3>
+                            <json-formatter open="1" json="rest.response"></json-formatter>
+                        </div>
 
-					</div>
-				</div>
-			</div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="col-md-12">
-				<div class="panel panel-primary">
-					<div class="panel-heading">Sessão e Identidade</div>
-					<div class="panel-body">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Sessão e Identidade</div>
+                    <div class="panel-body">
 
-						<div>
-							<button type="button" ng-click="login()" class="btn btn-raised btn-success"><i class="fa fa-sign-in"></i> Login</button>
-							<button type="button" ng-click="logout()" class="btn btn-raised btn-danger"><i class="fa fa-sign-out"></i> Logout</button>
-						</div>
+                        <div>
+                            <button type="button" ng-click="login()" class="btn btn-raised btn-success"><i
+                                    class="fa fa-sign-in"></i> Login
+                            </button>
+                            <button type="button" ng-click="logout()" class="btn btn-raised btn-danger"><i
+                                    class="fa fa-sign-out"></i> Logout
+                            </button>
+                        </div>
 
-						<table class="table">
-							<thead>
-								<tr>
-									<th colspan="2">session</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="(k, v) in storage.session">
-									<td>{{k}}</td>
-									<td ng-if="k !== 'token_expires_at' && k !== 'refresh_expires_at'">{{v}}</td>
-									<td ng-if="k === 'token_expires_at' || k === 'refresh_expires_at'">{{(v / 1000) | amFromUnix | amTimeAgo}} ({{v}})</td>
-								</tr>
-							</tbody>
-							<thead>
-							<tr>
-								<th colspan="2">identity</th>
-							</tr>
-							</thead>
-							<tbody>
-							<tr ng-repeat="(k, v) in storage.identity">
-								<td>{{k}}</td>
-								<td>{{v}}</td>
-							</tr>
-							</tbody>
-						</table>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th colspan="2">session</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="(k, v) in storage.session">
+                                <td>{{k}}</td>
+                                <td ng-if="k !== 'token_expires_at' && k !== 'refresh_expires_at'">{{v}}</td>
+                                <td ng-if="k === 'token_expires_at' || k === 'refresh_expires_at'">{{(v / 1000) |
+                                amFromUnix | amTimeAgo}} ({{v}})
+                                </td>
+                            </tr>
+                            </tbody>
+                            <thead>
+                            <tr>
+                                <th colspan="2">identity</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="(k, v) in storage.identity">
+                                <td>{{k}}</td>
+                                <td>{{v}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
-					</div>
-				</div>
-			</div>
+                    </div>
+                </div>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>

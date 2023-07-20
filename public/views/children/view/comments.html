@@ -2,76 +2,77 @@
     <div class="col-md-12">
         <div class="clearfix">
             <h3 class="pull-left"><i class="material-icons">comment</i> Anotações</h3>
-            <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
+            <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i>
+                Atualizar</a>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th width="15%">Data</th>
+                <th width="15%">Usuário</th>
+                <th width="10%">Grupo</th>
+                <th width="50%">Anotação</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="comment in comments.data">
+                <td>
+            <span
+                    uib-tooltip-html="comment.created_at | amTimeAgo"
+                    ng-bind="comment.created_at | amCalendar"
+            ></span>
+                </td>
+                <td>
+                    <i class="fa fa-user"></i>
+                    <span
+                            uib-tooltip-html="comment.author.type | lang:'user.type'"
+                            ng-bind="comment.author.name"
+                    ></span>
+                </td>
+                <td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
+                <td ng-bind="comment.message"></td>
+                <td>
+                    <a
+                            ng-if="comment.author.id == logged && !comment.notification && comment.dateLower && !comment.is_from_notification_solved"
+                            type="button"
+                            ng-click="sendNotification(comment)"
+                            class="btn btn-raised btn-default pull-right"
+                            title="A notificação será encaminhada para os coordenadores/supervisores do grupo superior ao seu."
+                    >
+                        <i class="fa fa-share-square-o"></i> Notificar</a>
+                    </a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th width="15%">Data</th>
-          <th width="15%">Usuário</th>
-          <th width="10%">Grupo</th>
-          <th width="50%">Anotação</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="comment in comments.data">
-          <td>
-            <span
-              uib-tooltip-html="comment.created_at | amTimeAgo"
-              ng-bind="comment.created_at | amCalendar"
-            ></span>
-          </td>
-          <td>
-            <i class="fa fa-user"></i>
-            <span
-              uib-tooltip-html="comment.author.type | lang:'user.type'"
-              ng-bind="comment.author.name"
-            ></span>
-          </td>
-          <td><span ng-bind="comment.author.group.name || 'Nenhum'"></span></td>
-          <td ng-bind="comment.message"></td>
-          <td>
-            <a
-              ng-if="comment.author.id == logged && !comment.notification && comment.dateLower && !comment.is_from_notification_solved"
-              type="button"
-              ng-click="sendNotification(comment)"
-              class="btn btn-raised btn-default pull-right"
-              title="A notificação será encaminhada para os coordenadores/supervisores do grupo superior ao seu."
-            >
-              <i class="fa fa-share-square-o"></i> Notificar</a>
-            </a>
-
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>
 
 <form class="form-group" ng-submit="sendMessage()">
-  <div>
-    <div class="col-md-12">
-      <label class="control-label" for="fld-register-comment"
-        >Registrar anotação</label
-      >
+    <div>
+        <div class="col-md-12">
+            <label class="control-label" for="fld-register-comment"
+            >Registrar anotação</label
+            >
+        </div>
     </div>
-  </div>
-  <div>
-    <div class="col-md-11">
-      <input
-        type="text"
-        class="form-control"
-        id="fld-register-comment"
-        ng-model="message"
-        placeholder="Digite sua mensagem..."
-      />
+    <div>
+        <div class="col-md-11">
+            <input
+                    type="text"
+                    class="form-control"
+                    id="fld-register-comment"
+                    ng-model="message"
+                    placeholder="Digite sua mensagem..."
+            />
+        </div>
+        <div class="col-md-1 btn-group-sm">
+            <button type="submit" class="btn btn-raised btn-success btn-fab">
+                <i class="fa fa-save"></i>
+            </button>
+        </div>
     </div>
-    <div class="col-md-1 btn-group-sm">
-      <button type="submit" class="btn btn-raised btn-success btn-fab">
-        <i class="fa fa-save"></i>
-      </button>
-    </div>
-  </div>
 </form>

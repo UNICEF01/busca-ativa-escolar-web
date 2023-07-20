@@ -1,23 +1,25 @@
 <form class="modal-template" id="md-user-picker" ng-submit="cancelCase()">
-	<div class="modal-header">
-		<h3 class="modal-title">Cancelando caso</h3>
-	</div>
-	<div class="modal-body">
-		<div>Você está cancelando um caso. Isso significa que o caso passará a não figurar mais nas estatísticas, e não poderá ser alterado.</div>
-		<div class="block">
-			<label class="control-label">Motivo do cancelamento</label>
-			<select
-				class="form-control"
-				required
-				ng-model="reason"
-				ng-options="n as lang.translate(n, 'child_case.cancel_reason') for n in static.getCaseCancelReasons()"
-			>
+    <div class="modal-header">
+        <h3 class="modal-title">Cancelando caso</h3>
+    </div>
+    <div class="modal-body">
+        <div>Você está cancelando um caso. Isso significa que o caso passará a não figurar mais nas estatísticas, e não
+            poderá ser alterado.
+        </div>
+        <div class="block">
+            <label class="control-label">Motivo do cancelamento</label>
+            <select
+                    class="form-control"
+                    required
+                    ng-model="reason"
+                    ng-options="n as lang.translate(n, 'child_case.cancel_reason') for n in static.getCaseCancelReasons()"
+            >
 
-			</select>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-default" type="button" ng-click="close()">Cancelar</button>
-		<button class="btn btn-danger btn-raised" type="submit" ng-show="reason">Cancelar caso</button>
-	</div>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-click="close()">Cancelar</button>
+        <button class="btn btn-danger btn-raised" type="submit" ng-show="reason">Cancelar caso</button>
+    </div>
 </form>

@@ -1,51 +1,51 @@
 <div class="city-select {{class}}">
-	<div class="form-group col-md-2" style="margin-top: 0px !important;">
-		<label class="control-label" for="fld-uf">UF{{isUfRequired ? '*' : ''}}</label>
-		<select
-				class="form-control"
-				id="fld-uf"
-				ng-model="uf"
-				ng-required="isUfRequired"
-				ng-change="onUFChanged()"
-				ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"
-		>
-			<option value="" ng-if="!isUfRequired"></option>
-		</select>
-	</div>
+    <div class="form-group col-md-2" style="margin-top: 0px !important;">
+        <label class="control-label" for="fld-uf">UF{{isUfRequired ? '*' : ''}}</label>
+        <select
+                class="form-control"
+                id="fld-uf"
+                ng-model="uf"
+                ng-required="isUfRequired"
+                ng-change="onUFChanged()"
+                ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"
+        >
+            <option value="" ng-if="!isUfRequired"></option>
+        </select>
+    </div>
 
-	<script type="text/ng-template" id="city_item.html">
-		<a>
-			<span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
-			<small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
-		</a>
-	</script>
+    <script type="text/ng-template" id="city_item.html">
+        <a>
+            <span ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+            <small ng-bind-html="match.model.uf | uibTypeaheadHighlight:query"></small>
+        </a>
+    </script>
 
-	<div class="form-group col-md-10" style="margin-top: 0px !important;">
-		<label class="control-label" for="fld-city">Município{{isCityRequired ? '*' : ''}}</label>
-		<input type="text" id="fld-city"
-		       class="form-control"
+    <div class="form-group col-md-10" style="margin-top: 0px !important;">
+        <label class="control-label" for="fld-city">Município{{isCityRequired ? '*' : ''}}</label>
+        <input type="text" id="fld-city"
+               class="form-control"
 
-		       ng-model="city"
-		       ng-required="isCityRequired"
+               ng-model="city"
+               ng-required="isCityRequired"
 
-		       uib-typeahead="city for city in fetch($viewValue)"
-		       typeahead-on-select="onCityChanged($item)"
-		       typeahead-editable="false"
-		       typeahead-no-results="noCitiesFound"
-		       typeahead-loading="citiesLoading"
-		       typeahead-focus-first="true"
-		       typeahead-template-url="city_item.html"
-		       typeahead-wait-ms="400"
-		       typeahead-min-length="3"
-		       typeahead-input-formatter="renderSelected($model)"
+               uib-typeahead="city for city in fetch($viewValue)"
+               typeahead-on-select="onCityChanged($item)"
+               typeahead-editable="false"
+               typeahead-no-results="noCitiesFound"
+               typeahead-loading="citiesLoading"
+               typeahead-focus-first="true"
+               typeahead-template-url="city_item.html"
+               typeahead-wait-ms="400"
+               typeahead-min-length="3"
+               typeahead-input-formatter="renderSelected($model)"
 
-		>
+        >
 
-		<div ng-show="citiesLoading">
-			<i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
-		</div>
-		<div ng-show="noCitiesFound">
-			<i class="fa fa-remove"></i> Nenhuma cidade encontrada
-		</div>
-	</div>
+        <div ng-show="citiesLoading">
+            <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
+        </div>
+        <div ng-show="noCitiesFound">
+            <i class="fa fa-remove"></i> Nenhuma cidade encontrada
+        </div>
+    </div>
 </div>

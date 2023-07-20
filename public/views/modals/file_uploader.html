@@ -2,16 +2,17 @@
     <h3 class="pl-title">{{title || 'Enviar arquivo:'}}</h3>
     <div class="pl-message" ng-show="message">{{message}}</div>
     <div class="drag-area" ngf-drop="upload($file)" ngf-select="upload($file)"
-        ngf-model="file" ngf-multiple="false" ngf-accept="allowedMimeTypes" ngf-drag-over-class="'file-valid'">
+         ngf-model="file" ngf-multiple="false" ngf-accept="allowedMimeTypes" ngf-drag-over-class="'file-valid'">
 
         <div ng-show="uploadingFile">
             <p>Fazendo upload do arquivo, aguarde...</p>
             <div class="progress">
                 <div class="progress-bar progress-bar-info" role="progressbar"
-                    style="overflow: hidden; text-align: center; display: flex; justify-content: center; align-items: center; width: {{calculateProgressWidth()}}">
+                     style="overflow: hidden; text-align: center; display: flex; justify-content: center; align-items: center; width: {{calculateProgressWidth()}}">
                     <span>{{calculateProgressWidth()}}</span>
                 </div>
-                <div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar" style="width: 100%;">
+                <div ng-show="file.error" class="progress-bar progress-bar-danger" role="progressbar"
+                     style="width: 100%;">
                     <span>Erro: @{{file.error}}</span>
                 </div>
             </div>
@@ -41,105 +42,106 @@
 
 <style>
 
-.progress {
-	height: 30px;
-	width: 200%;
-	margin-left: -50%;
-    border-radius: 2rem;
-}
+    .progress {
+        height: 30px;
+        width: 200%;
+        margin-left: -50%;
+        border-radius: 2rem;
+    }
 
-.progress .progress-bar {
-	border-radius: 2rem;
-}
+    .progress .progress-bar {
+        border-radius: 2rem;
+    }
 
-.pl-title {
-	padding-left: 1.5rem;
-    padding-top: 2rem;
-}
-.pl-message {
-	padding-left: 1.5rem;
-    margin-top: -0.5rem;
-    padding-bottom: 1rem;
-}
+    .pl-title {
+        padding-left: 1.5rem;
+        padding-top: 2rem;
+    }
 
-.drag-area {
-	height: 20rem;
-    border: 3px dashed #e0eafc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin: 0 1rem 0.5rem 1rem;
-    text-align: center;
-    border-radius: 1rem;
-}
+    .pl-message {
+        padding-left: 1.5rem;
+        margin-top: -0.5rem;
+        padding-bottom: 1rem;
+    }
 
-.drag-area .icon {
-  font-size: 50px;
-  color: #0C5E8E;
-}
+    .drag-area {
+        height: 20rem;
+        border: 3px dashed #e0eafc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: 0 1rem 0.5rem 1rem;
+        text-align: center;
+        border-radius: 1rem;
+    }
 
-.drag-area .header {
-  font-size: 16px;
-  font-weight: 500;
-  color: #34495e;
-  
-  margin-left: 5rem;
-    margin-right: 5rem;
-}
+    .drag-area .icon {
+        font-size: 50px;
+        color: #0C5E8E;
+    }
 
-.drag-area .support {
-  font-size: 12px;
-  color: gray;
-  margin: 10px 0 15px 0;
-}
+    .drag-area .header {
+        font-size: 16px;
+        font-weight: 500;
+        color: #34495e;
 
-.drag-area .button {
-  font-size: 16px;
-  font-weight: 500;
-  color: #0C5E8E;
-  cursor: pointer;
-}
+        margin-left: 5rem;
+        margin-right: 5rem;
+    }
 
-.drag-area img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
+    .drag-area .support {
+        font-size: 12px;
+        color: gray;
+        margin: 10px 0 15px 0;
+    }
 
-.modal-button {
-    display: hidden;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 1rem 0.5rem 1rem;
-}
+    .drag-area .button {
+        font-size: 16px;
+        font-weight: 500;
+        color: #0C5E8E;
+        cursor: pointer;
+    }
 
-.button-anexar {
-	background-color:#0C5E8E;
-    border: none;
-    color: white;
-    padding: 6px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 3px 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 10rem;
-}
+    .drag-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-.button-anexar-cancel {
-	background-color: #ff5959;
-    border: none;
-    color: white;
-    padding: 6px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 3px 1px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 10rem;
-}
+    .modal-button {
+        display: hidden;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 1rem 0.5rem 1rem;
+    }
+
+    .button-anexar {
+        background-color: #0C5E8E;
+        border: none;
+        color: white;
+        padding: 6px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 3px 1px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 10rem;
+    }
+
+    .button-anexar-cancel {
+        background-color: #ff5959;
+        border: none;
+        color: white;
+        padding: 6px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        margin: 3px 1px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 10rem;
+    }
 </style>
