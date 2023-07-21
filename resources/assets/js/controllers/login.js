@@ -21,10 +21,10 @@
 
         const currentDate = new Date();
         const startDate = new Date(2023, 6, 21);
-        const endDate = new Date(2023, 6, 24);
+        const endDate = new Date(2023, 6, 25);
 
         $scope.isBeforeJuly25 =
-          currentDate < startDate || currentDate > endDate;
+          currentDate >= startDate && currentDate <= endDate;
 
         $scope.endpoints = {
           allowed: Config.ALLOWED_ENDPOINTS,
