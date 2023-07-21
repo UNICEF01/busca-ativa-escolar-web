@@ -43,4 +43,4 @@
 
     - name: GIT PULL Production
       service: app
-      command: ssh unicef@buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/;git pull;exit
+      command: ssh unicef@buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull;exit
