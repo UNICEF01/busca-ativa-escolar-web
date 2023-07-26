@@ -19,8 +19,12 @@
         $scope.password = '';
         $scope.isLoading = false;
 
-        // Bloqueia o login ate a data 25/07/23
-        $scope.isBeforeJuly25 = Date.now() < new Date(2023, 6, 25).getTime();
+        const currentDate = new Date();
+        const startDate = new Date(2023, 6, 21);
+        const endDate = new Date(2023, 6, 24);
+
+        $scope.isBeforeJuly25 =
+          currentDate < startDate || currentDate > endDate;
 
         $scope.endpoints = {
           allowed: Config.ALLOWED_ENDPOINTS,
