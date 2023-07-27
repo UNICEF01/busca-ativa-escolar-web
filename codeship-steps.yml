@@ -66,4 +66,4 @@
 
     - name: GIT PULL Testing
       service: app
-      command: ssh unicef@site.testes.buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull;exit
+      command: ssh unicef@site.testes.buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull origin testing;exit
