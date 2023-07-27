@@ -1,215 +1,216 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
-		.config(function ($stateProvider) {
-			$stateProvider.state('user_editor', {
-				url: '/users/{user_id}?quick_add',
-				templateUrl: '/views/users/editor.html',
-				controller: 'UserEditorCtrl'
-			})
-		})
-		.controller('UserEditorCtrl', function ($rootScope, $scope, $state, $stateParams, ngToast, Platform, Cities, Utils, Tenants, Identity, Users, Groups, StaticData) {
+    angular.module('BuscaAtivaEscolar')
+        .config(function($stateProvider) {
+            $stateProvider.state('user_editor', {
+                url: '/users/{user_id}?quick_add',
+                templateUrl: '/views/users/editor.html',
+                controller: 'UserEditorCtrl'
+            })
+        })
+        .controller('UserEditorCtrl', function($rootScope, $scope, $state, $stateParams, ngToast, Platform, Utils, Identity, Users, StaticData, Modals) {
 
-			$scope.currentState = $state.current.name;
+            $scope.currentState = $state.current.name;
 
-			$scope.user = {};
-			$scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
-			$scope.isReviewing = false;
+            $scope.user = {};
+            $scope.isCreating = (!$stateParams.user_id || $stateParams.user_id === "new");
+            $scope.isReviewing = false;
 
-			$scope.identity = Identity;
-			$scope.static = StaticData;
-			$scope.showInputKey = false;
+            $scope.identity = Identity;
+            $scope.static = StaticData;
+            $scope.showInputKey = false;
 
-			$scope.groups = {};
-			$scope.tenants = Tenants.find();
-			$scope.quickAdd = ($stateParams.quick_add === 'true');
+            $scope.quickAdd = ($stateParams.quick_add === 'true');
 
-			var permissions = {};
-			var dateOnlyFields = ['dob'];
+            var permissions = {};
+            var dateOnlyFields = ['dob'];
 
-			var userTypeVisitantes = [];
-			var permissionsFormForVisitante = [];
+            var userTypeVisitantes = [];
+            var permissionsFormForVisitante = [];
 
-			$scope.perfilVisitante = { name: '' };
-			$scope.permissionsVisitantes = ['relatorios'];
+            $scope.perfilVisitante = { name: '' };
+            $scope.permissionsVisitantes = ['relatorios'];
 
-			Platform.whenReady(function() {
-				permissions = StaticData.getPermissions();
-				userTypeVisitantes = StaticData.getUserTypeVisitantes();
-				permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
-			});
+            $scope.isSuperAdmin = function() {
+                return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
+            };
 
-			if(!$scope.isCreating) {
-				$scope.user = Users.find({id: $stateParams.user_id}, prepareUserModel);
-			}else{
-				if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
-				}else{
-					$scope.groups = Groups.find();
-				}
-			}
+            $scope.isTargetUserTenantBound = function() {
+                return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
+            };
 
-			$scope.isSuperAdmin = function() {
-				return (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional');
-			};
+            $scope.isTargetUserUFBound = function() {
+                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
+            };
 
-			$scope.isTargetUserTenantBound = function () {
-				return (StaticData.getTypesWithGlobalScope().indexOf($scope.user.type) === -1 && StaticData.getTypesWithUFScope().indexOf($scope.user.type) === -1)
-			};
+            $scope.canDefineUserTenant = function() {
+                // Can specify user tenant only if superadmin, and only if target user type is tenant-bound
+                if (!$scope.isSuperAdmin()) return false;
+                return $scope.isTargetUserTenantBound();
+            };
 
-			$scope.isTargetUserUFBound = function () {
-				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
-			};
+            $scope.canDefineUserUF = function() {
+                // Only superusers can define user UF, and only on UF-bound user types
+                if (!$scope.isSuperAdmin()) return false;
+                return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
+            };
 
-			$scope.canDefineUserTenant = function() {
-				// Can specify user tenant only if superadmin, and only if target user type is tenant-bound
-				if(!$scope.isSuperAdmin()) return false;
-				return $scope.isTargetUserTenantBound();
-			};
+            $scope.openUser = function(user_id, is_reviewing) {
+                $scope.isCreating = false;
+                $scope.isReviewing = !!is_reviewing;
+                $scope.user = Users.find({ id: user_id }, prepareUserModel);
+            };
 
-			$scope.canDefineUserUF = function() {
-				// Only superusers can define user UF, and only on UF-bound user types
-				if(!$scope.isSuperAdmin()) return false;
-				return StaticData.getTypesWithUFScope().indexOf($scope.user.type) !== -1;
-			};
+            $scope.goBack = function() {
+                return $state.go($rootScope.previousState, $rootScope.previousStateParams);
+            };
 
-			$scope.openUser = function(user_id, is_reviewing) {
-				$scope.isCreating = false;
-				$scope.isReviewing = !!is_reviewing;
-				$scope.user = Users.find({id: user_id}, prepareUserModel);
-			};
+            $scope.getUserTypes = function() {
+                if (!permissions) return {};
+                if (!permissions.can_manage_types) return {};
 
-			$scope.goBack = function() {
-				return $state.go($rootScope.previousState, $rootScope.previousStateParams);
-			};
+                var finalPermissions = permissions.can_manage_types[Identity.getCurrentUser().type].filter(function(el) {
+                    return $scope.getUserTypesVisitantes().indexOf(el) < 0;
+                });
 
-			$scope.getUserTypes = function() {
-				if(!permissions) return {};
-				if(!permissions.can_manage_types) return {};
+                return finalPermissions;
+            };
 
-				var finalPermissions = permissions.can_manage_types[ Identity.getCurrentUser().type ].filter( function( el ) {
-						return $scope.getUserTypesVisitantes().indexOf( el ) < 0;
-					} );
+            $scope.getUserTypesVisitantes = function() {
+                if (!permissions) return {};
+                if (!permissions.can_manage_types) return {};
+                return userTypeVisitantes;
+            };
 
-				return finalPermissions;
-			};
+            $scope.getPermissionsFormForVisitante = function() {
+                return permissionsFormForVisitante;
+            };
 
-			$scope.getUserTypesVisitantes = function(){
-				if(!permissions) return {};
-				if(!permissions.can_manage_types) return {};
-				return userTypeVisitantes;
-			};
+            $scope.save = function() {
 
-			$scope.getPermissionsFormForVisitante = function(){
-				return permissionsFormForVisitante;
-			};
+                if ($scope.user.type === "perfil_visitante") {
+                    $scope.user.type = getFinalTypeUser();
+                }
 
-			$scope.save = function() {
+                var data = Object.assign({}, $scope.user);
+                data = Utils.prepareDateFields(data, dateOnlyFields);
+                data = Utils.prepareCityFields(data, ['work_city']);
 
-				if( $scope.user.type === "perfil_visitante" ){
-					$scope.user.type = getFinalTypeUser();
-				}
+                if ($scope.isCreating) {
+                    return Users.create(data).$promise.then(onSaved)
+                }
 
-				var data = Object.assign({}, $scope.user);
-				data = Utils.prepareDateFields(data, dateOnlyFields);
-				data = Utils.prepareCityFields(data, ['work_city']);
+                Users.update(data).$promise.then(onSaved);
 
-				if($scope.isCreating) {
-					return Users.create(data).$promise.then(onSaved)
-				}
+            };
 
-				Users.update(data).$promise.then(onSaved);
-
-			};
-
-            $scope.onSelectTenant = function(){
-                $scope.groups = Groups.findByTenant({'tenant_id': $scope.user.tenant_id});
-			}
-
-            $scope.onSelectUf = function(){
-                $scope.groups = Groups.findByUf({'uf': $scope.user.uf});
-            }
-
-            $scope.onSelectFunction = function(){
-                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-                    $scope.groups = {};
+            $scope.onSelectFunctionFunction = function() {
+                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
                     $scope.user.uf = null;
                     $scope.user.tenant_id = null;
                     $scope.perfilVisitante.name = '';
                 }
-			}
+            };
 
-			function prepareUserModel(user) {
-
-                if( Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional' ){
-
-                	if(user.type === 'coordenador_estadual' || user.type === 'gestor_estadual' || user.type === 'supervisor_estadual'){
-                        $scope.groups = Groups.findByUf({'uf': user.uf});
-					}else {
-                        $scope.groups = Groups.findByTenant({'tenant_id': user.tenant_id});
-                    }
-
-                	//perfil de visitante
-                	if( user.type.includes("visitante_") ){
-						$scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
-                		if( user.type.includes("visitante_nacional") ){
-							$scope.perfilVisitante.name = "visitante_nacional";
-						}
-						if( user.type.includes("visitante_estadual") ){
-							$scope.perfilVisitante.name = "visitante_estadual";
-						}
-						$scope.user.type = "perfil_visitante";
-					}
-
-                }else{
-                    $scope.groups = Groups.find();
-				}
-
-                return Utils.unpackDateFields(user, dateOnlyFields)
-			}
-
-			$scope.showPassowrd = function () {
+            $scope.showPassowrd = function() {
                 var field_password = document.getElementById("fld-password");
                 field_password.type === "password" ? field_password.type = "text" : field_password.type = "password"
-            }
+            };
 
-			function onSaved(res) {
-				if(res.status === "ok") {
-					ngToast.success("Dados de usuário salvos com sucesso!");
+            function prepareUserModel(user) {
 
-					if($scope.quickAdd && $rootScope.previousState) return $state.go($rootScope.previousState, $rootScope.previousStateParams);
-					if($scope.isCreating) return $state.go('user_editor', {user_id: res.id});
+                if (Identity.getType() === 'superuser' || Identity.getType() === 'gestor_nacional') {
 
-					return;
-				}
+                    //perfil de visitante
+                    if (user.type.includes("visitante_")) {
+                        $scope.permissionsVisitantes = permissionsFormForVisitante[user.type];
+                        if (user.type.includes("visitante_nacional")) {
+                            $scope.perfilVisitante.name = "visitante_nacional";
+                        }
+                        if (user.type.includes("visitante_estadual")) {
+                            $scope.perfilVisitante.name = "visitante_estadual";
+                        }
+                        $scope.user.type = "perfil_visitante";
+                    }
 
-				if(res.messages) return Utils.displayValidationErrors(res);
+                }
 
-				ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
-			}
+                return Utils.unpackDateFields(user, dateOnlyFields)
+            };
 
-			function getFinalTypeUser() {
-            	var finalType = "";
-				for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
-					if ( arraysEqual($scope.permissionsVisitantes.filter(function(obj) { return obj }), value) && key.includes($scope.perfilVisitante.name)){
-						finalType = key;
-					}
-				}
-				return finalType;
-			}
+            function onSaved(res) {
+                if (res.status === "ok") {
+                    ngToast.success("Dados de usuário salvos com sucesso!");
 
-			function arraysEqual(_arr1, _arr2) {
-				if (!Array.isArray(_arr1) || ! Array.isArray(_arr2) || _arr1.length !== _arr2.length)
-					return false;
-				var arr1 = _arr1.concat().sort();
-				var arr2 = _arr2.concat().sort();
-				for (var i = 0; i < arr1.length; i++) {
-					if (arr1[i] !== arr2[i])
-						return false;
-				}
-				return true;
-			}
+                    if ($scope.quickAdd && $rootScope.previousState) return $state.go($rootScope.previousState, $rootScope.previousStateParams);
+                    if ($scope.isCreating) return $state.go('user_editor', { user_id: res.id });
 
-		});
+                    return;
+                }
 
+                if (res.messages) return Utils.displayValidationErrors(res);
+
+                ngToast.danger("Ocorreu um erro ao salvar o usuário<br>por favor entre em contato com o nosso suporte informando o nome do erro: " + res.reason);
+            };
+
+            function getFinalTypeUser() {
+                var finalType = "";
+                for (var [key, value] of Object.entries($scope.getPermissionsFormForVisitante())) {
+                    if (arraysEqual($scope.permissionsVisitantes.filter(function(obj) { return obj }), value) && key.includes($scope.perfilVisitante.name)) {
+                        finalType = key;
+                    }
+                }
+                return finalType;
+            };
+
+            function arraysEqual(_arr1, _arr2) {
+                if (!Array.isArray(_arr1) || !Array.isArray(_arr2) || _arr1.length !== _arr2.length)
+                    return false;
+                var arr1 = _arr1.concat().sort();
+                var arr2 = _arr2.concat().sort();
+                for (var i = 0; i < arr1.length; i++) {
+                    if (arr1[i] !== arr2[i])
+                        return false;
+                }
+                return true;
+            };
+
+            Platform.whenReady(function() {
+
+                permissions = StaticData.getPermissions();
+                userTypeVisitantes = StaticData.getUserTypeVisitantes();
+                permissionsFormForVisitante = StaticData.getPermissionsFormForVisitante();
+                $scope.canSeeGroupsOptions = ($scope.identity.getType() === 'coordenador_operacional' || $scope.identity.getType() === 'supervisor_institucional' || $scope.identity.getType() === 'gestor_politico');
+
+                if (!$scope.isCreating) {
+                    $scope.user = Users.find({ id: $stateParams.user_id }, prepareUserModel);
+                } else {
+                    if ($scope.canSeeGroupsOptions) {
+                        $scope.user.group_id = $scope.identity.getCurrentUser().group.id;
+                        $scope.user.group_name = $scope.identity.getCurrentUser().group.name;
+                    }
+                }
+            });
+
+            $scope.changeGroup = function() {
+                Modals.show(
+                    Modals.GroupPicker(
+                        'Atribuir usuário ao grupo',
+                        'Selecione um grupo para o perfil do usuário',
+                        $scope.identity.getCurrentUser().group,
+                        'Atribuindo grupo: ',
+                        false,
+                        null,
+                        null,
+                        true,
+                        'Nenhum grupo selecionado.')
+                ).then(function(selectedGroup) {
+                    $scope.user.group_id = selectedGroup.id;
+                    $scope.user.group_name = selectedGroup.name;
+                }).then(function() {
+
+                });
+            };
+
+        });
 })();

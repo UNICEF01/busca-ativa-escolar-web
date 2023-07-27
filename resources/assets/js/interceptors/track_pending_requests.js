@@ -1,28 +1,28 @@
 (function() {
-	angular
-		.module('BuscaAtivaEscolar')
-		.service('TrackPendingRequestsInterceptor', function ($q, $rootScope, API) {
+    angular
+        .module('BuscaAtivaEscolar')
+        .service('TrackPendingRequestsInterceptor', function(API) {
 
-			this.request = function (config) {
+            this.request = function(config) {
 
-				if(config.data && config.data.$hide_loading_feedback) return config;
-				if(config.params && config.params.$hide_loading_feedback) return config;
+                if (config.data && config.data.$hide_loading_feedback) return config;
+                if (config.params && config.params.$hide_loading_feedback) return config;
 
-				API.pushRequest();
+                API.pushRequest();
 
-				return config;
-			};
+                return config;
+            };
 
-			this.response = function (response) {
+            this.response = function(response) {
 
-				if(response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
-				if(response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
+                if (response.config && response.config.data && response.config.data.$hide_loading_feedback) return response;
+                if (response.config && response.config.params && response.config.params.$hide_loading_feedback) return response;
 
-				API.popRequest();
+                API.popRequest();
 
-				return response;
-			};
+                return response;
+            };
 
-		});
+        });
 
 })();

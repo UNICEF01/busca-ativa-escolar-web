@@ -2,7 +2,7 @@
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $q, $uibModalInstance, message, canDismiss) {
+        .controller('GeneralAlertsModalCtrl', function GeneralAlertsModalCtrl($scope, $uibModalInstance, message, canDismiss) {
 
             $scope.message = message;
             $scope.canDismiss = canDismiss;

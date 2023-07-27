@@ -1,142 +1,152 @@
 <form class="panel panel-default" ng-submit="nextStep(1)">
-  <div class="panel-heading">
-    <h3>
-      <strong>{{step}}.</strong> <i class="fa fa-user"></i> Cadastre o(a)
-      prefeito(a).
-    </h3>
-  </div>
-  <div class="panel-body">
-    <p>Informe aqui os dados do(a) prefeito(a) do seu município.</p>
+    <div class="panel-heading">
+        <h3>
+            <strong>{{step}}.</strong> <i class="fa fa-user"></i> Cadastre o(a)
+            prefeito(a).
+        </h3>
+    </div>
+    <div class="panel-body">
+        <p>Informe aqui os dados do(a) prefeito(a) do seu município.</p>
 
-    <div class="form-group col-md-12">
-      <label class="control-label" for="fld-name">Nome*</label>
-      <input
-        type="text"
-        class="form-control"
-        id="fld-name"
-        required
-        ng-model="$parent.form.mayor.name"
-      />
+        <div class="form-group col-md-12">
+            <label class="control-label" for="fld-name">Nome*</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="fld-name"
+                    required
+                    ng-model="$parent.form.mayor.name"
+            />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-dob">Data de nascimento*</label>
+            <input
+                    type="tel"
+                    class="form-control"
+                    id="fld-dob"
+                    ui-date-mask
+                    required
+                    ng-model="$parent.form.mayor.dob"
+                    onpaste="return false"
+                    placeholder="dd/mm/yy"
+            />
+
+
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-cpf">CPF*</label>
+            <input
+                    type="tel"
+                    ui-br-cpf-mask
+                    class="form-control"
+                    required
+                    id="fld-cpf"
+                    ng-model="$parent.form.mayor.cpf"
+                    placeholder="000.000.000-00"
+            />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-email">E-mail*</label>
+            <input
+                    type="email"
+                    class="form-control"
+                    id="fld-email"
+                    required
+                    ng-model="$parent.form.mayor.email"
+            />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-work-phone"
+            >Telefone fixo institucional*</label
+            >
+            <input
+                    type="tel"
+                    ui-br-phone-number
+                    ng-minlength="12"
+                    class="form-control"
+                    required
+                    id="fld-work-phone"
+                    ng-model="$parent.form.mayor.phone"
+                    placeholder="(11) 00000-000"
+            />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-work-mobile"
+            >Telefone celular institucional</label
+            >
+            <input
+                    type="tel"
+                    ui-br-phone-number
+                    ng-minlength="12"
+                    class="form-control"
+                    id="fld-work-mobile"
+                    ng-model="$parent.form.mayor.mobile"
+                    placeholder="(00) 00000-0000"
+            />
+        </div>
+
+        <div class="form-group col-md-4">
+            <label class="control-label" for="fld-titulo-eleitor"
+            >Título de eleitor*</label
+            >
+            <input
+                    type="text"
+                    ng-minlength="12"
+                    ng-maxlength="12"
+                    maxlength="12"
+                    class="form-control"
+                    id="fld-titulo-eleitor"
+                    ng-model="$parent.form.mayor.titulo"
+                    placeholder="000000000000"
+                    required
+            />
+        </div>
+
+        <!--		<div class="form-group col-md-6">-->
+        <!--			<br/><a class="btn btn-primary btn-raised btn-lg" ng-click="beginImport()"><i class="fa fa-upload"></i> Selecionar documento com foto</a>-->
+        <!--		</div>-->
+
+        <div class="form-group col-md-6" ng-if="$parent.form.mayor.link_titulo">
+            <br/><a
+                class="btn btn-success btn-raised btn-lg"
+                href="{{$parent.form.mayor.link_titulo}}"
+                target="_blank"
+        >
+            <i class="fa fa-check"></i> <i class="fa fa-image"></i> Arquivo
+            válido</a
+        >
+            <small>Clique para visualizar</small>
+        </div>
+
+        <div
+                class="form-group col-md-6"
+                ng-if="$parent.form.mayor.link_titulo == null"
+        >
+            <br/>
+        </div>
+    </div>
+    <div class="panel-footer clearfix">
+
+        <button
+                ng-click="prevStep()"
+                type="button"
+                class="btn btn-primary pull-left"
+        >
+            <i class="fa fa-arrow-left"></i> Anterior
+        </button>
+
+        <button type="submit" class="btn btn-primary btn-raised pull-right">
+            Próximo <i class="fa fa-arrow-right"
+        ></i>
+
+        </button>
+
     </div>
 
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-dob">Data de nascimento*</label>
-      <input
-        type="tel"
-        ui-date-mask
-        class="form-control"
-        id="fld-dob"
-        required
-        ng-model="$parent.form.mayor.dob"
-        placeholder="dd/mm/yyyy"
-      />
-    </div>
-
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-cpf">CPF*</label>
-      <input
-        type="tel"
-        ui-br-cpf-mask
-        class="form-control"
-        required
-        id="fld-cpf"
-        ng-model="$parent.form.mayor.cpf"
-        placeholder="000.000.000-00"
-      />
-    </div>
-
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-email">E-mail*</label>
-      <input
-        type="email"
-        class="form-control"
-        id="fld-email"
-        required
-        ng-model="$parent.form.mayor.email"
-      />
-    </div>
-
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-work-phone"
-        >Telefone fixo institucional*</label
-      >
-      <input
-        type="tel"
-        ui-br-phone-number
-        ng-minlength="12"
-        class="form-control"
-        required
-        id="fld-work-phone"
-        ng-model="$parent.form.mayor.phone"
-        placeholder="(11) 00000-000"
-      />
-    </div>
-
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-work-mobile"
-        >Telefone celular institucional</label
-      >
-      <input
-        type="tel"
-        ui-br-phone-number
-        ng-minlength="12"
-        class="form-control"
-        id="fld-work-mobile"
-        ng-model="$parent.form.mayor.mobile"
-        placeholder="(00) 00000-0000"
-      />
-    </div>
-
-    <div class="form-group col-md-4">
-      <label class="control-label" for="fld-titulo-eleitor"
-        >Título de eleitor*</label
-      >
-      <input
-        type="text"
-        ng-minlength="12"
-        ng-maxlength="12"
-        maxlength="12"
-        class="form-control"
-        id="fld-titulo-eleitor"
-        ng-model="$parent.form.mayor.titulo"
-        placeholder="000000000000"
-        required
-      />
-    </div>
-
-    <!--		<div class="form-group col-md-6">-->
-    <!--			<br/><a class="btn btn-primary btn-raised btn-lg" ng-click="beginImport()"><i class="fa fa-upload"></i> Selecionar documento com foto</a>-->
-    <!--		</div>-->
-
-    <div class="form-group col-md-6" ng-if="$parent.form.mayor.link_titulo">
-      <br /><a
-        class="btn btn-success btn-raised btn-lg"
-        href="{{$parent.form.mayor.link_titulo}}"
-        target="_blank"
-      >
-        <i class="fa fa-check"></i> <i class="fa fa-image"></i> Arquivo
-        válido</a
-      >
-      <small>Clique para visualizar</small>
-    </div>
-
-    <div
-      class="form-group col-md-6"
-      ng-if="$parent.form.mayor.link_titulo == null"
-    >
-      <br />
-    </div>
-  </div>
-  <div class="panel-footer clearfix">
-    <button
-      ng-click="prevStep()"
-      type="button"
-      class="btn btn-primary pull-left"
-    >
-      <i class="fa fa-arrow-left"></i> Anterior
-    </button>
-    <button type="submit" class="btn btn-primary btn-raised pull-right">
-      Próximo <i class="fa fa-arrow-right"></i>
-    </button>
-  </div>
 </form>
+

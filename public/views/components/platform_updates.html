@@ -1,16 +1,17 @@
 <div class="platform-updates-widget">
-	<div class="list-group">
-		<div class="update-item list-group-item clearfix"
-		     ng-repeat="(i, commit) in commits | orderBy: '-date' | limitTo: 12">
+    <div class="list-group">
+        <div class="update-item list-group-item clearfix"
+             ng-repeat="(i, commit) in commits | orderBy: '-date' | limitTo: 12">
 
 			<span class="update-avatar" uib-tooltip-html="commit.author.name">
 				<img ng-src="{{commit.author.avatar_url}}"/>
 			</span>
 
-			<span class="update-repo label {{commit.repo === 'api' ? 'label-success' : 'label-primary'}}">{{commit.repo}}</span>
-			<span class="update-message" uib-tooltip-html="commit.message">{{commit.message}}</span>
-			<span class="update-date pull-right label label-default" uib-tooltip-html="commit.date">{{commit.date | amTimeAgo}}</span>
+            <span class="update-repo label {{commit.repo === 'api' ? 'label-success' : 'label-primary'}}">{{commit.repo}}</span>
+            <span class="update-message" uib-tooltip-html="commit.message">{{commit.message}}</span>
+            <span class="update-date pull-right label label-default"
+                  uib-tooltip-html="commit.date">{{commit.date | amTimeAgo}}</span>
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>

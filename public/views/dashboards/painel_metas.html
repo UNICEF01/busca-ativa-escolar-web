@@ -6,7 +6,8 @@
 
         <div class="panel panel-default animated fadeInUp">
             <div class="panel-heading">
-                <h4><i class="material-icons">beenhere</i>Status do município: <b ng-bind="renderTenantName()"></b>
+                <h4><i class="material-icons">beenhere</i> Status do {{identity.getCurrentUser().tenant.is_state ?
+                        'estado' : 'município'}}: <b ng-bind="renderTenantName()"></b>
                     <button type="button" class="btn btn-primary btn-sm pull-right" data-html2canvas-ignore
                             ng-click="chartWithContentDownload()">
                         <span class="glyphicon glyphicon-print"></span> Baixar Painel
@@ -22,10 +23,10 @@
                                 <div class="border"></div>
                                 <div class="number">{{$index + 1}}</div>
                             </div>
-                            <span class="animated fadeIn">
-                    {{ item.name }}<br>
-                    <small>{{item.info | dtFormat }}</small>
-                    </span>
+                            <span class="animated fadeIn" uib-tooltip="{{item.tooltiptext}}">
+                                {{ item.name }} <br>
+                                <small>{{item.info | dtFormat }}</small>
+                            </span>
 
                         </a>
                     </div>
@@ -36,19 +37,23 @@
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 0">
             <div class="panel-body">
                 <h3>Adesão</h3>
-                O primeiro passo já foi dado! A adesão do seu município à Busca Ativa Escolar foi realizada. No
+                O primeiro passo já foi dado! A adesão do seu {{identity.getCurrentUser().tenant.is_state ?
+                    'estado' : 'município'}} à Busca Ativa Escolar foi realizada. No
                 entanto,
-                esta etapa é só o começo. O seu município precisa, agora, implementar a estratégia seguindo o passo
+                esta etapa é só o começo. O seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                precisa, agora, implementar a estratégia seguindo o passo
                 a
                 passo necessário para que seja organizada uma equipe de trabalho e para que execute as ações
                 previstas.
                 Vamos lá?!<br>
 
-                O próximo passo é de fundamental relevância, pois dará ao município a oportunidade de definir a
+                O próximo passo é de fundamental relevância, pois dará ao {{identity.getCurrentUser().tenant.is_state ?
+                    'estado' : 'município'}} a oportunidade de definir a
                 melhor
                 forma de operacionalizar a estratégia, de acordo com a sua realidade. Neste sentido, a aba da
                 plataforma
-                <b>Configurações</b> é muito importante, pois é nela que o município vai preencher os dados
+                <b>Configurações</b> é muito importante, pois é nela que o {{identity.getCurrentUser().tenant.is_state ?
+                    'estado' : 'município'}} vai preencher os dados
                 relativos a: (i)
                 <b>Customização</b> – a partir dos motivos da exclusão escolar, definição sobre quais secretarias e
                 demais
@@ -68,15 +73,19 @@
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 1">
             <div class="panel-body">
                 <h3>Configuração</h3>
-                O seu município está devidamente configurado na plataforma da Busca Ativa Escolar!
+                O seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} está devidamente
+                configurado
+                na plataforma da Busca Ativa Escolar!
                 Isto significa que já é possível emitir alertas e dar seguimento aos casos. Mas, o que é um alerta?
                 É a
                 identificação de uma criança ou um(a) adolescente fora da escola. O alerta é a porta de entrada de
                 um
                 caso na plataforma e o início efetivo da Busca Ativa Escolar. Ele é emitido pelo(a) agente
-                comunitário(a) durante sua atuação territorial, ou, automaticamente, quando o município utiliza os
+                comunitário(a) durante sua atuação territorial, ou, automaticamente, quando o
+                {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} utiliza os
                 dados
-                da planilha do EducanCenso (INEP/MEC) ou de planilha própria (dados que o próprio município já
+                da planilha do EducanCenso (INEP/MEC) ou de planilha própria (dados que o próprio
+                {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} já
                 possua).
             </div>
         </div>
@@ -84,11 +93,13 @@
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 2">
             <div class="panel-body">
                 <h3>1º Aletra</h3>
-                Seu município já emitiu o primeiro alerta! Isto significa que pelo menos uma criança ou um(a)
+                Seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} já emitiu o primeiro alerta!
+                Isto significa que pelo menos uma criança ou um(a)
                 adolescente que está fora da escola já foi localizado(a)!
                 A partir da emissão dos primeiros alertas, já é possível identificar os motivos pelos quais os
                 meninos e
-                as meninas do seu município não estão na escola. Agora, cabe ao(à) supervisor(a) institucional
+                as meninas do seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} não estão na
+                escola. Agora, cabe ao(à) supervisor(a) institucional
                 aprovar
                 ou rejeitar os alertas. Os alertas aprovados, posteriormente, serão transformados em casos e poderão
                 ser
@@ -101,9 +112,11 @@
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 3">
             <div class="panel-body">
                 <h3>1º Caso</h3>
-                Seu município já tem o primeiro alerta aprovado e o primeiro caso pronto para ser acompanhado!
+                Seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} já tem o primeiro alerta
+                aprovado e o primeiro caso pronto para ser acompanhado!
 
-                Nesta fase, para cada um dos casos, o município precisa cumprir as seguintes etapas:
+                Nesta fase, para cada um dos casos, o {{identity.getCurrentUser().tenant.is_state ?
+                    'estado' : 'município'}} precisa cumprir as seguintes etapas:
 
                 a) Pesquisa e análise técnica (visita domiciliar para compreender mais a fundo as causas da exclusão
                 escolar);
@@ -114,9 +127,11 @@
                 c) (Re)Matrícula e observações (verificação da permanência de cada criança ou adolescente na escola,
                 durante o período de um ano).
 
-                É importante lembrar de que cada caso seguirá o fluxo pré-determinado pelo município durante a etapa
+                É importante lembrar de que cada caso seguirá o fluxo pré-determinado pelo
+                {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} durante a etapa
                 de
-                configuração da plataforma. Se o município realizou a configuração a partir da sua realidade, o
+                configuração da plataforma. Se o {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                realizou a configuração a partir da sua realidade, o
                 seguimento do fluxo dos casos vai ocorrer de forma mais eficaz e exitosa, favorecendo o
                 fortalecimento
                 do sistema de garantia de direitos de crianças e adolescentes.
@@ -126,14 +141,16 @@
         <div class="panel panel-default animated fadeInUp" ng-show="showInfo == 4">
             <div class="panel-body">
                 <h3>1ª (Re)Matrícula</h3>
-                Seu município chegou à etapa de (re)matrículas na execução da Busca Ativa Escolar.
+                Seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} chegou à etapa de
+                (re)matrículas na execução da Busca Ativa Escolar.
 
                 É importante salientar que somente após serem seguidas as etapas de pesquisa, análise técnica e
                 gestão do caso é que as crianças e os(as) adolescentes poderão ser devidamente (re)matriculados(as).
                 Vale a pena frisar que a (re)matrícula é muito mais qualificada quando são compreendidos o contexto
                 de vida e as necessidades de cada menina e cada menino que estava fora da escola.
 
-                <br>Se o seu município já está realizando (re)matrículas, parabéns! Agora é hora de garantir que as
+                <br>Se o seu {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} já está realizando
+                (re)matrículas, parabéns! Agora é hora de garantir que as
                 crianças e os(as) adolescentes permaneçam na escola e aprendam!
             </div>
         </div>
@@ -148,7 +165,8 @@
 
             <div class="col-md-6">
                 <div class="panel panel-default animated fadeInUp">
-                    <div class="panel-heading"><h4><i class="fa fa-bell"></i> Alertas</h4>
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-bell"></i> Alertas</h4>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-3">
@@ -181,12 +199,15 @@
 
             <div class="col-md-6">
                 <div class="panel panel-default animated fadeInUp">
-                    <div class="panel-heading"><h4><i class="fa fa-list"></i> Casos por etapa em andamento</h4>
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-list"></i> Casos por etapa em andamento</h4>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h5><b>No prazo</b></h5></div>
+                                <div class="panel-heading">
+                                    <h5><b>No prazo</b></h5>
+                                </div>
                                 <ul>
                                     <li>Pesquisa ( {{ otherData.cases_box.steps_on_time.pesquisa || 0}} )</li>
                                     <li>Análise Técnica ( {{ otherData.cases_box.steps_on_time.analise_tecnica || 0}}
@@ -202,7 +223,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h5><b>Em atraso</b></h5></div>
+                                <div class="panel-heading">
+                                    <h5><b>Em atraso</b></h5>
+                                </div>
                                 <ul>
                                     <li>Pesquisa ( {{ otherData.cases_box.steps_late.pesquisa || 0}} )</li>
                                     <li>Análise Técnica ( {{ otherData.cases_box.steps_late.analise_tecnica || 0}} )
@@ -224,7 +247,8 @@
 
                     <div class="panel-heading">
                         <h4>
-                            <i class="fa fa-file-text-o"></i> (Re)matrículas acumuladas <span ng-bind="otherData.goal_box.reinsertions_classes || 0"></span></span>
+                            <i class="fa fa-file-text-o"></i> (Re)matrículas acumuladas <span
+                                ng-bind="otherData.goal_box.reinsertions_classes || 0"></span></span>
                         </h4>
                     </div>
 
@@ -243,7 +267,12 @@
                                         <div class="panel-heading">Alto Risco</div>
                                         <div class="panel-body">
                                             <p>
-                                                O município realizou menos de 20% (vinte por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                                O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                realizou menos de 20% (vinte por cento) de (re)matrículas, de acordo com
+                                                a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta
+                                                o {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
+                                                resultado sistêmico obrigatório.
                                             </p>
                                         </div>
                                     </div>
@@ -254,7 +283,13 @@
                                         <div class="panel-heading">Médio Risco</b></div>
                                         <div class="panel-body">
                                             <p>
-                                                O município realizou entre 20% (vinte por cento) e 49% (quarenta e nove por cento) de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                                O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                realizou entre 20% (vinte por cento) e 49% (quarenta e nove por cento)
+                                                de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF.
+                                                Apenas com o atingimento da meta o
+                                                {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é
+                                                resultado sistêmico obrigatório.
                                             </p>
                                         </div>
                                     </div>
@@ -265,7 +300,13 @@
                                         <div class="panel-heading">Baixo Risco</div>
                                         <div class="panel-body">
                                             <p>
-                                                O município realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de acordo com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da meta o município poderá ser certificado com o Selo, uma vez que a Busca Ativa Escolar é resultado sistêmico obrigatório.
+                                                O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                realizou 50% (cinquenta por cento) ou mais de (re)matrículas, de acordo
+                                                com a meta estabelecida para o Selo UNICEF. Apenas com o atingimento da
+                                                meta o {{identity.getCurrentUser().tenant.is_state ?
+                                                    'estado' : 'município'}} poderá ser certificado com o Selo, uma vez
+                                                que a
+                                                Busca Ativa Escolar é resultado sistêmico obrigatório.
                                             </p>
                                         </div>
                                     </div>
@@ -276,17 +317,29 @@
                                         <div class="panel-heading">Parabéns!</div>
                                         <div class="panel-body">
                                             <p>
-                                            <p> O seu município já atingiu a meta de (re)matrículas da Busca Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe municipal que demonstra a dedicação de profissionais ao enfrentamento da exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu município faça da Busca Ativa Escolar um processo contínuo para assegurar o direito à educação para cada menina e menino.</p>
+                                            <p> O seu {{identity.getCurrentUser().tenant.is_state ?
+                                                    'estado' : 'município'}} já atingiu a meta de (re)matrículas da
+                                                Busca
+                                                Ativa Escolar! Este resultado é fruto do trabalho realizado pela equipe
+                                                municipal que demonstra a dedicação de profissionais ao enfrentamento da
+                                                exclusão escolar. Mas, o trabalho não pode parar! Esperamos que o seu
+                                                {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}}
+                                                faça da Busca Ativa Escolar um processo contínuo para assegurar o
+                                                direito à educação para cada menina e menino.</p>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <span class="badge" style="color: white; background-color: #d9534f;">O município realizou menos de 20% (vinte por cento) de (re)matrículas</span><br/>
-                                    <span class="badge" style="color: white; background-color: #f0ad4e;">O município realizou de 20% a 49% de (re)matrículas</span><br/>
-                                    <span class="badge" style="color: white; background-color: #5cb85c;">O município realizou de 50% a 99% de (re)matrículas</span><br/>
-                                    <span class="badge" style="color: white; background-color: #28ACE2;">O município realizou 100% de (re)matrículas</span>
+                                    <span class="badge"
+                                          style="color: white; background-color: #d9534f;">O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} realizou menos de 20% (vinte por cento) de (re)matrículas</span><br/>
+                                    <span class="badge"
+                                          style="color: white; background-color: #f0ad4e;">O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} realizou de 20% a 49% de (re)matrículas</span><br/>
+                                    <span class="badge"
+                                          style="color: white; background-color: #5cb85c;">O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} realizou de 50% a 99% de (re)matrículas</span><br/>
+                                    <span class="badge"
+                                          style="color: white; background-color: #28ACE2;">O {{identity.getCurrentUser().tenant.is_state ? 'estado' : 'município'}} realizou 100% de (re)matrículas</span>
                                 </div>
 
                             </div>
@@ -305,24 +358,30 @@
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="otherData.goal_box.goal || 0"></h1>
-                                <div class="panel-footer" style="min-height: 100px; background-color: #f4b48e; color: white;">
-                                    <small>Meta de novas (re)matrículas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                <div class="panel-footer"
+                                     style="min-height: 100px; background-color: #f4b48e; color: white;">
+                                    <small>Meta de novas (re)matrículas para a primeira medição (31/03/2023) do Selo
+                                        edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
-                                <h1 class="panel-body" ng-bind="(otherData.goal_box.accumulated_ciclo1 + otherData.goal_box.goal) || 0"></h1>
+                                <h1 class="panel-body"
+                                    ng-bind="(otherData.goal_box.accumulated_ciclo1 + otherData.goal_box.goal) || 0"></h1>
                                 <div class="panel-footer" style="min-height: 100px;">
-                                    <small>Meta de (re)matrículas acumuladas para a primeira medição (31/03/2023) do Selo edição 21/24</small>
+                                    <small>Meta de (re)matrículas acumuladas para a primeira medição (31/03/2023) do
+                                        Selo edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
-                                <h1 class="panel-body" ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
+                                <h1 class="panel-body"
+                                    ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
                                 <div class="panel-footer"
                                      ng-style="percentualAtingido <= 19 && {'color': 'white', 'background-color': '#d9534f'} || percentualAtingido <= 49 && {'color': 'white', 'background-color': '#f0ad4e'} || percentualAtingido < 100 && {'color': 'white', 'background-color': '#5cb85c'} || percentualAtingido >= 100 && {'color': 'white', 'background-color': '#28ACE2'}"
                                      style="min-height: 100px;">
-                                    <small>Total de novas (re)matrículas realizadas até o momento, válidas para o cumprimento das metas do Selo edição 21/24</small>
+                                    <small>Total de novas (re)matrículas realizadas até o momento, válidas para o
+                                        cumprimento das metas do Selo edição 21/24</small>
                                 </div>
                             </div>
 
@@ -341,6 +400,6 @@
 
     <div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
 
-    <span class="badge" style="color: white; background-color: #d9534f;">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
+    <span class="badge" style="color: white; background-color: #d9534f;" ng-if="otherData.goal_box.goal > 0">A meta refere-se ao acumulado de (re)matrículas já existentes + a nova meta do Selo UNICEF, edição 2021-2024</span><br/>
 
 </div>

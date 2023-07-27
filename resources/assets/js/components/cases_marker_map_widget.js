@@ -24,9 +24,7 @@
                 scope.marker.draggable = true;
                 scope.map.addObject(scope.marker);
                 scope.map.addEventListener('dragstart', function (ev) {
-                    // scope.$parent.fields.place_lat = ev.target.b.lat;
-                    // scope.$parent.fields.place_lng = ev.target.b.lng;
-                    // scope.$apply();
+
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -55,9 +53,7 @@
                 // Listen to the drag event and move the position of the marker
                 // as necessary
                 scope.map.addEventListener('drag', function (ev) {
-                    // scope.$parent.fields.place_lat = ev.target.b.lat;
-                    // scope.$parent.fields.place_lng = ev.target.b.lng;
-                    // scope.$apply();
+
                     var target = ev.target,
                         pointer = ev.currentPointer;
                     if (target instanceof H.map.Marker) {
@@ -66,7 +62,7 @@
                 }, false);
             }
 
-            scope.$watchGroup(['fields.place_lat','fields.place_lng'], function (newVal, oldVal) {
+            scope.$watchGroup(['fields.place_lat', 'fields.place_lng'], function (newVal, oldVal) {
 
                 if (newVal !== oldVal) {
                     scope.map.removeObject(scope.marker);
@@ -80,7 +76,7 @@
                     // Ensure that the marker can receive drag events
                     scope.marker.draggable = true;
                     scope.map.addObject(scope.marker);
-                    scope.map.setCenter({lat: scope.$parent.fields.place_lat, lng: scope.$parent.fields.place_lng});
+                    scope.map.setCenter({ lat: scope.$parent.fields.place_lat, lng: scope.$parent.fields.place_lng });
                     scope.map.setZoom(18);
                 }
             });
@@ -93,7 +89,7 @@
             //Step 1: initialize communication with the platform
             // In your own code, replace variable window.apikey with your own apikey
             var platform = new H.service.Platform({
-                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
+                apikey: 'mY7QwygLG_ITu-lmlZd8ybewn1FsoK7LM6cUFlpRJTI'
             });
 
             var defaultLayers = platform.createDefaultLayers();
@@ -101,13 +97,13 @@
             //Step 2: initialize a map - this map is centered over Boston
             scope.map = new H.Map(document.getElementById('map-marker'),
                 defaultLayers.vector.normal.map, {
-                    center: {
-                        lat: scope.$parent.fields.place_lat,
-                        lng: scope.$parent.fields.place_lng
-                    },
-                    zoom: 18,
-                    pixelRatio: window.devicePixelRatio || 1
-                });
+                center: {
+                    lat: scope.$parent.fields.place_lat,
+                    lng: scope.$parent.fields.place_lng
+                },
+                zoom: 18,
+                pixelRatio: window.devicePixelRatio || 1
+            });
 
 
             //Configuração do mapa

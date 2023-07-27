@@ -5,74 +5,95 @@
         </div>
         <div class="panel-body" ng-if="requests.data">
 
-            <!--			<div class="text-right">-->
-            <!--				<a ng-show="search.stats.total_results > 0" ng-click="exportXLS()" class="btn btn-success"><i class="fa fa-file-excel-o"></i> Exportar XLS</a>-->
-            <!--			</div>-->
-
-            <br/>
-
-            <table datatable class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th></th>
                     <th>Data</th>
                     <th>Nome</th>
-                    <th>Requisitante<br/> <small> </small></th>
-                    <th>Idade<br/> <small> </small></th>
-                    <th>Motivo do pedido<br/> <small> </small></th>
-                    <th>Motivo da rejeição<br/> <small> </small></th>
-                    <th>Tipo<br/> <small> </small></th>
-                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'" width=""
-                        class="text-center"><br/>Ações
+                    <th>Requisitante</th>
+                    <th>Idade</th>
+                    <th>Motivo do pedido</th>
+                    <th>Motivo da rejeição</th>
+                    <th>Tipo</th>
+                    <th ng-if="identity.getCurrentUser().type == 'coordenador_operacional'">Ações</th>
+                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'">Data de
+                        aceitação/rejeição
                     </th>
-                    <th ng-if="identity.getCurrentUser().type == 'supervisor_institucional'" width=""
-                        class="text-center"><br/><small>Data de aceitação/rejeição</small></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, child) in requests.data">
                     <td>
-                        <i class="fa fa-refresh" ng-show="child.type_request === 'reopen'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
-                        <i class="fa fa-share-square-o" ng-show="child.type_request === 'transfer'" uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                        <i class="fa fa-refresh" ng-show="child.type_request === 'reopen'"
+                           uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
+                        <i class="fa fa-share-square-o" ng-show="child.type_request === 'transfer'"
+                           uib-tooltip="{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência'}}"></i>
                     </td>
-                    <td width="10%">
+                    <td>
                         <b>{{child.created_at | dateFormatBr}}</b>
                     </td>
-                    <td width="25%" style="vertical-align: middle;">
-                        <a ui-sref="child_viewer({child_id: child.child.id})">
+                    <td>
+
+                        <a ui-sref="child_viewer({child_id: child.child.id})" ng-show="child.status === 'requested'">
                             <strong style="font-size: 15px;">
                                 <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
                                    ng-show="child.child.gender"></i><span
                                     uib-tooltip="Abertura do caso: {{child.child.created_at | dateFormatBr}}">
-								{{child.child.name}}</span>
+                                {{child.child.name}}</span>
                             </strong><br>
                             <small uib-tooltip="Pais ou responsáveis">
                                 {{Decorators.Child.parents(child.child)}}
                             </small>
                         </a>
+
+                        <div ng-show="child.status !== 'requested'">
+                            <strong style="font-size: 15px;">
+                                <i class="fa {{child.child.gender | lang:'child.gender_icon'}}"
+                                   ng-show="child.child.gender"></i><span
+                                    uib-tooltip="Abertura do caso: {{child.child.created_at | dateFormatBr}}">
+                                    {{child.child.name}}</span>
+                            </strong><br>
+                            <small uib-tooltip="Pais ou responsáveis">
+                                {{Decorators.Child.parents(child.child)}}
+                            </small>
+                        </div>
+
                     </td>
-                    <td width="20%">
+                    <td>
                         {{child.requester.name}}
                     </td>
-                    <td width="5%" style="vertical-align: middle;">
+                    <td>
                         <span ng-show="child.child.age">{{child.child.age | digits}} anos</span>
                         <span ng-show="!child.child.age"><span uib-tooltip="Informação não disponível"
                                                                class="label label-default">n/d</span></span>
                     </td>
-                    <td width="20%" style="vertical-align: middle;">
+                    <td>
                         <small>{{child.interrupt_reason}}</small>
                     </td>
-                    <td style="vertical-align: middle;">
+                    <td>
                         <small>{{child.reject_reason}}</small>
                     </td>
-                    <td width="20%" style="vertical-align: middle;">
+                    <td>
                         <span>{{(child.type_request === 'reopen') && 'Reabertura' || 'Transferência' }}</span><br>
-                        <small ng-if="child.status === 'requested'" class="label label-default">Status: Solicitado</small>
+                        <small ng-if="child.status === 'requested'" class="label label-default">Status:
+                            Solicitado</small>
                         <small ng-if="child.status === 'approved'" class="label label-success">Status: Aceita</small>
                         <small ng-if="child.status === 'cancelled'" class="label label-danger">Status: Rejeitado</small>
+
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Pesquisa'"
+                               class="label label-default">Etapa: Pesquisa</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\AnaliseTecnica'"
+                               class="label label-default">Etapa: Análise Técnica</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\GestaoDoCaso'"
+                               class="label label-default">Etapa: Gestão do Caso</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Rematricula'"
+                               class="label label-default">Etapa: (Re)matrícula</small>
+                        <small ng-if="child.child.current_step_type === 'BuscaAtivaEscolar\\CaseSteps\\Observacao'"
+                               class="label label-default">Etapa: Observação</small>
+
                     </td>
-                    <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'" width="25%"
-                        style="vertical-align: middle; text-align: center">
+                    <td ng-if="identity.getCurrentUser().type === 'coordenador_operacional'">
                         <div ng-show="child.status === 'requested'">
                             <button ng-click="aprove(child)" class="btn btn-success btn-sm btn-raised"
                                     uib-tooltip="Aprovar">Aprovar
@@ -81,10 +102,8 @@
                                     uib-tooltip="Rejeitar">Rejeitar</i></button>
                         </div>
                         <p ng-show="child.status !== 'requested'">Concluído</p>
-
                     </td>
-                    <td ng-if="identity.getCurrentUser().type === 'supervisor_institucional'" width="25%"
-                        style="vertical-align: middle; text-align: center">
+                    <td ng-if="identity.getCurrentUser().type === 'supervisor_institucional'">
                         <small>{{child.updated_at | dateFormatBr}}</small>
                     </td>
 

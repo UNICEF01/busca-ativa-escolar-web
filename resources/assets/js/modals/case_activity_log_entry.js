@@ -1,17 +1,16 @@
 (function() {
 
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $q, $uibModalInstance) {
+    angular
+        .module('BuscaAtivaEscolar')
+        .controller('CaseActivityLogEntryCtrl', function CaseActivityLogEntryCtrl($scope, $uibModalInstance) {
 
-			// TODO: receive case ID, fetch details and show
+            // TODO: receive case ID, fetch details and show
 
-			//console.log("[modal] case_activity_log_entry");
 
-			$scope.close = function() {
-				$uibModalInstance.dismiss(false);
-			};
+            $scope.close = function() {
+                $uibModalInstance.dismiss(false);
+            };
 
-		});
+        });
 
 })();

@@ -1,93 +1,92 @@
 (function() {
 
-	var app = angular.module('BuscaAtivaEscolar');
+    var app = angular.module('BuscaAtivaEscolar');
 
-	app.service('Language', function Language($q, $http, $rootScope, API) {
+    app.service('Language', function Language($http, $rootScope, API) {
 
-		var database = {};
-		var langFile = API.getURI('language.json');
-		var $promise = {};
+        var database = {};
+        var langFile = API.getURI('language.json');
+        var $promise = {};
 
-		function setup() {
-			//console.log("[platform.language] Setting up language service...");
-			loadFromAPI();
-		}
+        function setup() {
 
-		function loadFromAPI() {
-			//console.log("[platform.language] Loading language file...");
-			$promise = $http.get(langFile).then(onDataLoaded);
-		}
+            loadFromAPI();
+        }
 
-		function onDataLoaded(res) {
-			if(!res.data || !res.data.database) {
-				console.error("[platform.language] Failed to load language file: ", res);
-				return;
-			}
+        function loadFromAPI() {
 
-			database = res.data.database;
+            $promise = $http.get(langFile).then(onDataLoaded);
+        }
 
-			//console.log("[platform.language] Language file loaded! ", Object.keys(database).length, " strings available: ", database);
+        function onDataLoaded(res) {
+            if (!res.data || !res.data.database) {
+                console.error("[platform.language] Failed to load language file: ", res);
+                return;
+            }
 
-			$rootScope.$broadcast('Language.ready');
-		}
+            database = res.data.database;
 
-		function translate(word, key) {
-			var stringID = key + "." + word;
-			return string(stringID);
-		}
 
-		function string(stringID) {
-			if(!database) return "DB_EMPTY:" + stringID;
-			if(!database[stringID]) return "STR_MISSING:" + stringID;
+            $rootScope.$broadcast('Language.ready');
+        }
 
-			return database[stringID];
-		}
+        function translate(word, key) {
+            var stringID = key + "." + word;
+            return string(stringID);
+        }
 
-		function getNumStrings() {
-			return database.length ? database.length : 0;
-		}
+        function string(stringID) {
+            if (!database) return "DB_EMPTY:" + stringID;
+            if (!database[stringID]) return "STR_MISSING:" + stringID;
 
-		function getLangFile() {
-			return langFile;
-		}
+            return database[stringID];
+        }
 
-		function isReady() {
-			return getNumStrings() > 0;
-		}
+        function getNumStrings() {
+            return database.length ? database.length : 0;
+        }
 
-		return {
-			setup: setup,
-			translate: translate,
-			string: string,
-			getNumStrings: getNumStrings,
-			getLangFile: getLangFile,
-			isReady: isReady,
-		};
+        function getLangFile() {
+            return langFile;
+        }
 
-	});
+        function isReady() {
+            return getNumStrings() > 0;
+        }
 
-	app.run(function (Language) {
-		Language.setup();
-	});
+        return {
+            setup: setup,
+            translate: translate,
+            string: string,
+            getNumStrings: getNumStrings,
+            getLangFile: getLangFile,
+            isReady: isReady,
+        };
 
-	app.filter('lang', function LanguageTranslateFilter(Language) {
-		var $fn = function(word, key) {
-			return Language.translate(word, key);
-		};
+    });
 
-		$fn.$stateful = true; // TODO: optimize so this is not needed
+    app.run(function(Language) {
+        Language.setup();
+    });
 
-		return $fn;
-	});
+    app.filter('lang', function LanguageTranslateFilter(Language) {
+        var $fn = function(word, key) {
+            return Language.translate(word, key);
+        };
 
-	app.filter('string', function LanguageStringFilter(Language) {
-		var $fn =  function(stringID) {
-			return Language.string(stringID);
-		};
+        $fn.$stateful = true; // TODO: optimize so this is not needed
 
-		$fn.$stateful = true; // TODO: optimize so this is not needed
+        return $fn;
+    });
 
-		return $fn;
-	});
+    app.filter('string', function LanguageStringFilter(Language) {
+        var $fn = function(stringID) {
+            return Language.string(stringID);
+        };
+
+        $fn.$stateful = true; // TODO: optimize so this is not needed
+
+        return $fn;
+    });
 
 })();

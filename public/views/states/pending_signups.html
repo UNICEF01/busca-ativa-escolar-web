@@ -1,389 +1,392 @@
 <div>
-  <div class="col-md-6">
-    <div class="panel panel-default">
-      <div class="panel-heading clearfix">
-        <h3 class="pull-left">
-          <i class="fa fa-university"></i> Adesões estaduais pendentes
-        </h3>
-        <a
-          style="margin-top: 22px;"
-          class="btn btn-sm btn-raised btn-default pull-right"
-          ng-click="refresh()"
-          ><i class="fa fa-refresh"></i> Atualizar</a
-        >
-      </div>
-      <div class="panel-body">
-        <div class="simple-filter clearfix">
-          <h5><i class="fa fa-filter"></i> Filtrar</h5>
-
-          <div>
-            <div class="form-group col-md-4">
-              <select
-                class="form-control"
-                ng-model="query.filter.created_at"
-                ng-change="refresh()"
-              >
-                <option value="">Todos</option>
-                <option value="7">Últimos 7 dias</option>
-                <option value="30">Últimos 30 dias</option>
-                <option value="60">Últimos 60 dias</option>
-                <option value="90">Últimos 90 dias</option>
-              </select>
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="pull-left">
+                    <i class="fa fa-university"></i> Adesões estaduais pendentes
+                </h3>
+                <a
+                        style="margin-top: 22px;"
+                        class="btn btn-sm btn-raised btn-default pull-right"
+                        ng-click="refresh()"
+                ><i class="fa fa-refresh"></i> Atualizar</a
+                >
             </div>
-            <div class="form-group col-md-4">
-              <select
-                class="form-control"
-                ng-model="query.filter.status"
-                ng-change="refresh()"
-              >
-                <option value="all">Todos</option>
-                <option value="pending">Pendentes</option>
-                <option value="approved">Aprovados</option>
-                <option value="rejected">Rejeitados</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div
-          class="alert alert-success"
-          ng-hide="signups.data && signups.data.length > 0"
-        >
-          Nenhuma adesão pendente de aprovação!
-        </div>
+            <div class="panel-body">
+                <div class="simple-filter clearfix">
+                    <h5><i class="fa fa-filter"></i> Filtrar</h5>
 
-        <table class="table" ng-show="signups.data && signups.data.length > 0">
-          <thead>
-            <tr>
-              <th>
-                <column-sorter
-                  on-change="refresh"
-                  model="query.sort"
-                  field="'uf'"
-                  >UF</column-sorter
+                    <div>
+                        <div class="form-group col-md-4">
+                            <select
+                                    class="form-control"
+                                    ng-model="query.filter.created_at"
+                                    ng-change="refresh()"
+                            >
+                                <option value="">Todos</option>
+                                <option value="7">Últimos 7 dias</option>
+                                <option value="30">Últimos 30 dias</option>
+                                <option value="60">Últimos 60 dias</option>
+                                <option value="90">Últimos 90 dias</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <select
+                                    class="form-control"
+                                    ng-model="query.filter.status"
+                                    ng-change="refresh()"
+                            >
+                                <option value="all">Todos</option>
+                                <option value="pending">Pendentes</option>
+                                <option value="approved">Aprovados</option>
+                                <option value="rejected">Rejeitados</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div
+                        class="alert alert-success"
+                        ng-hide="signups.data && signups.data.length > 0"
                 >
-              </th>
-              <th>
-                <column-sorter
-                  on-change="refresh"
-                  model="query.sort"
-                  field="'created_at'"
-                  >Data</column-sorter
-                >
-              </th>
-              <th>
-                <column-sorter
-                  on-change="refresh"
-                  model="query.sort"
-                  field="'status'"
-                  >Status</column-sorter
-                >
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              ng-repeat="(i, signup) in signups.data"
-              ng-click="preview(signup)"
-              style="cursor: pointer;"
-            >
-              <td><span ng-bind="signup.uf"></span></td>
-              <td>
+                    Nenhuma adesão pendente de aprovação!
+                </div>
+
+                <table class="table" ng-show="signups.data && signups.data.length > 0">
+                    <thead>
+                    <tr>
+                        <th>
+                            <column-sorter
+                                    on-change="refresh"
+                                    model="query.sort"
+                                    field="'uf'"
+                            >UF
+                            </column-sorter
+                            >
+                        </th>
+                        <th>
+                            <column-sorter
+                                    on-change="refresh"
+                                    model="query.sort"
+                                    field="'created_at'"
+                            >Data
+                            </column-sorter
+                            >
+                        </th>
+                        <th>
+                            <column-sorter
+                                    on-change="refresh"
+                                    model="query.sort"
+                                    field="'status'"
+                            >Status
+                            </column-sorter
+                            >
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr
+                            ng-repeat="(i, signup) in signups.data"
+                            ng-click="preview(signup)"
+                            style="cursor: pointer;"
+                    >
+                        <td><span ng-bind="signup.uf"></span></td>
+                        <td>
                 <span
-                  ng-bind="signup.created_at | amTimeAgo"
-                  uib-tooltip-html="signup.created_at | amCalendar"
+                        ng-bind="signup.created_at | amTimeAgo"
+                        uib-tooltip-html="signup.created_at | amCalendar"
                 ></span>
-              </td>
-              <td>
+                        </td>
+                        <td>
                 <span ng-show="signup.is_approved" class="label label-success"
-                  >Aprovado!</span
+                >Aprovado!</span
                 >
-                <span
-                  ng-show="!signup.is_approved && !signup.deleted_at"
-                  class="label label-warning"
-                  >Aguardando Aprovação</span
-                >
-                <span
-                  ng-show="!signup.is_approved && signup.deleted_at"
-                  class="label label-danger"
-                  >Rejeitado</span
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                            <span
+                                    ng-show="!signup.is_approved && !signup.deleted_at"
+                                    class="label label-warning"
+                            >Aguardando Aprovação</span
+                            >
+                            <span
+                                    ng-show="!signup.is_approved && signup.deleted_at"
+                                    class="label label-danger"
+                            >Rejeitado</span
+                            >
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-        <app-paginator
-          collection="signups"
-          query="query"
-          on-refresh="refresh"
-        ></app-paginator>
-      </div>
+                <app-paginator
+                        collection="signups"
+                        query="query"
+                        on-refresh="refresh"
+                ></app-paginator>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div class="col-md-6">
-    <div class="panel panel-default" ng-show="signup && signup.id">
-      <div class="panel-heading">
-        <h3><i class="fa fa-signup"></i> {{signup.uf}}</h3>
-      </div>
-      <div class="panel-body">
-        <div class="alert alert-primary">
-          Adesão registrada
-          <strong
-            uib-tooltip-html="signup.created_at"
-            ng-bind="signup.created_at | amTimeAgo"
-          ></strong>
-          <span ng-show="signup.data.admin.name"
-            >por <strong ng-bind="signup.data.admin.name"></strong
-          ></span>
-        </div>
-
-        <div class="form-group col-md-12">
-          <label class="control-label">Cód. Adesão</label>
-          <p>{{signup.id}}</p>
-        </div>
-
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <i class="material-icons">person</i> Gestor(a) Estadual
-          </div>
-          <div class="panel-body">
-            <div class="form-group col-md-12">
-              <label class="control-label">Nome*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-name"
-                type="text"
-                ng-model="signup.data.admin.name"
-              />
+    <div class="col-md-6">
+        <div class="panel panel-default" ng-show="signup && signup.id">
+            <div class="panel-heading">
+                <h3><i class="fa fa-signup"></i> {{signup.uf}}</h3>
             </div>
-            <div class="form-group col-md-6">
-              <label class="control-label">Data de nascimento*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-dob"
-                type="text"
-                ng-model="signup.data.admin.dob"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label class="control-label">CPF*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-cpf"
-                type="text"
-                ng-model="signup.data.admin.cpf"
-              />
-            </div>
-
-            <div class="form-group col-md-12">
-              <label for="fld-signup-admin-email" class="control-label"
-                >E-mail*</label
-              >
-              <div class="row">
-                <div class="col-md-10">
-                  <input
-                    class="form-control"
-                    id="fld-signup-admin-email"
-                    type="text"
-                    ng-model="signup.data.admin.email"
-                  />
+            <div class="panel-body">
+                <div class="alert alert-primary">
+                    Adesão registrada
+                    <strong
+                            uib-tooltip-html="signup.created_at"
+                            ng-bind="signup.created_at | amTimeAgo"
+                    ></strong>
+                    <span ng-show="signup.data.admin.name"
+                    >por <strong ng-bind="signup.data.admin.name"></strong
+                    ></span>
                 </div>
-              </div>
-              <button
-                type="button"
-                ng-if="signup.is_approved_by_manager == false"
-                class="btn btn-sm btn-raised btn-info"
-                uib-tooltip="Reenviar o e-mail para o(a) gestor(a)"
-                ng-click="resendMail(signup)"
-              >
-                Reenviar e-mail
-              </button>
-            </div>
-            <div class="form-group col-md-6">
-              <label class="control-label">Telefone fixo*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-phone"
-                type="text"
-                ng-model="signup.data.admin.phone"
-              />
-            </div>
-            <div class="form-group col-md-6">
-              <label class="control-label">Telefone celular</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-mobile"
-                type="text"
-                ng-model="signup.data.admin.mobile"
-              />
-            </div>
 
-            <hr />
+                <div class="form-group col-md-12">
+                    <label class="control-label">Cód. Adesão</label>
+                    <p>{{signup.id}}</p>
+                </div>
 
-            <div class="form-group col-md-12">
-              <label class="control-label">Órgão*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-institution"
-                type="text"
-                ng-model="signup.data.admin.institution"
-              />
-            </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="material-icons">person</i> Gestor(a) Estadual
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Nome*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-name"
+                                    type="text"
+                                    ng-model="signup.data.admin.name"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Data de nascimento*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-dob"
+                                    type="text"
+                                    ng-model="signup.data.admin.dob"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">CPF*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-cpf"
+                                    type="text"
+                                    ng-model="signup.data.admin.cpf"
+                            />
+                        </div>
 
-            <div class="form-group col-md-12">
-              <label class="control-label">Cargo*</label>
-              <input
-                class="form-control"
-                id="fld-signup-admin-position"
-                type="text"
-                ng-model="signup.data.admin.position"
-              />
-              <div class="form-group col-md-12">
-                <div class="row">
-                  <label class="control-label">Aceite do termo de adesão</label>
-                  <p ng-if="signup.is_approved_by_manager">
+                        <div class="form-group col-md-12">
+                            <label for="fld-signup-admin-email" class="control-label"
+                            >E-mail*</label
+                            >
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input
+                                            class="form-control"
+                                            id="fld-signup-admin-email"
+                                            type="text"
+                                            ng-model="signup.data.admin.email"
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                    type="button"
+                                    ng-if="signup.is_approved_by_manager == false"
+                                    class="btn btn-sm btn-raised btn-info"
+                                    uib-tooltip="Reenviar o e-mail para o(a) gestor(a)"
+                                    ng-click="resendMail(signup)"
+                            >
+                                Reenviar e-mail
+                            </button>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Telefone fixo*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-phone"
+                                    type="text"
+                                    ng-model="signup.data.admin.phone"
+                            />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Telefone celular</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-mobile"
+                                    type="text"
+                                    ng-model="signup.data.admin.mobile"
+                            />
+                        </div>
+
+                        <hr/>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Órgão*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-institution"
+                                    type="text"
+                                    ng-model="signup.data.admin.institution"
+                            />
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Cargo*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-admin-position"
+                                    type="text"
+                                    ng-model="signup.data.admin.position"
+                            />
+                            <div class="form-group col-md-12">
+                                <div class="row">
+                                    <label class="control-label">Aceite do termo de adesão</label>
+                                    <p ng-if="signup.is_approved_by_manager">
                     <span class="label label-success"
-                      >Gestor(a) estadual aceitou o termo de adesão</span
+                    >Gestor(a) estadual aceitou o termo de adesão</span
                     >
-                  </p>
-                </div>
-                <div class="row">
-                  <p ng-if="signup.is_approved_by_manager == false">
+                                    </p>
+                                </div>
+                                <div class="row">
+                                    <p ng-if="signup.is_approved_by_manager == false">
                     <span class="label label-danger"
-                      >Gestor(a) estadual não aceitou o termo de adesão</span
+                    >Gestor(a) estadual não aceitou o termo de adesão</span
                     >
-                  </p>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <button
+                                    type="button"
+                                    class="btn btn-sm btn-raised btn-primary"
+                                    uib-tooltip="Alterar e-mail do gestor"
+                                    ng-click="updateRegistrationData('admin', signup)"
+                            >
+                                Alterar dados do(a) gestor(a)
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="col-md-2">
-              <button
-                type="button"
-                class="btn btn-sm btn-raised btn-primary"
-                uib-tooltip="Alterar e-mail do gestor"
-                ng-click="updateRegistrationData('admin', signup)"
-              >
-                Alterar dados do(a) gestor(a)
-              </button>
-            </div>
-          </div>
-        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="material-icons">person</i> Dados do(a) Coordenador(a)
+                        Estadual
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group col-md-12">
+                            <label class="control-label">Nome*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-coordinator-name"
+                                    type="text"
+                                    ng-model="signup.data.coordinator.name"
+                            />
+                        </div>
 
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <i class="material-icons">person</i> Dados do(a) Coordenador(a)
-            Estadual
-          </div>
-          <div class="panel-body">
-            <div class="form-group col-md-12">
-              <label class="control-label">Nome*</label>
-              <input
-                class="form-control"
-                id="fld-signup-coordinator-name"
-                type="text"
-                ng-model="signup.data.coordinator.name"
-              />
-            </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Data de nascimento*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-coordinator-dob"
+                                    type="text"
+                                    ng-model="signup.data.coordinator.dob"
+                            />
+                        </div>
 
-            <div class="form-group col-md-6">
-              <label class="control-label">Data de nascimento*</label>
-              <input
-                class="form-control"
-                id="fld-signup-coordinator-dob"
-                type="text"
-                ng-model="signup.data.coordinator.dob"
-              />
-            </div>
+                        <div class="form-group col-md-6">
+                            <label class="control-label">CPF*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-coordinator-cpf"
+                                    type="text"
+                                    ng-model="signup.data.coordinator.cpf"
+                            />
+                        </div>
 
-            <div class="form-group col-md-6">
-              <label class="control-label">CPF*</label>
-              <input
-                class="form-control"
-                id="fld-signup-coordinator-cpf"
-                type="text"
-                ng-model="signup.data.coordinator.cpf"
-              />
-            </div>
+                        <div class="form-group col-md-12">
+                            <label for="fld-signup-coordinator-email" class="control-label"
+                            >E-mail institucional*</label
+                            >
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input
+                                            class="form-control"
+                                            id="fld-signup-coordinator-email"
+                                            type="text"
+                                            ng-model="signup.data.coordinator.email"
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="form-group col-md-12">
-              <label for="fld-signup-coordinator-email" class="control-label"
-                >E-mail institucional*</label
-              >
-              <div class="row">
-                <div class="col-md-10">
-                  <input
-                    class="form-control"
-                    id="fld-signup-coordinator-email"
-                    type="text"
-                    ng-model="signup.data.coordinator.email"
-                  />
+                        <div class="form-group col-md-6">
+                            <label class="control-label">Telefone fixo institucional*</label>
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-coordinator-phone"
+                                    type="text"
+                                    ng-model="signup.data.coordinator.phone"
+                            />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label class="control-label"
+                            >Telefone celular institucional</label
+                            >
+                            <input
+                                    class="form-control"
+                                    id="fld-signup-coordinator-mobile"
+                                    type="text"
+                                    ng-model="signup.data.coordinator.mobile"
+                            />
+                        </div>
+                        <div class="col-md-2">
+                            <button
+                                    type="button"
+                                    class="btn btn-sm btn-raised btn-primary"
+                                    uib-tooltip="Alterar e-mail do coordenador"
+                                    ng-click="updateRegistrationData('coordinator', signup)"
+                            >
+                                Alterar dados do(a) coordenador(a)
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
 
-            <div class="form-group col-md-6">
-              <label class="control-label">Telefone fixo institucional*</label>
-              <input
-                class="form-control"
-                id="fld-signup-coordinator-phone"
-                type="text"
-                ng-model="signup.data.coordinator.phone"
-              />
+            <div class="panel-footer clearfix">
+                <a
+                        ng-show="!signup.is_approved"
+                        class="btn btn-raised btn-success"
+                        ng-click="approve(signup)"
+                ><i class="fa fa-check"></i> Aprovar</a
+                >
+                <a
+                        ng-show="!signup.is_approved"
+                        class="btn btn-raised btn-danger"
+                        ng-click="reject(signup)"
+                ><i class="fa fa-ban"></i> Rejeitar</a
+                >
+                <div ng-show="signup.is_approved">
+                    <div class="alert alert-success">
+                        <strong>Adesão aprovada!</strong>
+                    </div>
+                    <div>
+                        <a
+                                class="btn btn-raised btn-primary"
+                                ng-click="resendNotification(signup)"
+                        ><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a
+                        >
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group col-md-6">
-              <label class="control-label"
-                >Telefone celular institucional</label
-              >
-              <input
-                class="form-control"
-                id="fld-signup-coordinator-mobile"
-                type="text"
-                ng-model="signup.data.coordinator.mobile"
-              />
-            </div>
-            <div class="col-md-2">
-              <button
-                type="button"
-                class="btn btn-sm btn-raised btn-primary"
-                uib-tooltip="Alterar e-mail do coordenador"
-                ng-click="updateRegistrationData('coordinator', signup)"
-              >
-                Alterar dados do(a) coordenador(a)
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <div class="panel-footer clearfix">
-        <a
-          ng-show="!signup.is_approved"
-          class="btn btn-raised btn-success"
-          ng-click="approve(signup)"
-          ><i class="fa fa-check"></i> Aprovar</a
-        >
-        <a
-          ng-show="!signup.is_approved"
-          class="btn btn-raised btn-danger"
-          ng-click="reject(signup)"
-          ><i class="fa fa-ban"></i> Rejeitar</a
-        >
-        <div ng-show="signup.is_approved">
-          <div class="alert alert-success">
-            <strong>Adesão aprovada!</strong>
-          </div>
-          <div>
-            <a
-              class="btn btn-raised btn-primary"
-              ng-click="resendNotification(signup)"
-              ><i class="fa fa-envelope"></i> Reenviar e-mail de notificação</a
-            >
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="wnd-view">
 
-    <form name="schoolAdd"  method="post" class="panel panel-default" autocomplete="off" ng-submit="save()">
+    <form name="schoolAdd" method="post" class="panel panel-default" autocomplete="off" ng-submit="save()">
 
         <div class="panel-heading clearfix">
             <div class="pull-left">
@@ -11,24 +11,25 @@
         </div>
 
         <div class="panel-body">
-            <app-city-select model="alert" uf="school.uf" city="school.city"  is-uf-required="true"
-                is-city-required="true"></app-city-select>
+            <app-city-select model="alert" uf="school.uf" city="school.city" is-uf-required="true"
+                             is-city-required="true"></app-city-select>
             <div class="form-group col-md-12">
                 <label class="control-label" for="fld-name">Nome*</label>
-                <input type="text" class="form-control" id="fld-name" ng-model="school.name" required />
+                <input type="text" class="form-control" id="fld-name" ng-model="school.name" required/>
             </div>
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-codigo">Código INEP*</label>
-                <input type="text" class="form-control" id="fld-codigo" ng-model="school.codigo" required />
+                <input type="text" class="form-control" id="fld-codigo" ng-model="school.codigo" required/>
             </div>
             <div class="form-group col-md-6">
                 <label class="control-label" for="fld-email">Email da Escola</label>
                 <input type="text" class="form-control" id="fld-email" ng-model="school.email"/>
             </div>
             <div class="clearfix">
-                <button  type="submit" class="btn btn-raised btn-primary pull-right">
-                  <i class="fa fa-save"></i> Salvar </button>
-              </div>
+                <button type="submit" class="btn btn-raised btn-primary pull-right">
+                    <i class="fa fa-save"></i> Salvar
+                </button>
+            </div>
         </div>
     </form>
 </div>

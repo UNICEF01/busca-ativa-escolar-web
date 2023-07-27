@@ -1,10 +1,10 @@
-(function () {
+(function() {
 
 
-    angular.module('BuscaAtivaEscolar').directive('numbersOnly', function () {
+    angular.module('BuscaAtivaEscolar').directive('numbersOnly', function() {
         return {
             require: 'ngModel',
-            link: function (scope, element, attr, ngModelCtrl) {
+            link: function(ngModelCtrl) {
                 function fromUser(text) {
                     if (text) {
                         var transformedInput = text.replace(/[^0-9]/g, '');

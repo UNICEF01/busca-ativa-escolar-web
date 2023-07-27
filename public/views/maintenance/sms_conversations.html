@@ -1,48 +1,53 @@
 <div>
-	<div class="clearfix">
-		<h3 class="pull-left"><i class="fa fa-mobile-phone"></i> Recebimento via SMS</h3>
-		<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
-	</div>
-	<div class="col-md-12">
+    <div class="clearfix">
+        <h3 class="pull-left"><i class="fa fa-mobile-phone"></i> Recebimento via SMS</h3>
+        <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i>
+            Atualizar</a>
+    </div>
+    <div class="col-md-12">
 
-		<hr />
-		<table class="table">
-			<thead>
-			<tr>
-				<th>ID / MSISDN</th>
-				<th>Start</th>
-				<th>Update</th>
-				<th>Step</th>
-				<th>Messages</th>
-			</tr>
-			</thead>
-			<tbody ng-repeat="conversation in conversations.data">
-				<tr>
-					<td>
-						<div>
-							<span class="label label-default"><i class="fa fa-comments"></i> ID: {{conversation.id}}</span>
-						</div>
-						<div>
-							<span class="label label-primary"><i class="fa fa-mobile-phone"></i> MSISDN: {{conversation.phone_number}}</span>
+        <hr/>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID / MSISDN</th>
+                <th>Start</th>
+                <th>Update</th>
+                <th>Step</th>
+                <th>Messages</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="conversation in conversations.data">
+            <tr>
+                <td>
+                    <div>
+                        <span class="label label-default"><i class="fa fa-comments"></i> ID: {{conversation.id}}</span>
+                    </div>
+                    <div>
+                        <span class="label label-primary"><i
+                                class="fa fa-mobile-phone"></i> MSISDN: {{conversation.phone_number}}</span>
 
-						</div>
-						<div ng-show="conversation.spawned_child_id">
-							<a ui-sref="child_viewer({id: conversation.spawned_child_id})" class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-eye"></i> Ver alerta</a>
-						</div>
-					</td>
-					<td><span ng-bind="conversation.created_at"></span></td>
-					<td><span ng-bind="conversation.updated_at"></span></td>
-					<td><span ng-bind="conversation.conversation_step"></span></td>
-					<td>
-						<div ng-repeat="(i, message) in conversation.received_messages" style="margin: 5px 0; padding: 5px; border-bottom: 1px solid #eee; ">
-							<span class="label label-default"><i class="fa fa-envelope"></i> {{message.callbackMoRequest.id}}</span>
-							<span class="label label-default">{{message.callbackMoRequest.received}}</span>
-							<span>{{message.callbackMoRequest.body}}</span>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+                    </div>
+                    <div ng-show="conversation.spawned_child_id">
+                        <a ui-sref="child_viewer({id: conversation.spawned_child_id})"
+                           class="btn btn-xs btn-raised btn-success" target="_blank"><i class="fa fa-eye"></i> Ver
+                            alerta</a>
+                    </div>
+                </td>
+                <td><span ng-bind="conversation.created_at"></span></td>
+                <td><span ng-bind="conversation.updated_at"></span></td>
+                <td><span ng-bind="conversation.conversation_step"></span></td>
+                <td>
+                    <div ng-repeat="(i, message) in conversation.received_messages"
+                         style="margin: 5px 0; padding: 5px; border-bottom: 1px solid #eee; ">
+                        <span class="label label-default"><i class="fa fa-envelope"></i> {{message.callbackMoRequest.id}}</span>
+                        <span class="label label-default">{{message.callbackMoRequest.received}}</span>
+                        <span>{{message.callbackMoRequest.body}}</span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 

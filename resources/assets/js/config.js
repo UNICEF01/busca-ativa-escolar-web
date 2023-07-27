@@ -1,110 +1,141 @@
-(function() {
+(function () {
+    identify('core', 'config.js');
 
-	identify('core', 'config.js');
+    angular
+        .module('BuscaAtivaEscolar.Config', [])
+        .factory('Config', function Config($rootScope, $cookies) {
+            numeral.language('pt-br');
+            moment.locale('pt-br');
 
-	angular
-		.module('BuscaAtivaEscolar.Config', [])
-		.factory('Config', function Config($rootScope, $cookies) {
+            function env(key) {
+                var default_endpoint = 'prod_https';
 
-			numeral.language('pt-br');
-			moment.locale('pt-br');
+                switch (location.host) {
+                    case 'plataforma.busca-ativa-escolar.test':
+                        default_endpoint = 'local_http';
+                        break;
+                    case 'panel.busca-ativa-escolar.test':
+                        default_endpoint = 'local_http';
+                        break;
+                    case 'plataforma.testes.buscaativaescolar.org.br':
+                        default_endpoint = 'tests_https';
+                        break;
+                    case 'plataforma.dev.buscaativaescolar.org.br':
+                        default_endpoint = 'dev_https';
+                        break;
+                    default:
+                        default_endpoint = 'prod_https';
+                }
 
-			function env(key) {
-				if(!window.ENVIRONMENT) {
-					window.ENVIRONMENT = {
-						SERVER_NAME: "Default (not configured)",
-						DEFAULT_ENDPOINT: 'prod_https'
-					};
-				}
+                if (!window.ENVIRONMENT) {
+                    window.ENVIRONMENT = {
+                        SERVER_NAME: 'Default (not configured)',
+                        DEFAULT_ENDPOINT: default_endpoint,
+                    };
+                }
 
-				return window.ENVIRONMENT[key];
-			}
+                return window.ENVIRONMENT[key];
+            }
 
-			var config = {
+            var config = {
+                BUILD_PREFIX: 'b060.', // @DEPRECATED: see config/local_storage.js instead!
 
-				BUILD_PREFIX: 'b060.', // @DEPRECATED: see config/local_storage.js instead!
+                API_ENDPOINTS: {
+                    local_http: {
+                        label: 'V1 Local - Homestead (Insecure)',
+                        api: 'http://api.busca-ativa-escolar.test/api/v1/',
+                        token: 'http://api.busca-ativa-escolar.test/api/auth/token',
+                    },
+                    tests_http: {
+                        label: 'V1 Tests - buscaativaescolar-web1 (Insecure)',
+                        api: 'http://api.testes.buscaativaescolar.org.br/api/v1/',
+                        token: 'http://api.testes.buscaativaescolar.org.br/api/auth/token',
+                    },
+                    tests_https: {
+                        label: 'V1 Tests - buscaativaescolar-web1 (Secure)',
+                        api: 'https://api.testes.buscaativaescolar.org.br/api/v1/',
+                        token: 'https://api.testes.buscaativaescolar.org.br/api/auth/token',
+                    },
+                    prod_http: {
+                        label: 'V1 Prod - buscaativaescolar-web1 (Insecure)',
+                        api: 'http://api.buscaativaescolar.org.br/api/v1/',
+                        token: 'http://api.buscaativaescolar.org.br/api/auth/token',
+                    },
+                    prod_https: {
+                        label: 'V1 Prod - buscaativaescolar-web1 (Secure)',
+                        api: 'https://api.buscaativaescolar.org.br/api/v1/',
+                        token: 'https://api.buscaativaescolar.org.br/api/auth/token',
+                    },
+                    dev_https: {
+                        label: 'V1 Dev - buscaativaescolar-web1 (Secure)',
+                        api: 'https://api.dev.buscaativaescolar.org.br/api/v1/',
+                        token: 'https://api.dev.buscaativaescolar.org.br/api/auth/token',
+                    },
+                },
 
-				API_ENDPOINTS: {
-					local_http: {
-						label: 'V1 Local - Homestead (Insecure)',
-						api: 'http://api.busca-ativa-escolar.test/api/v1/',
-						token: 'http://api.busca-ativa-escolar.test/api/auth/token',
-					},
-					tests_http: {
-						label: 'V1 Tests - buscaativaescolar-web1 (Insecure)',
-						api: 'http://api.testes.buscaativaescolar.org.br/api/v1/',
-						token: 'http://api.testes.buscaativaescolar.org.br/api/auth/token',
-					},
-					tests_https: {
-						label: 'V1 Tests - buscaativaescolar-web1 (Secure)',
-						api: 'https://api.testes.buscaativaescolar.org.br/api/v1/',
-						token: 'https://api.testes.buscaativaescolar.org.br/api/auth/token',
-					},
-					prod_http: {
-						label: 'V1 Prod - buscaativaescolar-web1 (Insecure)',
-						api: 'http://api.buscaativaescolar.org.br/api/v1/',
-						token: 'http://api.buscaativaescolar.org.br/api/auth/token',
-					},
-					prod_https: {
-						label: 'V1 Prod - buscaativaescolar-web1 (Secure)',
-						api: 'https://api.buscaativaescolar.org.br/api/v1/',
-						token: 'https://api.buscaativaescolar.org.br/api/auth/token',
-					},
-					dev_https: {
-						label: 'V1 Dev - buscaativaescolar-web1 (Secure)',
-						api: 'https://api.dev.buscaativaescolar.org.br/api/v1/',
-						token: 'https://api.dev.buscaativaescolar.org.br/api/auth/token',
-					}
-				},
+                NOTIFICATIONS_REFRESH_INTERVAL: 30000, // 30 sec
 
-				NOTIFICATIONS_REFRESH_INTERVAL: 30000, // 30 sec
+                TOKEN_EXPIRES_IN: 3600, // 1 hour
+                REFRESH_EXPIRES_IN: 1209600, // 2 weeks
 
-				TOKEN_EXPIRES_IN: 3600, // 1 hour
-				REFRESH_EXPIRES_IN: 1209600, // 2 weeks
+                ALLOWED_ENDPOINTS: [
+                    'local_http',
+                    'tests_https',
+                    'prod_https',
+                    'dev_https',
+                ],
+                CURRENT_ENDPOINT: env('DEFAULT_ENDPOINT'),
+            };
 
-				ALLOWED_ENDPOINTS: ['local_http', 'tests_https', 'prod_https', 'dev_https'],
-				CURRENT_ENDPOINT: env('DEFAULT_ENDPOINT')
+            var hasCheckedCookie = false;
 
-			};
+            config.setEndpoint = function (endpoint) {
+                if (config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
+                    return;
+                }
 
-			// console.log("[core.config] Current environment: ", window.ENVIRONMENT.SERVER_NAME);
+                config.CURRENT_ENDPOINT = endpoint;
 
-			var hasCheckedCookie = false;
+                $cookies.put('FDENP_API_ENDPOINT', config.CURRENT_ENDPOINT);
+            };
 
-			config.setEndpoint = function(endpoint) {
-				if(config.ALLOWED_ENDPOINTS.indexOf(endpoint) === -1) {
-					//console.error("[core.config] Cannot set endpoint to ", endpoint,  ", not in valid endpoints list: ", config.ALLOWED_ENDPOINTS);
-					return;
-				}
+            config.getCurrentEndpoint = function () {
+                if (hasCheckedCookie) return config.CURRENT_ENDPOINT;
+                hasCheckedCookie = true;
 
-				//console.info("[core.config] Setting API endpoint: ", endpoint);
-				config.CURRENT_ENDPOINT = endpoint;
+                var cookie = $cookies.get('FDENP_API_ENDPOINT');
+                if (cookie) config.setEndpoint($cookies.get('FDENP_API_ENDPOINT'));
 
-				$cookies.put('FDENP_API_ENDPOINT', config.CURRENT_ENDPOINT);
-			};
+                return config.CURRENT_ENDPOINT;
+            };
 
-			config.getCurrentEndpoint = function() {
-				if(hasCheckedCookie) return config.CURRENT_ENDPOINT;
-				hasCheckedCookie = true;
+            config.getAPIEndpoint = function () {
+                return config.API_ENDPOINTS[config.getCurrentEndpoint()].api;
+            };
 
-				var cookie = $cookies.get('FDENP_API_ENDPOINT');
-				if(cookie) config.setEndpoint($cookies.get('FDENP_API_ENDPOINT'));
+            config.getTokenEndpoint = function () {
+                return config.API_ENDPOINTS[config.getCurrentEndpoint()].token;
+            };
 
-				//console.info("[core.config] Resolved current API endpoint: ", config.CURRENT_ENDPOINT, "cookie=", cookie);
+            config.getReadesaoURL = function () {
+                var url = '';
+                switch (location.host) {
+                    case 'plataforma.busca-ativa-escolar.test':
+                        url = 'http://site.busca-ativa-escolar.test/readesao-estadual';
+                        break;
+                    case 'plataforma.testes.buscaativaescolar.org.br':
+                        url =
+                            'https://site.testes.buscaativaescolar.org.br/readesao-estadual';
+                        break;
+                    case 'plataforma.dev.buscaativaescolar.org.br':
+                        url = 'https://site.dev.buscaativaescolar.org.br/readesao-estadual';
+                        break;
+                    default:
+                        url = 'https://buscaativaescolar.org.br/readesao-estadual';
+                }
+                return url;
+            };
 
-				return config.CURRENT_ENDPOINT;
-			};
-
-			config.getAPIEndpoint = function() {
-				return config.API_ENDPOINTS[config.getCurrentEndpoint()].api
-			};
-
-			config.getTokenEndpoint = function() {
-				return config.API_ENDPOINTS[config.getCurrentEndpoint()].token
-			};
-
-			return $rootScope.config = config;
-
-		});
-
+            return ($rootScope.config = config);
+        });
 })();

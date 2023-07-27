@@ -8,7 +8,6 @@
         $rootScope,
         $cookies,
         $state,
-        $location,
         Modals,
         Config,
         Auth,
@@ -20,9 +19,17 @@
         $scope.password = '';
         $scope.isLoading = false;
 
+        const currentDate = new Date();
+        const startDate = new Date(2023, 6, 21);
+        const endDate = new Date(2023, 6, 25);
+
+        $scope.isBeforeJuly25 =
+          currentDate >= startDate && currentDate <= endDate;
+
         $scope.endpoints = {
           allowed: Config.ALLOWED_ENDPOINTS,
           list: Config.API_ENDPOINTS,
+          readesaoURL: Config.getReadesaoURL(),
         };
 
         if (Identity.isLoggedIn()) {
@@ -36,15 +43,8 @@
             : (field_password.type = 'password');
         };
 
-        function onLoggedIn(session) {
+        function onLoggedIn() {
           $scope.isLoading = false;
-          /*Modals.show(
-            Modals.GeneralPopUpAlerts(
-              'QUESTIONÁRIO SOBRE IMPLEMENTAÇÃO DA ESTRATÉGIA'
-            )
-          );*/
-          //console.info("[login_ctrl] Logged in!", session);
-          //console.info("[login_ctrl] Tenant: ", Identity.getCurrentUser().tenant);
 
           if (Identity.getCurrentUser().lgpd) {
             if (!Identity.isUserType('coordenador_operacional'))

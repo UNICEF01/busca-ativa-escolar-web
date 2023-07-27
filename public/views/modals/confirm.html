@@ -1,12 +1,13 @@
 <div class="modal-template" id="md-confirm">
-	<div class="modal-header">
-		<h3 class="modal-title">{{message}}</h3>
-	</div>
-	<div class="modal-body" ng-show="details">
-		{{details}}
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-click="agree()">Sim</button>
-		<button class="btn btn-default" type="button" ng-click="disagree()">Não</button>
-	</div>
+    <div class="modal-header">
+        <h3 class="modal-title">{{message}}</h3>
+    </div>
+    <div class="modal-body" ng-show="details">
+        {{details}}
+    </div>
+    <div ng-show="htmlDetails" ng-bind-html="htmlDetails" class="modal-body"></div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="agree()">Sim</button>
+        <button class="btn btn-default" type="button" ng-click="disagree()">Não</button>
+    </div>
 </div>

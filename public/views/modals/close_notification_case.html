@@ -1,0 +1,21 @@
+<div class="modal-template" id="md-prompt">
+    <div class="modal-header">
+        <h3 class="modal-title">Confirma o fechamento da notificação?</h3>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="form-group col-md-12">
+                <p>Para fechar a notificação preencha o campo abaixo detalhando as ações que foram executadas. Uma nova
+                    anotação será criada no caso em andamento.</p>
+            </div>
+        </div>
+        <br/>
+        <p>Anotação:</p>
+        <textarea class="form-control" placeholder="Digite aqui as ações que foram executadas..."
+                  ng-model="annotation"></textarea>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-show="annotation" ng-click="ok()">Fechar notificação</button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+    </div>
+</div>

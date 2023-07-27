@@ -44,7 +44,7 @@
                     break;
                 default:
                     color = color
-                    //console.log('Algum problema com o Donuts');
+                //console.log('Algum problema com o Donuts');
             }
 
             var colors = Highcharts.getOptions().colors,

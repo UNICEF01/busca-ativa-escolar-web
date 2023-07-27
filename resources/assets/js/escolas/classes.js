@@ -1,7 +1,7 @@
-(function () {
+(function() {
 
     angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('classes', {
                 url: '/turmas/{school_id}',
                 templateUrl: '/views/escolas/turmas.html',
@@ -9,7 +9,7 @@
                 unauthenticated: true
             });
         })
-        .controller('TurmasCtrl', function ($scope, $anchorScroll, $httpParamSerializer, $stateParams, API, ngToast, Utils, Classes, Schools, Decorators, Modals, DTOptionsBuilder, DTColumnDefBuilder) {
+        .controller('TurmasCtrl', function($scope, $stateParams, ngToast, Utils, Classes, Decorators, Modals, DTOptionsBuilder) {
 
             $scope.Decorators = Decorators;
 
@@ -20,9 +20,9 @@
             };
 
             $scope.classes = {
-              school: {
-                  periodicidade: null
-              }
+                school: {
+                    periodicidade: null
+                }
             };
 
             $scope.showEdit = false;
@@ -30,13 +30,13 @@
             $scope.school_id = $stateParams.school_id;
 
 
-            $scope.refresh = function () {
-                $scope.classes = Classes.find({id: $scope.school_id});
+            $scope.refresh = function() {
+                $scope.classes = Classes.find({ id: $scope.school_id });
             };
 
             $scope.refresh();
 
-            $scope.edit = function (i) {
+            $scope.edit = function(i) {
                 if ($scope.show === i) {
                     $scope.show = false;
                     return;
@@ -60,7 +60,7 @@
 
                 if (res.success) {
                     ngToast.success(res.message);
-                    setInterval(function () {
+                    setInterval(function() {
                         location.reload();
                     }, 2000);
 
@@ -86,14 +86,14 @@
 
             }
 
-            $scope.addClasse = function () {
+            $scope.addClasse = function() {
                 $scope.classe.schools_id = $scope.school_id;
                 $scope.classe.periodicidade = $scope.classes.school.periodicidade;
                 Classes.create($scope.classe).$promise.then(onSaved);
             };
 
 
-            $scope.updateClasse = function (data) {
+            $scope.updateClasse = function(data) {
 
                 var check = validate(data);
 
@@ -103,7 +103,7 @@
                 }
 
                 if (data === undefined) {
-                    data = {periodicidade: $scope.classes.school.periodicidade};
+                    data = { periodicidade: $scope.classes.school.periodicidade };
                 }
 
                 $scope.show = false;
@@ -114,29 +114,29 @@
 
 
             var language = {
-                "sEmptyTable": "Nenhum registro encontrado",
-                "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
-                "sInfoFiltered": "(Filtrados de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sInfoThousands": ".",
-                "sLengthMenu": "_MENU_ resultados por página",
-                "sLoadingRecords": "Carregando...",
-                "sProcessing": "Processando...",
-                "sZeroRecords": "Nenhum registro encontrado",
-                "sSearch": "Pesquisar",
-                "oPaginate": {
-                    "sNext": "Próximo",
-                    "sPrevious": "Anterior",
-                    "sFirst": "Primeiro",
-                    "sLast": "Último"
-                },
-                "oAria": {
-                    "sSortAscending": ": Ordenar colunas de forma ascendente",
-                    "sSortDescending": ": Ordenar colunas de forma descendente"
+                    "sEmptyTable": "Nenhum registro encontrado",
+                    "sInfo": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 até 0 de 0 registros",
+                    "sInfoFiltered": "(Filtrados de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sInfoThousands": ".",
+                    "sLengthMenu": "_MENU_ resultados por página",
+                    "sLoadingRecords": "Carregando...",
+                    "sProcessing": "Processando...",
+                    "sZeroRecords": "Nenhum registro encontrado",
+                    "sSearch": "Pesquisar",
+                    "oPaginate": {
+                        "sNext": "Próximo",
+                        "sPrevious": "Anterior",
+                        "sFirst": "Primeiro",
+                        "sLast": "Último"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Ordenar colunas de forma ascendente",
+                        "sSortDescending": ": Ordenar colunas de forma descendente"
+                    }
                 }
-            }
-            //Configura a linguagem na diretiva dt-options=""
+                //Configura a linguagem na diretiva dt-options=""
             $scope.dtOptions = DTOptionsBuilder.newOptions()
                 .withLanguage(language);
 
@@ -146,14 +146,14 @@
             ];
 
             //deletar classe
-            $scope.removeClasse = function (classe) {
+            $scope.removeClasse = function(classe) {
                 Modals.show(
-                    Modals.Confirm(
-                        "Confirma a remoção da turma "+classe.name+"? " +
-                        "As frequências registradas serão removidas.")
+                        Modals.Confirm(
+                            "Confirma a remoção da turma " + classe.name + "? " +
+                            "As frequências registradas serão removidas.")
                     )
-                    .then(function () {
-                        Classes.deleteClasse({id: classe.id}).$promise.then( function (res) {
+                    .then(function() {
+                        Classes.deleteClasse({ id: classe.id }).$promise.then(function(res) {
                             if (res.success) {
                                 ngToast.success(res.message);
                                 $scope.refresh();
@@ -162,34 +162,34 @@
                     });
             };
 
-            $scope.finish = function(){
+            $scope.finish = function() {
 
-                    var alertDiaria = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no próximo dia útil, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
-                    var alertSemanal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima semana, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
-                    var alertQuinzenal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima quinzena, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
-                    var alertMensal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início do próximo mês, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                var alertDiaria = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no próximo dia útil, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                var alertSemanal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima semana, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                var alertQuinzenal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início da próxima quinzena, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
+                var alertMensal = "Atenção! Após a primeira configuração e turmas já registradas, você receberá um e-mail, no início do próximo mês, para cadastrar o acompanhamento de frequência escolar de acordo com a periodicidade escolhida.";
 
-                    var msgFinal = "";
+                var msgFinal = "";
 
-                    switch ($scope.classes.school.periodicidade) {
-                        case 'Diaria':
-                            msgFinal = alertDiaria;
-                            break;
-                        case 'Semanal':
-                            msgFinal = alertSemanal;
-                            break;
-                        case 'Quinzenal':
-                            msgFinal = alertQuinzenal;
-                            break;
-                        case 'Mensal':
-                            msgFinal = alertMensal;
-                            break;
-                    }
+                switch ($scope.classes.school.periodicidade) {
+                    case 'Diaria':
+                        msgFinal = alertDiaria;
+                        break;
+                    case 'Semanal':
+                        msgFinal = alertSemanal;
+                        break;
+                    case 'Quinzenal':
+                        msgFinal = alertQuinzenal;
+                        break;
+                    case 'Mensal':
+                        msgFinal = alertMensal;
+                        break;
+                }
 
                 Modals.show(
-                    Modals.Confirm(msgFinal))
-                    .then(function () {
-                        window.location.href = "/frequencia/"+$scope.school_id;
+                        Modals.Confirm(msgFinal))
+                    .then(function() {
+                        window.location.href = "/frequencia/" + $scope.school_id;
                     });
             };
 

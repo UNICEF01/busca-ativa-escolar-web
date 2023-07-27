@@ -1,8 +1,8 @@
 (function () {
 
-    angular.module('BuscaAtivaEscolar').directive('casesMap', function ($rootScope, moment, $timeout, uiGmapGoogleMapApi, Identity, Platform, Children, Decorators) {
+    angular.module('BuscaAtivaEscolar').directive('casesMap', function (Children) {
 
-        function init(scope, element, attrs) {
+        function init(scope, attrs) {
 
 
             function synchronizeMaps(firstMap, secondMap) {
@@ -25,8 +25,7 @@
                 marker.setData(html);
                 group.addObject(marker);
 
-                group.addEventListener('pointerleave', function (evt) {
-                    //console.log(evt);
+                group.addEventListener('pointerleave', function () {
                     if (scope.bubble !== undefined) {
                         scope.bubble.close();
                     }
@@ -59,16 +58,17 @@
                 }, false);
 
                 angular.forEach(coordinates, function (value, key) {
-                    addMarkerToGroup(group, {lat: value.latitude, lng: value.longitude},
+                    addMarkerToGroup(group, { lat: value.latitude, lng: value.longitude },
                         '<div style="width: 250px"><a href="/children/view/' + value.id + '">' + value.name + '</a>');
                 });
 
-                var markers = document.getElementById("map-markes");
-                markers.style.display = "none";
             }
 
 
             function startClustering(map, data) {
+
+                var markers = document.getElementById("map-markes");
+                markers.style.display = "none";
 
                 var dataPoints = data.map(function (item) {
                     return new H.clustering.DataPoint(item.latitude, item.longitude);
@@ -84,21 +84,9 @@
                 var clusteringLayer = new H.map.layer.ObjectLayer(clusteredDataProvider);
 
                 var locations = data.map(function (item) {
-                    return new H.map.Marker({lat: item.latitude, lng: item.longitude});
+                    return new H.map.Marker({ lat: item.latitude, lng: item.longitude });
                 });
                 var group = new H.map.Group();
-
-                // group.addEventListener('tap', function (evt) {
-                //     alert()
-                //     var target = evt.target;
-                //     // retrieve maximum zoom level
-                //     var maxZoom = target.getData().maxZoom;
-                //     // get the shape's bounding box and adjust the camera position
-                //     map.getViewModel().setLookAtData({
-                //         zoom: maxZoom,
-                //         bounds: target.getBoundingBox()
-                //     });
-                // });
 
                 group.addObjects(locations);
 
@@ -111,20 +99,15 @@
                 map.addLayer(clusteringLayer);
             }
 
-            /**
-             * Boilerplate map initialization code starts below:
-             */
-
             var platform = new H.service.Platform({
-                apikey: 'fgRnSsPLJX3oJiiDsKfxhuuA5EAXrZlTc7P4Oei_vHA'
+                apikey: 'mY7QwygLG_ITu-lmlZd8ybewn1FsoK7LM6cUFlpRJTI'
             });
             var defaultLayers = platform.createDefaultLayers();
             var defaultLayersSync = platform.createDefaultLayers();
 
 
             var refresh = function () {
-                // console.log('[widget.cases_map] Loading data...');
-                Children.getMap({city_id: attrs.cityId}, function (data) {
+                Children.getMap({ city_id: attrs.cityId }, function (data) {
 
                     scope.coordinates = data.coordinates;
                     scope.mapCenter = data.center;
@@ -134,13 +117,13 @@
 
                     scope.map = new H.Map(document.getElementById('map'),
                         defaultLayers.vector.normal.map, {
-                            center: {lat: -13.5013846, lng: -51.901559},
-                            zoom: 5,
-                            pixelRatio: window.devicePixelRatio || 1
-                        });
+                        center: { lat: -13.5013846, lng: -51.901559 },
+                        zoom: 5,
+                        pixelRatio: window.devicePixelRatio || 1
+                    });
 
                     var mapTileService = platform.getMapTileService({
-                        // type: 'aerial'
+
                     });
 
                     scope.tileLayer = mapTileService.createTileLayer(
@@ -151,7 +134,6 @@
                     );
                     scope.map.setBaseLayer(scope.tileLayer);
 
-                    // map.getViewModel().setLookAtData({tilt: 45});
 
                     window.addEventListener('resize', () => scope.map.getViewPort().resize());
 
@@ -163,12 +145,12 @@
 
                     var mapMarkSync = new H.Map(document.getElementById('map-markes'),
                         defaultLayersSync.vector.normal.map, {
-                            center: {lat: -13.5013846, lng: -51.901559},
-                            zoom: 5,
-                            pixelRatio: window.devicePixelRatio || 1
-                        });
+                        center: { lat: -13.5013846, lng: -51.901559 },
+                        zoom: 5,
+                        pixelRatio: window.devicePixelRatio || 1
+                    });
                     var mapTileServiceSync = platform.getMapTileService({
-                        // type: 'aerial'
+
                     });
 
                     scope.tileLayer = mapTileService.createTileLayer(

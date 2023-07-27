@@ -1,29 +1,31 @@
 <div>
-	<div class="col-md-12">
-		<div class="clearfix">
-			<h3 class="pull-left"><i class="fa fa-history"></i> Histórico</h3>
-			<a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i> Atualizar</a>
-		</div>
+    <div class="col-md-12">
+        <div class="clearfix">
+            <h3 class="pull-left"><i class="fa fa-history"></i> Histórico</h3>
+            <a ng-click="refresh()" class="btn btn-raised btn-default pull-right"><i class="fa fa-refresh"></i>
+                Atualizar</a>
+        </div>
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th>Data</th>
-					<th>Usuário</th>
-					<th>Grupo</th>
-					<th>Atividade</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="(i, entry) in entries.data">
-					<td><span ng-bind="entry.created_at | amCalendar"></span></td>
-					<td ng-show="entry.user"><span uib-tooltip-html="entry.user.type | lang:'user.type'"><i class="fa fa-user"></i> {{entry.user.name}}</span></td>
-					<td ng-show="entry.user"><span>{{entry.user.group.name || 'Nenhum'}}</span></td>
-					<td ng-show="!entry.user"><i class="fa fa-gear"></i> Sistema</td>
-					<td ng-show="!entry.user">Nenhum</td>
-					<td ng-bind="entry.message"></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Usuário</th>
+                <th>Grupo</th>
+                <th>Atividade</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(i, entry) in entries.data">
+                <td><span ng-bind="entry.created_at | amCalendar"></span></td>
+                <td ng-show="entry.user"><span uib-tooltip-html="entry.user.type | lang:'user.type'"><i
+                        class="fa fa-user"></i> {{entry.user.name}}</span></td>
+                <td ng-show="entry.user"><span>{{entry.user.group.name || 'Nenhum'}}</span></td>
+                <td ng-show="!entry.user"><i class="fa fa-gear"></i> Sistema</td>
+                <td ng-show="!entry.user">Nenhum</td>
+                <td ng-bind="entry.message"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

@@ -4,8 +4,6 @@
     .factory('Modals', function ($q, $uibModal) {
       return {
         show: function (params) {
-          //console.log('[modals] Show modal: ', params);
-
           var def = $q.defer();
 
           var instance = $uibModal.open(params);
@@ -38,7 +36,7 @@
           };
         },
 
-        Confirm: function (message, details, canDismiss) {
+        Confirm: function (message, details, canDismiss, htmlDetails) {
           var params = {
             templateUrl: '/views/modals/confirm.html',
             controller: 'ConfirmModalCtrl',
@@ -52,6 +50,9 @@
               },
               canDismiss: function () {
                 return canDismiss;
+              },
+              htmlDetails: function () {
+                return htmlDetails;
               },
             },
           };
@@ -238,11 +239,11 @@
 
           return params;
         },
-
         UserPicker: function (
           title,
           message,
           users,
+          caseGroups,
           canDismiss,
           noUsersMessage
         ) {
@@ -257,11 +258,122 @@
               message: function () {
                 return message;
               },
+              users: function () {
+                return users;
+              },
+              caseGroups: function () {
+                return caseGroups;
+              },
               noUsersMessage: function () {
                 return noUsersMessage;
               },
-              users: function () {
-                return users;
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
+
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
+
+          return params;
+        },
+
+        GroupPicker: function (
+          title,
+          message,
+          initialGroup,
+          messageButton,
+          isMovement,
+          toBeMoved,
+          levelOfToBeMoved,
+          noGroupsMessage,
+          canDismiss
+        ) {
+          var params = {
+            templateUrl: '/views/modals/group_picker.html',
+            controller: 'GroupPickerModalCtrl',
+            size: 'lg',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              initialGroup: function () {
+                return initialGroup;
+              },
+              messageButton: function () {
+                return messageButton;
+              },
+              isMovement: function () {
+                return isMovement;
+              },
+              toBeMoved: function () {
+                return toBeMoved;
+              },
+              levelOfToBeMoved: function () {
+                return levelOfToBeMoved;
+              },
+              noGroupsMessage: function () {
+                return noGroupsMessage;
+              },
+              canDismiss: function () {
+                return canDismiss;
+              },
+            },
+          };
+
+          if (!canDismiss) {
+            params.keyboard = false;
+            params.backdrop = 'static';
+          }
+
+          return params;
+        },
+
+        RemoveGroupPicker: function (
+          title,
+          message,
+          initialGroup,
+          messageButton,
+          isMovement,
+          toBeRemoved,
+          levelOfToBeRemoved,
+          noGroupsMessage,
+          canDismiss
+        ) {
+          var params = {
+            templateUrl: '/views/modals/group_picker.html',
+            controller: 'RemoveGroupPickerModalCtrl',
+            size: 'lg',
+            resolve: {
+              title: function () {
+                return title;
+              },
+              message: function () {
+                return message;
+              },
+              initialGroup: function () {
+                return initialGroup;
+              },
+              messageButton: function () {
+                return messageButton;
+              },
+              isMovement: function () {
+                return isMovement;
+              },
+              toBeRemoved: function () {
+                return toBeRemoved;
+              },
+              levelOfToBeRemoved: function () {
+                return levelOfToBeRemoved;
+              },
+              noGroupsMessage: function () {
+                return noGroupsMessage;
               },
               canDismiss: function () {
                 return canDismiss;
@@ -285,7 +397,13 @@
           };
         },
 
-        FileUploader: function (title, message, uploadUrl, uploadParameters) {
+        FileUploader: function (
+          title,
+          message,
+          uploadUrl,
+          uploadParameters,
+          fileExtension
+        ) {
           return {
             templateUrl: '/views/modals/file_uploader.html',
             controller: 'FileUploaderModalCtrl',
@@ -302,6 +420,9 @@
               },
               uploadParameters: function () {
                 return uploadParameters;
+              },
+              fileExtension: function () {
+                return fileExtension;
               },
             },
           };
@@ -406,11 +527,6 @@
             resolve: {},
           };
 
-          //if (!canDismiss) {
-          //params.keyboard = false;
-          //params.backdrop = 'static';
-          //}
-
           return params;
         },
 
@@ -449,6 +565,15 @@
             params.backdrop = 'static';
           }
 
+          return params;
+        },
+
+        CloseNotification: function () {
+          var params = {
+            templateUrl: '/views/modals/close_notification_case.html',
+            controller: 'CloseNotificationModalCtrl',
+            size: 'md',
+          };
           return params;
         },
       };

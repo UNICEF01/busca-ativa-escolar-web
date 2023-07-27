@@ -1,0 +1,36 @@
+<div>
+    <table class="table table-hover" ng-show="isReady() && hasNotifications()">
+        <thead>
+        <tr>
+            <th>Usuário que criou a Notificação</th>
+            <th>Data de Abertura</th>
+            <th>Conteúdo da Notificação</th>
+            <th>Resolver Notificação?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(i, notification) in getNotifications()">
+            <td><span ng-bind="notification.user_name"></span></td>
+            <td>
+                <a href="{{'/children/view/' +notification.link+ '/comments'}}">
+                    <div style="height: 100%; width: 100%">
+                        <span ng-bind="notification.create_date"></span>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <span ng-bind="notification.notification"></span>
+            </td>
+            <td>
+                <a type="button" ng-click="solveNotification(notification.id)"
+                   class="btn btn-raised btn-default pull-right" title="Comentar e fechar notificação.">
+                    <i class="fa fa-ban"></i> Fechar notificação</a>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="alert alert-info" ng-show="isReady() && !hasNotifications()">
+        Você não tem notificações.
+    </div>
+</div>

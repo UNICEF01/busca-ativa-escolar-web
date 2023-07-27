@@ -1,69 +1,67 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar').directive('appPaginator', function () {
+    angular.module('BuscaAtivaEscolar').directive('appPaginator', function() {
 
 
-		function init(scope, element, attrs) {
+        function init(scope) {
 
-			scope.pageInput = 1;
+            function validatePageLimits() {
+                if (scope.query.page > scope.collection.meta.pagination.total_pages) {
+                    scope.query.page = scope.collection.meta.pagination.total_pages
+                }
 
-			function validatePageLimits() {
-				if(scope.query.page > scope.collection.meta.total_pages) {
-					scope.query.page = scope.collection.meta.total_pages
-				}
+                if (scope.query.page < 1) {
+                    scope.query.page = 1
+                }
+            }
 
-				if(scope.query.page < 1) {
-					scope.query.page = 1
-				}
-			}
+            scope.nextPage = function() {
+                if (!scope.query) return;
+                if (!scope.collection) return;
 
-			scope.nextPage = function() {
-				if(!scope.query) return;
-				if(!scope.collection) return;
+                scope.query.page++;
 
-				scope.query.page++;
+                validatePageLimits();
 
-				validatePageLimits();
+                scope.onRefresh();
+            };
 
-				scope.onRefresh();
-			};
+            scope.prevPage = function() {
+                if (!scope.query) return;
+                if (!scope.collection) return;
 
-			scope.prevPage = function() {
-				if(!scope.query) return;
-				if(!scope.collection) return;
+                scope.query.page--;
 
-				scope.query.page--;
+                validatePageLimits();
 
-				validatePageLimits();
+                scope.onRefresh();
+            };
 
-				scope.onRefresh();
-			};
+            scope.jumpToPage = function(page) {
+                if (!scope.query) return;
+                if (!scope.collection) return;
 
-			scope.jumpToPage = function(page) {
-				if(!scope.query) return;
-				if(!scope.collection) return;
+                scope.query.page = page;
 
-				scope.query.page = page;
+                validatePageLimits();
 
-				validatePageLimits();
+                scope.onRefresh();
+            }
 
-				scope.onRefresh();
-			}
+        }
 
-		}
+        return {
+            scope: {
+                'onRefresh': '=?',
+                'collection': '=?',
+                'query': '=?',
+            },
 
-		return {
-			scope: {
-				'onRefresh': '=?',
-				'collection': '=?',
-				'query': '=?',
-			},
+            link: init,
+            replace: true,
 
-			link: init,
-			replace: true,
-
-			templateUrl: '/views/components/paginator.html'
-		};
-	});
+            templateUrl: '/views/components/paginator.html'
+        };
+    });
 
 })();

@@ -1,30 +1,36 @@
 <div class="modal-template" id="md-prompt">
 
     <div class="modal-header">
-		<h3 class="modal-title">Tem certeza que deseja reabrir o caso em andamento?</h3>
-	</div>
+        <h3 class="modal-title">Tem certeza que deseja reabrir o caso em andamento?</h3>
+    </div>
 
     <div class="modal-body" ng-show="step == 1">
-		<p>O caso atual está com status: 'Em andamento'. Ao ser interrompido, o status do caso será definido como 'Fora da escola', e um novo caso na etapa <b>Pesquisa</b> será reaberto.</p>
-		<p>Essa operação não pode ser desfeita!</p>
-	</div>
+        <p>O caso atual está com status: 'Em andamento'. Ao ser interrompido, o status do caso será definido como 'Fora
+            da escola', e um novo caso na etapa <b>Pesquisa</b> será reaberto.</p>
+        <p>Essa operação não pode ser desfeita!</p>
+    </div>
 
-	<div class="modal-body" ng-show="step == 2">
-		<p ng-show="typeUser == 'coordenador_operacional'">
-			Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa.
-		<p>Essa operação não pode ser desfeita!</p>
-		</p>
-		<p ng-show="typeUser == 'supervisor_institucional'">
-			Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa. Uma solicitação será enviada ao coordenador(a) operacional do seu município autorizando ou não essa ação.
-		</p>
+    <div class="modal-body" ng-show="step == 2">
+        <p ng-show="typeUser == 'coordenador_operacional'">
+            Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa.
+        <p>Essa operação não pode ser desfeita!</p>
+        </p>
+        <p ng-show="typeUser == 'supervisor_institucional'">
+            Para reabrir o caso e reinseri-lo na etapa de Pesquisa, você deve escrever uma justificativa. Uma
+            solicitação será enviada ao coordenador(a) operacional do seu município autorizando ou não essa ação.
+        </p>
 
-		<textarea class="form-control" placeholder="Digite aqui o motivo do encerramento..." ng-model="reason"></textarea>
-	</div>
+        <textarea class="form-control" placeholder="Digite aqui o motivo do encerramento..."
+                  ng-model="reason"></textarea>
+    </div>
 
     <div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-show="step == 2 && reason" ng-click="ok()">OK, reabrir o caso</button>
-		<button class="btn btn-primary" type="button" ng-show="step == 1" ng-click="step = 2">Sim, desejo reabrir o caso</button>
-		<button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
-	</div>
+        <button class="btn btn-primary" type="button" ng-show="step == 2 && reason" ng-click="ok()">OK, reabrir o caso
+        </button>
+        <button class="btn btn-primary" type="button" ng-show="step == 1" ng-click="step = 2">Sim, desejo reabrir o
+            caso
+        </button>
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancelar</button>
+    </div>
 
 </div>

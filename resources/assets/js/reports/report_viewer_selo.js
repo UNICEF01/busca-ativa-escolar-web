@@ -1,14 +1,14 @@
 (function() {
 
     angular.module('BuscaAtivaEscolar')
-        .config(function ($stateProvider) {
+        .config(function($stateProvider) {
             $stateProvider.state('reports_selo', {
                 url: '/reports/selo/',
                 templateUrl: '/views/reports/reports_selo.html',
                 controller: 'ReportSeloViewerCtrl'
             })
         })
-        .controller('ReportSeloViewerCtrl', function ($scope, $rootScope, ngToast, API, Config, Platform, Identity, Reports, Tenants, StaticData, Modals) {
+        .controller('ReportSeloViewerCtrl', function($scope, Config, Identity, Reports, Modals) {
 
             $scope.reports = {};
             $scope.lastOrder = {
@@ -21,18 +21,18 @@
                     Modals.Confirm(
                         'Confirma a criação de um novo relatório?',
                         'Esse processo pode demorar alguns minutos devido a quantidade de casos registrados na plataforma'
-                    )).then(function () {
+                    )).then(function() {
 
-                        Reports.createReportSelo().$promise
-                            .then(function (res) {
-                                $scope.lastOrder.date = res.date;
-                            });
+                    Reports.createReportSelo().$promise
+                        .then(function(res) {
+                            $scope.lastOrder.date = res.date;
+                        });
                 });
 
             };
 
             $scope.downloadFile = function(file) {
-                Identity.provideToken().then(function (token) {
+                Identity.provideToken().then(function(token) {
                     window.open(Config.getAPIEndpoint() + 'reports/selo/download?token=' + token + "&file=" + file);
                 });
             };

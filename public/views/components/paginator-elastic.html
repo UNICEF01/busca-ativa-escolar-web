@@ -1,0 +1,34 @@
+<div class="row paginator" ng-show="collection && stats && stats.total_results > 1">
+    <script type="text/ng-template" id="paginator_popover.html">
+        <div></div>
+        <form ng-submit="jumpToPage(pageInput)" class="form-inline">
+            <input placeholder="Pág. n&ordm;..." type="number" min="0" max="{{ (stats.total_results/query.size) }}"
+                   ng-model="pageInput" class="form-control"/>
+            <button type="submit" class="btn btn-success btn-raised"><i class="fa fa-hand-o-right"></i></button>
+        </form>
+    </script>
+
+    <div class="col-xs-3 text-left">
+        <a ng-show="query.from > 1" class="btn btn-primary btn-raised" uib-tooltip="Página anterior"
+           ng-click="prevPage()">
+            <i class="fa fa-arrow-left"></i></a>
+    </div>
+
+    <div class="col-xs-6 text-center">
+        <a class="btn btn-default"
+           uib-popover-template="'paginator_popover.html'"
+           popover-title="Pular para página"
+           popover-class="popover-paginator"
+        >
+            Página <strong ng-bind="query.from">0</strong> de <strong
+                ng-bind=" (stats.total_results % query.size) == 0 ? (stats.total_results/query.size) : fixedNumberOf(stats.total_results/query.size)+1 ">0</strong>
+        </a>
+    </div>
+
+    <div class="col-xs-3 text-right">
+        <a ng-show="query.from < (stats.total_results/query.size) " class="btn btn-primary btn-raised"
+           uib-tooltip="Próxima página" ng-click="nextPage()">
+            <i class="fa fa-arrow-right"></i>
+        </a>
+    </div>
+</div>

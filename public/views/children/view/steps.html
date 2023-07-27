@@ -1,44 +1,58 @@
 <div class="row">
-	<div class="col-md-3">
-		<h3><i class="fa fa-check-square-o"></i> Etapas</h3>
-		<hr />
+    <div class="alert alert-danger" ng-if="showMessageNeedTransfer()">
+        Este caso pertence a outro município. As solicitações de transferências devem ser autorizadas <a
+            style="text-decoration: underline" href="/checks">aqui</a>.
+    </div>
 
-		<div ng-repeat="(i, case) in child.cases" class="panel panel-default case-container">
-			<div class="panel-heading" ng-click="collapseCase(case)">
-				#{{case.name}}
-				<span ng-show="case.case_status === 'transferred'" class="label label-warn">Transferido {{case.updated_at | amTimeAgo}}</span>
-				<span ng-show="case.case_status === 'cancelled'" class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
-				<span ng-show="case.case_status === 'interrupted'" class="label label-danger">Interrompido {{case.updated_at | amTimeAgo}}</span>
-				<span ng-show="case.case_status === 'completed'" class="label label-success">Concluído {{case.updated_at | amTimeAgo}}</span>
-				<span ng-show="case.case_status === 'in_progress'" class="label label-primary">Em andamento</span>
-			</div>
-			<div class="panel-body">
-				<div class="step-list" style="width: 100%">
+    <div class="col-md-3">
+        <h3><i class="fa fa-check-square-o"></i> Etapas</h3>
+        <hr/>
 
-					<div ng-repeat="(i, step) in case.steps" class="step {{renderStepStatusClass(case, step)}}" uib-tooltip-html="!identity.can('cases.step.' + step.slug) ? 'Você não tem permissão para acessar essa etapa' : null" ng-click="openStep(step)">
-						<strong>{{step.name}}</strong>
-						<span ng-show="step.is_completed">{{step.updated_at | amTimeAgo}}</span>
+        <div ng-repeat="(i, case) in child.cases" class="panel panel-default case-container">
+            <div class="panel-heading" ng-click="collapseCase(case)">
+                #{{case.name}}
+                <span ng-show="case.case_status === 'transferred'"
+                      class="label label-warn">Transferido {{case.updated_at | amTimeAgo}}</span>
+                <span ng-show="case.case_status === 'cancelled'"
+                      class="label label-warn">Cancelado {{case.updated_at | amTimeAgo}}</span>
+                <span ng-show="case.case_status === 'interrupted'"
+                      class="label label-danger">Interrompido {{case.updated_at | amTimeAgo}}</span>
+                <span ng-show="case.case_status === 'completed'"
+                      class="label label-success">Concluído {{case.updated_at | amTimeAgo}}</span>
+                <span ng-show="case.case_status === 'in_progress'" class="label label-primary">Em andamento</span>
+            </div>
+            <div class="panel-body">
 
-						<!--span ng-show="canCompleteStep(case, step) && identity.can('cases.step.' + step.slug)" class="btn btn-xs btn-info btn-raised btn-under btn-complete-step" ng-click="completeStep(step)" >Concluir etapa</span-->
-						<!--span ng-show="isPendingAssignment(step) && identity.can('cases.assign')" class="btn btn-xs btn-success btn-raised btn-under btn-assign-step" ng-click="assignStep(step)">Atribuir responsável</span -->
+                <div class="step-list" style="width: 100%">
 
-						<span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
-					</div>
-				</div>
-				<div class="col-md-12" ng-show="identity.can('cases.transfer') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
-					<a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()" style="width: 100%">Transferir caso</a>
-				</div>
+                    <div ng-repeat="(i, step) in case.steps" class="step {{renderStepStatusClass(case, step)}}"
+                         uib-tooltip-html="!identity.can('cases.step.' + step.slug) ? 'Você não tem permissão para acessar essa etapa' : null"
+                         ng-click="openStep(step)">
+                        <strong>{{step.name}}</strong>
+                        <span ng-show="step.is_completed">{{step.updated_at | amTimeAgo}}</span>
+                        <span class="not-allowed-icon" ng-hide="identity.can('cases.step.' + step.slug)"></span>
+                    </div>
+                </div>
 
-				<div class="col-md-12" ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
-					<a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i class="fa fa-ban"></i> Cancelar caso</a>
-				</div>
-			</div>
+                <div class="col-md-12" ng-show="canTransferCase()">
+                    <a class="btn btn-raised btn-warning pull-right" ng-click="transferCase()" style="width: 100%">Transferir
+                        caso</a>
+                </div>
 
-		</div>
+                <div class="col-md-12"
+                     ng-show="identity.can('cases.cancel') && case.case_status === 'in_progress' && case.currentStep.slug !== 'alerta'">
+                    <div ng-show="canCancelCase()">
+                        <a class="btn btn-danger btn-raised" ng-click="cancelCase()" style="width: 100%"><i
+                                class="fa fa-ban"></i> Cancelar caso</a>
+                    </div>
+                </div>
+            </div>
 
-	</div>
+        </div>
 
-	<div class="col-md-9">
-		<ui-view></ui-view>
-	</div>
+    </div>
+
+    <div class="col-md-9">
+        <ui-view></ui-view>
+    </div>
 </div>

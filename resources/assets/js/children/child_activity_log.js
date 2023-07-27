@@ -1,31 +1,29 @@
 (function() {
 
-	angular.module('BuscaAtivaEscolar')
-		.controller('ChildActivityLogCtrl', ChildActivityLogCtrl)
+    angular.module('BuscaAtivaEscolar')
+        .controller('ChildActivityLogCtrl', ChildActivityLogCtrl)
 
-		.config(function ($stateProvider) {
-			$stateProvider
-				.state('child_viewer.activity_log', {
-					url: '/activity_log',
-					templateUrl: '/views/children/view/activity_log.html',
-					controller: 'ChildActivityLogCtrl'
-				})
-		});
-	
-	function ChildActivityLogCtrl($scope, $state, $stateParams, Children, Decorators) {
+    .config(function($stateProvider) {
+        $stateProvider
+            .state('child_viewer.activity_log', {
+                url: '/activity_log',
+                templateUrl: '/views/children/view/activity_log.html',
+                controller: 'ChildActivityLogCtrl'
+            })
+    });
 
-		$scope.Decorators = Decorators;
-		$scope.Children = Children;
+    function ChildActivityLogCtrl($scope, $stateParams, Children, Decorators) {
 
-		$scope.entries = {};
+        $scope.Decorators = Decorators;
+        $scope.Children = Children;
 
-		$scope.refresh = function() {
-			$scope.entries = Children.getActivity({id: $stateParams.child_id});
-		};
+        $scope.entries = {};
 
-		$scope.refresh();
+        $scope.refresh = function() {
+            $scope.entries = Children.getActivity({ id: $stateParams.child_id });
+        };
 
-		//console.log("[core] @ChildActivityLogCtrl", $scope.$parent.entries);
-	}
+        $scope.refresh();
+    }
 
 })();

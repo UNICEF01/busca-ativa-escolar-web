@@ -1,36 +1,39 @@
 <div class="row">
-	<div class="col-md-3">
-		<div class="panel {{renderSearchPanelClass(search.health.status)}}">
-			<div class="panel-heading">Search</div>
-			<h1 class="panel-body" style="height: 110px">
-				{{search.health.active_shards ? (search.health.active_shards + ' shards') : 'Offline!'}}
-				<small ng-show="search.health.active_shards_percent_as_number">{{search.health.active_shards_percent_as_number}}% active</small>
-				<a class="btn btn-xs btn-default btn-raised" href="http://search.buscaativaescolar.org.br/_plugin/kopf"><i class="fa fa-cog"></i> Manage</a>
-			</h1>
-		</div>
-	</div>
-	<div class="col-md-3">
-		<div class="panel {{renderPctPanelClass(search.os.cpu_percent, 70, 80)}}">
-			<div class="panel-heading">CPU %</div>
-			<h1 class="panel-body" style="height: 110px">
-				{{search.os.cpu_percent !== null ? (search.os.cpu_percent + ' %') : 'Unavailable'}}
-			</h1>
-		</div>
-	</div>
-	<div class="col-md-3">
-		<div class="panel {{renderPctPanelClass(search.os.mem.used_percent, 70, 80)}}">
-			<div class="panel-heading">Memory %</div>
-			<h1 class="panel-body" style="height: 110px">
-				{{search.os.mem.used_percent !== null ? (search.os.mem.used_percent + '%') : 'Unavailable'}}
-			</h1>
-		</div>
-	</div>
-	<div class="col-md-3">
-		<div class="panel {{renderPctPanelClass(search.os.swap.used_in_bytes / search.os.swap.total_in_bytes, 0.7, 0.8)}}">
-			<div class="panel-heading">Swap %</div>
-			<h1 class="panel-body" style="height: 110px">
-				{{search.os.swap !== null ? (Math.round((search.os.swap.used_in_bytes * 100) / search.os.swap.total_in_bytes)) : 'Unavailable'}}
-			</h1>
-		</div>
-	</div>
+    <div class="col-md-3">
+        <div class="panel {{renderSearchPanelClass(search.health.status)}}">
+            <div class="panel-heading">Search</div>
+            <h1 class="panel-body" style="height: 110px">
+                {{search.health.active_shards ? (search.health.active_shards + ' shards') : 'Offline!'}}
+                <small ng-show="search.health.active_shards_percent_as_number">{{search.health.active_shards_percent_as_number}}%
+                    active</small>
+                <a class="btn btn-xs btn-default btn-raised" href="http://search.buscaativaescolar.org.br/_plugin/kopf"><i
+                        class="fa fa-cog"></i> Manage</a>
+            </h1>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel {{renderPctPanelClass(search.os.cpu_percent, 70, 80)}}">
+            <div class="panel-heading">CPU %</div>
+            <h1 class="panel-body" style="height: 110px">
+                {{search.os.cpu_percent !== null ? (search.os.cpu_percent + ' %') : 'Unavailable'}}
+            </h1>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel {{renderPctPanelClass(search.os.mem.used_percent, 70, 80)}}">
+            <div class="panel-heading">Memory %</div>
+            <h1 class="panel-body" style="height: 110px">
+                {{search.os.mem.used_percent !== null ? (search.os.mem.used_percent + '%') : 'Unavailable'}}
+            </h1>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel {{renderPctPanelClass(search.os.swap.used_in_bytes / search.os.swap.total_in_bytes, 0.7, 0.8)}}">
+            <div class="panel-heading">Swap %</div>
+            <h1 class="panel-body" style="height: 110px">
+                {{search.os.swap !== null ? (Math.round((search.os.swap.used_in_bytes * 100) /
+                    search.os.swap.total_in_bytes)) : 'Unavailable'}}
+            </h1>
+        </div>
+    </div>
 </div>

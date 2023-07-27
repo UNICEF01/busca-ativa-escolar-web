@@ -1,27 +1,20 @@
 @charset "UTF-8";
-
 @import 'compass/css3';
-
 @import 'shared/util_mixins';
 @import 'shared/util_classes';
-
 @import 'shared/bootstrap_config';
-
 @import 'components/navbar';
 @import 'components/case_steps';
 @import 'components/subnav_tabs';
 @import 'components/app_footer';
 @import 'components/loading_feedback';
 @import 'components/support_widget';
-@import 'components/user_browser';
 @import 'components/tenants';
-@import 'components/pending_alerts';
-@import 'components/scholl_browser';
-@import 'components/data_table';
+@import 'components/material-switch';
 @import 'components/painel_metas';
 @import 'components/animated';
-
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
+@import 'components/manage_groups';
 
 .form-control.ng-invalid {
   background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important;
@@ -97,11 +90,13 @@
   color: #777 !important;
 }
 
-.form-group .checkbox label, .form-group .radio label, .form-group label {
+.form-group .checkbox label,
+.form-group .radio label,
+.form-group label {
   color: #777 !important;
 }
 
-.dropdown .dropdown-menu li > a {
+.dropdown .dropdown-menu li>a {
   cursor: pointer;
 }
 
@@ -415,7 +410,7 @@ a.column-sorter {
   margin: 0 auto;
 }
 
-.panel-ciano > .panel-heading {
+.panel-ciano>.panel-heading {
   color: #FFF;
   background-color: #28ACE2;
   border-color: #d6e9c6;
@@ -436,4 +431,3 @@ a.column-sorter {
     color: #a8a8a8 !important;
   }
 }
-

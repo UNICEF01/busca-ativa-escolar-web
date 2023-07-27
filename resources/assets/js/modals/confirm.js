@@ -1,23 +1,32 @@
-(function() {
+(function () {
+  angular
+    .module('BuscaAtivaEscolar')
+    .controller(
+      'ConfirmModalCtrl',
+      function ConfirmModalCtrl(
+        $scope,
+        $uibModalInstance,
+        message,
+        details,
+        canDismiss,
+        htmlDetails
+      ) {
+        $scope.message = message;
+        $scope.details = details;
+        $scope.canDismiss = canDismiss;
 
-	angular
-		.module('BuscaAtivaEscolar')
-		.controller('ConfirmModalCtrl', function ConfirmModalCtrl($scope, $q, $uibModalInstance, message, details, canDismiss) {
+        if (htmlDetails) {
+          $scope.htmlDetails = htmlDetails;
+          $scope.details = null;
+        }
 
-			//console.log("[modal] confirm_modal", message, details, canDismiss);
+        $scope.agree = function () {
+          $uibModalInstance.close(true);
+        };
 
-			$scope.message = message;
-			$scope.details = details;
-			$scope.canDismiss = canDismiss;
-
-			$scope.agree = function() {
-				$uibModalInstance.close(true);
-			};
-
-			$scope.disagree = function() {
-				$uibModalInstance.dismiss(false);
-			};
-
-		});
-
+        $scope.disagree = function () {
+          $uibModalInstance.dismiss(false);
+        };
+      }
+    );
 })();

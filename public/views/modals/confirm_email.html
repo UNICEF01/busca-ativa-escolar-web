@@ -1,25 +1,25 @@
 <div class="modal-template" id="md-confirm">
-	<div class="modal-header">
-		<h2 class="modal-title">{{message}}</h2>
-	</div>
-	<div class="modal-body" ng-show="details">
-		<p>{{details}}</p>
-	</div>
-	<div class="modal-body" ng-show="schools">
-		<table class="table table-bordered">
-			<tr ng-repeat="(i, school) in schools">
-				<td>
-					<i class="glyphicon glyphicon-ok" ng-show="school.school_email != null"></i>
-					<i class="glyphicon glyphicon-remove" ng-show="school.school_email == null"></i>
-				</td>
-				<td>{{school.name}}</td>
-				<td>{{school.school_email}}</td>
-				<td>{{school.school_cell_phone}}</td>
-			</tr>
-		</table>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-success" type="button" ng-click="agree()">Sim</button>
-		<button class="btn btn-default" type="button" ng-click="disagree()">Não</button>
-	</div>
+    <div class="modal-header">
+        <h2 class="modal-title">{{message}}</h2>
+    </div>
+    <div class="modal-body" ng-show="details">
+        <p>{{details}}</p>
+    </div>
+    <div class="modal-body" ng-show="schools">
+        <table class="table table-bordered">
+            <tr ng-repeat="(i, school) in schools">
+                <td>
+                    <i class="glyphicon glyphicon-ok" ng-show="school.school_email != null"></i>
+                    <i class="glyphicon glyphicon-remove" ng-show="school.school_email == null"></i>
+                </td>
+                <td>{{school.name}}</td>
+                <td>{{school.school_email}}</td>
+                <td>{{school.school_cell_phone}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" type="button" ng-click="agree()">Sim</button>
+        <button class="btn btn-default" type="button" ng-click="disagree()">Não</button>
+    </div>
 </div>

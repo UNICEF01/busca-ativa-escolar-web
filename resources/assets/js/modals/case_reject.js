@@ -1,22 +1,20 @@
-(function () {
+(function() {
 
     angular
         .module('BuscaAtivaEscolar')
-        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $q, $uibModalInstance) {
+        .controller('CaseRejectModalCtrl', function CaseRestartModalCtrl($scope, $uibModalInstance) {
 
             $scope.reject_reason = "";
-            $scope.ok = function () {
+            $scope.ok = function() {
                 if (!$scope.reason) return;
-                $uibModalInstance.close(
-                    {
-                        response:
-                            {
-                                reason: $scope.reason,
-                            }
-                    });
+                $uibModalInstance.close({
+                    response: {
+                        reason: $scope.reason,
+                    }
+                });
             };
 
-            $scope.cancel = function () {
+            $scope.cancel = function() {
                 $uibModalInstance.dismiss(false);
             };
 

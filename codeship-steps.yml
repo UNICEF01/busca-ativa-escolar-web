@@ -1,0 +1,46 @@
+- name: Deploy Development
+  type: serial
+  tag: development
+  steps:
+    - name: Install SSH Private Key File
+      service: app
+      command: /bin/bash -c "echo -e $PRIVATE_SSH_KEY >> /root/.ssh/id_rsa"
+
+    - name: Change SSH Key Permissions
+      service: app
+      command: chmod 600 /root/.ssh/id_rsa
+
+    - name: Add Server to Known Hosts
+      service: app
+      command: /bin/bash -c "ssh-keyscan -H site.dev.buscaativaescolar.org.br >> /root/.ssh/known_hosts"
+
+    - name: SSH Command
+      service: app
+      command: ssh unicef@site.dev.buscaativaescolar.org.br ls;exit
+
+    - name: GIT PULL Development
+      service: app
+      command: ssh unicef@site.dev.buscaativaescolar.org.br cd /home/unicef/plataforma.dev.buscaativaescolar.org.br;git pull;exit
+- name: Deploy Production
+  type: serial
+  tag: master
+  steps:
+    - name: Install SSH Private Key File
+      service: app
+      command: /bin/bash -c "echo -e $PRIVATE_SSH_KEY >> /root/.ssh/id_rsa"
+
+    - name: Change SSH Key Permissions
+      service: app
+      command: chmod 600 /root/.ssh/id_rsa
+
+    - name: Add Server to Known Hosts
+      service: app
+      command: /bin/bash -c "ssh-keyscan -H buscaativaescolar.org.br >> /root/.ssh/known_hosts"
+
+    - name: SSH Command
+      service: app
+      command: ssh unicef@buscaativaescolar.org.br ls;exit
+
+    - name: GIT PULL Production
+      service: app
+      command: ssh unicef@buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull;exit

@@ -16,11 +16,15 @@
 
             <div class="row" style="margin-bottom: 20px; margin-top: 20px;">
                 <div class="col-lg-9">
-                    <p>Utilize o formulário abaixo para registrar o acompanhamento de frequência das turmas cadastradas pela sua escola. A periodicidade de registro foi definida e salva no cadastro feito por sua escola.</p>
+                    <p>Utilize o formulário abaixo para registrar o acompanhamento de frequência das turmas cadastradas
+                        pela sua escola. A periodicidade de registro foi definida e salva no cadastro feito por sua
+                        escola.</p>
                 </div>
 
                 <div class="col-lg-3 text-right">
-                    <a class="btn btn-info btn-raised" href="/turmas/{{school_id}}"> <i class="fa fa-cog" aria-hidden="true"></i> Configurar turmas</a>
+                    <a class="btn btn-info btn-raised" href="/turmas/{{school_id}}"> <i class="fa fa-cog"
+                                                                                        aria-hidden="true"></i>
+                        Configurar turmas</a>
                 </div>
             </div>
 
@@ -29,7 +33,8 @@
                     display: block;
                     margin-top: 20px;
                 }
-                .input_frequency{
+
+                .input_frequency {
                     -webkit-border-radius: 20px;
                     -moz-border-radius: 20px;
                     border-radius: 20px;
@@ -39,6 +44,7 @@
                     padding-left: 10px;
                     text-align: center;
                 }
+
                 .input_frequency:focus {
                     outline: none;
                     border: 1px solid #2d9fd9;
@@ -49,58 +55,71 @@
 
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>Turmas</th>
-                        <th>Período</th>
-                        <th>Estudantes matriculados</th>
-                        <th>Estudantes frequentes</th>
-                        <th>Percentual de frequência do último registro</th>
-                        <th>Período anterior</th>
-                    </tr>
+                <tr>
+                    <th>Turmas</th>
+                    <th>Período</th>
+                    <th>Estudantes matriculados</th>
+                    <th>Estudantes frequentes</th>
+                    <th>Percentual de frequência do último registro</th>
+                    <th>Período anterior</th>
+                </tr>
                 </thead>
                 <tbody>
 
-                    <tr ng-repeat="(i, turma) in classes.turmas" ng-if="turma.frequencies.length > 0">
-                        <td>
-                            <span class="data_class">{{turma.name}}</span>
-                        </td>
-                        <td>
-                            <span class="data_class">{{turma.shift}}</span>
-                        </td>
-                        <td>
-                            <span class="data_class">{{turma.qty_enrollment}}</span>
-                        </td>
-                        </td>
-                        <td>
-                            <input
-                                    id="frequency_{{turma.frequencies[turma.frequencies.length-1].id}}"
-                                    type="number"
-                                    max="{{turma.qty_enrollment}}"
-                                    name="frequency"
-                                    class="form-control"
-                                    placeholder="informe a frequência"
-                                    ng-blur="onModifyFrequency(turma.frequencies[turma.frequencies.length-1], turma)"
-                                    value="{{turma.frequencies[turma.frequencies.length-1].qty_presence}}">
-                        </td>
-                        <td>
+                <tr ng-repeat="(i, turma) in classes.turmas" ng-if="turma.frequencies.length > 0">
+                    <td>
+                        <span class="data_class">{{turma.name}}</span>
+                    </td>
+                    <td>
+                        <span class="data_class">{{turma.shift}}</span>
+                    </td>
+                    <td>
+                        <span class="data_class">{{turma.qty_enrollment}}</span>
+                    </td>
+                    </td>
+                    <td>
+                        <input
+                                id="frequency_{{turma.frequencies[turma.frequencies.length-1].id}}"
+                                type="number"
+                                max="{{turma.qty_enrollment}}"
+                                name="frequency"
+                                class="form-control"
+                                placeholder="informe a frequência"
+                                ng-blur="onModifyFrequency(turma.frequencies[turma.frequencies.length-1], turma)"
+                                value="{{turma.frequencies[turma.frequencies.length-1].qty_presence}}">
+                    </td>
+                    <td>
                             <span class="data_class">
                                 {{calculatePercentualFrequencies(turma.frequencies, turma.qty_enrollment)}}
                             </span>
-                        </td>
-                        <td class="text-center">
-                            <button class="btn btn-default btn-raised" ng-click="addPeriodFrequency(turma)"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                        </td>
-                    </tr>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-default btn-raised" ng-click="addPeriodFrequency(turma)"><i
+                                class="fa fa-plus" aria-hidden="true"></i></button>
+                    </td>
+                </tr>
 
                 </tbody>
             </table>
 
             <div class="row">
                 <ul class="nav nav-tabs" style="margin-bottom: 15px;">
-                    <li class="" id="li_diaria"><a href="#aba_diaria" data-toggle="tab" aria-expanded="false" id="link_diaria">Frequências diárias<div class="ripple-container"></div></a></li>
-                    <li class="" id="li_semanal"><a href="#aba_semanal" data-toggle="tab" aria-expanded="false" id="link_semanal">Frequências semanais<div class="ripple-container"></div></a></li>
-                    <li class="" id="li_quinzenal"><a href="#aba_quinzenal" data-toggle="tab" aria-expanded="false" id="link_quinzenal">Frequências quinzenais<div class="ripple-container"></div></a></li>
-                    <li class="" id="li_mensal"><a href="#aba_mensal" data-toggle="tab" aria-expanded="false" id="link_mensal">Frequências mensais<div class="ripple-container"></div></a></li>
+                    <li class="" id="li_diaria"><a href="#aba_diaria" data-toggle="tab" aria-expanded="false"
+                                                   id="link_diaria">Frequências diárias
+                        <div class="ripple-container"></div>
+                    </a></li>
+                    <li class="" id="li_semanal"><a href="#aba_semanal" data-toggle="tab" aria-expanded="false"
+                                                    id="link_semanal">Frequências semanais
+                        <div class="ripple-container"></div>
+                    </a></li>
+                    <li class="" id="li_quinzenal"><a href="#aba_quinzenal" data-toggle="tab" aria-expanded="false"
+                                                      id="link_quinzenal">Frequências quinzenais
+                        <div class="ripple-container"></div>
+                    </a></li>
+                    <li class="" id="li_mensal"><a href="#aba_mensal" data-toggle="tab" aria-expanded="false"
+                                                   id="link_mensal">Frequências mensais
+                        <div class="ripple-container"></div>
+                    </a></li>
                 </ul>
                 <div id="myTabContent" class="tab-content">
                     <div class="tab-pane fade" id="aba_diaria">

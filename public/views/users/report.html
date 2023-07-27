@@ -2,12 +2,14 @@
     <div class="panel panel-default">
         <div class="panel-heading clearfix">
             <h3 class="pull-left">Relatórios completos</h3>
-            <a ng-show="identity.isUserType('gestor_nacional')" ng-click="createReport()" class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Gerar novo relatório</a>
+            <a ng-show="identity.isUserType('gestor_nacional')" ng-click="createReport()"
+               class="btn btn-primary btn-raised pull-right"><i class="fa fa-file-excel-o"></i> Gerar novo relatório</a>
         </div>
         <div class="panel-body">
 
             <div>
-                <p>A lista abaixo exibe os últimos relatórios completos de todos os dados dos usuários da plataforma. Os arquivos ficam disponíveis durante uma semana. Essa tela será atualizada a cada 10 minutos.</p>
+                <p>A lista abaixo exibe os últimos relatórios completos de todos os dados dos usuários da plataforma. Os
+                    arquivos ficam disponíveis durante uma semana. Essa tela será atualizada a cada 10 minutos.</p>
                 <br>
                 <div class="alert alert-info" ng-show="lastOrder.date">
                     Última solicitação feita em {{ lastOrder.date * 1000 | date:'dd/MM/yyyy | HH:mm:ss' }}
@@ -24,7 +26,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="(i, report) in reports.data">
-                    <td>{{i+1}} - <a href="" ng-click="downloadFile(report.file)">{{report.file}}</a></td>
+                    <td>{{i + 1}} - <a href="" ng-click="downloadFile(report.file)">{{report.file}}</a></td>
                     <td>{{report.last_modification * 1000 | date:'dd/MM/yyyy HH:mm:ss'}}</td>
                     <td>{{report.size}}</td>
                 </tr>

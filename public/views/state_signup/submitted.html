@@ -1,20 +1,23 @@
 <div class="panel panel-default">
-	<div class="panel-heading">
-		<h3><strong>4.</strong> <i class="fa fa-history"></i> Aguarde confirmação</h3>
-	</div>
-	<div class="panel-body">
-		<p>Seus dados foram salvos e enviados com sucesso!</p>
-		<p>Nossa equipe irá validar e aprovar seu cadastro em até 5 dias úteis. Em seguida, você receberá uma mensagem em seu e-mail institucional com os dados para acessar a plataforma e instruções de como utilizá-la.</p>
-		<div>
-			<h3>status das etapas</h3>
-			<ul>
-				<li ng-repeat="item in stepsNames">
-					{{item}}
-					<span ng-if="stepChecks[$index]" class="glyphicon glyphicon-ok" style="color: green" aria-hidden="true"></span>
-					<span ng-if="!stepChecks[$index]" class="glyphicon glyphicon-remove" style="color: red" aria-hidden="true"></span>
+    <div class="panel-heading">
+        <h3><strong>4.</strong> <i class="fa fa-history"></i> Aguarde confirmação</h3>
+    </div>
+    <div class="panel-body">
+        <p>Seus dados foram salvos e enviados com sucesso!</p>
+        <p>Nossa equipe irá validar e aprovar seu cadastro em até 5 dias úteis. Em seguida, você receberá uma mensagem
+            em seu e-mail institucional com os dados para acessar a plataforma e instruções de como utilizá-la.</p>
+        <div>
+            <h3>status das etapas</h3>
+            <ul>
+                <li ng-repeat="item in stepsNames">
+                    {{item}}
+                    <span ng-if="stepChecks[$index]" class="glyphicon glyphicon-ok" style="color: green"
+                          aria-hidden="true"></span>
+                    <span ng-if="!stepChecks[$index]" class="glyphicon glyphicon-remove" style="color: red"
+                          aria-hidden="true"></span>
 
-				</li>
-			</ul>
-		</div>
-	</div>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

@@ -4,7 +4,6 @@
 
 		$rootScope.section = 'settings';
 		$scope.identity = Identity;
-
 		if(!$stateParams.step) {
 			if(Identity.can('settings.manage') || Identity.can('groups.manage')) { // First tab in settings
 				return $state.go('settings', {step: 4});

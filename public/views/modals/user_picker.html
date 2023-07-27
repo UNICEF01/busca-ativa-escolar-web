@@ -1,37 +1,81 @@
 <div class="modal-template" id="md-user-picker">
-	<div class="modal-header">
-		<h3 class="modal-title">{{title || 'Selecione um usuário:'}}</h3>
-	</div>
-	<div class="modal-body" ng-show="hasUsers()">
-		<div ng-show="message">{{message}}</div>
-		<div class="block">
-			<label class="control-label">Usuário</label>
-			<ui-select ng-model="$parent.selectedUser">
-				<ui-select-match allow-clear="true"><i class="fa fa-user"></i> {{$select.selected.name}}</ui-select-match>
-				<ui-select-choices repeat="user in users | filter: $select.search track by user.id">
-					<div>
-						<div>
-							<i class="fa fa-user"></i>
-							<strong ng-bind-html="user.name | highlight: $select.search"></strong>
 
-						</div>
-						<div>
-							<small ng-bind="user.type | lang:'user.type'"></small>
-							<span class="pull-right text-right" ng-show="user.group">
-								<small ng-bind="user.group.name"></small>
-								<i class="fa fa-users"></i>
-							</span>
-						</div>
-					</div>
-				</ui-select-choices>
-			</ui-select>
-		</div>
-	</div>
-	<div class="modal-body" ng-show="!hasUsers()">
-		<div class="alert alert-warning"><strong>Nenhum usuário disponível! </strong><span ng-bind="noUsersMessage"></span></div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-default" type="button" ng-show="canDismiss || !hasUsers()" ng-click="close()">Cancelar</button>
-		<button class="btn btn-primary btn-raised" type="button" ng-show="hasUsers()" ng-click="onSelect()">Selecionar</button>
-	</div>
+    <style>
+        #group_list {
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 1px solid lightgrey;
+            max-height: 500px;
+            overflow-y: scroll;
+        }
+
+        #group_list h5 {
+            padding-top: 5px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        #group_list hr {
+            padding: 0px !important;
+            margin-left: 30px !important;
+        }
+
+        #users_list .radio {
+            background-color: #ffffff;
+        }
+
+        #users_list .radio label {
+            color: #333333;
+            font-size: 13px;
+        }
+
+    </style>
+
+    <div class="modal-header">
+        <h3 class="modal-title">{{title || 'Selecione um usuário:'}}</h3>
+    </div>
+
+    <div class="modal-body" ng-show="hasUsers()">
+
+        <div ng-show="message">{{message}}</div>
+
+        <div id="group_list">
+
+            <div ng-repeat="group in getGroupWithUsers()" id="item_group">
+
+                <div style="padding-left: {{group.margin}}px;">
+                    <h5>{{group.name}}</h5>
+                </div>
+
+                <div style="padding-left: {{group.margin}}px;" id="users_list">
+                    <div ng-repeat="user in group.users" class="radio">
+                        <label>
+                            <input type="radio" id="optionsRadios{{user.id}}" ng-model="selectedUser.id"
+                                   value="{{user.id}}"> {{user.name}}
+                            <br/><strong>{{user.type | lang:'user.type'}}</strong>
+                        </label>
+                    </div>
+
+                </div>
+
+                <hr/>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal-body" ng-show="!hasUsers()">
+        <div class="alert alert-warning"><strong>Nenhum usuário disponível! </strong><span
+                ng-bind="noUsersMessage"></span></div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" type="button" ng-show="canDismiss || !hasUsers()" ng-click="close()">Cancelar
+        </button>
+        <button class="btn btn-primary btn-raised" type="button" ng-show="hasUsers()" ng-click="onSelect()">Selecionar
+        </button>
+    </div>
+
 </div>

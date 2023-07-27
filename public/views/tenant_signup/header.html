@@ -1,57 +1,57 @@
 <div class="sign-up-header">
-  <ul class="nav nav-pills sign-up-wizard-pills">
-    <li
-      style="width: 20%"
-      ng-class="{'active': (step == 1), 'completed' : (step > 1)}"
-    >
-      <a href="#" ng-click="goToStep(1)"
-        ><strong>1.</strong> <i class="fa fa-building"></i> Cadastre o
-        município</a
-      >
-    </li>
+    <ul class="nav nav-pills sign-up-wizard-pills">
+        <li
+                style="width: 20%"
+                ng-class="{'active': (step == 1), 'completed' : (step > 1)}"
+        >
+            <a href="#" ng-click="goToStep(1)"
+            ><strong>1.</strong> <i class="fa fa-building"></i> Cadastre o
+                município</a
+            >
+        </li>
 
-    <li ng-show="!stepChecks[0]" style="width: 20%">
-      <a
-        ><strong>2.</strong> <i class="fa fa-user"></i> Cadastre o(a)
-        prefeito(a)</a
-      >
-    </li>
-    <li
-      ng-show="stepChecks[0]"
-      style="width: 20%"
-      ng-class="{'active': (step == 2), 'completed' : (step > 2)}"
-    >
-      <a href="#" ng-click="goToStep(2)"
-        ><strong>2.</strong> <i class="fa fa-user"></i> Cadastre o(a)
-        prefeito(a)</a
-      >
-    </li>
+        <li ng-show="!stepChecks[0]" style="width: 20%">
+            <a
+            ><strong>2.</strong> <i class="fa fa-user"></i> Cadastre o(a)
+                prefeito(a)</a
+            >
+        </li>
+        <li
+                ng-show="stepChecks[0]"
+                style="width: 20%"
+                ng-class="{'active': (step == 2), 'completed' : (step > 2)}"
+        >
+            <a href="#" ng-click="goToStep(2)"
+            ><strong>2.</strong> <i class="fa fa-user"></i> Cadastre o(a)
+                prefeito(a)</a
+            >
+        </li>
 
-    <li ng-show="!stepChecks[1]" style="width: 20%">
-      <a
-        ><strong>3.</strong> <i class="fa fa-user"></i> Gestor(a) Político(a)</a
-      >
-    </li>
-    <li
-      ng-show="stepChecks[1]"
-      style="width: 20%"
-      ng-class="{'active': (step == 3), 'completed' : (step > 3)}"
-    >
-      <a href="#" ng-click="goToStep(3)"
-        ><strong>3.</strong> <i class="fa fa-user"></i> Gestor(a) Político(a)</a
-      >
-    </li>
+        <li ng-show="!stepChecks[1]" style="width: 20%">
+            <a
+            ><strong>3.</strong> <i class="fa fa-user"></i> Gestor(a) Político(a)</a
+            >
+        </li>
+        <li
+                ng-show="stepChecks[1]"
+                style="width: 20%"
+                ng-class="{'active': (step == 3), 'completed' : (step > 3)}"
+        >
+            <a href="#" ng-click="goToStep(3)"
+            ><strong>3.</strong> <i class="fa fa-user"></i> Gestor(a) Político(a)</a
+            >
+        </li>
 
-    <li
-      ng-show="stepChecks[3]"
-      style="width: 20%"
-      ng-class="{'active': (step == 5), 'completed' : (step > 5)}"
-    >
-      <a href="#" ng-click="goToStep(5)"
-        ><strong>5.</strong> <i class="fa fa-history"></i> Aguarde a
-        Confirmação</a
-      >
-    </li>
-  </ul>
-  <hr style="margin-top: 0; margin-bottom: 30px;" />
+        <li
+                ng-show="stepChecks[3]"
+                style="width: 20%"
+                ng-class="{'active': (step == 5), 'completed' : (step > 5)}"
+        >
+            <a href="#" ng-click="goToStep(5)"
+            ><strong>5.</strong> <i class="fa fa-history"></i> Aguarde a
+                Confirmação</a
+            >
+        </li>
+    </ul>
+    <hr style="margin-top: 0; margin-bottom: 30px;"/>
 </div>
