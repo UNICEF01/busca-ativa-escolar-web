@@ -46,7 +46,7 @@
       command: ssh unicef@buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull;exit
 - name: Deploy Testing
   type: serial
-  tag: master
+  tag: testing
   steps:
     - name: Install SSH Private Key File
       service: app
