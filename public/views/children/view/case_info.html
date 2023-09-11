@@ -291,6 +291,12 @@
                 <input type="tel" class="form-control" id="fld-codnis" ng-readonly="!canEditCurrentStep()"
                        ng-model="fields.nis">
             </div>
+            <div class="form-grouo col-md-4">
+                <label class="control-label" for="fld-nationality">Nacionalidade</label>
+                <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()"
+                        ng-model="fields.nationality"
+                        ng-options="n.slug as n.label for n in static.getNationalities()"></select>
+            </div>
         </div>
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
@@ -814,12 +820,6 @@
             <label class="control-label" for="fld-place_neighborhood">Bairro*</label>
             <input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()"
                    ng-model="fields.place_neighborhood">
-        </div>
-        <div class="form-grouo col-md-4">
-            <label class="control-label" for="fld-nationality">Nacionalidade</label>
-            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.nationality"
-                    ng-options="n.slug as n.label for n in static.getNationalities()"></select>
         </div>
         <app-city-select model="fields" city="fields.place_city" is-uf-required="true"
                          is-city-required="true"></app-city-select>
