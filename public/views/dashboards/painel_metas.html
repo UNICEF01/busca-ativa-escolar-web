@@ -350,38 +350,38 @@
 
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
-                                <h1 class="panel-body" ng-bind="otherData.goal_box.accumulated_ciclo1 || 0"></h1>
+                                <h1 class="panel-body" ng-bind="otherData.goal_box.accumulated_ciclo2 || 0"></h1>
                                 <div class="panel-footer" style="min-height: 100px;">
-                                    <small>(Re)matrículas realizadas até 31/10/2021 (data de corte)</small>
+                                    <small>(Re)matrículas realizadas até 06/06/2023 (data de corte)</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body" ng-bind="otherData.goal_box.goal || 0"></h1>
                                 <div class="panel-footer"
-                                     style="min-height: 100px; background-color: #f4b48e; color: white;">
-                                    <small>Meta de novas (re)matrículas para a primeira medição (31/03/2023) do Selo
+                                     style="min-height: 100px; background-color: #e56b1f; color: white;">
+                                    <small>Meta de novas (re)matrículas para a segunda medição (31/06/2024) do Selo
                                         edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body"
-                                    ng-bind="(otherData.goal_box.accumulated_ciclo1 + otherData.goal_box.goal) || 0"></h1>
+                                    ng-bind="(otherData.goal_box.accumulated_ciclo2 + otherData.goal_box.goal) || 0"></h1>
                                 <div class="panel-footer" style="min-height: 100px;">
-                                    <small>Meta de (re)matrículas acumuladas para a primeira medição (31/03/2023) do
-                                        Selo edição 21/24</small>
+                                    <small>Meta de (re)matrículas acumuladas para a segunda medição do Selo (30/06/2024) do
+                                        Selo UNICEF edição 21/24</small>
                                 </div>
                             </div>
 
                             <div class="panel panel-default" style="flex: 1; margin: 10px;">
                                 <h1 class="panel-body"
-                                    ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo1) || 0"></h1>
+                                    ng-bind="(otherData.goal_box.reinsertions_classes - otherData.goal_box.accumulated_ciclo2) || 0"></h1>
                                 <div class="panel-footer"
                                      ng-style="percentualAtingido <= 19 && {'color': 'white', 'background-color': '#d9534f'} || percentualAtingido <= 49 && {'color': 'white', 'background-color': '#f0ad4e'} || percentualAtingido < 100 && {'color': 'white', 'background-color': '#5cb85c'} || percentualAtingido >= 100 && {'color': 'white', 'background-color': '#28ACE2'}"
                                      style="min-height: 100px;">
                                     <small>Total de novas (re)matrículas realizadas até o momento, válidas para o
-                                        cumprimento das metas do Selo edição 21/24</small>
+                                        cumprimento das metas do Selo UNICEF edição 21/24</small>
                                 </div>
                             </div>
 

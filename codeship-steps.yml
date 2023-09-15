@@ -44,3 +44,26 @@
     - name: GIT PULL Production
       service: app
       command: ssh unicef@buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull;exit
+- name: Deploy Testing
+  type: serial
+  tag: testing
+  steps:
+    - name: Install SSH Private Key File
+      service: app
+      command: /bin/bash -c "echo -e $PRIVATE_SSH_KEY >> /root/.ssh/id_rsa"
+
+    - name: Change SSH Key Permissions
+      service: app
+      command: chmod 600 /root/.ssh/id_rsa
+
+    - name: Add Server to Known Hosts
+      service: app
+      command: /bin/bash -c "ssh-keyscan -H site.testes.buscaativaescolar.org.br >> /root/.ssh/known_hosts"
+
+    - name: SSH Command
+      service: app
+      command: ssh unicef@site.testes.buscaativaescolar.org.br ls;exit
+
+    - name: GIT PULL Testing
+      service: app
+      command: ssh unicef@site.testes.buscaativaescolar.org.br cd /home/unicef/buscaativaescolar/web;git pull origin testing;exit

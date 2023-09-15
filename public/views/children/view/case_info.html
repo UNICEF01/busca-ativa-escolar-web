@@ -291,6 +291,12 @@
                 <input type="tel" class="form-control" id="fld-codnis" ng-readonly="!canEditCurrentStep()"
                        ng-model="fields.nis">
             </div>
+            <div class="form-grouo col-md-4">
+                <label class="control-label" for="fld-nationality">Nacionalidade</label>
+                <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()"
+                        ng-model="fields.nationality"
+                        ng-options="n.slug as n.label for n in static.getNationalities()"></select>
+            </div>
         </div>
         <div ng-show="editable && canEditCurrentStep()">
             <hr/>
@@ -815,12 +821,6 @@
             <input type="text" class="form-control" id="fld-place_neighborhood" ng-readonly="!canEditCurrentStep()"
                    ng-model="fields.place_neighborhood">
         </div>
-        <div class="form-grouo col-md-4">
-            <label class="control-label" for="fld-nationality">Nacionalidade</label>
-            <select id="fld-nationality" class="form-control" ng-disabled="!canEditCurrentStep()"
-                    ng-model="fields.nationality"
-                    ng-options="n.slug as n.label for n in static.getNationalities()"></select>
-        </div>
         <app-city-select model="fields" city="fields.place_city" is-uf-required="true"
                          is-city-required="true"></app-city-select>
 
@@ -833,14 +833,42 @@
             </select>
         </div>
 
-        <div class="form-group col-md-6">
+        <!-- <div class="form-group col-md-6">
             <label class="control-label" for="fld-place_is_quilombola">Comunidade quilombola*</label>
             <select type="text" class="form-control" id="fld-place_is_quilombola" ng-disabled="!canEditCurrentStep()"
                     ng-model="fields.place_is_quilombola">
                 <option ng-value="1">Sim</option>
                 <option ng-value="0">Não</option>
             </select>
-        </div>
+        </div> -->
+
+        <div class="form-group col-md-6" id="radio_place_type" ng-disabled="!canEditCurrentStep()">
+            <label class="control-label" style="margin-bottom: 1rem;">Tipo de Comunidade</label>
+            <div>
+                <label>
+                    <input type="radio" ng-model="fields.selectedPlaceType" ng-value="'quilombola'" ng-change="updatePlaceType()" ng-disabled="!canEditCurrentStep()">
+                    Quilombola
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" ng-model="fields.selectedPlaceType" ng-value="'indigena'" ng-change="updatePlaceType()" ng-disabled="!canEditCurrentStep()">
+                    Indígena
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" ng-model="fields.selectedPlaceType" ng-value="'do_campo'" ng-change="updatePlaceType()" ng-disabled="!canEditCurrentStep()">
+                    Do Campo
+                </label>
+            </div>
+            <div>
+                <label>
+                    <input type="radio" ng-model="fields.selectedPlaceType" ng-value="'ribeirinha'" ng-change="updatePlaceType()" ng-disabled="!canEditCurrentStep()">
+                    Ribeirinha
+                </label>
+            </div>
+        </div>        
 
         <div class="form-group col-md-12" ng-if="fields.place_coords">
 
