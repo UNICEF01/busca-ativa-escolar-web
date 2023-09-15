@@ -25,7 +25,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" ng-if="!identity.isCoordenadorOrSupervisorEstadual()">
                         <div class="col-md-6">
                             <input class="form-control" type="text" ng-model="selectedGroup.name" disabled
                                    placeholder="Grupo Selecionado">
@@ -252,7 +252,7 @@
                     <th>Etapa</th>
                     <th>Responsável</th>
                     <th>Município e bairro</th>
-                    <th>Grupo <small>(do caso)</small></th>
+                    <th ng-if="!identity.isCoordenadorOrSupervisorEstadual()">Grupo <small>(do caso)</small></th>
                     <th>Status</th>
                     <th></th>
                 </tr>
@@ -311,7 +311,7 @@
                                ng-show="child.place_neighborhood">{{child.place_neighborhood}}</small>
                     </td>
 
-                    <td>
+                    <td ng-if="!identity.isCoordenadorOrSupervisorEstadual()">
                         <span uib-popover="{{branchGroups}}" popover-title="{{child.group_name}}"
                               popover-trigger="'outsideClick'" ng-click="clikcInGroup(child.group_id)"> <a
                                 href="#">{{child.group_name}}</a> </span>
