@@ -1,89 +1,92 @@
-<div class="panel panel-default">
-    <div class="panel-body" ng-if="isReady() && hasAssignments()">
+<div style="margin-top: 2rem; margin-bottom: 2rem;">
+    <div class="panel panel-default" ng-if="isReady() && hasAssignments()">
 
-        <div class="alert alert-info" ng-show="isReady() && !hasAssignments()">Você não tem atribuições pendentes.</div>
-
-        <table datatable class="row-border hover" dt-column-defs="dtColumnDefs"
-               ng-show="isReady() && hasAssignments()">
-            <thead>
-            <tr>
-                <th>Nome <br/><small>da criança ou adolescente</small></th>
-                <th>Risco <br/>&nbsp;</th>
-                <th>Nascimento <br/>&nbsp;</th>
-                <th>Etapa <br/>&nbsp;</th>
-                <th>Responsável <br/><small>pela etapa</small></th>
-                <th>Status <br/><small>do caso</small></th>
-                <th class="text-center"><br/>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="(i, child) in getChildren()">
-                <td width="34%" style="vertical-align: middle;">
-                    <strong style="font-size: 15px;">
-                        <i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
-                        {{child.name}}
-                    </strong><br/>
-                    <small><span uib-tooltip="Pais ou responsáveis"><i
-                            class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
-                </td>
-                <td width="10%" style="vertical-align: middle;">
-                    <div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
-                    <div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M
-                    </div>
-                    <div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B
-                    </div>
-                </td>
-                <td width="10%" style="vertical-align: middle;">
-                    <span ng-show="child.dob" ng-bind="child.dob | amDateFormat:'DD/MM/YYYY'"
-                          uib-tooltip-html="child.dob | dateFormat"></span>
-                    <span ng-show="!child.dob"><span uib-tooltip="Informação não disponível"
-                                                     class="label label-default">n/d</span></span>
-                </td>
-                <td width="10%" style="vertical-align: middle;">
-                    <strong>{{child.step_name}}</strong>
-                </td>
-                <td width="28%" style="vertical-align: middle;">
-                    <span ng-show="child.assigned_user_name"><i
-                            class="fa fa-user"></i> {{child.assigned_user_name}} <br/></span>
-                    <span ng-show="!child.assigned_user_name"><span class="label label-warning"
-                                                                    uib-tooltip="Nenhum usuário atribuído">---</span></span>
-                </td>
-                <td width="8%" style="vertical-align: middle;">
-                    <span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
-                    <span class="label label-default" ng-show="child.case_status == 'cancelled'">
-								Cancelado
-								<span ng-show="child.cancel_reason == 'duplicate'">| Motivo: Caso duplicado</span>
-								<span ng-show="child.cancel_reason == 'death'">| Motivo: Óbito</span>
-								<span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
-								<span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
-								<span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
-								<span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
-							</span>
-                    <span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
-                    <span ng-if="child.case_status === 'in_progress'">
-							<span class="label label-danger" ng-if="child.is_late">Em atraso!</span>
-							<span class="label label-info"
-                                  ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
-							<span class="label label-info"
-                                  ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
-							<span class="label label-success"
-                                  ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
-						</span>
-                </td>
-                <td width="6%" class="text-center" style="vertical-align: middle;">
-                    <div class="btn-group">
-                        <a ui-sref="child_viewer({child_id: child.id})" class="btn btn-default btn-sm btn-raised"
-                           style="padding: 8px 10px" uib-tooltip="Incluir informações"><i class="fa fa-edit"></i></a>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <div class="clearfix">
-            <a ng-click="refresh()" class="btn btn-sm btn-primary pull-right"><i class="fa fa-refresh"></i>
-                Atualizar</a>
+        <div style="margin-top: -1rem;margin-bottom: 1rem;background-color: #eeeeee;border-radius: 5px 5px 0 0;display: flex;justify-content: space-between;width: 100%;align-items: baseline;">
+            <span style="padding-left: 1rem;"><strong>Lista de casos</strong></span>
+            <a ng-click="refresh()" class="btn btn-sm btn-primary pull-right">
+                <i class="fa fa-refresh"></i>
+                Atualizar
+            </a>
         </div>
 
+        <div class="alert alert-info" ng-show="isReady() && !hasAssignments()">Você não tem atribuições pendentes.</div>
+        <div style="padding: 0px 10px 0px 10px;">
+            <table datatable="ng" class="row-border hover" dt-options="dtOptions" dt-column-defs="dtColumnDefs"
+                ng-show="isReady() && hasAssignments()">
+                <thead>
+                <tr>
+                    <th>Nome <br/><small>da criança ou adolescente</small></th>
+                    <th>Risco <br/>&nbsp;</th>
+                    <th>Nascimento <br/>&nbsp;</th>
+                    <th>Etapa <br/>&nbsp;</th>
+                    <th>Responsável <br/><small>pela etapa</small></th>
+                    <th>Status <br/><small>do caso</small></th>
+                    <th class="text-center"><br/>&nbsp;</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="(i, child) in getChildren()">
+                    <td width="34%" style="vertical-align: middle;">
+                        <strong style="font-size: 15px;">
+                            <i class="fa {{child.gender | lang:'child.gender_icon'}}" ng-show="child.gender"></i>
+                            {{child.name}}
+                        </strong><br/>
+                        <small><span uib-tooltip="Pais ou responsáveis"><i
+                                class="fa fa-users"></i> {{Decorators.Child.parents(child)}}</span></small>
+                    </td>
+                    <td width="10%" style="vertical-align: middle;">
+                        <div class="label label-danger" uib-tooltip="Alto Risco" ng-if="child.risk_level === 'high'">A</div>
+                        <div class="label label-warning" uib-tooltip="Médio Risco" ng-if="child.risk_level === 'medium'">M
+                        </div>
+                        <div class="label label-default" uib-tooltip="Baixo Risco" ng-if="child.risk_level === 'low'">B
+                        </div>
+                    </td>
+                    <td width="10%" style="vertical-align: middle;">
+                        <span ng-show="child.dob" ng-bind="child.dob | amDateFormat:'DD/MM/YYYY'"
+                            uib-tooltip-html="child.dob | dateFormat"></span>
+                        <span ng-show="!child.dob"><span uib-tooltip="Informação não disponível"
+                                                        class="label label-default">n/d</span></span>
+                    </td>
+                    <td width="10%" style="vertical-align: middle;">
+                        <strong>{{child.step_name}}</strong>
+                    </td>
+                    <td width="28%" style="vertical-align: middle;">
+                        <span ng-show="child.assigned_user_name"><i
+                                class="fa fa-user"></i> {{child.assigned_user_name}} <br/></span>
+                        <span ng-show="!child.assigned_user_name"><span class="label label-warning"
+                                                                        uib-tooltip="Nenhum usuário atribuído">---</span></span>
+                    </td>
+                    <td width="8%" style="vertical-align: middle;">
+                        <span class="label label-danger" ng-show="child.case_status == 'interrupted'">Interrompido</span>
+                        <span class="label label-default" ng-show="child.case_status == 'cancelled'">
+                                    Cancelado
+                                    <span ng-show="child.cancel_reason == 'duplicate'">| Motivo: Caso duplicado</span>
+                                    <span ng-show="child.cancel_reason == 'death'">| Motivo: Óbito</span>
+                                    <span ng-show="child.cancel_reason == 'not_found'">| Motivo: Criança não foi encontrada</span>
+                                    <span ng-show="child.cancel_reason == 'wrongful_insertion'">| Motivo: Caso inserido por engano</span>
+                                    <span ng-show="child.cancel_reason == 'rejected_alert'">| Motivo: Alerta rejeitado</span>
+                                    <span ng-show="child.cancel_reason == 'city_transfer'">| Motivo: Mudança de município/ estado</span>
+                                </span>
+                        <span class="label label-success" ng-show="child.case_status == 'completed'">Concluído</span>
+                        <span ng-if="child.case_status === 'in_progress'">
+                                <span class="label label-danger" ng-if="child.is_late">Em atraso!</span>
+                                <span class="label label-info"
+                                    ng-if="!child.is_late && child.child_status === 'out_of_school'">Em andamento</span>
+                                <span class="label label-info"
+                                    ng-if="!child.is_late && child.child_status === 'in_observation'">Em observação</span>
+                                <span class="label label-success"
+                                    ng-if="!child.is_late && child.child_status === 'in_school'">Concluído</span>
+                            </span>
+                    </td>
+                    <td width="6%" class="text-center" style="vertical-align: middle;">
+                        <div class="btn-group">
+                            <a ui-sref="child_viewer({child_id: child.id})" class="btn btn-default btn-sm btn-raised"
+                            style="padding: 8px 10px" uib-tooltip="Incluir informações"><i class="fa fa-edit"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
