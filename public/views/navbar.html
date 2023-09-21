@@ -1,106 +1,162 @@
 <div>
-    <div id="app-navbar" class="navbar navbar-primary" ng-if="!identity.isLoggedIn() && (location !== '/login') && identity.lgpdSigned()">
+    <div id="app-navbar"
+        class="navbar navbar-primary"
+        ng-if="!identity.isLoggedIn() && (location !== '/login') && identity.lgpdSigned()">
         <div class="container">
-
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
+                <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar-items"
+                    aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="https://buscaativaescolar.org.br">
+                <a class="navbar-brand"
+                    href="https://buscaativaescolar.org.br">
                     <strong>Busca Ativa Escolar</strong>
                 </a>
             </div>
-
-
         </div>
     </div>
 
-
-    <div id="app-navbar" class="navbar navbar-primary" ng-show="identity.isLoggedIn() && !isHidden() && identity.lgpdSigned()">
+    <div id="app-navbar"
+        class="navbar navbar-primary"
+        ng-show="identity.isLoggedIn() && !isHidden() && identity.lgpdSigned()">
         <div class="navbar-container container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-items" aria-expanded="false">
+                <button type="button"
+                    class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#navbar-items"
+                    aria-expanded="false">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" ui-sref="dashboard">
+                <a class="navbar-brand"
+                    ui-sref="dashboard">
                     <strong>Busca Ativa Escolar</strong>
                     <small ng-bind="renderTenantName()"></small>
                 </a>
             </div>
 
-            <div class="collapse navbar-collapse" id="navbar-items">
+            <div class="collapse navbar-collapse"
+                id="navbar-items">
+                <ul class="nav navbar-nav" style="display: flex;">
+                    <li ui-sref-active="active">
+                        <a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a>
+                    </li>
 
-                <ul class="nav navbar-nav">
-                    <li ui-sref-active="active"><a ui-sref="dashboard"><i class="fa fa-tachometer"></i> Painel</a></li>
-
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown ui-sref-active="active">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li ng-if="identity.can('alerts.spawn')"
+                        class="dropdown"
+                        uib-dropdown
+                        ui-sref-active="active">
+                        <a href="#"
+                            class="dropdown-toggle"
+                            uib-dropdown-toggle
+                            data-toggle="dropdown"
+                            role="button"
+                            aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="fa fa-bell"></i>
                             Alertas
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a ui-sref="child_create_from_alert"><i class="fa fa-bell-o" aria-hidden="true"></i>
-                                    Criar alerta</a>
+                            <li>
+                                <a ui-sref="child_create_from_alert"><i class="fa fa-bell-o"
+                                        aria-hidden="true"></i> Criar
+                                    alerta</a>
                             </li>
-                            <li ng-show="identity.can('alerts.pending')"><a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas pendentes</a></li>
+                            <li ng-show="identity.can('alerts.pending')">
+                                <a ui-sref="pending_alerts"><i class="fa fa-bell"></i> Alertas pendentes</a>
+                            </li>
 
-                            <li ng-show="identity.can('alerts.spawn')"><a ui-sref="user_alerts"><i class="fa fa-exclamation-triangle"></i> Meus alertas</a></li>
+                            <li ng-show="identity.can('alerts.spawn')">
+                                <a ui-sref="user_alerts"><i class="fa fa-exclamation-triangle"></i> Meus alertas</a>
+                            </li>
                         </ul>
                     </li>
 
                     <!-- Antigo estado pode ver -->
-                    <li ui-sref-active="active" ng-if="identity.isCoordenadorOrSupervisorEstadual()">
+                    <li ui-sref-active="active"
+                        ng-if="identity.isCoordenadorOrSupervisorEstadual()">
                         <a ui-sref="child_browser">
-                            <i class="fa fa-bell-o" aria-hidden="true"></i> Casos 
-                            
+                            <i class="fa fa-bell-o"
+                                aria-hidden="true"></i> Casos
                         </a>
                     </li>
                     <!-- FIM Antigo estado -->
 
                     <div ng-if="!identity.isCoordenadorOrSupervisorEstadual()">
-                        <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown ui-sref-active="active">
-                            <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-    
+                        <li ng-if="identity.can('cases.view')"
+                            class="dropdown"
+                            uib-dropdown
+                            ui-sref-active="active">
+                            <a href="#"
+                                class="dropdown-toggle"
+                                uib-dropdown-toggle
+                                data-toggle="dropdown"
+                                role="button"
+                                aria-haspopup="true"
+                                aria-expanded="false">
                                 Casos
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
                                     <a ui-sref="child_browser">
-                                        <i class="fa fa-bell-o" aria-hidden="true"> </i> Casos
+                                        <i class="fa fa-bell-o"
+                                            aria-hidden="true"> </i> Casos
                                     </a>
                                 </li>
                                 <li>
                                     <a ui-sref="user_notifications">
-                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"> </i> Minhas notificações
+                                        <i class="fa fa-exclamation-triangle"
+                                            aria-hidden="true">
+                                        </i>
+                                        Minhas notificações
                                     </a>
                                 </li>
                             </ul>
                         </li>
                     </div>
 
-                    <li ng-show="identity.can('reports.view')" ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
+                    <li ng-show="identity.can('reports.view')"
+                        ui-sref-active="active">
+                        <a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a>
+                    </li>
 
-                    <li ng-show="identity.can('users.view')" ui-sref-active="active"><a ui-sref="user_browser"><i class="fa fa-users"></i> Usuários</a></li>
+                    <li ng-show="identity.can('users.view')"
+                        ui-sref-active="active">
+                        <a ui-sref="user_browser"><i class="fa fa-users"></i> Usuários</a>
+                    </li>
 
-                    <li ng-show="identity.can('tenants.view')" ui-sref-active="active"><a ui-sref="tenant_browser"><i class="fa fa-university"></i> Municípios</a></li>
+                    <li ng-show="identity.can('tenants.view')"
+                        ui-sref-active="active">
+                        <a ui-sref="tenant_browser"><i class="fa fa-university"></i> Adesões</a>
+                    </li>
 
-                    <li ng-show="identity.can('ufs.view')" ui-sref-active="active"><a ui-sref="state_browser"><i class="fa fa-map-o"></i> Estados</a></li>
+                    <!-- <li ng-show="identity.can('ufs.view')" ui-sref-active="active"><a ui-sref="state_browser"><i class="fa fa-map-o"></i> Estados</a></li> -->
 
-                    <li ng-show="identity.can('cities.selo_reports')" ui-sref-active="active"><a ui-sref="reports_selo">
-                            Selo Unicef</a></li>
+                    <li ng-show="identity.can('cities.selo_reports')"
+                        ui-sref-active="active">
+                        <a ui-sref="reports_selo"> Selo Unicef</a>
+                    </li>
 
-                    <li ng-show="identity.can('schools.view')" ui-sref-active="active"><a ui-sref="school_editor">
-                            Escola</a></li>
+                    <li ng-show="identity.can('schools.view')"
+                        ui-sref-active="active">
+                        <a ui-sref="school_editor"> Escola</a>
+                    </li>
 
-                    <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()" ui-sref-active="active"><a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a></li>
+                    <li ng-show="identity.can('settings.manage') || identity.can('groups.manage') || identity.manageImports()"
+                        ui-sref-active="active">
+                        <a ui-sref="settings"><i class="fa fa-cog"></i> Configurações</a>
+                    </li>
 
                     <!-- <li ng-show="identity.getCurrentUser().type == 'coordenador_estadual' || identity.getCurrentUser().type == 'supervisor_estadual'">
                         <a ui-sref="school_list_frequency">
@@ -109,8 +165,17 @@
                         </a>
                     </li> -->
 
-                    <li ng-if="identity.can('alerts.spawn')" class="dropdown" uib-dropdown ui-sref-active="active">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <li ng-if="identity.can('alerts.spawn')"
+                        class="dropdown"
+                        uib-dropdown
+                        ui-sref-active="active">
+                        <a href="#"
+                            class="dropdown-toggle"
+                            uib-dropdown-toggle
+                            data-toggle="dropdown"
+                            role="button"
+                            aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="fa fa-wrench"></i>
                             Ferramentas
                             <span class="caret"></span>
@@ -122,10 +187,15 @@
                                     Escolas
                                 </a>
                             </li> -->
-                            <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')" ui-sref-active="active">
+                            <li ng-show="(identity.getCurrentUser().type == 'coordenador_operacional') || (identity.getCurrentUser().type == 'supervisor_institucional')"
+                                ui-sref-active="active">
                                 <a ui-sref="checks">
                                     <i class="fa fa-exclamation-circle"></i>
-                                    Solicitações <span ng-if="pending_requests > 0" style="background-color: #953b39;" class="badge" ng-bind="pending_requests"></span>
+                                    Solicitações
+                                    <span ng-if="pending_requests > 0"
+                                        style="background-color: #953b39"
+                                        class="badge"
+                                        ng-bind="pending_requests"></span>
                                 </a>
                             </li>
                             <!-- <li ng-show="identity.manageImports()">
@@ -134,16 +204,21 @@
                                     Frequências
                                 </a>
                             </li> -->
-
                         </ul>
                     </li>
-
                 </ul>
 
-                <ul class="nav navbar-nav navbar-right logged-user" ng-show="platform.isReady()">
-
-                    <li class="dropdown" uib-dropdown>
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <ul class="nav navbar-nav navbar-right logged-user"
+                    ng-show="platform.isReady()">
+                    <li class="dropdown"
+                        uib-dropdown>
+                        <a href="#"
+                            class="dropdown-toggle"
+                            uib-dropdown-toggle
+                            data-toggle="dropdown"
+                            role="button"
+                            aria-haspopup="true"
+                            aria-expanded="false">
                             <i class="fa fa-user-circle-o"></i>
                             <span class="user-details">
                                 <strong ng-bind="identity.getCurrentUser().name"></strong>
@@ -151,7 +226,8 @@
                             </span>
                             <span class="caret"></span>
                         </a>
-                        <ul uib-dropdown-menu class="dropdown-menu">
+                        <ul uib-dropdown-menu
+                            class="dropdown-menu">
                             <li ng-show="identity.can('preferences')">
                                 <a ui-sref="user_preferences"><i class="fa fa-cog"></i> Preferências</a>
                             </li>
@@ -160,11 +236,8 @@
                             </li>
                         </ul>
                     </li>
-
                 </ul>
-
             </div>
-
         </div>
     </div>
 </div>
