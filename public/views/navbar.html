@@ -55,25 +55,36 @@
                         </ul>
                     </li>
 
-                    <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown ui-sref-active="active">
-                        <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-
-                            Casos
-                            <span class="caret"></span>
+                    <!-- Antigo estado pode ver -->
+                    <li ui-sref-active="active" ng-if="identity.isCoordenadorOrSupervisorEstadual()">
+                        <a ui-sref="child_browser">
+                            <i class="fa fa-bell-o" aria-hidden="true"></i> Casos 
+                            
                         </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a ui-sref="child_browser">
-                                    <i class="fa fa-bell-o" aria-hidden="true"> </i> Casos
-                                </a>
-                            </li>
-                            <li>
-                                <a ui-sref="user_notifications">
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true"> </i> Minhas notificações
-                                </a>
-                            </li>
-                        </ul>
                     </li>
+                    <!-- FIM Antigo estado -->
+
+                    <div ng-if="!identity.isCoordenadorOrSupervisorEstadual()">
+                        <li ng-if="identity.can('cases.view')" class="dropdown" uib-dropdown ui-sref-active="active">
+                            <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+    
+                                Casos
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a ui-sref="child_browser">
+                                        <i class="fa fa-bell-o" aria-hidden="true"> </i> Casos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ui-sref="user_notifications">
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true"> </i> Minhas notificações
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
 
                     <li ng-show="identity.can('reports.view')" ui-sref-active="active"><a ui-sref="reports"><i class="fa fa-line-chart"></i> Relatórios</a></li>
 
