@@ -7,39 +7,19 @@
             <div class="panel-body">
                 <div class="form-group">
                     <label class="control-label" for="sel-report-entity">Segmento</label>
-                    <select
-                            id="sel-report-entity"
-                            class="form-control"
-                            ng-model="current.entity"
-                            ng-change="refresh()"
-                            ng-options="entity.id as entity.name for entity in entities"
-                    >
+                    <select id="sel-report-entity" class="form-control" ng-model="current.entity" ng-change="refresh()" ng-options="entity.id as entity.name for entity in entities">
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label" for="sel-report-view">Recorte</label>
-                    <select
-                            id="sel-report-view"
-                            class="form-control"
-                            ng-model="current.view"
-                            ng-change="refresh()"
-                            ng-options="view as views[view].name for view in entities[current.entity].views"
-                    >
+                    <select id="sel-report-view" class="form-control" ng-model="current.view" ng-change="refresh()" ng-options="view as views[view].name for view in entities[current.entity].views">
                     </select>
                 </div>
 
                 <div class="form-group" ng-show="views[current.view].allowsDimension">
-                    <label class="control-label" for="sel-report-dimension"
-                    >Dimensão</label
-                    >
-                    <select
-                            id="sel-report-dimension"
-                            class="form-control"
-                            ng-model="current.dimension"
-                            ng-change="refresh()"
-                            ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions | filter:canShowLabel()"
-                    >
+                    <label class="control-label" for="sel-report-dimension">Dimensão</label>
+                    <select id="sel-report-dimension" class="form-control" ng-model="current.dimension" ng-change="refresh()" ng-options="dimension as fields[dimension] for dimension in entities[current.entity].dimensions | filter:canShowLabel()">
                     </select>
                 </div>
             </div>
@@ -60,111 +40,41 @@
                 <!--					</div>-->
                 <!--				</div>-->
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('case_cause_ids')"
-                >
-                    <label class="control-label" for="filter-case_cause_ids"
-                    >Por motivo do caso</label
-                    >
-                    <select
-                            class="form-control"
-                            id="filter-case_cause_ids"
-                            placeholder="Motivo do caso..."
-                            ng-model="filters.case_cause_ids"
-                            ng-options="n.id as n.label for n in static.getCaseCauses()"
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_cause_ids')">
+                    <label class="control-label" for="filter-case_cause_ids">Por motivo do caso</label>
+                    <select class="form-control" id="filter-case_cause_ids" placeholder="Motivo do caso..." ng-model="filters.case_cause_ids" ng-options="n.id as n.label for n in static.getCaseCauses()">
                         <option value="">Todas</option>
                     </select>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('alert_cause_id')"
-                >
-                    <label class="control-label" for="filter-alert_cause_id"
-                    >Por motivo do alerta</label
-                    >
-                    <select
-                            class="form-control"
-                            id="filter-alert_cause_id"
-                            placeholder="Motivo do alerta..."
-                            ng-model="filters.alert_cause_id"
-                            ng-options="n.id as n.label for n in static.getAlertCauses()"
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_cause_id')">
+                    <label class="control-label" for="filter-alert_cause_id">Por motivo do alerta</label>
+                    <select class="form-control" id="filter-alert_cause_id" placeholder="Motivo do alerta..." ng-model="filters.alert_cause_id" ng-options="n.id as n.label for n in static.getAlertCauses()">
                         <option value="">Todas</option>
                     </select>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('step_slug')"
-                >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('step_slug')">
                     <label class="control-label" for="filter-step_slug">Por etapa</label>
-                    <select
-                            id="filter-step_slug"
-                            class="form-control"
-                            id="filter-step_slug"
-                            placeholder="Etapa do caso..."
-                            ng-model="filters.step_slug"
-                            ng-options="val as lang.translate(val, 'case_step.name_by_slug') for val in static.getCaseStepSlugs()"
-                    >
+                    <select id="filter-step_slug" class="form-control" id="filter-step_slug" placeholder="Etapa do caso..." ng-model="filters.step_slug" ng-options="val as lang.translate(val, 'case_step.name_by_slug') for val in static.getCaseStepSlugs()">
                         <option value="">Todas</option>
                     </select>
                 </div>
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('assigned_user_name')"
-                >
-                    <label class="control-label" for="filter-assigned_user_name"
-                    >Por usuário responsável</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('assigned_user_name')">
+                    <label class="control-label" for="filter-assigned_user_name">Por usuário responsável</label>
                     <!-- TODO: autocomplete users -->
-                    <input
-                            type="text"
-                            class="form-control"
-                            id="filter-assigned_user_name"
-                            placeholder="Nome de usuário..."
-                    />
+                    <input type="text" class="form-control" id="filter-assigned_user_name" placeholder="Nome de usuário..." />
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('deadline_status')"
-                >
-                    <label class="control-label" for="filter-deadline_status-normal"
-                    >Por status do prazo</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('deadline_status')">
+                    <label class="control-label" for="filter-deadline_status-normal">Por status do prazo</label>
                     <div class="checkbox">
-                        <label for="filter-deadline_status-normal"
-                        ><input
-                                type="checkbox"
-                                id="filter-deadline_status-normal"
-                                checklist-model="filters.deadline_status"
-                                checklist-value="'normal'"
-                                name="filter-deadline_status-normal"
-                                checked
-                        />
-                            Normal</label
-                        >
+                        <label for="filter-deadline_status-normal"><input type="checkbox" id="filter-deadline_status-normal" checklist-model="filters.deadline_status" checklist-value="'normal'" name="filter-deadline_status-normal" checked />
+                            Normal</label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-deadline_status-delayed"
-                        ><input
-                                type="checkbox"
-                                id="filter-deadline_status-delayed"
-                                checklist-model="filters.deadline_status"
-                                checklist-value="'delayed'"
-                                name="filter-deadline_status-delayed"
-                                checked
-                        />
-                            Em atraso</label
-                        >
+                        <label for="filter-deadline_status-delayed"><input type="checkbox" id="filter-deadline_status-delayed" checklist-model="filters.deadline_status" checklist-value="'delayed'" name="filter-deadline_status-delayed" checked />
+                            Em atraso</label>
                     </div>
                 </div>
 
@@ -180,241 +90,81 @@
                 <!--					<div class="checkbox"><label for="filter-children_status-transferred"><input type="checkbox" id="filter-children_status-transferred"  checklist-model="filters.child_status" checklist-value="'transferred'" name="filter-child_status-transferred"> Transferido</label></div>-->
                 <!--				</div>-->
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px;"
-                        ng-show="canFilterBy('child_status')"
-                >
-                    <label
-                            class="control-label"
-                            for="filter-children_status-out_of_school"
-                    >Por status do caso</label
-                    >
+                <div class="form-group" style="margin-top: 5px;" ng-show="canFilterBy('child_status')">
+                    <label class="control-label" for="filter-children_status-out_of_school">Por status do caso</label>
                     <!--label class="control-label" for="filter-children_status-out_of_school">Por status da criança</label -->
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-out_of_school"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-out_of_school"
-                                checklist-model="filters.child_status"
-                                checklist-value="'out_of_school'"
-                                name="filter-child_status-out_of_school"
-                        />
+                        <label style="font-size: 14px" for="filter-children_status-out_of_school"><input type="checkbox" id="filter-children_status-out_of_school" checklist-model="filters.child_status" checklist-value="'out_of_school'" name="filter-child_status-out_of_school" />
                             Em andamento/ Fora da escola
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-in_observation"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-in_observation"
-                                checklist-model="filters.child_status"
-                                checklist-value="'in_observation'"
-                                name="filter-child_status-in_observation"
-                        />
+                        <label style="font-size: 14px" for="filter-children_status-in_observation"><input type="checkbox" id="filter-children_status-in_observation" checklist-model="filters.child_status" checklist-value="'in_observation'" name="filter-child_status-in_observation" />
                             Em andamento/ Dentro da escola
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-in_school"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-in_school"
-                                checklist-model="filters.child_status"
-                                checklist-value="'in_school'"
-                                name="filter-child_status-in_school"
-                        />
+                        <label style="font-size: 14px" for="filter-children_status-in_school"><input type="checkbox" id="filter-children_status-in_school" checklist-model="filters.child_status" checklist-value="'in_school'" name="filter-child_status-in_school" />
                             Casos concluídos
                         </label>
                     </div>
 
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-cancelled"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-cancelled"
-                                checklist-model="filters.child_status"
-                                checklist-value="'cancelled'"
-                                name="filter-child_status-cancelled"
-                        />
+                        <label style="font-size: 14px" for="filter-children_status-cancelled"><input type="checkbox" id="filter-children_status-cancelled" checklist-model="filters.child_status" checklist-value="'cancelled'" name="filter-child_status-cancelled" />
                             Caso cancelado
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-interrupted"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-interrupted"
-                                checklist-model="filters.child_status"
-                                checklist-value="'interrupted'"
-                                name="filter-child_status-interrupted"
-                        />
+                        <label style="font-size: 14px" for="filter-children_status-interrupted"><input type="checkbox" id="filter-children_status-interrupted" checklist-model="filters.child_status" checklist-value="'interrupted'" name="filter-child_status-interrupted" />
                             Interrompido
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                style="font-size: 14px"
-                                for="filter-children_status-transferred"
-                        ><input
-                                type="checkbox"
-                                id="filter-children_status-transferred"
-                                checklist-model="filters.child_status"
-                                checklist-value="'transferred'"
-                                name="filter-child_status-transferred"
-                        />
-                            Transferido</label
-                        >
+                        <label style="font-size: 14px" for="filter-children_status-transferred"><input type="checkbox" id="filter-children_status-transferred" checklist-model="filters.child_status" checklist-value="'transferred'" name="filter-child_status-transferred" />
+                            Transferido</label>
                     </div>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('case_status')"
-                >
-                    <label class="control-label" for="filter-status-in_progress"
-                    >Por status do caso</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('case_status')">
+                    <label class="control-label" for="filter-status-in_progress">Por status do caso</label>
                     <div class="checkbox">
-                        <label for="filter-status-in_progress"
-                        ><input
-                                type="checkbox"
-                                id="filter-status-in_progress"
-                                checklist-model="filters.case_status"
-                                checklist-value="'in_progress'"
-                                name="filter-case_status_in_progress"
-                        />
-                            Em andamento</label
-                        >
+                        <label for="filter-status-in_progress"><input type="checkbox" id="filter-status-in_progress" checklist-model="filters.case_status" checklist-value="'in_progress'" name="filter-case_status_in_progress" />
+                            Em andamento</label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-status-completed"
-                        ><input
-                                type="checkbox"
-                                id="filter-status-completed"
-                                checklist-model="filters.case_status"
-                                checklist-value="'completed'"
-                                name="filter-case_status_completed"
-                        />
-                            Concluído</label
-                        >
+                        <label for="filter-status-completed"><input type="checkbox" id="filter-status-completed" checklist-model="filters.case_status" checklist-value="'completed'" name="filter-case_status_completed" />
+                            Concluído</label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-status-cancelled"
-                        ><input
-                                type="checkbox"
-                                id="filter-status-cancelled"
-                                checklist-model="filters.case_status"
-                                checklist-value="'cancelled'"
-                                ng-change="checkChild('cancelled')"
-                                name="filter-case_status_cancelled"
-                        />
-                            Cancelado</label
-                        >
+                        <label for="filter-status-cancelled"><input type="checkbox" id="filter-status-cancelled" checklist-model="filters.case_status" checklist-value="'cancelled'" ng-change="checkChild('cancelled')" name="filter-case_status_cancelled" />
+                            Cancelado</label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-status-interrupted"
-                        ><input
-                                type="checkbox"
-                                id="filter-status-interrupted"
-                                checklist-model="filters.case_status"
-                                checklist-value="'interrupted'"
-                                ng-change="checkChild('interrupted')"
-                                name="filter-case_status_interrupted"
-                        />
-                            Interrompido</label
-                        >
+                        <label for="filter-status-interrupted"><input type="checkbox" id="filter-status-interrupted" checklist-model="filters.case_status" checklist-value="'interrupted'" ng-change="checkChild('interrupted')" name="filter-case_status_interrupted" />
+                            Interrompido</label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-status-transferred"
-                        ><input
-                                type="checkbox"
-                                id="filter-status-transferred"
-                                checklist-model="filters.case_status"
-                                checklist-value="'transferred'"
-                                ng-change="checkChild('transferred')"
-                                name="filter-case_status_transferred"
-                        />
-                            Transferido</label
-                        >
+                        <label for="filter-status-transferred"><input type="checkbox" id="filter-status-transferred" checklist-model="filters.case_status" checklist-value="'transferred'" ng-change="checkChild('transferred')" name="filter-case_status_transferred" />
+                            Transferido</label>
                     </div>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('alert_status')"
-                >
-                    <label class="control-label" for="filter-alert_status-accepted"
-                    >Por status do alerta</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('alert_status')">
+                    <label class="control-label" for="filter-alert_status-accepted">Por status do alerta</label>
                     <div class="checkbox">
-                        <label
-                                ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
-                                for="filter-alert_status-accepted"
-                        ><input
-                                type="checkbox"
-                                ng-disabled="current.dimension != 'alert_cause_id'"
-                                id="filter-alert_status-accepted"
-                                checklist-model="filters.alert_status"
-                                checklist-value="'accepted'"
-                                name="filter-alert_status_accepted"
-                        />
-                            <span
-                                    ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}"
-                            >
-                Aceito</span
-                            ></label
-                        >
+                        <label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}" for="filter-alert_status-accepted"><input type="checkbox" ng-disabled="current.dimension != 'alert_cause_id'" id="filter-alert_status-accepted" checklist-model="filters.alert_status" checklist-value="'accepted'" name="filter-alert_status_accepted" />
+                            <span ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}">
+                                Aceito</span></label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
-                                for="filter-alert_status-rejected"
-                        ><input
-                                type="checkbox"
-                                ng-disabled="current.dimension != 'alert_cause_id'"
-                                id="filter-alert_status-rejected"
-                                checklist-model="filters.alert_status"
-                                checklist-value="'rejected'"
-                                name="filter-alert_status_rejected"
-                        />
-                            <span
-                                    ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}"
-                            >
-                Rejeitado</span
-                            ></label
-                        >
+                        <label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}" for="filter-alert_status-rejected"><input type="checkbox" ng-disabled="current.dimension != 'alert_cause_id'" id="filter-alert_status-rejected" checklist-model="filters.alert_status" checklist-value="'rejected'" name="filter-alert_status_rejected" />
+                            <span ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}">
+                                Rejeitado</span></label>
                     </div>
                     <div class="checkbox">
-                        <label
-                                ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}"
-                                for="filter-alert_status-pending"
-                        ><input
-                                type="checkbox"
-                                ng-disabled="current.dimension != 'alert_cause_id'"
-                                id="filter-alert_status-pending"
-                                checklist-model="filters.alert_status"
-                                checklist-value="'pending'"
-                                name="filter-alert_status_pending"
-                        />
-                            <span
-                                    ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}"
-                            >
-                Pendente</span
-                            ></label
-                        >
+                        <label ng-class="{'disabled-check': current.dimension != 'alert_cause_id'}" for="filter-alert_status-pending"><input type="checkbox" ng-disabled="current.dimension != 'alert_cause_id'" id="filter-alert_status-pending" checklist-model="filters.alert_status" checklist-value="'pending'" name="filter-alert_status_pending" />
+                            <span ng-class="{'disabled-color': current.dimension != 'alert_cause_id'}">
+                                Pendente</span></label>
                     </div>
                 </div>
 
@@ -430,93 +180,42 @@
                               <div class="checkbox"><label for="filter-age-null"><input type="checkbox" ng-model="filters.age_null" name="filter-age_null" id="filter-age-null"> Casos sem informação</label></div>
                           </div-->
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('age_ranges')"
-                >
-                    <label class="control-label" for="filter-age-null"
-                    >Por faixa etária</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('age_ranges')">
+                    <label class="control-label" for="filter-age-null">Por faixa etária</label>
 
                     <div ng-repeat="n in static.getAgeRanges()" class="checkbox">
                         <label for="filter-age_ranges-{{n.slug}}">
-                            <input
-                                    type="checkbox"
-                                    checklist-model="filters.age_ranges"
-                                    checklist-value="n.slug"
-                                    name="filter-age_ranges"
-                                    id="filter-age_ranges-{{n.slug}}"
-                            />
+                            <input type="checkbox" checklist-model="filters.age_ranges" checklist-value="n.slug" name="filter-age_ranges" id="filter-age_ranges-{{n.slug}}" />
                             {{n.label}}
                         </label>
                     </div>
                     <div class="checkbox">
-                        <label for="filter-age-null"
-                        ><input
-                                type="checkbox"
-                                ng-model="filters.age_null"
-                                name="filter-age_null"
-                                id="filter-age-null"
-                        />
-                            Casos sem informação</label
-                        >
+                        <label for="filter-age-null"><input type="checkbox" ng-model="filters.age_null" name="filter-age_null" id="filter-age-null" />
+                            Casos sem informação</label>
                     </div>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('gender')"
-                >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('gender')">
                     <label class="control-label" for="filter-gender-male">Por sexo</label>
                     <div class="form-inline row">
                         <div class="checkbox col-md-6">
-                            <label for="filter-gender-male"
-                            ><input
-                                    type="checkbox"
-                                    checklist-model="filters.gender"
-                                    checklist-value="'male'"
-                                    name="filter-gender_male"
-                                    id="filter-gender-male"
-                            />
-                                <i class="fa fa-mars"></i> Masc.</label
-                            >
+                            <label for="filter-gender-male"><input type="checkbox" checklist-model="filters.gender" checklist-value="'male'" name="filter-gender_male" id="filter-gender-male" />
+                                <i class="fa fa-mars"></i> Masc.</label>
                         </div>
                         <div class="checkbox col-md-6">
-                            <label for="filter-gender-female"
-                            ><input
-                                    type="checkbox"
-                                    checklist-model="filters.gender"
-                                    checklist-value="'female'"
-                                    name="filter-gender_female"
-                                    id="filter-gender-female"
-                            />
-                                <i class="fa fa-venus"></i> Fem.</label
-                            >
+                            <label for="filter-gender-female"><input type="checkbox" checklist-model="filters.gender" checklist-value="'female'" name="filter-gender_female" id="filter-gender-female" />
+                                <i class="fa fa-venus"></i> Fem.</label>
                         </div>
                         <div class="checkbox col-md-12">
-                            <label for="filter-gender-null"
-                            ><input
-                                    type="checkbox"
-                                    ng-model="filters.gender_null"
-                                    name="filter-gender_null"
-                                    id="filter-gender-null"
-                            />
-                                <i class="fa fa-block"></i> Sem informação</label
-                            >
+                            <label for="filter-gender-null"><input type="checkbox" ng-model="filters.gender_null" name="filter-gender_null" id="filter-gender-null" />
+                                <i class="fa fa-block"></i> Sem informação</label>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group" ng-show="canFilterBy('uf')">
                     <label class="control-label" for="fld-uf">UF*</label>
-                    <select
-                            class="form-control"
-                            id="fld-uf"
-                            ng-model="filters.uf"
-                            ng-options="uf.code as uf.code for uf in static.getUFsDropdown() | orderBy:'code' track by uf.code"
-                    >
+                    <select class="form-control" id="fld-uf" ng-model="filters.place_uf" ng-options="uf.code as uf.code for uf in static.getUFsDropdown() | orderBy:'code' track by uf.code">
                         <option value="">Todos</option>
                     </select>
                 </div>
@@ -530,21 +229,7 @@
 
                 <div class="form-group" ng-show="canFilterBy('city')">
                     <label class="control-label" for="fld-city">Município*</label>
-                    <input
-                            type="text"
-                            id="fld-city"
-                            class="form-control"
-                            ng-model="filters.place_city"
-                            uib-typeahead="city for city in fetchCities($viewValue)"
-                            typeahead-editable="false"
-                            typeahead-no-results="noCitiesFound"
-                            typeahead-loading="citiesLoading"
-                            typeahead-focus-first="true"
-                            typeahead-template-url="city_item.html"
-                            typeahead-wait-ms="400"
-                            typeahead-min-length="3"
-                            typeahead-input-formatter="renderSelectedCity($model)"
-                    />
+                    <input type="text" id="fld-city" class="form-control" ng-model="filters.place_city" uib-typeahead="city for city in fetchCities($viewValue)" typeahead-editable="false" typeahead-no-results="noCitiesFound" typeahead-loading="citiesLoading" typeahead-focus-first="true" typeahead-template-url="city_item.html" typeahead-wait-ms="400" typeahead-min-length="3" typeahead-input-formatter="renderSelectedCity($model)" />
 
                     <div ng-show="citiesLoading">
                         <i class="fa fa-refresh rotate-icon"></i> Buscando cidades...
@@ -554,113 +239,44 @@
                     </div>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('school_last_grade')"
-                >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('school_last_grade')">
                     <label class="control-label">Por último ano escolar cursado</label>
-                    <select
-                            id="fld-school_last_grade"
-                            class="form-control"
-                            ng-model="filters.school_last_grade"
-                            ng-options="n.slug as n.label for n in static.getSchoolGrades()"
-                    ></select>
-                    <a
-                            class="btn btn-xs btn-default btn-raised"
-                            ng-show="filters.school_last_grade"
-                            ng-click="clearFilter('school_last_grade')"
-                    ><i class="fa fa-times"></i> Remover filtro</a
-                    >
+                    <select id="fld-school_last_grade" class="form-control" ng-model="filters.school_last_grade" ng-options="n.slug as n.label for n in static.getSchoolGrades()"></select>
+                    <a class="btn btn-xs btn-default btn-raised" ng-show="filters.school_last_grade" ng-click="clearFilter('school_last_grade')"><i class="fa fa-times"></i> Remover filtro</a>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('place_kind')"
-                >
-                    <label class="control-label" for="filter-place_kind-rural"
-                    >Por zona</label
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('place_kind')">
+                    <label class="control-label" for="filter-place_kind-rural">Por zona</label>
                     <div class="form-inline row">
                         <div class="checkbox col-md-6">
-                            <label for="filter-place_kind-rural"
-                            ><input
-                                    type="checkbox"
-                                    checklist-model="filters.place_kind"
-                                    checklist-value="'rural'"
-                                    name="filter-place_kind_rural"
-                                    id="filter-place_kind-rural"
-                            />
-                                Rural</label
-                            >
+                            <label for="filter-place_kind-rural"><input type="checkbox" checklist-model="filters.place_kind" checklist-value="'rural'" name="filter-place_kind_rural" id="filter-place_kind-rural" />
+                                Rural</label>
                         </div>
                         <div class="checkbox col-md-6">
-                            <label for="filter-place_kind-urban"
-                            ><input
-                                    type="checkbox"
-                                    checklist-model="filters.place_kind"
-                                    checklist-value="'urban'"
-                                    name="filter-place_kind_urban"
-                                    id="filter-place_kind-urban"
-                            />
-                                Urbana</label
-                            >
+                            <label for="filter-place_kind-urban"><input type="checkbox" checklist-model="filters.place_kind" checklist-value="'urban'" name="filter-place_kind_urban" id="filter-place_kind-urban" />
+                                Urbana</label>
                         </div>
                         <!--						<div class="checkbox col-md-12"><label for="filter-place_kind-null"><input type="checkbox" ng-model="filters.place_kind_null" name="filter-place_kind_null" id="filter-place_kind-null"> Sem informação</label></div>-->
                     </div>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('guardian_schooling')"
-                >
-                    <label class="control-label" for="filter-guardian_schooling"
-                    >Por grau de instrução</label
-                    >
-                    <select
-                            id="filter-guardian_schooling"
-                            class="form-control"
-                            ng-model="filters.guardian_schooling"
-                            ng-options="n.slug as n.label for n in static.getSchoolingLevels()"
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('guardian_schooling')">
+                    <label class="control-label" for="filter-guardian_schooling">Por grau de instrução</label>
+                    <select id="filter-guardian_schooling" class="form-control" ng-model="filters.guardian_schooling" ng-options="n.slug as n.label for n in static.getSchoolingLevels()">
                         <option value="">Todos</option>
                     </select>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('parents_income')"
-                >
-                    <label class="control-label" for="filter-parents_income"
-                    >Por renda familiar - salário mínimo</label
-                    >
-                    <select
-                            id="filter-parents_income"
-                            class="form-control"
-                            ng-model="filters.parents_income"
-                            ng-options="n.slug as n.label for n in static.getIncomeRanges()"
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('parents_income')">
+                    <label class="control-label" for="filter-parents_income">Por renda familiar - salário mínimo</label>
+                    <select id="filter-parents_income" class="form-control" ng-model="filters.parents_income" ng-options="n.slug as n.label for n in static.getIncomeRanges()">
                         <option value="">Todas</option>
                     </select>
                 </div>
 
-                <div
-                        class="form-group"
-                        style="margin-top: 5px"
-                        ng-show="canFilterBy('race')"
-                >
-                    <label class="control-label" for="filter-ethnicity"
-                    >Por raça/etnia</label
-                    >
-                    <select
-                            id="filter-ethnicity"
-                            class="form-control"
-                            ng-model="filters.race"
-                            ng-options="n.slug as n.label for n in static.getRaces()"
-                    >
+                <div class="form-group" style="margin-top: 5px" ng-show="canFilterBy('race')">
+                    <label class="control-label" for="filter-ethnicity">Por raça/etnia</label>
+                    <select id="filter-ethnicity" class="form-control" ng-model="filters.race" ng-options="n.slug as n.label for n in static.getRaces()">
                         <option value="">Todas</option>
                     </select>
                 </div>
@@ -668,11 +284,7 @@
 
             <div class="panel-footer">
                 <div>
-                    <button
-                            type="submit"
-                            class="btn btn-raised btn-info"
-                            style="width: 100%; padding: 8px 0"
-                    >
+                    <button type="submit" class="btn btn-raised btn-info" style="width: 100%; padding: 8px 0">
                         <i class="material-icons">search</i> Filtrar
                     </button>
                 </div>
@@ -691,10 +303,7 @@
         <!--            </div>-->
         <!--        </div>-->
 
-        <div
-                class="panel has-subnav-tabs panel-default"
-                ng-show="reportData.response.records_total == 0 && showGraph()"
-        >
+        <div class="panel has-subnav-tabs panel-default" ng-show="reportData.response.records_total == 0 && showGraph()">
             <div class="panel-heading">
                 <h3>
                     <i class="material-icons">error_outline</i> Dados não encontrados
@@ -716,24 +325,14 @@
                     <div class="col-md-3">
                         <ul class="nav navbar-nav" ng-show="current.view == 'chart'">
                             <li class="dropdown">
-                                <a
-                                        href="/reports"
-                                        data-target="#"
-                                        class="dropdown-toggle"
-                                        data-toggle="dropdown"
-                                >
-                                    <strong>Ordenar<b class="caret"></b></strong
-                                    ></a>
+                                <a href="/reports" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <strong>Ordenar<b class="caret"></b></strong></a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="#" ng-click="refresByMinToMax()"
-                                        ><i class="fa fa-angle-up"></i> Menor para o maior</a
-                                        >
+                                        <a href="#" ng-click="refresByMinToMax()"><i class="fa fa-angle-up"></i> Menor para o maior</a>
                                     </li>
                                     <li>
-                                        <a href="#" ng-click="refresByMaxToMin()"
-                                        ><i class="fa fa-angle-down"></i> Maior para o menor</a
-                                        >
+                                        <a href="#" ng-click="refresByMaxToMin()"><i class="fa fa-angle-down"></i> Maior para o menor</a>
                                     </li>
                                 </ul>
                             </li>
@@ -845,71 +444,58 @@
 
             </div>
 
-            <highchart
-                    ng-if="reportData.$resolved === true && current.view !== 'list'"
-                    style="width: 800px; height: 1000px"
-                    id="base-chart"
-                    config="chartConfig"
-            ></highchart>
+            <highchart ng-if="reportData.$resolved === true && current.view !== 'list'" style="width: 800px; height: 1000px" id="base-chart" config="chartConfig"></highchart>
 
             <table class="table">
                 <thead>
-                <tr ng-if="current.view !== 'timeline'">
-                    <th>Dimensão - {{fields[current.dimension]}}</th>
-                    <th>Qtd.</th>
-                    <th>%</th>
-                </tr>
+                    <tr ng-if="current.view !== 'timeline'">
+                        <th>Dimensão - {{fields[current.dimension]}}</th>
+                        <th>Qtd.</th>
+                        <th>%</th>
+                    </tr>
 
-                <tr ng-if="current.view !== 'timeline'">
-                    <td><strong>Total</strong></td>
-                    <td>{{sumValuesOfReportData(reportData.response.report)}}</td>
-                    <td>100%</td>
-                </tr>
+                    <tr ng-if="current.view !== 'timeline'">
+                        <td><strong>Total</strong></td>
+                        <td>{{sumValuesOfReportData(reportData.response.report)}}</td>
+                        <td>100%</td>
+                    </tr>
 
-                <tr ng-if="current.view === 'timeline'">
-                    <th>Data</th>
-                    <th>{{fields[current.dimension]}}</th>
-                    <th>{{totals[entities[current.entity].value]}}</th>
-                </tr>
+                    <tr ng-if="current.view === 'timeline'">
+                        <th>Data</th>
+                        <th>{{fields[current.dimension]}}</th>
+                        <th>{{totals[entities[current.entity].value]}}</th>
+                    </tr>
                 </thead>
 
                 <tbody ng-if="current.view !== 'timeline'">
-                <tr ng-repeat="(metric, value) in reportData.response.report">
-                    <td>
-                        {{reportData.labels[metric] ? reportData.labels[metric] : metric
-                        }}
-                    </td>
-                    <td>{{value}}</td>
-                    <td>
-                        {{(value / reportData.response.records_total) | percentage}}
-                    </td>
-                </tr>
+                    <tr ng-repeat="(metric, value) in reportData.response.report">
+                        <td>
+                            {{reportData.labels[metric] ? reportData.labels[metric] : metric
+                            }}
+                        </td>
+                        <td>{{value}}</td>
+                        <td>
+                            {{(value / reportData.response.records_total) | percentage}}
+                        </td>
+                    </tr>
                 </tbody>
 
-                <tbody
-                        ng-if="current.view === 'timeline'"
-                        ng-repeat="(metric, value) in reportData.response.report"
-                >
-                <tr>
-                    <td><strong>{{metric | amDateFormat:'DD/MM/YYYY'}}</strong></td>
-                    <td ng-if="current.view === 'timeline'"></td>
-                    <td ng-if="current.view === 'timeline'"></td>
-                </tr>
-                <tr
-                        ng-if="current.view === 'timeline'"
-                        ng-repeat="(dimension, label) in reportData.labels"
-                >
-                    <td></td>
-                    <td>{{label || dimension}}</td>
-                    <td>{{value[dimension] || 0}}</td>
-                </tr>
+                <tbody ng-if="current.view === 'timeline'" ng-repeat="(metric, value) in reportData.response.report">
+                    <tr>
+                        <td><strong>{{metric | amDateFormat:'DD/MM/YYYY'}}</strong></td>
+                        <td ng-if="current.view === 'timeline'"></td>
+                        <td ng-if="current.view === 'timeline'"></td>
+                    </tr>
+                    <tr ng-if="current.view === 'timeline'" ng-repeat="(dimension, label) in reportData.labels">
+                        <td></td>
+                        <td>{{label || dimension}}</td>
+                        <td>{{value[dimension] || 0}}</td>
+                    </tr>
                 </tbody>
             </table>
 
             <div class="panel-footer clearfix">
-                <a class="btn btn-success pull-right" ng-click="exportXLS()"
-                ><i class="fa fa-download"></i> Exportar XLS</a
-                >
+                <a class="btn btn-success pull-right" ng-click="exportXLS()"><i class="fa fa-download"></i> Exportar XLS</a>
             </div>
         </div>
     </div>
