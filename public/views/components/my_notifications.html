@@ -1,30 +1,34 @@
 <div>
-    <table class="table table-hover" ng-show="isReady() && hasNotifications()">
+    <table class="table table-hover" ng-if="isReady() && hasNotifications()">
         <thead>
         <tr>
-            <th>Usuário que criou a Notificação</th>
-            <th>Data de Abertura</th>
-            <th>Conteúdo da Notificação</th>
-            <th>Resolver Notificação?</th>
+            <th style="text-align: center; vertical-align: middle;">Usuário que criou a Notificação</th>
+            <th style="text-align: center; vertical-align: middle;">Data de Abertura</th>
+            <th style="text-align: center; vertical-align: middle;">Conteúdo da Notificação</th>
+            <th style="text-align: center; vertical-align: middle;">Resolver Notificação?</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="(i, notification) in getNotifications()">
-            <td><span ng-bind="notification.user_name"></span></td>
-            <td>
-                <a href="{{'/children/view/' +notification.link+ '/comments'}}">
-                    <div style="height: 100%; width: 100%">
-                        <span ng-bind="notification.create_date"></span>
-                    </div>
-                </a>
+            <td style="text-align: center; vertical-align: middle; cursor: pointer;" ng-click="redirectToLink('/children/view/' + notification.link + '/comments')">
+                <span ng-bind="notification.user_name" style="color: black;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'"></span>
             </td>
-            <td>
-                <span ng-bind="notification.notification"></span>
+            <td style="text-align: center; vertical-align: middle; cursor: pointer;" ng-click="redirectToLink('/children/view/' + notification.link + '/comments')">                
+                <div style="height: 100%; width: 100%">
+                    <span ng-bind="notification.create_date" style="color: black;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'"></span>
+                </div>              
+            </td>
+            <td style="text-align: justify; vertical-align: middle; cursor: pointer;" ng-click="redirectToLink('/children/view/' + notification.link + '/comments')">
+                <span ng-bind="notification.notification" style="color: black;" onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'"></span>
             </td>
             <td>
                 <a type="button" ng-click="solveNotification(notification.id)"
-                   class="btn btn-raised btn-default pull-right" title="Comentar e fechar notificação.">
-                    <i class="fa fa-ban"></i> Fechar notificação</a>
+                   class="btn btn-raised btn-default pull-right" title="Comentar e fechar notificação;">
+                    <i class="fa fa-ban"></i> Fechar notificação
+                </a>
+                <a type="button" ng-click="redirectToLink('/children/view/' + notification.link + '/comments')"
+                   class="btn btn-raised btn-default pull-right" title="Comentar e fechar notificação;">
+                    Abrir caso
                 </a>
             </td>
         </tr>
