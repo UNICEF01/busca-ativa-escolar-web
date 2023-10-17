@@ -7,15 +7,15 @@
 
             <div class="sign-up-header">
                 <ul class="nav nav-pills sign-up-wizard-pills">
-                    <li ng-show="identity.can('groups.manage')" style="width: 20%" ng-class="{'active': (step == 4)}"><a ng-click="goToStep(4)"><i class="fa fa-users"></i> Grupos</a></li>
-                    <li ng-show="identity.can('settings.manage')" style="width: 20%" ng-class="{'active': (step == 6)}">
+                    <li ng-show="identity.can('groups.manage')" style="width: 20%; cursor: pointer;" ng-class="{'active': (step == 4)}"><a ng-click="goToStep(4)"><i class="fa fa-users"></i> Grupos</a></li>
+                    <li ng-show="identity.can('settings.manage')" style="width: 20%; cursor: pointer;" ng-class="{'active': (step == 6)}">
                         <a ng-click="goToStep(6)"><i class="fa fa-random"></i> Customização</a>
                     </li>
-                    <li ng-show="identity.can('settings.manage')" style="width: 20%" ng-class="{'active': (step == 7)}">
+                    <li ng-show="identity.can('settings.manage')" style="width: 20%; cursor: pointer;" ng-class="{'active': (step == 7)}">
                         <a ng-click="goToStep(7)"><i class="fa fa-calendar"></i> Prazos</a>
                     </li>
-                    <li ng-show="identity.can('settings.educacenso') && !identity.getCurrentUser().tenant.is_state" style="width: 20%" ng-class="{'active': (step == 8)}"><a ng-click="goToStep(8)"><i class="fa fa-upload"></i> Educacenso</a></li>
-                    <li ng-show="identity.can('settings.educacenso')" style="width: 20%" ng-class="{'active': (step == 9)}"><a ng-click="goToStep(9)"><i class="fa fa-upload"></i> Importação</a></li>
+                    <li ng-show="identity.can('settings.educacenso') && !identity.getCurrentUser().tenant.is_state" style="width: 20%; cursor: pointer;" ng-class="{'active': (step == 8)}"><a ng-click="goToStep(8)"><i class="fa fa-upload"></i> Educacenso</a></li>
+                    <li ng-show="identity.can('settings.educacenso')" style="width: 20%; cursor: pointer;" ng-class="{'active': (step == 9)}"><a ng-click="goToStep(9)"><i class="fa fa-upload"></i> Importação</a></li>
                 </ul>
                 <hr style="margin-top: 0; margin-bottom: 30px;" />
             </div>
