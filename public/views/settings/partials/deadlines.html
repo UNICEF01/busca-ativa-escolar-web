@@ -22,17 +22,17 @@
                 <td><span ng-bind="step | lang:'case_step.name_by_slug'"></span></td>
                 <td>
 
-						<span ng-show="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == '1a_observacao'">
+						<span ng-if="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == '1a_observacao'">
 							<input class="deadline-input" type="number" ng-model="tenantSettings.stepDeadlines[step]"
                                    min="45" max="365" step="1" placeholder="15"/> dias (mínimo de 45)
 						</span>
 
-                    <span ng-show="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == '2a_observacao' || step == '3a_observacao' || step == '4a_observacao'">
+                    <span ng-if="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == '2a_observacao' || step == '3a_observacao' || step == '4a_observacao'">
 							<input class="deadline-input" type="number" ng-model="tenantSettings.stepDeadlines[step]"
                                    min="60" max="365" step="1" placeholder="15"/> dias (mínimo de 60)
 						</span>
 
-                    <span ng-show="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == 'alerta' || step == 'pesquisa' || step == 'analise_tecnica' || step == 'rematricula'">
+                    <span ng-if="tenantSettings.blockedStepDeadlines.indexOf(step) === -1 && step == 'alerta' || step == 'pesquisa' || step == 'analise_tecnica' || step == 'rematricula' || step == 'gestao_do_caso'">
 							<input class="deadline-input" type="number" ng-model="tenantSettings.stepDeadlines[step]"
                                    min="1" max="365" step="1" placeholder="15"/> dias
 						</span>

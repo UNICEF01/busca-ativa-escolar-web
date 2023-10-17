@@ -3,7 +3,7 @@
   "scripts": {
     "prod": "gulp --production",
     "dev": "gulp watch",
-    "cache": "gulp cachebust"
+    "clean-cache": "gulp cachebust"
   },
   "devDependencies": {
     "bootstrap": "^3.3.7",
