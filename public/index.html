@@ -2,34 +2,35 @@
 <html lang="pt-BR" xmlns:ng="http://angularjs.org">
 
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    
-    <link rel="stylesheet" type="text/css" href="/css/vendor.css?hash=1697556144283"/>
-    <link rel="stylesheet" type="text/css" href="/css/app.css?hash=1697556144283"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
 
-    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"/>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/css/vendor.css?hash=1697556144283" />
+    <link rel="stylesheet" type="text/css" href="/css/app.css?hash=1697556144283" />
 
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"/>
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet" />
 
-    <meta name="theme-color" content="#62c031"/>
-    <meta name="msapplication-navbutton-color" content="#62c031"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <meta name="theme-color" content="#62c031" />
+    <meta name="msapplication-navbutton-color" content="#62c031" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
     <!-- Powered by LQDI Digital - www.lqdi.net -->
 
     <title>Busca Ativa Escolar - UNICEF</title>
 
-    <base href="/"/>
+    <base href="/" />
 
     <!-- Browser Update Warning -->
     <script>
-        var $buoop = {c: 2};
+        var $buoop = { c: 2 };
 
         function $buo_f() {
             var e = document.createElement('script');
@@ -64,65 +65,63 @@
     <!-- Core vendor libs -->
     <script type="text/javascript" src="/vendor/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript" src="/js/vendor.js"></script>
-    
-    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+
 </head>
 
 <body id="ng-app" ng-app="BuscaAtivaEscolar">
-<app-navbar></app-navbar>
-<app-print-header></app-print-header>
+    <app-navbar></app-navbar>
+    <app-print-header></app-print-header>
 
-<toast></toast>
-<app-header-warnings></app-header-warnings>
+    <toast></toast>
+    <app-header-warnings></app-header-warnings>
 
-<app-loading-feedback></app-loading-feedback>
-<app-support-widget></app-support-widget>
-<div class="container app-container" ui-view></div>
+    <app-loading-feedback></app-loading-feedback>
+    <app-support-widget></app-support-widget>
+    <div class="container app-container" ui-view></div>
 
-<footer class="app-footer" ng-include="'/views/components/app_footer.html'"></footer>
+    <footer class="app-footer" ng-include="'/views/components/app_footer.html'"></footer>
 
-<!-- Additional vendor libraries / locales -->
-<script type="text/javascript" src="/vendor/angular-i18n/angular-locale_pt-br.js"></script>
-<script type="text/javascript" src="/vendor/numeral/languages/pt-br.js"></script>
-<script type="text/javascript" src="/vendor/moment/locale/pt-br.js"></script>
-<script type="text/javascript" src="/vendor/highcharts/modules/map.js"></script>
-<script type="text/javascript" src="/vendor/ace-builds/src-min/ace.js"></script>
-<script data-require="jspdf@1.2.61" data-semver="1.2.61"
-        src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.debug.js"></script>
+    <!-- Additional vendor libraries / locales -->
+    <script type="text/javascript" src="/vendor/angular-i18n/angular-locale_pt-br.js"></script>
+    <script type="text/javascript" src="/vendor/numeral/languages/pt-br.js"></script>
+    <script type="text/javascript" src="/vendor/moment/locale/pt-br.js"></script>
+    <script type="text/javascript" src="/vendor/highcharts/modules/map.js"></script>
+    <script type="text/javascript" src="/vendor/ace-builds/src-min/ace.js"></script>
+    <script data-require="jspdf@1.2.61" data-semver="1.2.61" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.debug.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
-<!--		<script src="https://github.com/devongovett/pdfkit/releases/download/v0.6.2/pdfkit.js"></script>-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.62/pdfmake.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+    <!--		<script src="https://github.com/devongovett/pdfkit/releases/download/v0.6.2/pdfkit.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.62/pdfmake.js"></script>
 
-<script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.js"></script>
-<script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.charts.js"></script>
-<script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.maps.js"></script>
-<script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/themes/fusioncharts.theme.fusion.js"></script>
+    <script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.js"></script>
+    <script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.charts.js"></script>
+    <script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/fusioncharts.maps.js"></script>
+    <script type="text/javascript" src="/vendor/fusion-chart/fusioncharts/themes/fusioncharts.theme.fusion.js"></script>
 
-<!-- Core app file -->
-<script type="text/javascript" defer src="/js/app.js?hash=1697556144283"></script>
+    <!-- Core app file -->
+    <script type="text/javascript" defer src="/js/app.js?hash=1697556144283"></script>
 
-<script type="text/javascript" src="/vendor/fusion-chart/angularjs-fusioncharts/dist/angular-fusioncharts.js"></script>
+    <script type="text/javascript" src="/vendor/fusion-chart/angularjs-fusioncharts/dist/angular-fusioncharts.js"></script>
 
-<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
-<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
-<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
-<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
-<script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js"></script>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-130432930-1"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-130432930-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
+        function gtag() {
+            dataLayer.push(arguments);
+        }
 
-    gtag('js', new Date());
+        gtag('js', new Date());
 
-    gtag('config', 'UA-130432930-1');
-</script>
+        gtag('config', 'UA-130432930-1');
+    </script>
 </body>
 
 </html>
