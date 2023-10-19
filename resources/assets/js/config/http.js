@@ -9,7 +9,7 @@
         $httpProvider.interceptors.push('AddAuthorizationHeadersInterceptor');
         $httpProvider.interceptors.push('HandleExceptionResponsesInterceptor');
         $httpProvider.interceptors.push('HandleErrorResponsesInterceptor');
-        $httpProvider.interceptors.push('InjectTimeEndpointSearch');
+        //$httpProvider.interceptors.push('InjectTimeEndpointSearch');
 
     });
 
