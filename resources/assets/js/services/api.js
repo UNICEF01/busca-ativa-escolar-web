@@ -7,10 +7,12 @@
     var REQUIRE_AUTH = {
       'X-Require-Auth': 'auth-required',
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache'
     };
     var OPTIONAL_AUTH = {
       'X-Require-Auth': 'auth-optional',
       'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache'
     };
 
     function isLoading() {

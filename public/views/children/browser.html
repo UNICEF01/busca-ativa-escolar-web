@@ -78,7 +78,7 @@
                                                                                                 checklist-value="'in_progress'"
                                                                                                 name="filter-case_status_in_progress">
                                 Em andamento</label></div>
-                            <br/>
+                            <br/>                            
                             <div class="checkbox"><label for="filter-status-cancelled"><input type="checkbox"
                                                                                               id="filter-status-cancelled"
                                                                                               checklist-model="query.case_status"
@@ -190,20 +190,25 @@
                         </div>
                         <div class="col-md-2">
                             <label class="control-label" for="filter-case_not_info">
-                                <strong uib-tooltip="Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos.">
-                                    Mostrar apenas:
-                                </strong>
-                                <i class="fa fa-info-circle"
-                                   uib-tooltip="Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos."></i>
+                            <strong>Mostrar apenas:</strong>
                             </label><br/><br/>
-                            <div class="checkbox"><label for="filter-case_not_info"><input type="checkbox"
-                                                                                           id="filter-case_not_info"
-                                                                                           checklist-model="query.case_not_info"
-                                                                                           checklist-value="'yes'"
-                                                                                           name="filter-case_not_info">
-                                Casos pendentes de informação</label></div>
+                            <div class="checkbox"><label for="filter-case_not_info" uib-tooltip="Ao marcar essa opção, apenas os casos que ainda não tenham motivo informado serão apresentados, mesmo que opções de motivos sejam selecionados no seletor de motivos de casos."><input type="checkbox"
+                               id="filter-case_not_info"
+                               checklist-model="query.case_not_info"
+                               checklist-value="'yes'"
+                               name="filter-case_not_info">
+                               Casos pendentes de informação</label>
+                            </div>
                             <br/>
-                        </div>
+                            <div class="checkbox"><label for="filter-case_deadline_status" uib-tooltip="Ao marcar essa opção, apenas os casos que em atraso serão exibidos."><input type="checkbox"
+                               id="filter-case_deadline_status"
+                               checklist-model="query.deadline_status"
+                               checklist-value="'late'"
+                               name="filter-case_deadline_status">
+                               Em atraso</label>
+                            </div>
+                            <br/>
+                         </div>
                     </div>
 
                     <div class="row">
