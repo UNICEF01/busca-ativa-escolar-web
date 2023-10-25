@@ -26,7 +26,7 @@
                 </button>
                 <a class="navbar-brand" ui-sref="dashboard">
                     <strong>Busca Ativa Escolar</strong>
-                    <small ng-bind="renderTenantName()"></small>
+                    <small style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px;" ng-bind="renderTenantName()"></small>
                 </a>
             </div>
 
@@ -158,7 +158,7 @@
                         <a href="#" class="dropdown-toggle" uib-dropdown-toggle data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <i class="fa fa-user-circle-o"></i>
                             <span class="user-details">
-                                <strong ng-bind="identity.getCurrentUser().name"></strong>
+                                <strong style="display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 200px;" ng-bind="identity.getCurrentUser().name"></strong>
                                 <small ng-bind="identity.getCurrentUser().type | lang:'user.type'"></small>
                             </span>
                             <span class="caret"></span>
