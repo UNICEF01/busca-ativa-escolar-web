@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     angular
         .module('BuscaAtivaEscolar')
@@ -9,11 +9,11 @@
             $scope.schools = schools;
             $scope.canDismiss = canDismiss;
 
-            $scope.agree = function() {
+            $scope.agree = function () {
                 $uibModalInstance.close(true);
             };
 
-            $scope.disagree = function() {
+            $scope.disagree = function () {
                 $uibModalInstance.dismiss(false);
             };
 

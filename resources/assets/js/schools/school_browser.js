@@ -64,8 +64,8 @@
 
                     Modals.show(
                         Modals.ConfirmEmail(
-                            'Confirma o envio de sms e email para as seguintes escolas?',
-                            'Ao confirmar, as escolas serão notificadas por email e sms e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
+                            'Confirma o envio do email para as seguintes escolas?',
+                            'Ao confirmar, as escolas serão notificadas por email e poderão cadastrar o endereço das crianças e adolescentes reportadas pelo Educacenso',
                             schools_to_send_notification
                         )).then(function () {
                             return Schools.send_educacenso_notifications(schools_to_send_notification).$promise;
@@ -86,7 +86,7 @@
                             }
                         });
                 } else {
-                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email/ SMS'));
+                    Modals.show(Modals.Alert('Atenção', 'Selecione as escolas para as quais deseja encaminhar o email'));
                 }
 
             };
