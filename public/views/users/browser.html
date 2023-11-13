@@ -1,7 +1,7 @@
 <div>
     <div class="panel panel-default">
 
-        <div class="panel-heading clearfix">
+        <div class="clearfix panel-heading">
             <h3 class="pull-left">
                 <strong ng-show="!$parent.isEditing">3.</strong>
                 <i class="fa fa-users"></i> Usuários | {{search.meta.pagination.total}}
@@ -79,7 +79,7 @@
                                     <ui-select-match allow-clear="true" placeholder="Todos">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices
-                                            repeat="tenant.id as tenant in getTenants() | orderObjectBy:'name' | filter: $select.search track by tenant.id">
+                                            repeat="tenant.id as tenant in getTenants() | filter: $select.search track by tenant.id">
                                         <div ng-bind-html="tenant.name | highlight: $select.search"></div>
                                     </ui-select-choices>
                                 </ui-select>
