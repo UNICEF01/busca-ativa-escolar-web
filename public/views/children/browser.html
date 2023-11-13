@@ -18,8 +18,16 @@
                         <div class="col-md-3"><input class="form-control" type="search" id="filter-assigned-user"
                                                      ng-model="query.assigned_user_name"
                                                      placeholder="Nome do responsável pelo caso ..."></div>
-                        <div class="col-md-3"><input class="form-control" type="search" id="filter-stage"
-                                                     ng-model="query.step_name" placeholder="Etapa do caso..."></div>
+                                                     
+                        <div class="col-md-3">
+                            <ui-select ng-model="query.step_name" on-select="refresh()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
+                                <ui-select-match placeholder="Etapas do caso...">{{$select.selected.value}}</ui-select-match>
+                                <ui-select-choices repeat="step.key as step in caseStepList">
+                                  <div ng-bind-html="step.value | highlight: $select.search"></div>
+                                </ui-select-choices>
+                              </ui-select>                                                          
+                        </div>
+
                         <div class="col-md-3"><input type="search" id="filter-full-address" class="form-control"
                                                      ng-model="query.location_full" placeholder="Bairro, CEP, Rua ...">
                         </div>
@@ -199,14 +207,25 @@
                                name="filter-case_not_info">
                                Casos pendentes de informação</label>
                             </div>
+
                             <br/>
-                            <div class="checkbox"><label for="filter-case_deadline_status" uib-tooltip="Ao marcar essa opção, apenas os casos que em atraso serão exibidos."><input type="checkbox"
-                               id="filter-case_deadline_status"
+                            <div class="checkbox"><label for="filter-case_deadline_status_late" uib-tooltip="Ao marcar essa opção, apenas os casos que em atraso serão exibidos."><input type="checkbox"
+                               id="filter-case_deadline_status_late"
                                checklist-model="query.deadline_status"
                                checklist-value="'late'"
-                               name="filter-case_deadline_status">
+                               name="filter-case_deadline_status_late">
                                Em atraso</label>
                             </div>
+
+                            <br/>
+                            <div class="checkbox"><label for="filter-case_deadline_status_normal" uib-tooltip="Ao marcar essa opção, apenas os casos dentro do prazo."><input type="checkbox"
+                               id="filter-case_deadline_status_normal"
+                               checklist-model="query.deadline_status"
+                               checklist-value="'normal'"
+                               name="filter-case_deadline_status_normal">
+                               Dentro do Prazo</label>
+                            </div>
+                            
                             <br/>
                          </div>
                     </div>
@@ -223,7 +242,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="col-md-6 text-right">
+                        <div class="text-right col-md-6">
                             <button type="button" ng-click="resetQuery()" class="btn btn-raised btn-default"><i
                                     class="fa fa-undo"></i> Limpar filtros
                             </button>

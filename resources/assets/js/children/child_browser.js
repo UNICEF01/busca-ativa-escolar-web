@@ -31,6 +31,18 @@
           date: null,
         };
 
+        $scope.caseStepList = [
+          { key: 'alerta', value: 'Alerta' },
+          { key: 'pesquisa', value: 'Pesquisa' },
+          { key: 'analise_tecnica', value: 'Analise Técnica' },
+          { key: 'gestao_do_caso', value: 'Gestão do Caso' },
+          { key: 'rematricula', value: 'Rematricula' },
+          { key: '1a_observacao', value: '1ª Observação' },
+          { key: '2a_observacao', value: '2ª Observação' },
+          { key: '3a_observacao', value: '3ª Observação' },
+          { key: '4a_observacao', value: '4ª Observação' },
+        ];
+
         $scope.identity = Identity;
 
         $scope.defaultQuery = {
@@ -124,10 +136,10 @@
           Identity.provideToken().then(function (token) {
             window.open(
               Config.getAPIEndpoint() +
-              'reports/child/download?token=' +
-              token +
-              '&file=' +
-              file
+                'reports/child/download?token=' +
+                token +
+                '&file=' +
+                file
             );
           });
         };
@@ -182,7 +194,7 @@
               $scope.query.group_id = $scope.selectedGroup.id;
               $scope.defaultQuery.group_id = $scope.selectedGroup.id;
             })
-            .then(function () { });
+            .then(function () {});
         };
 
         $scope.onCheckSelectAll = function (element) {
@@ -229,7 +241,7 @@
                   $scope.refresh();
                 });
               })
-              .then(function () { });
+              .then(function () {});
           } else {
             Modals.show(
               Modals.Alert(
@@ -251,8 +263,8 @@
               a.displayName > b.displayName
                 ? 1
                 : b.displayName > a.displayName
-                  ? -1
-                  : 0
+                ? -1
+                : 0
             );
             $scope.causes = [...new Set($scope.causes)];
           }
