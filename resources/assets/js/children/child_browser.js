@@ -32,7 +32,7 @@
         };
 
         $scope.caseStepList = [
-          { key: 'alerta', value: 'Alerta' },
+          { key: null, value: 'Todos' },
           { key: 'pesquisa', value: 'Pesquisa' },
           { key: 'analise_tecnica', value: 'Analise Técnica' },
           { key: 'gestao_do_caso', value: 'Gestão do Caso' },
