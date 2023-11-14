@@ -15,9 +15,10 @@
             $scope.schools = {};
             $scope.msg_success = false;
             $scope.msg_error = false;
-            $scope.avaliable_years_educacenso = [2017, 2018, 2019, 2020, 2021, 2022, 2023];
+            $scope.avaliable_years_educacenso = [];
             $scope.query = {
                 year_educacenso: new Date().getFullYear(),
+                city_uf: '',
                 sort: {},
                 show_suspended: false,
                 max: 5,
@@ -94,6 +95,13 @@
             $scope.onSelectYear = function () {
                 $scope.query.page = 1;
                 $scope.query.max = 5;
+                $scope.query.city_uf = '';
+                $scope.refresh();
+            };
+
+            $scope.onSelectCity = function () {
+                $scope.query.page = 1;
+                $scope.query.max = 5;
                 $scope.refresh();
             };
 
@@ -111,9 +119,23 @@
                 $scope.refresh();
             };
 
+            $scope.getYears = function () {
+                const currentYear = new Date().getFullYear();
+                const startYear = 2017;
+                const years = [];
+                for (let year = startYear; year <= currentYear; year++) {
+                    years.push(year);
+                }
+                return years;
+            }
+
             Platform.whenReady(function () {
+                //criando a lista dos anos possíveis para seleção
+                $scope.avaliable_years_educacenso = $scope.getYears();
                 $scope.refresh();
             });
+
+
 
         });
 
