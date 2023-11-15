@@ -19,10 +19,6 @@
             <div class="alert alert-warning" ng-show="msg_success">Mensagens encaminhadas para fila de envio</div>
             <div class="alert alert-danger" ng-show="msg_error">Erro no envio das mensagens</div>
 
-            <!-- <pre>
-                {{schools | json}}
-            </pre> -->
-
             <div class="row">
 
                 <div class="form-group col-md-2">
@@ -45,9 +41,9 @@
 
                 <div class="col-md-3">
                     <ui-select ng-model="query.city_name" on-select="onSelectCity()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
-                        <ui-select-match placeholder="Município">{{$select.selected.city_name}}</ui-select-match>
-                        <ui-select-choices repeat="school.city_name as school in schools.data">
-                            <div ng-bind-html="school.city_name | highlight: $select.search"></div>
+                        <ui-select-match placeholder="Município">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="city in schools.cities">
+                            <div ng-bind-html="city | highlight: $select.search"></div>
                         </ui-select-choices>
                     </ui-select>
                 </div>
