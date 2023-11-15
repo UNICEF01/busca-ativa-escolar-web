@@ -18,7 +18,7 @@
             $scope.avaliable_years_educacenso = [];
             $scope.query = {
                 year_educacenso: new Date().getFullYear(),
-                city_uf: '',
+                city_name: '',
                 sort: {},
                 show_suspended: false,
                 max: 5,
@@ -95,7 +95,7 @@
             $scope.onSelectYear = function () {
                 $scope.query.page = 1;
                 $scope.query.max = 5;
-                $scope.query.city_uf = '';
+                $scope.query.city_name = '';
                 $scope.refresh();
             };
 

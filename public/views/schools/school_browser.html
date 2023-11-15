@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <ui-select ng-model="query.city_uf" on-select="onSelectCity()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
+                    <ui-select ng-model="query.city_name" on-select="onSelectCity()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
                         <ui-select-match placeholder="Município">{{$select.selected.city_name}}</ui-select-match>
                         <ui-select-choices repeat="school.city_name as school in schools.data">
                             <div ng-bind-html="school.city_name | highlight: $select.search"></div>
