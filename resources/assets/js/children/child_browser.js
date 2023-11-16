@@ -32,7 +32,6 @@
         };
 
         $scope.caseStepList = [
-          { key: null, value: 'Todos' },
           { key: 'pesquisa', value: 'Pesquisa' },
           { key: 'analise_tecnica', value: 'Analise Técnica' },
           { key: 'gestao_do_caso', value: 'Gestão do Caso' },
@@ -136,10 +135,10 @@
           Identity.provideToken().then(function (token) {
             window.open(
               Config.getAPIEndpoint() +
-                'reports/child/download?token=' +
-                token +
-                '&file=' +
-                file
+              'reports/child/download?token=' +
+              token +
+              '&file=' +
+              file
             );
           });
         };
@@ -194,7 +193,7 @@
               $scope.query.group_id = $scope.selectedGroup.id;
               $scope.defaultQuery.group_id = $scope.selectedGroup.id;
             })
-            .then(function () {});
+            .then(function () { });
         };
 
         $scope.onCheckSelectAll = function (element) {
@@ -241,7 +240,7 @@
                   $scope.refresh();
                 });
               })
-              .then(function () {});
+              .then(function () { });
           } else {
             Modals.show(
               Modals.Alert(
@@ -263,8 +262,8 @@
               a.displayName > b.displayName
                 ? 1
                 : b.displayName > a.displayName
-                ? -1
-                : 0
+                  ? -1
+                  : 0
             );
             $scope.causes = [...new Set($scope.causes)];
           }
