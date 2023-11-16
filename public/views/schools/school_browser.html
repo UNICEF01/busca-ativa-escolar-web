@@ -30,7 +30,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <ui-select ng-model="query.year_educacenso" on-select="onSelectYear()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
                         <ui-select-match placeholder="Ano de importação">{{$select.selected}}</ui-select-match>
                         <ui-select-choices repeat="year in avaliable_years_educacenso">
@@ -39,9 +39,9 @@
                     </ui-select>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <ui-select ng-model="query.city_name" on-select="onSelectCity()" style="height: max-content; width: 100%; margin-top: 1.3rem; margin-bottom: -1.5rem;">
-                        <ui-select-match placeholder="Município">{{$select.selected}}</ui-select-match>
+                        <ui-select-match placeholder="Município" allow-clear>{{$select.selected}}</ui-select-match>
                         <ui-select-choices repeat="city in schools.cities">
                             <div ng-bind-html="city | highlight: $select.search"></div>
                         </ui-select-choices>
