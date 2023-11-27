@@ -22,7 +22,6 @@
     'datatables',
     'ui.mask',
     'angular.viacep',
-
     'ngclipboard',
     'ng-fusioncharts',
   ]);

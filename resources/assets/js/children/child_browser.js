@@ -31,6 +31,17 @@
           date: null,
         };
 
+        $scope.caseStepList = [
+          { key: 'pesquisa', value: 'Pesquisa' },
+          { key: 'analise_tecnica', value: 'Analise Técnica' },
+          { key: 'gestao_do_caso', value: 'Gestão do Caso' },
+          { key: 'rematricula', value: 'Rematricula' },
+          { key: '1a_observacao', value: '1ª Observação' },
+          { key: '2a_observacao', value: '2ª Observação' },
+          { key: '3a_observacao', value: '3ª Observação' },
+          { key: '4a_observacao', value: '4ª Observação' },
+        ];
+
         $scope.identity = Identity;
 
         $scope.defaultQuery = {
