@@ -3,7 +3,7 @@
         <div class="col-md-6">
             <h3><i class="fa fa-file-text-o"></i> <span>{{step.name}}</span></h3>
         </div>
-        <div class="col-md-6 text-right" ng-show="step.assigned_user">
+        <div class="text-right col-md-6" ng-show="step.assigned_user">
             <div style="display: inline-block; vertical-align: middle;" uib-tooltip="Usuário responsável pela etapa">
 
                 <div ng-if="step.assigned_user.deleted_at == null">
@@ -196,7 +196,7 @@
                     ng-model="fields.place_uf"
                     ng-options="uf.code as uf.code for uf in static.getUFs()| orderObjectBy:'code'"></select>
         </div>
-        <div class="form-group col-md-5 clearfix">
+        <div class="clearfix form-group col-md-5">
             <label class="control-label" for="fld-alert-city">Município*</label>
             <input type="text" id="fld-alert-city" class="form-control" ng-model="fields.place_city"
                    ng-readonly="!canEditCurrentStep()" uib-typeahead="city for city in fetchCities($viewValue)"
@@ -366,11 +366,11 @@
         <div class="form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last_age">Com qual idade foi cursado o último ano
                 escolar?*</label>
-            <input type="number" min="0" max="18" step="1" class="form-control" id="fld-school_last_age"
+            <input type="number" min="0" max="99" step="1" class="form-control" id="fld-school_last_age"
                    ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_age">
         </div>
 
-        <div class="form-group col-md-12 clearfix" ng-show="fields.has_been_in_school">
+        <div class="clearfix form-group col-md-12" ng-show="fields.has_been_in_school">
             <label class="control-label" for="fld-school_last">Qual a última escola cursada?*</label>
             <!--input type="text" class="form-control" id="fld-school_last_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_last_name"-->
 
@@ -482,7 +482,7 @@
 
             <div class="clearfix"
                  ng-if="(fields.parents_has_father && canEditCurrentStep()) || (fields.aux.contatos.father && !canEditCurrentStep())">
-                <div class="col-md-6 pl-0">
+                <div class="pl-0 col-md-6">
                     <label>
                         <small>Nome:</small>
                     </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
@@ -503,7 +503,7 @@
             </div>
             <div class="clearfix"
                  ng-if="(fields.parents_has_mother && canEditCurrentStep()) || (fields.aux.contatos.mother && !canEditCurrentStep())">
-                <div class="col-md-6 pl-0">
+                <div class="pl-0 col-md-6">
                     <label>
                         <small>Nome:</small>
                     </label><input type="text" class="form-control" ng-disabled="!canEditCurrentStep()"
@@ -532,7 +532,7 @@
                 <div class="clearfix"></div>
 
                 <div ng-repeat="item in fields.aux.contatos.siblings">
-                    <div class="col-md-6 pl-0">
+                    <div class="pl-0 col-md-6">
                         <label>
                             <small>Nome:</small>
                         </label>
@@ -567,7 +567,7 @@
                 <div class="clearfix"></div>
 
                 <div ng-repeat="item in fields.aux.contatos.grandparents">
-                    <div class="col-md-6 pl-0">
+                    <div class="pl-0 col-md-6">
                         <label>
                             <small>Nome:</small>
                         </label>
@@ -601,7 +601,7 @@
                 <div class="clearfix"></div>
 
                 <div ng-repeat="item in fields.aux.contatos.others">
-                    <div class="col-md-6 pl-0">
+                    <div class="pl-0 col-md-6">
                         <label>
                             <small>Nome:</small>
                         </label>
@@ -1015,7 +1015,7 @@
                     ng-model="fields.school_uf"
                     ng-options="uf.code as uf.code for uf in static.getUFs() | orderObjectBy:'code'"></select>
         </div>
-        <div class="form-group col-md-4 clearfix">
+        <div class="clearfix form-group col-md-4">
             <label class="control-label" for="fld-enroll-school_city">Município*</label>
             <input type="text" id="fld-enroll-school_city" class="form-control" ng-model="fields.school_city"
                    ng-readonly="!canEditCurrentStep()" uib-typeahead="city for city in fetchCities($viewValue)"
@@ -1058,7 +1058,7 @@
                    ng-model="fields.school_email">
         </div>
 
-        <div class="form-group col-md-12 clearfix">
+        <div class="clearfix form-group col-md-12">
             <label class="control-label" for="fld-enroll-school">Nome da escola*</label>
             <!--input type="text" class="form-control" id="fld-enroll-school_name" ng-readonly="!canEditCurrentStep()" ng-model="fields.school_name"-->
             <input type="text" id="fld-enroll-school" class="form-control" ng-model="fields.school"
@@ -1069,7 +1069,7 @@
                    typeahead-input-formatter="renderSelectedSchool($model)"
                    typeahead-on-select="putStateAndCity(fields.school)">
 
-            <small class="alert-color text-center" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão
+            <small class="text-center alert-color" ng-show="avisoDivergencia"><b>O município da escola e do CEP estão
                 divergentes</b></small>
 
             <div ng-show="rematriculaSchoolsLoading">
