@@ -273,11 +273,17 @@
                             </div>
                             <br/>
                             <i class="material-icons">person</i> <strong>Dados do responsável</strong>
-                            <div ng-show="child.alert.mother_name || child.alert.father_name || child.alert.mother_rg || child.alert.father_rg">
+                            <div>
                                 <div class="row">
                                     <div class="form-group col-md-3">
                                         <label class="control-label"><strong>Nome da mãe ou responsável</strong></label>
-                                        <p><span ng-bind="child.alert.mother_name"></span></p>
+                                        <!-- Check if mother_name is valid; if not, show input field -->
+                                        <p ng-hide="child.invalidMotherName">
+                                            <span ng-bind="child.alert.mother_name"></span>
+                                        </p>
+                                        <p ng-show="child.invalidMotherName">
+                                            <input type="text" class="form-control" ng-model="child.alert.mother_name" placeholder="Informe o nome da mãe" required>
+                                        </p>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label class="control-label"><strong>Nome do pai ou responsável</strong></label>
