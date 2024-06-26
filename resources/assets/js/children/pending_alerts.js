@@ -214,11 +214,6 @@
             $scope.child.invalidMotherName = false;
           } else {
             $scope.child.invalidMotherName = true;
-            setTimeout(() => {
-              alert(
-                'O nome da mãe é inválido. Por favor, corrija antes de prosseguir.'
-              );
-            }, 1000);
           }
 
           // Open the modal
@@ -279,12 +274,14 @@
           if (!$scope.canAcceptAlert(child)) {
             return;
           }
+
           $scope.sendingAlert = true;
           Alerts.accept(
             {
               id: child.id,
               place_address: child.alert.place_address,
               place_neighborhood: child.alert.place_neighborhood,
+              mother_name: child.alert.mother_name,
               group_id: child.group_id,
               group_name: child.group_name,
             },
