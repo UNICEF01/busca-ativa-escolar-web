@@ -119,7 +119,7 @@
                 ngToast.warning('Você não pode realizar essa ação.');
               }
             })
-            .then(function () { });
+            .then(function () {});
         };
       }
     );
