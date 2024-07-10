@@ -114,7 +114,7 @@
               $scope.selectedGroup = selectedGroup;
               $scope.query.group_id = $scope.selectedGroup.id;
             })
-            .then(function () { });
+            .then(function () {});
         };
 
         $scope.updateGroup = function () {
@@ -143,7 +143,7 @@
                 $scope.child.id
               );
             })
-            .then(function () { });
+            .then(function () {});
         };
 
         $scope.branchGroups = 'carregando ...';
@@ -308,7 +308,7 @@
               //$scope.refresh();
               //$('#modalChild').modal('hide');
             });
-          else Alerts.edit({ id: id, data: data, type: type }, function () { });
+          else Alerts.edit({ id: id, data: data, type: type }, function () {});
         };
 
         Platform.whenReady(function () {
@@ -324,8 +324,8 @@
               a.displayName > b.displayName
                 ? 1
                 : b.displayName > a.displayName
-                  ? -1
-                  : 0
+                ? -1
+                : 0
             );
           }
           $scope.selectedGroup = Identity.getCurrentUser().group;
