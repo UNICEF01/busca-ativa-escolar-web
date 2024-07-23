@@ -44,6 +44,10 @@
           entity: 'children',
           dimension: 'cause',
           view: 'chart',
+          date: {
+            firstDate: new Date(),
+            finalDate: new Date(),
+          },
         };
 
         $scope.avaliable_graph = true;
@@ -58,6 +62,47 @@
         };
 
         function onInit() {
+          //----------------------------
+          // Inicializa as datas para os datepickers
+          $scope.today = function () {
+            $scope.current.date.finalDate = new Date(); // Data final para hoje
+            $scope.current.date.firstDate = new Date(); // Data inicial para hoje, para ajustar a seis meses atrás
+            $scope.current.date.firstDate.setMonth(
+              $scope.current.date.firstDate.getMonth() - 6
+            ); // Subtrai 6 meses
+          };
+
+          $scope.popupStart = {
+            opened: false,
+          };
+
+          $scope.popupFinish = {
+            opened: false,
+          };
+
+          $scope.formatDates = 'ddMMyyyy';
+
+          $scope.dateOptionsStart = {
+            formatYear: 'yyyy',
+            showWeeks: false,
+            maxDate: new Date($scope.current.date.finalDate), // O máximo é a data final
+          };
+
+          $scope.dateOptionsFinish = {
+            formatYear: 'yyyy',
+            maxDate: new Date(),
+            showWeeks: false,
+          };
+
+          $scope.openStartDate = function () {
+            $scope.popupStart.opened = true;
+          };
+
+          $scope.openFinishDate = function () {
+            $scope.popupFinish.opened = true;
+          };
+          //----------------------------
+
           $scope.ready = true;
 
           var lastWeek = moment().subtract(7, 'days').toDate();
@@ -230,6 +275,8 @@
             country_region: 'Região geográfica',
           };
 
+          $scope.today();
+
           $scope.chartConfig = getChartConfig();
 
           $scope.refresh();
@@ -331,14 +378,20 @@
                   format: 'YYYY-MM-dd',
                 };
               }
+
               if (params.view === 'time_series') {
                 delete $scope.filters.created_at;
                 $scope.filters.date = {
-                  from: moment().subtract(filter, 'days').format('YYYY-MM-DD'),
-                  to: moment().format('YYYY-MM-DD'),
+                  from: moment($scope.current.date.firstDate).format(
+                    'YYYY-MM-DD'
+                  ),
+                  to: moment($scope.current.date.finalDate).format(
+                    'YYYY-MM-DD'
+                  ),
                   format: 'YYYY-MM-dd',
                 };
               }
+
               if (filter === 'null') {
                 if ($scope.filters.hasOwnProperty('created_at'))
                   delete $scope.filters.created_at;
@@ -351,16 +404,25 @@
                 if (params.view === 'time_series') {
                   delete $scope.filters.created_at;
                   $scope.filters.date = {
-                    from: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                    to: moment($scope.dt_final).format('YYYY-MM-DD'),
+                    from: moment($scope.current.date.firstDate).format(
+                      'YYYY-MM-DD'
+                    ),
+                    to: moment($scope.current.date.finalDate).format(
+                      'YYYY-MM-DD'
+                    ),
                     format: 'YYYY-MM-dd',
                   };
                 }
+
                 if (params.view === 'linear') {
                   delete $scope.filters.date;
                   $scope.filters.created_at = {
-                    gte: moment($scope.dt_inicial).format('YYYY-MM-DD'),
-                    lte: moment($scope.dt_final).format('YYYY-MM-DD'),
+                    gte: moment($scope.current.date.firstDate).format(
+                      'YYYY-MM-DD'
+                    ),
+                    lte: moment($scope.current.date.finalDate).format(
+                      'YYYY-MM-DD'
+                    ),
                     format: 'YYYY-MM-dd',
                   };
                 }
@@ -371,6 +433,17 @@
           params.filters.place_city_id = params.filters.place_city
             ? params.filters.place_city.id
             : null;
+
+          if (params.view === 'time_series') {
+            $scope.filters.date = {
+              from: moment($scope.current.date.firstDate).format('YYYY-MM-DD'),
+              to: moment($scope.current.date.finalDate).format('YYYY-MM-DD'),
+              format: 'YYYY-MM-dd',
+            };
+            delete params.date;
+          } else {
+            delete params.date;
+          }
 
           if (params.format === 'xls') {
             return Reports.query(params).$promise;
@@ -588,8 +661,6 @@
           };
         };
 
-        Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
-
         $scope.filterShow = function () {
           $scope.showFilter = !$scope.showFilter;
         };
@@ -651,8 +722,6 @@
           $scope.popup2.opened = true;
         };
 
-        $scope.format = 'ddMMyyyy';
-
         $scope.altInputFormats = ['M!/d!/yyyy'];
 
         $scope.popup1 = {
@@ -672,6 +741,8 @@
           $scope.sort = 'maxToMin';
           $scope.refresh();
         };
+
+        Platform.whenReady(onInit); // Must be the last call, since $scope functions are not hoisted to the top
       }
     );
 })();
