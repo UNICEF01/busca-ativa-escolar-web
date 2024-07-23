@@ -5,6 +5,7 @@
                 <i class="fa fa-search"></i> Tipos de relatórios
             </div>
             <div class="panel-body">
+
                 <div class="form-group">
                     <label class="control-label" for="sel-report-entity">Segmento</label>
                     <select id="sel-report-entity" class="form-control" ng-model="current.entity" ng-change="refresh()" ng-options="entity.id as entity.name for entity in entities">
@@ -15,6 +16,32 @@
                     <label class="control-label" for="sel-report-view">Recorte</label>
                     <select id="sel-report-view" class="form-control" ng-model="current.view" ng-change="refresh()" ng-options="view as views[view].name for view in entities[current.entity].views">
                     </select>
+                </div>
+
+                <div class="form-group" ng-if="current.view == 'timeline'">
+                    <label class="control-label">Período do Relatório:</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">Data inicial</div>
+                        <input style="text-align: center;" class="form-control" ng-model="current.date.firstDate"
+                               ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" ng-change="refresh()"
+                               is-open="popupStart.opened" datepicker-options="dateOptionsStart" close-text="Close"
+                               show-button-bar="false">
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-calendar" ng-click="openStartDate()"
+                               style="cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">Data final</div>
+                        <input style="text-align: center;" class="form-control" ng-model="current.date.finalDate"
+                               ui-mask="99/99/9999" uib-datepicker-popup="{{formatDates}}" ng-change="refresh()"
+                               is-open="popupFinish.opened" datepicker-options="dateOptionsFinish"
+                               close-text="Close" show-button-bar="false">
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-calendar" ng-click="openFinishDate()"
+                               style="cursor: pointer;"></i>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-group" ng-show="views[current.view].allowsDimension">
