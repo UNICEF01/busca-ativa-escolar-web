@@ -4,7 +4,6 @@
 
         function init(scope, attrs) {
 
-
             function synchronizeMaps(firstMap, secondMap) {
                 // get view model objects for both maps, view model contains all data and
                 // utility functions that're related to map's geo state
@@ -64,7 +63,6 @@
 
             }
 
-
             function startClustering(map, data) {
 
                 var markers = document.getElementById("map-markes");
@@ -105,7 +103,6 @@
             var defaultLayers = platform.createDefaultLayers();
             var defaultLayersSync = platform.createDefaultLayers();
 
-
             var refresh = function () {
                 Children.getMap({ city_id: attrs.cityId }, function (data) {
 
@@ -134,14 +131,11 @@
                     );
                     scope.map.setBaseLayer(scope.tileLayer);
 
-
                     window.addEventListener('resize', () => scope.map.getViewPort().resize());
-
 
                     var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(scope.map));
 
                     scope.ui = H.ui.UI.createDefault(scope.map, defaultLayersSync);
-
 
                     var mapMarkSync = new H.Map(document.getElementById('map-markes'),
                         defaultLayersSync.vector.normal.map, {

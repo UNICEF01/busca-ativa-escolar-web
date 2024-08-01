@@ -8,8 +8,8 @@
 
             function refreshMetrics() {
 
-                if (attrs.ibgeId && attrs.uf) {
-                    Report.getStatusCityByCountry({ ibge_id: attrs.ibgeId, uf: attrs.uf }, function (data) {
+                if (scope.ibgeId && scope.uf) {
+                    Report.getStatusCityByCountry({ ibge_id: scope.ibgeId, uf: scope.uf }, function (data) {
                         metrics = data.stats;
                     });
                 } else {
@@ -42,6 +42,8 @@
         return {
             link: init,
             scope: {
+                ibgeId: '@',
+                uf: '@',
                 objectToInjectInMetrics: '='
             },
             replace: true,
