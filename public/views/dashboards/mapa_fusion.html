@@ -22,7 +22,7 @@
                 <a href="#" ng-click="initFusionChartMapState(fusionmap_scope_uf, fusionmap_scope_table)">{{fusionmap_scope_uf}}</a>
                 /
                 <select class="fusion_city_selector" name="scope_city" ng-model="fusionmap_scope_city.id" ng-change="initFusionChartMapCity()">
-                  <option ng-repeat="(i, local) in getTablevaluesFormFusionMap()" ng-value="local.id">{{local.name_city}}</option>
+                  <option ng-repeat="(i, local) in getTablevaluesFormFusionMap() | orderBy: 'name_city'" ng-value="local.id">{{local.name_city}}</option>
                 </select>
               </h4>
             </div>
