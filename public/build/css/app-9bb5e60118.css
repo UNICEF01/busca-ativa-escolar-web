@@ -465,7 +465,7 @@ row-switch .label-switch {
 
 .wizard a:hover {
   text-decoration: none;
-  color: #FFF;
+  color: #ffffff;
 }
 
 .wizard a:first-child {
@@ -559,21 +559,26 @@ row-switch .label-switch {
   margin-left: 0;
 }
 
-.wizard .current, .wizard a.progress-current {
+.wizard .current,
+.wizard a.progress-current {
   background: #19AFA1;
   color: #fff;
 }
 
-.wizard a.current:after, .wizard a.progress-current:after {
+.wizard a.current:after,
+.wizard a.progress-current:after {
   border-left-color: #19AFA1 !important;
 }
 
-.wizard.left-arrow a.current:before, .wizard.left-arrow a.progress-current:before,
-.wizard.small.left-arrow a.current:before, .wizard.small.left-arrow a.progress-current:before {
+.wizard.left-arrow a.current:before,
+.wizard.left-arrow a.progress-current:before,
+.wizard.small.left-arrow a.current:before,
+.wizard.small.left-arrow a.progress-current:before {
   border-right-color: #19AFA1;
 }
 
-.wizard a.current .badge, .wizard a.progress-current .badge {
+.wizard a.current .badge,
+.wizard a.progress-current .badge {
   background-color: #FFFFFF;
   color: #19AFA1;
 }
@@ -621,19 +626,23 @@ row-switch .label-switch {
 }
 
 /* IE11 border bug fixes... hooray! */
-_:-ms-fullscreen, :root .wizard.small.left-arrow a:before {
+_:-ms-fullscreen,
+:root .wizard.small.left-arrow a:before {
   left: -14px;
 }
 
-_:-ms-fullscreen, :root .wizard.small:not(.left-arrow) a:after {
+_:-ms-fullscreen,
+:root .wizard.small:not(.left-arrow) a:after {
   right: -14px;
 }
 
-_:-ms-fullscreen, :root .wizard.left-arrow a:before {
+_:-ms-fullscreen,
+:root .wizard.left-arrow a:before {
   left: -29px;
 }
 
-_:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
+_:-ms-fullscreen,
+:root .wizard:not(.left-arrow) a:after {
   right: -29px;
 }
 
@@ -3999,13 +4008,6 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   background-color: #ddd;
 }
 
-.select_year_ciclo {
-  font-size: 15px;
-  border-radius: 10px;
-  padding: 5px;
-  border: 1px solid #cccccc;
-}
-
 .form-control.ng-invalid {
   background-image: linear-gradient(#d9534f, #d9534f), linear-gradient(#d2d2d2, #d2d2d2) !important;
 }
@@ -4202,6 +4204,14 @@ p.agent-panel {
 
 .angular-google-map-container {
   height: 400px;
+}
+
+#dashboard-map-coordenador-operacional .angular-google-map-container {
+  height: 660px;
+}
+
+#dashboard-map-gestor-nacional .angular-google-map-container {
+  height: 550px;
 }
 
 .alert .alert-link {

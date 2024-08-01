@@ -15,6 +15,15 @@
 @import 'components/animated';
 @import '../../../public/vendor/json-formatter/dist/json-formatter';
 @import 'components/manage_groups';
+@import 'components/mapa_fusion';
+
+
+.select_year_ciclo {
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  border: 1px solid #cccccc;
+}
 
 .form-control.ng-invalid {
   background-image: linear-gradient($brand-danger, $brand-danger), linear-gradient(#D2D2D2, #D2D2D2) !important;
@@ -242,14 +251,6 @@ p.agent-panel {
 
 .angular-google-map-container {
   height: 400px;
-}
-
-#dashboard-map-coordenador-operacional .angular-google-map-container {
-  height: 660px;
-}
-
-#dashboard-map-gestor-nacional .angular-google-map-container {
-  height: 550px;
 }
 
 .alert .alert-link {

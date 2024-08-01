@@ -465,7 +465,7 @@ row-switch .label-switch {
 
 .wizard a:hover {
   text-decoration: none;
-  color: #FFF;
+  color: #ffffff;
 }
 
 .wizard a:first-child {
@@ -559,21 +559,26 @@ row-switch .label-switch {
   margin-left: 0;
 }
 
-.wizard .current, .wizard a.progress-current {
+.wizard .current,
+.wizard a.progress-current {
   background: #19AFA1;
   color: #fff;
 }
 
-.wizard a.current:after, .wizard a.progress-current:after {
+.wizard a.current:after,
+.wizard a.progress-current:after {
   border-left-color: #19AFA1 !important;
 }
 
-.wizard.left-arrow a.current:before, .wizard.left-arrow a.progress-current:before,
-.wizard.small.left-arrow a.current:before, .wizard.small.left-arrow a.progress-current:before {
+.wizard.left-arrow a.current:before,
+.wizard.left-arrow a.progress-current:before,
+.wizard.small.left-arrow a.current:before,
+.wizard.small.left-arrow a.progress-current:before {
   border-right-color: #19AFA1;
 }
 
-.wizard a.current .badge, .wizard a.progress-current .badge {
+.wizard a.current .badge,
+.wizard a.progress-current .badge {
   background-color: #FFFFFF;
   color: #19AFA1;
 }
@@ -621,19 +626,23 @@ row-switch .label-switch {
 }
 
 /* IE11 border bug fixes... hooray! */
-_:-ms-fullscreen, :root .wizard.small.left-arrow a:before {
+_:-ms-fullscreen,
+:root .wizard.small.left-arrow a:before {
   left: -14px;
 }
 
-_:-ms-fullscreen, :root .wizard.small:not(.left-arrow) a:after {
+_:-ms-fullscreen,
+:root .wizard.small:not(.left-arrow) a:after {
   right: -14px;
 }
 
-_:-ms-fullscreen, :root .wizard.left-arrow a:before {
+_:-ms-fullscreen,
+:root .wizard.left-arrow a:before {
   left: -29px;
 }
 
-_:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
+_:-ms-fullscreen,
+:root .wizard:not(.left-arrow) a:after {
   right: -29px;
 }
 
@@ -3975,7 +3984,8 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   padding: 5px;
   border: 1px solid #cccccc;
 }
-.mapa_fusion .table_ufs {
+
+.mapa_fusion.table_ufs {
   border-collapse: collapse;
   background-color: white;
   overflow: hidden;
@@ -3984,26 +3994,22 @@ _:-ms-fullscreen, :root .wizard:not(.left-arrow) a:after {
   margin-top: 50px;
   margin-right: 20px;
 }
-.mapa_fusion .table_ufs th,
-.mapa_fusion .table_ufs td {
+
+.mapa_fusion.table_ufs th,
+.mapa_fusion.table_ufs td {
   text-align: center;
   font-size: 12px;
   padding: 3px;
   border: 1px solid #ddd;
 }
-.mapa_fusion .table_ufs th {
+
+.mapa_fusion.table_ufs th {
   background-color: #90af07;
   color: white;
 }
-.mapa_fusion .table_ufs tr:hover {
-  background-color: #ddd;
-}
 
-.select_year_ciclo {
-  font-size: 15px;
-  border-radius: 10px;
-  padding: 5px;
-  border: 1px solid #cccccc;
+.mapa_fusion.table_ufs tr:hover {
+  background-color: #ddd;
 }
 
 .form-control.ng-invalid {
@@ -4202,6 +4208,14 @@ p.agent-panel {
 
 .angular-google-map-container {
   height: 400px;
+}
+
+#dashboard-map-coordenador-operacional .angular-google-map-container {
+  height: 660px;
+}
+
+#dashboard-map-gestor-nacional .angular-google-map-container {
+  height: 550px;
 }
 
 .alert .alert-link {
