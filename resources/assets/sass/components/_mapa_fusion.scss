@@ -1,0 +1,34 @@
+.mapa_fusion {
+    .fusion_city_selector {
+        border-radius: 10px;
+        padding: 5px;
+        border: 1px solid #cccccc;
+    }
+
+    .table_ufs {
+        border-collapse: collapse;
+        background-color: white;
+        overflow: hidden;
+        border-radius: 10px;
+        width: 100%;
+        margin-top: 50px;
+        margin-right: 20px;
+    }
+
+    .table_ufs th,
+    .table_ufs td {
+        text-align: center;
+        font-size: 12px;
+        padding: 3px;
+        border: 1px solid #ddd;
+    }
+
+    .table_ufs th {
+        background-color: #90af07;
+        color: white;
+    }
+
+    .table_ufs tr:hover {
+        background-color: #ddd;
+    }
+}
