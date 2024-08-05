@@ -1,12 +1,4 @@
 <div class="dashboard dashboard-super-administrador">
-    <style>
-        #select_year_ciclo {
-            font-size: 15px;
-            border-radius: 10px;
-            padding: 5px;
-            border: 1px solid #cccccc;
-        }
-    </style>
 
     <div class="row">
         <div class="col-md-6">
@@ -14,16 +6,10 @@
                 <i class="material-icons">timeline</i> Números gerais da estratégia no
                 Brasil
             </h3>
-            <span>Valores se referem à data de: <span id="greeting"></span>
         </div>
 
         <div class="col-md-6 text-right">
-            <select
-                    name="selectCiclo"
-                    id="select_year_ciclo"
-                    ng-options="option.name for option in availableOptions track by option.id"
-                    ng-model="selectedOption"
-            ></select>
+            <select name="selectCiclo" class="select_year_ciclo" ng-options="option.name for option in availableOptions track by option.id" ng-model="selectedOption"></select>
         </div>
 
         <div class="col-md-12">
@@ -31,9 +17,7 @@
         </div>
     </div>
 
-    <div
-            ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"
-    ></div>
+    <div ng-include="'/views/dashboards/grafico_evolucao_rematriculas.html'"></div>
 
     <div class="row">
         <div class="col-md-12">
@@ -54,11 +38,3 @@
 
     <div ng-include="'/views/dashboards/mapa_fusion.html'"></div>
 </div>
-
-<script>
-    var date = new Date();
-    date = date.setDate(date.getDate() - 1);
-    document.getElementById('greeting').innerHTML = new Date(
-        date
-    ).toLocaleDateString();
-</script>
